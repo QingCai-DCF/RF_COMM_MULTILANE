@@ -1,5 +1,5 @@
 {
-  "acceptance_eligible": true,
+  "acceptance_eligible": false,
   "allowed_hardware_stages": [
     "preflight",
     "module_intake",
@@ -122,7 +122,10 @@
   },
   "current_run_hardware_authorization": false,
   "eligibility_scope": "NEW_EXACT_CURRENT_RUN_AUTHORIZATION_ONLY",
-  "errors": [],
+  "errors": [
+    "offline readiness gate failed: state_requirements_consistency",
+    "offline readiness gate failed: requirement_traceability"
+  ],
   "forbidden": {
     "ethernet": true,
     "lane_mask_above_0xF": true,
@@ -133,7 +136,7 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-04T18:14:44+00:00",
+  "generated_at_utc": "2026-08-04T19:03:05+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": false,
   "hardware_first_fault_kill_active_during_each_command": true,
@@ -209,9 +212,9 @@
       "sha256": "7f8efdfc03662fa668a042ace129e2592747d8fc92784d5566ba11f91b98bfc8"
     },
     {
-      "bytes": 8030,
+      "bytes": 9699,
       "path": "docs/design/P10_3_FIRST_FAULT_FORENSICS.md",
-      "sha256": "14f8c781c7abd7fda98bcc1f2642f8ae155328dacace1a2bb6b1cabb2f1ad5b3"
+      "sha256": "86d10f2bf65facc5bd1b51141ed2243688b40a4ba5cec8cf8d986bf8d433c10f"
     },
     {
       "bytes": 23677,
@@ -264,9 +267,9 @@
       "sha256": "c8177f98ec62b98eef4e25ac96fe654d04b465ac961a43a426452ddfc5eebb86"
     },
     {
-      "bytes": 124625,
+      "bytes": 128046,
       "path": "scripts/run_p10_3_ax7020_4lane_hardware.py",
-      "sha256": "ae84647f449007816169df368074445e8d42b6d6335240e4e73936b82c28e458"
+      "sha256": "20b17fd9c8038bff4c473007e9469c5d29e0c31820b8428d6649eb328cced6aa"
     },
     {
       "bytes": 23750,
@@ -279,9 +282,9 @@
       "sha256": "aae168cbb4839c2790298021e8c16c76e9d7495e25cff5f1397d7151fbbb7d2f"
     },
     {
-      "bytes": 94067,
+      "bytes": 99194,
       "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
-      "sha256": "9cce2627ae72604d909faf2d37830585492481da39da580ce7edc29af69e1fc6"
+      "sha256": "b0bb230fa9ef33547c82d8f631d941d4dd4d907dd87841c52da1b95b40c6c23c"
     },
     {
       "bytes": 16185,
@@ -339,7 +342,7 @@
       "sha256": "2fb807fee73fe78398ee8ff1583f787f73b37b97900e63ea5804f83092f4efda"
     }
   ],
-  "host_source_commit": "f113566f84ee1362ef2d86e2394bd1d2eb5ef754",
+  "host_source_commit": "8e224e8b9e06477fe40931555ec54060e195930f",
   "internal_stream_object_bytes": 262144,
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_board_autonomous_aggregate_command_bytes": 67108864,
@@ -372,7 +375,7 @@
       "log": {
         "bytes": 133,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
-        "sha256": "c5263b91ebbc1ceec20b367dc876e46d77435c9bfb5842ebc4f29b800b7adc38"
+        "sha256": "a8cc50d258336073c4c7619584ffe1f6dac757b883dd48b64a437a30e0fbe8d7"
       },
       "returncode": 0,
       "status": "PASS"
@@ -463,12 +466,12 @@
         "--check"
       ],
       "log": {
-        "bytes": 111,
+        "bytes": 313,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/requirement_traceability.log",
-        "sha256": "44dff0fbdfbc50814da41d4e4c416cca8282cafcfa95c15c7f76abf48d6f4110"
+        "sha256": "a1b4b18c08d0b4b272aab4a6ece9bcb1f4f2d3a2d2580613f30dcb925a649e16"
       },
-      "returncode": 0,
-      "status": "PASS"
+      "returncode": 1,
+      "status": "FAIL"
     },
     "state_requirements_consistency": {
       "command": [
@@ -477,12 +480,12 @@
         "--check"
       ],
       "log": {
-        "bytes": 183,
+        "bytes": 455,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/state_requirements_consistency.log",
-        "sha256": "30d94a2fdbbc42c42202d87c3fc5ca3cb4f550daa10c5d8c7a6e65d623cbf933"
+        "sha256": "56812973bca13be16ad1f97139a4656a4558b87599c1fb48e56fba789d4fdaa4"
       },
-      "returncode": 0,
-      "status": "PASS"
+      "returncode": 1,
+      "status": "FAIL"
     },
     "tcl_syntax_complete": {
       "command": [
@@ -518,8 +521,8 @@
   "source_tree_clean": true,
   "source_tree_clean_before_generation": true,
   "stage_plan_sha256": {
-    "arq_sack": "07a0b45ed91e58059026771054903903aa1c694f5851e72bb27cef44781011e9",
-    "degrade": "50580cdd48eb2e9ee80ab9f20d9a0c61fa7f443cb75595db1c239bdf6f263046",
+    "arq_sack": "9ec09937911d0ec313e551c5b77d72e7b86be37a405331e95c5929cf46db75c7",
+    "degrade": "1de6991dfa221ddc95af501faac4d3039427371e0d938ba5bb83d7494dd86142",
     "dma": "8c42fd2bbf9953e2b1a8de73bd35ef9cd7dbe594b706e071c3bb4f8703f5d96d",
     "fault_capture": "62ea545e01988b501e05ec2acf5374dd0b7f6562385d4c7af5f1166816977d16",
     "formal_30min": "a08eecacc6adb11019d720774397a33e178f70050394e314841be1256ee11f98",
@@ -542,6 +545,6 @@
     "streaming_64m": "e425d898d1576f5b751c5c8219532d42268fe922d25dc2ee9aee3f794022f083",
     "two_lane_regression": "90cacb29425008bb52c3393414e3bd4cbdc2a5c34dfb83300886fa51cbc13dda"
   },
-  "status": "PASS",
+  "status": "FAIL",
   "test_id": "P10_3F-FULL-CAMPAIGN-FREEZE"
 }
