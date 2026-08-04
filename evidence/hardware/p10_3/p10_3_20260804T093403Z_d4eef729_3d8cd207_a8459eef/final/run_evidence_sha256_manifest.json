@@ -1,0 +1,465 @@
+{
+  "acceptance_status": "FAIL",
+  "files": [
+    {
+      "bytes": 8837,
+      "path": "artifacts/artifact_freeze.json",
+      "sha256": "80f713cc13de26494fa702069bb96a41dfe489f1c6ac5899687fedcb8c2473d7"
+    },
+    {
+      "bytes": 3894,
+      "path": "artifacts/authorized_artifact_manifest.json",
+      "sha256": "88cc8d7ee52004762544598265e760328cbb60d989b7b1bec3b217c674008f32"
+    },
+    {
+      "bytes": 1033,
+      "path": "artifacts/derived_artifact_manifest.json",
+      "sha256": "881c119700f1db875076b18e5979638a3dbf27fa0ff83585dbe2589497fbb866"
+    },
+    {
+      "bytes": 34511,
+      "path": "artifacts/fixed/ps7_init.tcl",
+      "sha256": "76ecb9eeebc0f6042a3743c81dbb5af6910c0980a083347013936f925719c125"
+    },
+    {
+      "bytes": 34511,
+      "path": "artifacts/rotating/ps7_init.tcl",
+      "sha256": "76ecb9eeebc0f6042a3743c81dbb5af6910c0980a083347013936f925719c125"
+    },
+    {
+      "bytes": 31921,
+      "path": "authorization/goal.md",
+      "sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+    },
+    {
+      "bytes": 13684,
+      "path": "authorization/immutable_authorization.json",
+      "sha256": "0e3f94967dae7be947fd365ef2ca21dafa6a796d61e64b1eed848fb3852f3afb"
+    },
+    {
+      "bytes": 2747,
+      "path": "authorization/immutable_input_copy_manifest.json",
+      "sha256": "98833341763fb055fc21220261288246b8646f55c30d2f2e40b8bbce88e0d3cb"
+    },
+    {
+      "bytes": 121,
+      "path": "authorization/NO_MOVEMENT_NETWORK_ATTESTATION.txt",
+      "sha256": "181fad7829fa4fc71ee27f66ba74611a60ec296557eedafa70f9f85804a3f870"
+    },
+    {
+      "bytes": 178305,
+      "path": "final/orchestrator_result.json",
+      "sha256": "74c41c803b3352a46cd223930a6e9e97c8b47c3d1cabc526ca0055fbf9a0b6b9"
+    },
+    {
+      "bytes": 355,
+      "path": "final/p10_3_evidence_consistency.json",
+      "sha256": "4b884695452ef9bc0b3407e6a02cdb0b0338306c2f9928c5ae970a543e00aeba"
+    },
+    {
+      "bytes": 188,
+      "path": "final/p10_3_evidence_consistency.md",
+      "sha256": "e7e4b437b18fc50080f05bac111e0c14b85440dc64d720008b84876109d29866"
+    },
+    {
+      "bytes": 178305,
+      "path": "final/p10_3_final_summary.json",
+      "sha256": "74c41c803b3352a46cd223930a6e9e97c8b47c3d1cabc526ca0055fbf9a0b6b9"
+    },
+    {
+      "bytes": 208,
+      "path": "final/p10_3_final_summary.md",
+      "sha256": "ca99f8be20ab44af074910a01540a393be61fb6d1b391be95484ee498ec7f740"
+    },
+    {
+      "bytes": 7774,
+      "path": "module_inventory/tfdu_module_inventory.yaml",
+      "sha256": "1293702c8d80e1365ee022ecadd72761cda81d6c190f8f7babf7f8b0396e92a9"
+    },
+    {
+      "bytes": 739,
+      "path": "power_preflight/summary.json",
+      "sha256": "b087685ecfed9bf7c6ed1e26ed8e6db9f46070ffe6fbb1c95e10dd8515d12639"
+    },
+    {
+      "bytes": 194,
+      "path": "power_preflight/summary.md",
+      "sha256": "80cf3e4a7f28cb6eb5da835e98e710a408a0b1cc2f70071d4609c1cff95e927c"
+    },
+    {
+      "bytes": 68,
+      "path": "raw_logs/hw_server.json",
+      "sha256": "45c8044adb4fb019f99fc06b7cab6eb63a75e2c107d8158d586f5432cd49aeb0"
+    },
+    {
+      "bytes": 6529,
+      "path": "safe_boot/dumps/observations.psv",
+      "sha256": "49fcb621c284e1db7a33a66333a29e807b31a955cd54221e6f599cf2f2a71d76"
+    },
+    {
+      "bytes": 653,
+      "path": "safe_boot/dumps/p10_1r_telemetry.psv",
+      "sha256": "018ec92a82e8a7135f96f241ada711d5b9e9871c3aed56efbc76bd201163225a"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/P10_3-PREFLIGHT_endpoint_shutdown.fixed.bin",
+      "sha256": "eb1fb77c5d9ab49a6e457a8e20badfa8d290252692c906d20ec36472dc731d47"
+    },
+    {
+      "bytes": 113,
+      "path": "safe_boot/dumps/P10_3-PREFLIGHT_endpoint_shutdown.fixed.p10_1r.psv",
+      "sha256": "e7d171d32e2cbb8689c342efc98d47f4c3dc81c51378ed7199262ad652e3c2f2"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/P10_3-PREFLIGHT_endpoint_shutdown.fixed.p10_2.psv",
+      "sha256": "76b6a03ee3c6e4b257ae4b0400092bb70cbdffeb1447dd574d51af1fefc4218d"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/P10_3-PREFLIGHT_endpoint_shutdown.rotating.bin",
+      "sha256": "f0ea74dac95e773cee9c511cdbc0b6dc90588005554dbe50ace8cc7d26d7730b"
+    },
+    {
+      "bytes": 113,
+      "path": "safe_boot/dumps/P10_3-PREFLIGHT_endpoint_shutdown.rotating.p10_1r.psv",
+      "sha256": "69650a979e18a1b7aa645f027a6342858008ce7ba8f6961634bafeccfb9d60be"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/P10_3-PREFLIGHT_endpoint_shutdown.rotating.p10_2.psv",
+      "sha256": "c0e680cbc8eafc292006d0ae520ca4ea8552035ab2d97c9ad1decf27796898ab"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/P10_3-PREFLIGHT_ready.fixed.bin",
+      "sha256": "563e9cf60b4637c733775e20f1ec3bfa8f2bca6acf462c8b047f7a6e1937c747"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/P10_3-PREFLIGHT_ready.rotating.bin",
+      "sha256": "42d2e71878a2ea2b36143c5ee3d28307f5119197ac32649dbe4d94ef282c59a6"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_dma_reset_idle.fixed.bin",
+      "sha256": "a488f123b9c4f96269c08cc18e3f368edc247aac8009f860b1004f16a5867ac2"
+    },
+    {
+      "bytes": 113,
+      "path": "safe_boot/dumps/p10_3_dma_reset_idle.fixed.p10_1r.psv",
+      "sha256": "addd4bfce7e55934a62e3bd4c30f96b4f5f3b25fb0120e1843299d2df00893b0"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/p10_3_dma_reset_idle.fixed.p10_2.psv",
+      "sha256": "928c235abd67b6cac8a4fa879ff34a96b889946183119d9ef1395acb4162d2ac"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_dma_reset_idle.rotating.bin",
+      "sha256": "4fbcf221ca14b19bf278774f78e3c4bbf3e9eba3763e02eef9f5153414e3c435"
+    },
+    {
+      "bytes": 113,
+      "path": "safe_boot/dumps/p10_3_dma_reset_idle.rotating.p10_1r.psv",
+      "sha256": "0f902d73922acec9198d3d6fc041e52bbdc5bb301b924958246b4a3b00e3bdf2"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/p10_3_dma_reset_idle.rotating.p10_2.psv",
+      "sha256": "0e350b1c3244e47719cc52a80c7137ce45530c88874b7bcc3916a4750c9859b8"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_identity.fixed.bin",
+      "sha256": "a1455cab6ddb204e49bd9fb38720d03581c93404692d2071ed8f392159891a96"
+    },
+    {
+      "bytes": 112,
+      "path": "safe_boot/dumps/p10_3_identity.fixed.p10_1r.psv",
+      "sha256": "b3743e20c2411387603be6e9f8c875d2c50bb394dd6f8b909068577e4d3b069c"
+    },
+    {
+      "bytes": 339,
+      "path": "safe_boot/dumps/p10_3_identity.fixed.p10_2.psv",
+      "sha256": "ab7238261db41378848c74deec3dddb45e46fec3b174cb0292ed655a3f5f8527"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_identity.rotating.bin",
+      "sha256": "2a0f2cb2db2ded9fd758dec1eb004c80eb74e3b5c4f8cda0c18013023f0b33d7"
+    },
+    {
+      "bytes": 112,
+      "path": "safe_boot/dumps/p10_3_identity.rotating.p10_1r.psv",
+      "sha256": "53294016af03fad0caca3ef7e038c8603fbfac4f7d094c10503e812b261ed615"
+    },
+    {
+      "bytes": 339,
+      "path": "safe_boot/dumps/p10_3_identity.rotating.p10_2.psv",
+      "sha256": "6e6bc9ee1f796626c3f14050a47946ead3a229687be5c45fd3a8d30cdee91f6b"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_identity_after_reset.fixed.bin",
+      "sha256": "0601125fc318476c7c738c4f7f0054795c7f1c3f5fc9cbb0b2c78cb7f80d4548"
+    },
+    {
+      "bytes": 113,
+      "path": "safe_boot/dumps/p10_3_identity_after_reset.fixed.p10_1r.psv",
+      "sha256": "adb0072ff8456487e785751c9de740f40911258bcecebce25d65a5d95e08eb58"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/p10_3_identity_after_reset.fixed.p10_2.psv",
+      "sha256": "61692fae1331740e952581917bbad89934003ad0ce6a87323d661e3e77e8433d"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_identity_after_reset.rotating.bin",
+      "sha256": "3d17c5a360cb527dddfefa629f6953223a911a977bfd1a5bb2c7c8849d356a3f"
+    },
+    {
+      "bytes": 113,
+      "path": "safe_boot/dumps/p10_3_identity_after_reset.rotating.p10_1r.psv",
+      "sha256": "e6b1749d1dc04e04b5af4cba9b8d03415828d09d943bd899fdd7726773f4ab3d"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/p10_3_identity_after_reset.rotating.p10_2.psv",
+      "sha256": "507ac6ffd1015bbaffb3a3d7579dc1d0d1a0ab085cf9321a5e75a219a49610f5"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_pl_soft_reset.fixed.bin",
+      "sha256": "b6fca77811649ef020286150f284749294b607f22522bb28cd03ec4d894b85c6"
+    },
+    {
+      "bytes": 113,
+      "path": "safe_boot/dumps/p10_3_pl_soft_reset.fixed.p10_1r.psv",
+      "sha256": "805642acc5ae07653b6a05c13d0ffb476ad733c396a7988ed4fbb7d7178e7fed"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/p10_3_pl_soft_reset.fixed.p10_2.psv",
+      "sha256": "192111295cef677d10814a59db4542b4fb262849f6829145412ebe0c3b3bdf45"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_pl_soft_reset.rotating.bin",
+      "sha256": "ad789c14f0b5741d7b056df3e24cc949cd8d878b60d091ff8ed634a50f05d912"
+    },
+    {
+      "bytes": 113,
+      "path": "safe_boot/dumps/p10_3_pl_soft_reset.rotating.p10_1r.psv",
+      "sha256": "55e6c0ad677553080a4e9ea418297608c674a2a70140489cb50a7bf95e45e759"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/p10_3_pl_soft_reset.rotating.p10_2.psv",
+      "sha256": "e37d810d6ef0f31b3a41aec7c8f3b1c9500220ce88721e4bae1930ca17ff9aa7"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_receive_only_5000ms.fixed.bin",
+      "sha256": "b360405a1fb880ac0e4b6e79ebf0ba5e4ab8ded23e5cb5da6dfe64428dec3359"
+    },
+    {
+      "bytes": 112,
+      "path": "safe_boot/dumps/p10_3_receive_only_5000ms.fixed.p10_1r.psv",
+      "sha256": "b161ec5de822d641d565be6da664246e687a24f6c56af92bab50e94e39dc2f8e"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/p10_3_receive_only_5000ms.fixed.p10_2.psv",
+      "sha256": "86dcb17ea074c96f360227984b73f55d72c570306ea51ff7c3f7f395bafad690"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_receive_only_5000ms.rotating.bin",
+      "sha256": "688ad659efe5a4aa0edc72e7d8eca73e6d31cd1d39f70f126f61a4afdddfb04b"
+    },
+    {
+      "bytes": 112,
+      "path": "safe_boot/dumps/p10_3_receive_only_5000ms.rotating.p10_1r.psv",
+      "sha256": "c9656bcb2e4ae5a0a59ae25e042768d6ab4127cc0e976b1e24ea3e161ce3868b"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/p10_3_receive_only_5000ms.rotating.p10_2.psv",
+      "sha256": "bd1485db026db10543a27955063a9a86a8060e818b23639386e9a267702e4f9e"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_ring32.fixed.bin",
+      "sha256": "494523dced64f8a5f0e9e5f149163250d09a7fcfb7ef6c57e5ec557c667c226d"
+    },
+    {
+      "bytes": 112,
+      "path": "safe_boot/dumps/p10_3_ring32.fixed.p10_1r.psv",
+      "sha256": "924a1748f748565527cc33c04ee4cda7f50fca9d29be328a7364ae4b330c76cd"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/p10_3_ring32.fixed.p10_2.psv",
+      "sha256": "565fe484ee7ec0f82a7767366dbbc4f1ac6d5926bfcb34412c65e606008a9bd3"
+    },
+    {
+      "bytes": 1024,
+      "path": "safe_boot/dumps/p10_3_ring32.rotating.bin",
+      "sha256": "af3777857cd10e0092d51ea195768b7e98668e2e208e401ce4b9b8a8f7a77b79"
+    },
+    {
+      "bytes": 112,
+      "path": "safe_boot/dumps/p10_3_ring32.rotating.p10_1r.psv",
+      "sha256": "b53be49494939e7f6f926cdf95e36a63d70091862451952186a9c93d2fea1dcc"
+    },
+    {
+      "bytes": 344,
+      "path": "safe_boot/dumps/p10_3_ring32.rotating.p10_2.psv",
+      "sha256": "6596500e6a8c9d8e5f169ef44676d3dfc2b3fce3e8c34d1614737751e8f59bf2"
+    },
+    {
+      "bytes": 1429,
+      "path": "safe_boot/dumps/ps_gpio_activity.psv",
+      "sha256": "4028935870dbeb5dddc49e0eaa50d7cc6d4f93d41da3e637fc689ae6e5e13f8e"
+    },
+    {
+      "bytes": 675,
+      "path": "safe_boot/preflight.plan",
+      "sha256": "56cf7e734882d844edfefdd424fef42373d3b6b6b2c4887b5c19ed42c14955ed"
+    },
+    {
+      "bytes": 134055,
+      "path": "safe_boot/stage_summary.json",
+      "sha256": "badba99f66dce0d5dfe6f47d873e8bd2a1f689bb7822756d834b6ce34d85146c"
+    },
+    {
+      "bytes": 2391,
+      "path": "safe_boot/xsdb.result.txt",
+      "sha256": "223f372b8182bd5dfb096447560ba1a0dc4d324f573e2b8799ebfe0f3d54e189"
+    },
+    {
+      "bytes": 0,
+      "path": "safe_boot/xsdb.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2391,
+      "path": "safe_boot/xsdb.stdout.log",
+      "sha256": "223f372b8182bd5dfb096447560ba1a0dc4d324f573e2b8799ebfe0f3d54e189"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/finally_emergency/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/finally_emergency/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3609,
+      "path": "shutdown/finally_emergency/attempt_1.stdout.log",
+      "sha256": "3498e51aa087a98e5602f647820235cbeb1f62b58b834161ce756a02a3a55598"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/initial_shutdown/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/initial_shutdown/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3609,
+      "path": "shutdown/initial_shutdown/attempt_1.stdout.log",
+      "sha256": "8aaae21677674dfaab2506ea533f397f4794cc88f256333ed232602c907e0142"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/preflight_after/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/preflight_after/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3609,
+      "path": "shutdown/preflight_after/attempt_1.stdout.log",
+      "sha256": "f6e8e6f8044b913285e40bfc90669458d914de172c8c3f976392b566a9a200f8"
+    },
+    {
+      "bytes": 1699,
+      "path": "shutdown/preflight_before/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    {
+      "bytes": 0,
+      "path": "shutdown/preflight_before/attempt_1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3609,
+      "path": "shutdown/preflight_before/attempt_1.stdout.log",
+      "sha256": "f7d9669c257d23847ce8fa57171d776600c5c536aca917b1d06c4b06bfed6464"
+    },
+    {
+      "bytes": 18658,
+      "path": "shutdown/summary.json",
+      "sha256": "f27986334dff3017c688ad905c6f3ab4e82f346a8691189e6c8890fa80a860f7"
+    },
+    {
+      "bytes": 185,
+      "path": "shutdown/summary.md",
+      "sha256": "bbfbb5c014c4dd14d54792fbc73c96b46cdab8bef940e88ae0ce0d8561171d17"
+    },
+    {
+      "bytes": 514,
+      "path": "target_identity/summary.json",
+      "sha256": "dd9b0973f25fe4814c019f8275dd55db65feefb601739f84fe032cbf13bdab7b"
+    },
+    {
+      "bytes": 183,
+      "path": "target_identity/summary.md",
+      "sha256": "10443ba738a20baf904f1547449bb8e75875992211b89856aa4e249799d95b1f"
+    },
+    {
+      "bytes": 23677,
+      "path": "wiring/p10_2_ax7020_4lane_wiring.yaml",
+      "sha256": "5b53408fe10c6cf1a04f4e5c88cc18eb5a400a91f987b27ec42c77c2bbec7dad"
+    },
+    {
+      "bytes": 19834,
+      "path": "wiring/P10_2_AX7020_4LANE_WIRING_PROPOSAL.md",
+      "sha256": "5f4a89b818b007af4863534759068dda529fe3c34501569ea4da89a42d8026fc"
+    },
+    {
+      "bytes": 4765,
+      "path": "wiring/p10_3_actual_wiring.yaml",
+      "sha256": "51e65e9f993068a25ed113b9be0648319875eb8b02b8e7b524bba76249346603"
+    },
+    {
+      "bytes": 3012,
+      "path": "wiring/P10_3_AS_WIRED_RECORD.md",
+      "sha256": "c88ab81bd584515cfd1fd18e77df5130b632ccebbcde931e463c5f8ecbdfd574"
+    },
+    {
+      "bytes": 3998,
+      "path": "wiring/p10_3_ax7020_activity_leds.yaml",
+      "sha256": "a525f5c2accda201e33a5f36a31a8e435a2b77c5a7c77afba9b8da851c6efbb1"
+    }
+  ],
+  "generated_at_utc": "2026-08-04T09:35:51+00:00",
+  "run_id": "p10_3_20260804T093403Z_d4eef729_3d8cd207_a8459eef",
+  "schema_version": 1,
+  "status": "INDEX_GENERATED",
+  "test_id": "P10_3-HW-EVIDENCE-MANIFEST"
+}

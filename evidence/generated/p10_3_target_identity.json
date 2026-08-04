@@ -5,17 +5,20 @@
     "rotating": "AX7020-R/JTAG:210512180081"
   },
   "errors": [
-    "XSDB stage/safe-boot PASS marker missing",
-    "exactly one final endpoint-shutdown observation required",
-    "missing immutable case p10_3_identity",
-    "missing immutable case p10_3_receive_only_5000ms",
-    "missing immutable case p10_3_ring32",
-    "missing immutable case p10_3_dma_reset_idle",
-    "missing immutable case p10_3_pl_soft_reset",
-    "missing immutable case p10_3_identity_after_reset",
-    "PS LED safe-boot off state not directly read back",
-    "PS LED endpoint-shutdown off state not directly read back",
-    "preflight identity/reset identity pair missing"
+    "p10_3_identity:fixed:duty configuration mismatch",
+    "p10_3_identity:rotating:duty configuration mismatch",
+    "p10_3_receive_only_5000ms:fixed:duty configuration mismatch",
+    "p10_3_receive_only_5000ms:rotating:duty configuration mismatch",
+    "p10_3_ring32:fixed:duty configuration mismatch",
+    "p10_3_ring32:rotating:duty configuration mismatch",
+    "p10_3_dma_reset_idle:fixed:duty configuration mismatch",
+    "p10_3_dma_reset_idle:rotating:duty configuration mismatch",
+    "p10_3_pl_soft_reset:fixed:duty configuration mismatch",
+    "p10_3_pl_soft_reset:rotating:duty configuration mismatch",
+    "p10_3_identity_after_reset:fixed:duty configuration mismatch",
+    "p10_3_identity_after_reset:rotating:duty configuration mismatch",
+    "P10_3-PREFLIGHT_endpoint_shutdown:fixed:duty configuration mismatch",
+    "P10_3-PREFLIGHT_endpoint_shutdown:rotating:duty configuration mismatch"
   ],
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": true,
@@ -24,20 +27,20 @@
   "movement": false,
   "network_used": false,
   "p11": false,
-  "raw_summary": "evidence/hardware/p10_3/p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef/safe_boot/stage_summary.json",
+  "raw_summary": "evidence/hardware/p10_3/p10_3_20260804T093403Z_d4eef729_3d8cd207_a8459eef/safe_boot/stage_summary.json",
   "realignment": false,
   "rewiring": false,
   "rotation": false,
-  "run_id": "p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef",
+  "run_id": "p10_3_20260804T093403Z_d4eef729_3d8cd207_a8459eef",
   "schema_version": 1,
   "semantics": {
     "ps_led_gpio": {
       "physical_visible_state": "PENDING_DIRECT_USER_OBSERVATION",
       "register_evidence": true,
-      "samples": 0
+      "samples": 18
     },
     "receive_only_ms": 5000,
-    "safe_boot_both": false,
+    "safe_boot_both": true,
     "target_role_binding": {
       "fixed": "210249855178",
       "rotating": "210512180081"
