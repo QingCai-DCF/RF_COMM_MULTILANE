@@ -634,6 +634,7 @@ proc p10_wait_pair_terminal {sequence timeout_ms} {
   set next_telemetry [expr {[clock milliseconds] + 5000}]
   set fixed_done 0; set rotating_done 0
   set fixed_state 0; set rotating_state 0
+  set active_gpio_recorded 0
   while {[clock milliseconds] < $deadline} {
     p10_check_abort
     set now [clock milliseconds]
@@ -645,6 +646,11 @@ proc p10_wait_pair_terminal {sequence timeout_ms} {
     set fixed_state [p10_read32 fixed 0x0002000C]
     set rotating_response [p10_read32 rotating 0x0002001C]
     set rotating_state [p10_read32 rotating 0x0002000C]
+    if {!$active_gpio_recorded &&
+        ($fixed_state == 3 || $rotating_state == 3)} {
+      p10_record_ps_gpio $sequence "${p10_active_case_label}_active"
+      set active_gpio_recorded 1
+    }
     if {$fixed_response == $sequence && $fixed_state in {4 5 6}} { set fixed_done 1 }
     if {$rotating_response == $sequence && $rotating_state in {4 5 6}} { set rotating_done 1 }
     if {$fixed_done && $rotating_done} {
@@ -1020,7 +1026,8 @@ proc p10_execute_ps_service_reset {label reset_role direction lane size object_i
   global p10_command_sequence p10_active_case_label
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
       $reset_role ni {fixed rotating} || $direction ni {0 1} ||
-      $lane < 1 || $lane > $p10_max_lane_mask || $size != 67108864} {
+      $lane < 1 || $lane > $p10_max_lane_mask ||
+      $size ni {262144 67108864}} {
     error "invalid P10.1 PS service-reset vector"
   }
   set sender [p10_sender_role $direction]
@@ -1188,6 +1195,178 @@ proc p10ff_run_formal {label duration_sec} {
   p10_say "P10_3F_FORMAL_END_MS=$finished"
   p10_say "P10_3F_FORMAL_ELAPSED_MS=$elapsed"
   p10_say "P10_3F_FORMAL_RESULT=PASS"
+}
+
+# Repeat exact 256-KiB autonomous commands until the requested aggregate byte
+# count is reached.  This preserves the large-transfer coverage required by
+# P10.3 while honoring the later P10.3F rule that no admitted long-test command
+# may exceed 256 KiB.  A coherent safety snapshot is checked after every
+# command, before the next command is launched.
+proc p10ff_run_total {label total_bytes direction lane unavailable first_object_id} {
+  global p10_max_lane_mask
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      ![string is wideinteger -strict $total_bytes] ||
+      $total_bytes < 262144 || $total_bytes > 67108864 ||
+      ($total_bytes % 262144) != 0 || $direction ni {0 1} ||
+      $lane < 1 || $lane > $p10_max_lane_mask ||
+      ![string is integer -strict $unavailable] ||
+      $unavailable < 0 || $unavailable > $p10_max_lane_mask ||
+      ($lane & ~$unavailable) == 0 ||
+      ![string is wideinteger -strict $first_object_id] ||
+      $first_object_id < 0x60000000 || $first_object_id > 0x7FFFFFFF ||
+      $first_object_id + ($total_bytes / 262144) - 1 > 0x7FFFFFFF} {
+    error "invalid P10.3F bounded aggregate transfer"
+  }
+  set started [clock milliseconds]
+  set remaining $total_bytes
+  set command_count 0
+  set next_object_id $first_object_id
+  set marker_label [string toupper [string map [list "." "_" "-" "_"] $label]]
+  p10_say "P10_3F_TOTAL_START_${marker_label}=$started"
+  while {$remaining > 0} {
+    p10_check_abort
+    set size [expr {min(262144, $remaining)}]
+    set case_label [format "%s_%05d_%d" $label $command_count $size]
+    set d [p10_p101_case $case_label $next_object_id $size $direction $lane \
+        120000 [expr {($command_count % 5) << 8}]]
+    dict set d unavailable $unavailable
+    p10_execute_case $d $label
+    p10ff_assert_safety $case_label
+    incr next_object_id
+    incr command_count
+    incr remaining -$size
+    if {$next_object_id > 0x7FFFFFFF} {
+      error "P10.3F aggregate object-ID range overflow"
+    }
+  }
+  set finished [clock milliseconds]
+  set elapsed [expr {$finished - $started}]
+  p10_say "P10_3F_TOTAL_PASS_${marker_label}=commands:$command_count,bytes:$total_bytes,elapsed_ms:$elapsed,max_command_bytes:262144,unavailable_mask:$unavailable"
+}
+
+proc p10ff_run_window {label duration_sec direction lane} {
+  if {![string is integer -strict $duration_sec] ||
+      $duration_sec < 10 || $duration_sec > 840} {
+    error "invalid P10.3F bounded performance window"
+  }
+  set started [clock milliseconds]
+  p10ff_run_bounded_window $label $duration_sec $direction $lane \
+      [expr {$started + $duration_sec * 1000}]
+}
+
+# Verify that a terminal object failure has already driven both endpoints into
+# the persistent first-fault kill/full-shutdown state.  This procedure reads
+# only status/cause and live final-TX counters; the immutable snapshot/event
+# arrays remain unread until the host archive step.  Repeated counter samples
+# directly prove that no physical TX event advances after kill.
+proc p10ff_verify_terminal_fault {label expected_cause_mask} {
+  global p10_dump_dir p10ff_fault_terminal
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      ![string is wideinteger -strict $expected_cause_mask] ||
+      $expected_cause_mask <= 0 || $expected_cause_mask > 0xFFFFFFFF} {
+    error "invalid P10.3F terminal-fault verification"
+  }
+  set kill_deadline [expr {[clock milliseconds] + 1000}]
+  set kill_ready 0
+  while {[clock milliseconds] < $kill_deadline} {
+    set kill_ready 1
+    foreach role {fixed rotating} {
+      set ff_status [p10_read32 $role 0x43C00D14]
+      if {($ff_status & 0x000001C3) != 0x000001C3} {
+        set kill_ready 0
+      }
+    }
+    if {$kill_ready} { break }
+    after 1
+  }
+  if {!$kill_ready} {
+    error "P10.3F controlled fault did not reach frozen kill/full-shutdown"
+  }
+
+  set before_counts {}
+  foreach role {fixed rotating} {
+    set role_counts {}
+    foreach address {0x43C007E4 0x43C007E8 0x43C007EC 0x43C007F0} {
+      lappend role_counts [p10_read32 $role $address]
+    }
+    dict set before_counts $role $role_counts
+  }
+  after 10
+  set direct_file [file join $p10_dump_dir "${label}.fault_before_forensic_read.psv"]
+  set out [open $direct_file w]
+  puts $out "role|ff_status|fault_cause|effective_tx_enable_mask|physical_tx_counts_before|physical_tx_counts_after"
+  foreach role {fixed rotating} {
+    set ff_status [p10_read32 $role 0x43C00D14]
+    set fault_cause [p10_read32 $role 0x43C00D24]
+    set effective_tx [expr {[p10_read32 $role 0x43C00424] & 0xF}]
+    set after_counts {}
+    foreach address {0x43C007E4 0x43C007E8 0x43C007EC 0x43C007F0} {
+      lappend after_counts [p10_read32 $role $address]
+    }
+    set prior [dict get $before_counts $role]
+    puts $out [join [list $role [format "0x%08X" $ff_status] \
+        [format "0x%08X" $fault_cause] [format "0x%X" $effective_tx] \
+        [join $prior ,] [join $after_counts ,]] "|"]
+    if {($ff_status & 0x000001C3) != 0x000001C3 ||
+        ($fault_cause & $expected_cause_mask) != $expected_cause_mask ||
+        $effective_tx != 0 || $after_counts ne $prior} {
+      close $out
+      error "P10.3F controlled fault pre-read shutdown evidence failed for $role"
+    }
+  }
+  close $out
+  set p10ff_fault_terminal 1
+  p10_say "P10_3F_FAULT_KILL_BEFORE_FORENSIC_READ=PASS"
+  p10_say "P10_3F_FAULT_DIRECT_EVIDENCE=$direct_file"
+}
+
+# Exercise the implemented terminal-object-fault path without forcing a TFDU
+# electrical safety violation.  A valid bounded transfer is first observed on
+# the final physical TX counters; both PL endpoints are then aborted directly.
+# The procedure proves frozen/kill/full-shutdown state and no post-kill TX
+# counter advance before any forensic snapshot or event word is read.  The
+# host runner performs the ordered forensic read and archive only after this
+# procedure returns.
+proc p10ff_abort_fault {label direction lane size} {
+  global p10_command_sequence p10_active_case_label p10_dump_dir
+  global p10_max_lane_mask p10ff_fault_terminal
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] || $direction ni {0 1} ||
+      $lane != $p10_max_lane_mask || $size != 262144} {
+    error "invalid P10.3F controlled terminal-fault vector"
+  }
+  foreach role {fixed rotating} {
+    p10_write32 $role 0x43C00718 0x00000020
+  }
+  after 1
+  incr p10_command_sequence
+  set sequence $p10_command_sequence
+  set p10_active_case_label $label
+  set d [p10_p101_case $label 0x7E000001 $size $direction $lane 120000]
+  set receiver [p10_receiver_role $direction]
+  set sender [p10_sender_role $direction]
+  p10_publish_case $receiver $d $sequence
+  p10_wait_receiver_primed $receiver $d
+  p10_publish_case $sender $d $sequence
+  p10_wait_p101_active $sequence 30000
+
+  set progress_deadline [expr {[clock milliseconds] + 5000}]
+  set sender_progress 0
+  while {[clock milliseconds] < $progress_deadline} {
+    set sender_progress 0
+    foreach address {0x43C007E4 0x43C007E8 0x43C007EC 0x43C007F0} {
+      incr sender_progress [p10_read32 $sender $address]
+    }
+    if {$sender_progress > 0} { break }
+    after 1
+  }
+  if {$sender_progress == 0} {
+    error "P10.3F controlled fault observed no final physical TX event"
+  }
+
+  foreach role {fixed rotating} {
+    p10_write32 $role 0x43C00718 0x00000080
+  }
+  p10ff_verify_terminal_fault $label 0x10
 }
 
 proc p10_run_p101r_timed_case {label duration_sec direction lane size object_id} {
@@ -1537,6 +1716,8 @@ set p10_connected 0
 set p10_active_target_id -1
 set p10_command_sequence 1000
 set p10_active_case_label "boot"
+set p10ff_fault_terminal 0
+set p10ff_expected_fault_stage [expr {$p10_stage eq "P10_3F-STREAMING_FAULT"}]
 file mkdir $p10_dump_dir
 file mkdir [file dirname $p10_result_file]
 set p10_result_handle [open $p10_result_file w]
@@ -1561,7 +1742,7 @@ set rc [catch {
   }
   set p10_1r_stage_ok [regexp {^P10_1R-(PREFLIGHT|ECHO_TAIL|CROSSTALK|PHY_SANITY|ACK_TUNING|PERFORMANCE|STREAMING_64M|FORMAL_30MIN)$} $p10_stage]
   set p10_3_stage_ok [regexp {^P10_3-(PREFLIGHT|MODULE_INTAKE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STREAMING_64M|PERFORMANCE|FORMAL_30MIN|LANE2_RAW_RETEST|LANE3_RAW_RETEST)$} $p10_stage]
-  set p10_3f_stage_ok [regexp {^P10_3F-(STAIRCASE|FORMAL)$} $p10_stage]
+  set p10_3f_stage_ok [regexp {^P10_3F-(PREFLIGHT|MODULE_INTAKE|FAULT_CAPTURE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STAIRCASE|STREAMING_64M|STREAMING_FAULT|PERFORMANCE|FORMAL)$} $p10_stage]
   if {!$p10_1r_stage_ok && !$p10_3_stage_ok && !$p10_3f_stage_ok} {
     error "unsupported P10 XSDB stage"
   }
@@ -1650,6 +1831,44 @@ set rc [catch {
           ![string is integer -strict [lindex $fields 2]] ||
           [lindex $fields 2] != 1800} {
         error "invalid P10.3F formal record"
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P10FF_TOTAL"} {
+      if {[llength $fields] != 7 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          ![string is wideinteger -strict [lindex $fields 2]] ||
+          [lindex $fields 2] < 262144 || [lindex $fields 2] > 67108864 ||
+          ([lindex $fields 2] % 262144) != 0 ||
+          [lindex $fields 3] ni {0 1} ||
+          ![string is integer -strict [lindex $fields 4]] ||
+          [lindex $fields 4] < 1 || [lindex $fields 4] > $p10_max_lane_mask ||
+          ![string is integer -strict [lindex $fields 5]] ||
+          [lindex $fields 5] < 0 || [lindex $fields 5] > $p10_max_lane_mask ||
+          ![string is wideinteger -strict [lindex $fields 6]] ||
+          [lindex $fields 6] < 0x60000000 || [lindex $fields 6] > 0x7FFFFFFF} {
+        error "invalid P10.3F aggregate record"
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P10FF_WINDOW"} {
+      if {[llength $fields] != 5 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          ![string is integer -strict [lindex $fields 2]] ||
+          [lindex $fields 2] < 10 || [lindex $fields 2] > 840 ||
+          [lindex $fields 3] ni {0 1} ||
+          ![string is integer -strict [lindex $fields 4]] ||
+          [lindex $fields 4] != $p10_max_lane_mask} {
+        error "invalid P10.3F window record"
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P10FF_ABORT_FAULT"} {
+      if {[llength $fields] != 5 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          [lindex $fields 2] ni {0 1} ||
+          ![string is integer -strict [lindex $fields 3]] ||
+          [lindex $fields 3] != $p10_max_lane_mask ||
+          ![string is wideinteger -strict [lindex $fields 4]] ||
+          [lindex $fields 4] != 262144} {
+        error "invalid P10.3F controlled-fault record"
       }
       lappend parsed_plan $fields
     } elseif {$kind eq "P101_1PLUS1_PROBE"} {
@@ -1744,11 +1963,19 @@ set rc [catch {
   set p10_echo_matrix_failures {}
   set p10_echo_matrix_directions 0
   foreach record $parsed_plan {
+    if {$p10ff_fault_terminal} {
+      error "P10.3F plan attempted to continue after terminal first fault"
+    }
     set kind [lindex $record 0]
     if {$kind eq "CASE"} {
       p10_execute_case [lindex $record 1]
       if {$p10_campaign_p103f} {
-        p10ff_assert_safety [dict get [lindex $record 1] label]
+        set case_label [dict get [lindex $record 1] label]
+        if {$p10ff_expected_fault_stage} {
+          p10ff_verify_terminal_fault $case_label 0x10
+        } else {
+          p10ff_assert_safety $case_label
+        }
       }
     } elseif {$kind eq "REBOOT"} {
       p10_reboot_role [lindex $record 1] [lindex $record 2]
@@ -1761,12 +1988,25 @@ set rc [catch {
       p10_execute_ps_service_reset [lindex $record 1] [lindex $record 2] \
           [lindex $record 3] [lindex $record 4] [lindex $record 5] \
           [lindex $record 6]
+      if {$p10ff_expected_fault_stage} {
+        p10ff_verify_terminal_fault [lindex $record 1] 0x10
+      }
     } elseif {$kind eq "P101_FORMAL"} {
       p10_run_p101_formal [lindex $record 1] [lindex $record 2]
     } elseif {$kind eq "P10FF_CHECKPOINT"} {
       p10ff_checkpoint [lindex $record 1] [lindex $record 2]
     } elseif {$kind eq "P10FF_FORMAL"} {
       p10ff_run_formal [lindex $record 1] [lindex $record 2]
+    } elseif {$kind eq "P10FF_TOTAL"} {
+      p10ff_run_total [lindex $record 1] [lindex $record 2] \
+          [lindex $record 3] [lindex $record 4] [lindex $record 5] \
+          [lindex $record 6]
+    } elseif {$kind eq "P10FF_WINDOW"} {
+      p10ff_run_window [lindex $record 1] [lindex $record 2] \
+          [lindex $record 3] [lindex $record 4]
+    } elseif {$kind eq "P10FF_ABORT_FAULT"} {
+      p10ff_abort_fault [lindex $record 1] [lindex $record 2] \
+          [lindex $record 3] [lindex $record 4]
     } elseif {$kind eq "P101_1PLUS1_PROBE"} {
       p10_probe_1plus1 [lindex $record 1]
     } elseif {$kind eq "P101R_ECHO_SWEEP"} {
@@ -1785,11 +2025,24 @@ set rc [catch {
     }
   }
 
-  set shutdown_fields [list CASE "${p10_stage}_endpoint_shutdown" 10 0 0 0 0 0 0 0 \
-      8 0 0 0 10000 0 0 0 0 0 0 0 1024 0 0 0 0 0 0]
-  p10_execute_case [p10_case_dict $shutdown_fields]
-  p10_say "P10_ENDPOINT_SHUTDOWN_FIXED=PASS"
-  p10_say "P10_ENDPOINT_SHUTDOWN_ROTATING=PASS"
+  if {$p10ff_expected_fault_stage && !$p10ff_fault_terminal} {
+    error "P10.3F expected-fault stage did not freeze both endpoints"
+  }
+
+  if {$p10ff_fault_terminal} {
+    # The persistent first-fault hold is already the functional full-shutdown
+    # state.  Do not issue another mailbox command before the host archives the
+    # recorder; that command cannot add safety and could obscure causality.
+    p10_say "P10_ENDPOINT_SHUTDOWN_FIXED=PASS"
+    p10_say "P10_ENDPOINT_SHUTDOWN_ROTATING=PASS"
+    p10_say "P10_3F_FAULT_CAPTURE_LEFT_FROZEN=1"
+  } else {
+    set shutdown_fields [list CASE "${p10_stage}_endpoint_shutdown" 10 0 0 0 0 0 0 0 \
+        8 0 0 0 10000 0 0 0 0 0 0 0 1024 0 0 0 0 0 0]
+    p10_execute_case [p10_case_dict $shutdown_fields]
+    p10_say "P10_ENDPOINT_SHUTDOWN_FIXED=PASS"
+    p10_say "P10_ENDPOINT_SHUTDOWN_ROTATING=PASS"
+  }
   if {$p10_echo_matrix_directions > 0} {
     if {$p10_echo_matrix_directions != 4} {
       error "P10.1R echo matrix did not contain exactly four directions"
