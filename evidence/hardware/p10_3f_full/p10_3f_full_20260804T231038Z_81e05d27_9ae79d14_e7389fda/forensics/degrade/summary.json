@@ -1,0 +1,97 @@
+{
+  "archives": [
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda\\forensics\\degrade\\fixed.p10ff.bin",
+      "binary_sha256": "7e837af979a05e1a98f5a154ba3c0366f684f80e77e8b8743024d3108ef0bc3c",
+      "digest_words_little_endian": [
+        "0xF97A837E",
+        "0x1A5EA079",
+        "0x54A1F598",
+        "0x66033CBA",
+        "0x0EF884F6",
+        "0x74B8E877",
+        "0x10D32430",
+        "0x3CBCF08E"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda\\forensics\\degrade\\fixed.p10ff.json",
+      "role": "fixed",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda\\forensics\\degrade\\fixed.p10ff.sha256",
+      "status": "FROZEN"
+    },
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda\\forensics\\degrade\\rotating.p10ff.bin",
+      "binary_sha256": "85cd8ca24a1eebb3c9f8ff352b1b36a5b1078666960fa63cfdd75a68b3840abe",
+      "digest_words_little_endian": [
+        "0xA28CCD85",
+        "0xB3EB1E4A",
+        "0x35FFF8C9",
+        "0xA5361B2B",
+        "0x668607B1",
+        "0x3CA60F96",
+        "0x685AD7FD",
+        "0xBE0A84B3"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda\\forensics\\degrade\\rotating.p10ff.json",
+      "role": "rotating",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda\\forensics\\degrade\\rotating.p10ff.sha256",
+      "status": "FROZEN"
+    }
+  ],
+  "capture_process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\scripts\\hw\\p10_3f_fault_forensics.tcl",
+      "capture",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda\\forensics\\degrade",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\config\\p10_3f_full_current_run_hardware_authorization.json",
+      "p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda",
+      "0x50334646",
+      "0x50334652",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda\\forensics\\degrade\\capture.result.txt"
+    ],
+    "elapsed_seconds": 5.8195353001356125,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda/forensics/degrade/capture.stderr.log",
+    "stdout": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda/forensics/degrade/capture.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 180
+  },
+  "commit_process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\scripts\\hw\\p10_3f_fault_forensics.tcl",
+      "commit",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda\\forensics\\degrade",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\config\\p10_3f_full_current_run_hardware_authorization.json",
+      "p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda",
+      "0x50334646",
+      "0x50334652",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda\\forensics\\degrade\\commit.result.txt",
+      "7e837af979a05e1a98f5a154ba3c0366f684f80e77e8b8743024d3108ef0bc3c",
+      "85cd8ca24a1eebb3c9f8ff352b1b36a5b1078666960fa63cfdd75a68b3840abe"
+    ],
+    "elapsed_seconds": 0.7148948998656124,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda/forensics/degrade/commit.stderr.log",
+    "stdout": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda/forensics/degrade/commit.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 180
+  },
+  "errors": [],
+  "explicit_clear_executed": false,
+  "force_terminal_fault": false,
+  "frozen_roles": [
+    "fixed",
+    "rotating"
+  ],
+  "generated_at_utc": "2026-08-04T23:37:44+00:00",
+  "label": "degrade",
+  "schema_version": 1,
+  "status": "PASS"
+}

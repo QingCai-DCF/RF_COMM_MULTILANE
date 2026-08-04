@@ -1,0 +1,90 @@
+{
+  "artifact_source_commit": "21f159e3fdb250d1a25e9f521e104d6240d9caae",
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/f19329cff2fc2ef01f657ffeab8d84f865ea5a3a20978c522d9d58b0c32a745d/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "f19329cff2fc2ef01f657ffeab8d84f865ea5a3a20978c522d9d58b0c32a745d"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a"
+    },
+    {
+      "bytes": 1307778,
+      "kind": "xsa",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/868212f6a06733cc7979c9977bebd36fb1a3df74431a88d43f8b12612c36e22e/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "868212f6a06733cc7979c9977bebd36fb1a3df74431a88d43f8b12612c36e22e"
+    },
+    {
+      "bytes": 1970179,
+      "kind": "bsp",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/330ebffd7de59df6fa6e6c20e39187885b521a73fba7d85697ed13e81a388600/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "330ebffd7de59df6fa6e6c20e39187885b521a73fba7d85697ed13e81a388600"
+    },
+    {
+      "bytes": 570652,
+      "kind": "elf",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/7ea3542ac346eb567371cd7635ebcb597f10df7b51b756e76ab57e9e03077b40/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "7ea3542ac346eb567371cd7635ebcb597f10df7b51b756e76ab57e9e03077b40"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/91c047f498095e17adf429f60aaa2d4a34459f2e70e902873a2c1b6a188492c9/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "91c047f498095e17adf429f60aaa2d4a34459f2e70e902873a2c1b6a188492c9"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2"
+    },
+    {
+      "bytes": 1301250,
+      "kind": "xsa",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/2ae989275b5bfe25dc9f191064a07badc38cefc6a83390770db3cb9068309229/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2ae989275b5bfe25dc9f191064a07badc38cefc6a83390770db3cb9068309229"
+    },
+    {
+      "bytes": 1970549,
+      "kind": "bsp",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/83e74bd963c23a639fd5dfb28d554e83264b79272ab1c4da4883a98216d586e0/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "83e74bd963c23a639fd5dfb28d554e83264b79272ab1c4da4883a98216d586e0"
+    },
+    {
+      "bytes": 571096,
+      "kind": "elf",
+      "path": "artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/c21f8c9c0d88783b1163d3c20c17ac49ff7b2463511abf9ddf3889f3152d1f7d/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "c21f8c9c0d88783b1163d3c20c17ac49ff7b2463511abf9ddf3889f3152d1f7d"
+    }
+  ],
+  "errors": [],
+  "generated_at_utc": "2026-08-04T23:11:27+00:00",
+  "host_source_commit": "81e05d275ea841abf353dac2f429e3273100ce3e",
+  "schema_version": 1,
+  "status": "PASS"
+}
