@@ -1,0 +1,241 @@
+{
+  "acceptance_eligible": true,
+  "allowed_hardware_stages": [
+    "preflight",
+    "module_intake",
+    "raw_8x8",
+    "per_lane_phy",
+    "two_lane_regression",
+    "four_lane_raw",
+    "mask_matrix",
+    "degrade",
+    "arq_sack",
+    "dma",
+    "streaming_64m",
+    "performance",
+    "formal_30min"
+  ],
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/027159d3b028aa164ed25858c868b70bc014514c0f220af731c82470cbcafc28/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "027159d3b028aa164ed25858c868b70bc014514c0f220af731c82470cbcafc28"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/3d8cd20747f311c9467f4269bc7b10d7d16ffaeca4e5d888a15a8e883dbf5bcd/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "3d8cd20747f311c9467f4269bc7b10d7d16ffaeca4e5d888a15a8e883dbf5bcd"
+    },
+    {
+      "bytes": 1235605,
+      "kind": "xsa",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/50ccc34a1015e008c9e5a2a85f3679f3bd2cf8dd9090d8aab78acc737d0d62b9/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "50ccc34a1015e008c9e5a2a85f3679f3bd2cf8dd9090d8aab78acc737d0d62b9"
+    },
+    {
+      "bytes": 1970211,
+      "kind": "bsp",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/d0c57af71efe5c4a9a984a6b74334414035996fb1352f96931796f1881650cae/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "d0c57af71efe5c4a9a984a6b74334414035996fb1352f96931796f1881650cae"
+    },
+    {
+      "bytes": 567708,
+      "kind": "elf",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/f4c9bd6fa8ae8bbbad3a927f19759c8605c253258613d72271c8aa202e27fa3a/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "f4c9bd6fa8ae8bbbad3a927f19759c8605c253258613d72271c8aa202e27fa3a"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/204d79b7f01fc6b755316c011d09df958996c0ee9628b68492b842ff28e2847d/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "204d79b7f01fc6b755316c011d09df958996c0ee9628b68492b842ff28e2847d"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/a8459eeff9df4373f80112e5cc5892864900eeb95afd6a5bb949008d52262846/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "a8459eeff9df4373f80112e5cc5892864900eeb95afd6a5bb949008d52262846"
+    },
+    {
+      "bytes": 1242318,
+      "kind": "xsa",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/fe43bdb9f85753393c69e8466478a5e598ac7c6b31149b1459b28e55a1a9256c/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "fe43bdb9f85753393c69e8466478a5e598ac7c6b31149b1459b28e55a1a9256c"
+    },
+    {
+      "bytes": 1970419,
+      "kind": "bsp",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/fab469f35477b56fe25d37f0c2c4b94e648b308ea73cc75abd81483e3a1ae1e1/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "fab469f35477b56fe25d37f0c2c4b94e648b308ea73cc75abd81483e3a1ae1e1"
+    },
+    {
+      "bytes": 568156,
+      "kind": "elf",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/fd2edb95306323e4c8796368d3425487994e7471b115b8543d20053f10d6f01a/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "fd2edb95306323e4c8796368d3425487994e7471b115b8543d20053f10d6f01a"
+    }
+  ],
+  "baseline_verification": {
+    "gates": [
+      "p10_1r_verify_existing",
+      "p10_2_verify_existing",
+      "p10_verify_existing",
+      "p8c_safety_verify_existing"
+    ],
+    "status": "PASS"
+  },
+  "branch": "p10.3/ax7020-stationary-4lane-hardware",
+  "build_evidence": {
+    "functional": {
+      "bytes": 22142,
+      "path": "evidence/generated/p10_3_functional_build_summary.json",
+      "sha256": "a2d3303f111262e82ab6014ece8c33e987353bb1a6ac346fd0dc305e02c68298"
+    },
+    "ps_runtime": {
+      "bytes": 10470,
+      "path": "evidence/generated/p10_3_ps_runtime_build_summary.json",
+      "sha256": "42fd5f04fa931be3353db8d55825585d5a8d2d15113642fdf9fa72542d33116f"
+    },
+    "shutdown": {
+      "bytes": 10320,
+      "path": "evidence/generated/p10_3_shutdown_build_summary.json",
+      "sha256": "8f6b6b05b3fea67d0f7951c4af3d4b7f86795b060f20617d0c0ac37cb9ecc7c0"
+    },
+    "xsim": {
+      "bytes": 6778,
+      "path": "evidence/generated/p10_3_xsim/summary.json",
+      "sha256": "ac13417949ec275eb88c92c502391922ec45b512830738a072d1c7f4d4d938fa"
+    }
+  },
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "expected_build_ids": {
+    "fixed": "0x50333446",
+    "rotating": "0x50333452"
+  },
+  "generated_at_utc": "2026-08-04T09:28:17+00:00",
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "hardware_actions_executed": false,
+  "maximum_lane_mask": 15,
+  "maximum_single_formal_run_seconds": 1800,
+  "network_used": false,
+  "no_hardware": true,
+  "offline_gates": {
+    "functional_fixed": {
+      "status": "PASS"
+    },
+    "functional_rotating": {
+      "status": "PASS"
+    },
+    "no_hardware_static_scan": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_no_hardware_calls.py"
+      ],
+      "log": "evidence/generated/p10_3_raw/offline_gates/no_hardware_static_scan.log",
+      "log_bytes": 31,
+      "log_sha256": "22a36fafd58a794d360a159b85137bb06f7478d2aaad089567ffebfbc8d60a5c",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_1r_verify_existing": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_1r_existing.py"
+      ],
+      "log": "evidence/generated/p10_3_raw/offline_gates/p10_1r_verify_existing.log",
+      "log_bytes": 254,
+      "log_sha256": "339e769a2706755be6d3adab99567a0abbe0ae1e464e4e4643d7b2de29f43385",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_2_verify_existing": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_2_existing.py"
+      ],
+      "log": "evidence/generated/p10_3_raw/offline_gates/p10_2_verify_existing.log",
+      "log_bytes": 181,
+      "log_sha256": "181d803018fc436d877ae8daa2d7dedce9e8d7fcfd8103d1c72d21fb4794dbbf",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_3_xsim": {
+      "status": "PASS"
+    },
+    "p10_verify_existing": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_frozen_existing.py"
+      ],
+      "log": "evidence/generated/p10_3_raw/offline_gates/p10_verify_existing.log",
+      "log_bytes": 254,
+      "log_sha256": "140fe3c86000706c3307679c07f6ada728ed4bc9daabaed902b35a58a9297196",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p8c_safety_verify_existing": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p8c_existing.py"
+      ],
+      "log": "evidence/generated/p10_3_raw/offline_gates/p8c_safety_verify_existing.log",
+      "log_bytes": 25,
+      "log_sha256": "42040d278511b798595228f906f6eb59f51b8a15d979941ac27ff3b10ad4861b",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "ps_runtime_fixed": {
+      "status": "PASS"
+    },
+    "ps_runtime_rotating": {
+      "status": "PASS"
+    },
+    "shutdown_fixed": {
+      "status": "PASS"
+    },
+    "shutdown_rotating": {
+      "status": "PASS"
+    },
+    "state_requirements_consistency": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_p8a_consistency.py",
+        "--check"
+      ],
+      "log": "evidence/generated/p10_3_raw/offline_gates/state_requirements_consistency.log",
+      "log_bytes": 183,
+      "log_sha256": "30d94a2fdbbc42c42202d87c3fc5ca3cb4f550daa10c5d8c7a6e65d623cbf933",
+      "returncode": 0,
+      "status": "PASS"
+    }
+  },
+  "schema_version": 1,
+  "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
+  "source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
+  "source_tree_clean": true,
+  "status": "PASS",
+  "test_id": "P10_3-IMMUTABLE-ARTIFACT-FREEZE"
+}

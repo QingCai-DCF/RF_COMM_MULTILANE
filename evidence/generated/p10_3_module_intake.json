@@ -3,7 +3,6 @@
   "errors": [
     "XSDB stage/safe-boot PASS marker missing",
     "exactly one final endpoint-shutdown observation required",
-    "missing immutable case intake_R2_raw_64",
     "missing immutable case intake_R2_raw_1024",
     "missing immutable case intake_F3_raw_64",
     "missing immutable case intake_F3_raw_1024",
@@ -17,6 +16,8 @@
     "missing immutable case intake_F3_prbs_1000f",
     "missing immutable case intake_R3_counter_100f",
     "missing immutable case intake_R3_prbs_1000f",
+    "intake_R2_raw_64:fixed:mailbox terminal mismatch",
+    "intake_R2_raw_64:target remote raw count mismatch",
     "PS LED endpoint-shutdown off state not directly read back",
     "F2:module intake vector incomplete",
     "F3:module intake vector incomplete",
@@ -30,11 +31,11 @@
   "movement": false,
   "network_used": false,
   "p11": false,
-  "raw_summary": "evidence/hardware/p10_3/p10_3_20260804T100428Z_d4eef729_3d8cd207_a8459eef/module_intake/stage_summary.json",
+  "raw_summary": "evidence/hardware/p10_3/p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef/module_intake/stage_summary.json",
   "realignment": false,
   "rewiring": false,
   "rotation": false,
-  "run_id": "p10_3_20260804T100428Z_d4eef729_3d8cd207_a8459eef",
+  "run_id": "p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef",
   "schema_version": 1,
   "semantics": {
     "mode_sd_txd_default": "DIRECT_PL_SAFE_STATE_EVIDENCE",
@@ -47,7 +48,7 @@
     "ps_led_gpio": {
       "physical_visible_state": "PENDING_DIRECT_USER_OBSERVATION",
       "register_evidence": true,
-      "samples": 10
+      "samples": 22
     },
     "receive_only_startup": "PASS"
   },
