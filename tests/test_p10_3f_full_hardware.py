@@ -89,16 +89,76 @@ class P103FFullHardwareTests(unittest.TestCase):
                 if fields[0] == "CASE" and stage not in runner.BASE_STAGES:
                     if int(fields[2], 0) in (3, 13):
                         self.assertLessEqual(
-                            int(fields[9], 0), runner.MAX_COMMAND_BYTES
+                            int(fields[9], 0), runner.INTERNAL_OBJECT_BYTES
                         )
                 if fields[0] == "P10FF_TOTAL":
                     total = int(fields[2], 0)
                     first = int(fields[6], 0)
-                    count = total // runner.MAX_COMMAND_BYTES
+                    count = total // runner.INTERNAL_OBJECT_BYTES
                     ranges.append((first, first + count - 1, f"{stage}:{fields[1]}"))
         ranges.sort()
         for prior, current in zip(ranges, ranges[1:]):
             self.assertLess(prior[1], current[0], f"{prior[2]} / {current[2]}")
+
+    def test_total_is_one_board_autonomous_command_with_internal_objects(self) -> None:
+        plan = runner.build_plans()["two_lane_regression"]
+        rows = []
+        sequence = 1
+        for line in plan.splitlines():
+            fields = line.split()
+            if not fields or fields[0] != "P10FF_TOTAL":
+                continue
+            rows.append({
+                "label": fields[1],
+                "window": fields[1],
+                "sequence": sequence,
+                "command": 13,
+                "direction": int(fields[3], 0),
+                "lane": int(fields[4], 0),
+                "unavailable": int(fields[5], 0),
+                "size": int(fields[2], 0),
+                "object": int(fields[6], 0),
+            })
+            sequence += 1
+        rows.append({
+            "label": "two_lane_regression_endpoint_shutdown",
+            "window": "NA",
+            "sequence": sequence,
+            "command": 10,
+        })
+        self.assertEqual(
+            runner.validate_custom_observation_shape(
+                "two_lane_regression", rows, plan
+            ),
+            [],
+        )
+        rows[0]["size"] = runner.INTERNAL_OBJECT_BYTES
+        self.assertTrue(any(
+            "differs from bounded plan" in error or
+            "aggregate byte count mismatch" in error
+            for error in runner.validate_custom_observation_shape(
+                "two_lane_regression", rows, plan
+            )
+        ))
+
+        tcl = runner.STAGE_TCL.read_text(encoding="utf-8")
+        total_body = tcl[
+            tcl.index("proc p10ff_run_total"):
+            tcl.index("proc p10ff_run_window")
+        ]
+        self.assertEqual(total_body.count("p10_execute_case $d $label"), 1)
+        self.assertNotIn("while {$remaining > 0}", total_body)
+        self.assertIn("$first_object_id $total_bytes", total_body)
+        self.assertIn("p10ff_assert_safety $label", total_body)
+
+        window_body = tcl[
+            tcl.index("proc p10ff_run_bounded_window"):
+            tcl.index("proc p10ff_run_formal")
+        ]
+        for size in runner.WINDOW_COMMAND_BYTES:
+            self.assertIn(str(size), window_body)
+        self.assertIn("p10ff_assert_safety $case_label", window_body)
+        self.assertIn("incr next_object_id $consumed_ids", window_body)
 
     def test_functional_diagnostics_remain_explicitly_bounded_and_snapshotted(self) -> None:
         plans = runner.build_plans()
@@ -180,7 +240,7 @@ class P103FFullHardwareTests(unittest.TestCase):
             runner.validate_custom_observation_shape("staircase_1k", rows, plan),
             [],
         )
-        rows[0]["size"] = runner.MAX_COMMAND_BYTES + 1
+        rows[0]["size"] = runner.INTERNAL_OBJECT_BYTES + 1
         self.assertTrue(any(
             "differs from immutable plan" in error
             for error in runner.validate_custom_observation_shape(
@@ -268,7 +328,9 @@ class P103FFullHardwareTests(unittest.TestCase):
         )
         self.assertEqual(runner.EXPECTED_FIXED_SERIAL, "210249855178")
         self.assertEqual(runner.EXPECTED_ROTATING_SERIAL, "210512180081")
-        self.assertEqual(runner.MAX_COMMAND_BYTES, 256 * 1024)
+        self.assertEqual(runner.INTERNAL_OBJECT_BYTES, 256 * 1024)
+        self.assertEqual(runner.MAX_STAIRCASE_LEVEL_BYTES, 256 * 1024)
+        self.assertEqual(runner.MAX_AGGREGATE_COMMAND_BYTES, 64 * 1024 * 1024)
         self.assertEqual(runner.STAGE_TIMEOUT["formal_30min"], 2100)
         source = Path(runner.__file__).read_text(encoding="utf-8")
         for token in (

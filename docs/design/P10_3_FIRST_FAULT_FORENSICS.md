@@ -72,7 +72,13 @@ Raw evidence consists of:
 
 Long-transfer admission is changed to exact 1, 4, 16, 64, and 256 KiB levels in both directions on lane mask `0xF`. A level-specific checkpoint event is written before traffic. Both directions must complete and their atomic snapshots must pass all safety, integrity, protocol, descriptor, continuous-high, and rolling-duty gates before the next size is admitted.
 
-The 1800-second formal test may start only after the entire staircase passes. It uses at most one 256 KiB autonomous command at a time, keeps the protocol object size at 256 KiB, and checks each completed command before launching another. The maximum formal runtime remains 1800 seconds.
+The 1800-second formal test may start only after the entire staircase passes. The protocol object size remains 256 KiB. After that admission gate, a board-autonomous command may contain multiple internal objects, up to 64 MiB per command. The host is not in the per-object fast path. The PL first-fault monitor remains active throughout each aggregate command and immediately forces TX kill/full shutdown on a detected fault; the host checks a coherent safety snapshot after each completed aggregate command before launching another. The maximum formal runtime remains 1800 seconds.
+
+## Aggregate-command remediation
+
+The immutable run `p10_3f_full_20260804T172941Z_6e8d939a_a6ecd8e6_a5491982` completed 64 MiB in both two-lane directions but measured only about 1.83 and 1.86 Mbit/s. Its host wrapper had expanded each 64-MiB transfer into 256 separate 256-KiB mailbox commands, including host re-prime, resume, dump, and verification overhead at every internal-object boundary. That run remains FAIL evidence and is not reclassified.
+
+The corrected orchestration issues one 64-MiB board-autonomous stream command whose firmware/RTL data path still uses 256-KiB objects, 64-KiB segments, the existing selective-repeat/SACK protocol, the unchanged duty and continuous-high guards, and the unchanged single `GLOBAL_PERMIT` safety path. Timed windows use bounded 1/4/16/64-MiB aggregate commands. This changes host orchestration only; it does not weaken the per-module rolling-duty, pulse-width, permit, SD, Mode, Txd-kill, or first-fault requirements.
 
 ## Evidence limits
 

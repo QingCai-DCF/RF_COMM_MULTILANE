@@ -50,10 +50,19 @@ formal:
   duration_seconds: 1800
   warmup_seconds_total: 120
   measured_seconds_per_direction: 840
-  maximum_command_bytes: 262144
-  object_bytes: 262144
+  internal_object_bytes: 262144
+  maximum_staircase_level_bytes: 262144
+  maximum_board_autonomous_aggregate_command_bytes: 67108864
+  adaptive_window_command_bytes:
+    - 1048576
+    - 4194304
+    - 16777216
+    - 67108864
   lane_mask: '0xF'
-  require_each_command_snapshot_gate: true
+  require_each_staircase_direction_snapshot_gate: true
+  require_each_aggregate_command_snapshot_gate: true
+  continuous_pl_first_fault_kill_during_command: true
+  host_in_per_object_fast_path: false
   maximum_single_run_seconds: 1800
 manual_measurement:
   oscilloscope: OMITTED_BY_USER

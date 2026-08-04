@@ -91,7 +91,13 @@ ALLOWED_EXECUTION_BRANCHES = {
     "codex/p10.3-fault-forensics",
 }
 EXPECTED_BUILD = {"fixed": 0x50334646, "rotating": 0x50334652}
-MAX_COMMAND_BYTES = 262_144
+INTERNAL_OBJECT_BYTES = 262_144
+MAX_STAIRCASE_LEVEL_BYTES = INTERNAL_OBJECT_BYTES
+MAX_AGGREGATE_COMMAND_BYTES = 64 << 20
+WINDOW_COMMAND_BYTES = frozenset((1 << 20, 4 << 20, 16 << 20, 64 << 20))
+# Compatibility name for callers that mean the protocol's internal object,
+# not the size of one board-autonomous aggregate command.
+MAX_COMMAND_BYTES = INTERNAL_OBJECT_BYTES
 MAX_FUNCTIONAL_DIAGNOSTIC_BYTES = 16 << 20
 RUN_RE = re.compile(
     r"^p10_3f_full_(?P<utc>[0-9]{8}T[0-9]{6}Z)_"
@@ -275,6 +281,7 @@ HOST_INPUTS = (
     ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
     ROOT / "docs/hardware/P10_3_AS_WIRED_RECORD.md",
     ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
+    ROOT / "docs/design/P10_3_FIRST_FAULT_FORENSICS.md",
     ROOT / "config/hardware/p10_2_ax7020_4lane_wiring.yaml",
     ROOT / "docs/hardware/P10_2_AX7020_4LANE_WIRING_PROPOSAL.md",
     ROOT / "board_profiles/ax7020_fixed_4lane/profile.yaml",
@@ -458,8 +465,8 @@ class ObjectIds:
     def __init__(self, first: int = 0x60000000) -> None:
         self.next = first
 
-    def allocate(self, total_bytes: int = MAX_COMMAND_BYTES) -> int:
-        count = (total_bytes + MAX_COMMAND_BYTES - 1) // MAX_COMMAND_BYTES
+    def allocate(self, total_bytes: int = INTERNAL_OBJECT_BYTES) -> int:
+        count = (total_bytes + INTERNAL_OBJECT_BYTES - 1) // INTERNAL_OBJECT_BYTES
         first = self.next
         self.next += count
         if self.next > 0x7F000000:
@@ -477,7 +484,9 @@ def total_line(
 ) -> str:
     if not re.fullmatch(r"[A-Za-z0-9_.-]+", label):
         raise ValueError("unsafe P10.3F total label")
-    if total_bytes % MAX_COMMAND_BYTES or not MAX_COMMAND_BYTES <= total_bytes <= 64 << 20:
+    if total_bytes % INTERNAL_OBJECT_BYTES or not (
+        INTERNAL_OBJECT_BYTES <= total_bytes <= MAX_AGGREGATE_COMMAND_BYTES
+    ):
         raise ValueError("invalid P10.3F total byte count")
     first = ids.allocate(total_bytes)
     return (
@@ -497,7 +506,7 @@ def build_plans() -> dict[str, str]:
     )
     plans["two_lane_regression"] = "\n".join(
         (
-            "# Exact aggregate 64-MiB two-lane regression with 256-KiB commands",
+            "# Exact 64-MiB board-autonomous regression; internal objects are 256 KiB",
             total_line("regression64_f2r", 64 << 20, 0, 3, 0, ids),
             total_line("regression64_r2f", 64 << 20, 1, 3, 0, ids),
             "",
@@ -508,7 +517,9 @@ def build_plans() -> dict[str, str]:
     ):
         plans[stage] = forensic.staircase_plan(level, size, tag)
 
-    streaming = ["# Aggregate streaming; every autonomous command is <=256 KiB"]
+    streaming = [
+        "# Board-autonomous 64-MiB commands; internal protocol objects are 256 KiB"
+    ]
     for direction, side in ((0, "f2r"), (1, "r2f")):
         for index in range(1, 4):
             streaming.append(
@@ -527,7 +538,7 @@ def build_plans() -> dict[str, str]:
 
     dma_reset = base.stream_case(
         "stream_dma_reset_sender",
-        size=MAX_COMMAND_BYTES,
+        size=INTERNAL_OBJECT_BYTES,
         direction=0,
         lane=15,
         object_id=ids.allocate(),
@@ -547,7 +558,7 @@ def build_plans() -> dict[str, str]:
     plans["stream_service_reset_fault"] = (
         "# Expected endpoint-service-reset terminal fault; archive before shutdown\n"
         "P101_PSRESET stream_service_reset_receiver fixed 1 15 "
-        f"{MAX_COMMAND_BYTES} {service_id}\n"
+        f"{INTERNAL_OBJECT_BYTES} {service_id}\n"
     )
     plans["stream_service_reset_recovery_64m"] = (
         "# Fresh post-archive/reload 64-MiB service-reset recovery aggregate\n"
@@ -555,7 +566,7 @@ def build_plans() -> dict[str, str]:
         + "\n"
     )
     plans["performance"] = (
-        "# 300-second application windows; internal command size is 256 KiB\n"
+        "# 300-second windows use 1/4/16/64-MiB board-autonomous commands\n"
         "P10FF_WINDOW sustained_300s_f2r 300 0 15\n"
         "P10FF_WINDOW sustained_300s_r2f 300 1 15\n"
     )
@@ -595,7 +606,7 @@ def validate_plans(plans: dict[str, str]) -> list[str]:
                     errors.append(f"{stage}: malformed CASE")
                     continue
                 if command in (3, 13):
-                    if stage not in BASE_STAGES and size > MAX_COMMAND_BYTES:
+                    if stage not in BASE_STAGES and size > INTERNAL_OBJECT_BYTES:
                         errors.append(f"{stage}: bounded CASE exceeds 256 KiB")
                     if stage in BASE_STAGES and size > MAX_FUNCTIONAL_DIAGNOSTIC_BYTES:
                         errors.append(f"{stage}: functional diagnostic exceeds 16 MiB")
@@ -609,10 +620,12 @@ def validate_plans(plans: dict[str, str]) -> list[str]:
                 except ValueError:
                     errors.append(f"{stage}: malformed bounded total")
                     continue
-                if total % MAX_COMMAND_BYTES or not MAX_COMMAND_BYTES <= total <= 64 << 20:
+                if total % INTERNAL_OBJECT_BYTES or not (
+                    INTERNAL_OBJECT_BYTES <= total <= MAX_AGGREGATE_COMMAND_BYTES
+                ):
                     errors.append(f"{stage}: malformed bounded total")
                 else:
-                    count = total // MAX_COMMAND_BYTES
+                    count = total // INTERNAL_OBJECT_BYTES
                     object_ranges.append((first, first + count - 1, f"{stage}:{fields[1]}"))
             if fields[0] in {"P10FF_TOTAL", "P10FF_WINDOW", "P10FF_FORMAL"} and \
                     stage not in BOUNDED_LONG_STAGES:
@@ -901,11 +914,19 @@ def prepare_campaign_freeze() -> dict[str, Any]:
             for stage, text in plans.items()
         },
         "maximum_lane_mask": 15,
-        "maximum_long_test_command_bytes": MAX_COMMAND_BYTES,
+        "internal_stream_object_bytes": INTERNAL_OBJECT_BYTES,
+        "maximum_staircase_level_bytes": MAX_STAIRCASE_LEVEL_BYTES,
+        "maximum_long_test_command_bytes": MAX_AGGREGATE_COMMAND_BYTES,
+        "maximum_board_autonomous_aggregate_command_bytes": (
+            MAX_AGGREGATE_COMMAND_BYTES
+        ),
         "maximum_functional_diagnostic_object_bytes": max(
             functional_case_sizes, default=0
         ),
         "safety_snapshot_after_each_functional_case": True,
+        "safety_snapshot_after_each_staircase_direction": True,
+        "safety_snapshot_after_each_aggregate_command": True,
+        "hardware_first_fault_kill_active_during_each_command": True,
         "maximum_single_formal_run_seconds": 1800,
         "board_binding": {
             "fixed": f"AX7020-F/JTAG:{EXPECTED_FIXED_SERIAL}",
@@ -939,7 +960,10 @@ def prepare_campaign_freeze() -> dict[str, Any]:
         "- Hardware actions executed: `false`",
         "- Current-run hardware authorization: `false`",
         "- Manual instrumentation: `OMITTED_BY_USER`",
-        f"- Maximum long-test command: `{MAX_COMMAND_BYTES}` bytes",
+        f"- Internal protocol object: `{INTERNAL_OBJECT_BYTES}` bytes",
+        f"- Maximum staircase level: `{MAX_STAIRCASE_LEVEL_BYTES}` bytes",
+        f"- Maximum board-autonomous aggregate command: "
+        f"`{MAX_AGGREGATE_COMMAND_BYTES}` bytes",
         f"- Maximum bounded functional diagnostic object: "
         f"`{payload['maximum_functional_diagnostic_object_bytes']}` bytes",
         f"- Stages: `{len(STAGES)}`",
@@ -999,7 +1023,12 @@ def validate_authorization(
         "fixed_jtag_serial": EXPECTED_FIXED_SERIAL,
         "rotating_jtag_serial": EXPECTED_ROTATING_SERIAL,
         "maximum_lane_mask": 15,
-        "maximum_long_test_command_bytes": MAX_COMMAND_BYTES,
+        "internal_stream_object_bytes": INTERNAL_OBJECT_BYTES,
+        "maximum_staircase_level_bytes": MAX_STAIRCASE_LEVEL_BYTES,
+        "maximum_long_test_command_bytes": MAX_AGGREGATE_COMMAND_BYTES,
+        "maximum_board_autonomous_aggregate_command_bytes": (
+            MAX_AGGREGATE_COMMAND_BYTES
+        ),
         "maximum_functional_diagnostic_object_bytes": MAX_FUNCTIONAL_DIAGNOSTIC_BYTES,
         "maximum_single_formal_run_seconds": 1800,
         "ethernet_allowed": False,
@@ -1176,6 +1205,7 @@ def validate_custom_observation_shape(
     def consume_dynamic(
         label: str, direction: int, lane: int, unavailable: int = 0,
         total_bytes: int | None = None, first_object: int | None = None,
+        aggregate: bool = False,
     ) -> None:
         nonlocal cursor
         selected: list[dict[str, Any]] = []
@@ -1186,17 +1216,25 @@ def validate_custom_observation_shape(
             errors.append(f"{label}: dynamic window has no autonomous command")
             return
         for index, row in enumerate(selected):
+            size = row.get("size", 0)
+            valid_size = (
+                size == total_bytes
+                if aggregate
+                else size in WINDOW_COMMAND_BYTES
+            )
             if row.get("command") != 13 or row.get("direction") != direction or \
                     row.get("lane") != lane or row.get("unavailable") != unavailable or \
                     not str(row.get("label", "")).startswith(label) or \
-                    not 1 <= row.get("size", 0) <= MAX_COMMAND_BYTES:
+                    not valid_size:
                 errors.append(f"{label}: dynamic command {index} differs from bounded plan")
-            if first_object is not None and row.get("object") != first_object + index:
+            if first_object is not None and row.get("object") != first_object:
                 errors.append(f"{label}: object-ID sequence mismatch at command {index}")
         if total_bytes is not None:
             if sum(row.get("size", 0) for row in selected) != total_bytes:
                 errors.append(f"{label}: aggregate byte count mismatch")
-            expected_count = (total_bytes + MAX_COMMAND_BYTES - 1) // MAX_COMMAND_BYTES
+            expected_count = 1 if aggregate else (
+                total_bytes + INTERNAL_OBJECT_BYTES - 1
+            ) // INTERNAL_OBJECT_BYTES
             if len(selected) != expected_count:
                 errors.append(f"{label}: aggregate command count mismatch")
 
@@ -1263,7 +1301,7 @@ def validate_custom_observation_shape(
         elif kind == "P10FF_TOTAL":
             consume_dynamic(
                 fields[1], int(fields[3], 0), int(fields[4], 0),
-                int(fields[5], 0), int(fields[2], 0), int(fields[6], 0),
+                int(fields[5], 0), int(fields[2], 0), int(fields[6], 0), True,
             )
         elif kind == "P10FF_WINDOW":
             consume_dynamic(fields[1], int(fields[3], 0), int(fields[4], 0))
@@ -1475,8 +1513,15 @@ def evaluate_custom_stage(
             errors.append("exactly one functional endpoint-shutdown observation required")
         for detail in non_shutdown:
             if detail["command"] in (3, 13):
-                if detail["requested_bytes"] > MAX_COMMAND_BYTES:
-                    errors.append(f"{detail['label']}: command exceeds 256 KiB")
+                maximum = (
+                    MAX_AGGREGATE_COMMAND_BYTES
+                    if stage in BOUNDED_LONG_STAGES and stage not in STAIRCASE_STAGES
+                    else INTERNAL_OBJECT_BYTES
+                )
+                if detail["requested_bytes"] > maximum:
+                    errors.append(
+                        f"{detail['label']}: command exceeds stage maximum {maximum}"
+                    )
                 if not detail.get("recovery_case"):
                     errors.extend(
                         base.data_path_errors(
@@ -1486,7 +1531,15 @@ def evaluate_custom_stage(
         groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for detail in non_shutdown:
             groups[str(detail.get("window", "NA"))].append(detail)
-        semantics = {"maximum_command_bytes": MAX_COMMAND_BYTES}
+        semantics = {
+            "internal_object_bytes": INTERNAL_OBJECT_BYTES,
+            "maximum_staircase_level_bytes": MAX_STAIRCASE_LEVEL_BYTES,
+            "maximum_board_autonomous_aggregate_command_bytes": (
+                MAX_AGGREGATE_COMMAND_BYTES
+            ),
+            "continuous_pl_first_fault_kill_during_command": True,
+            "snapshot_after_each_completed_aggregate_command": True,
+        }
         if stage in STAIRCASE_STAGES:
             expected = dict(zip(STAIRCASE_STAGES, forensic.LEVELS, strict=True))[stage]
             _, size, _ = expected
@@ -1503,7 +1556,7 @@ def evaluate_custom_stage(
                 elapsed_ms = max((item["finished_ms"] for item in selected), default=0) - \
                     min((item["started_ms"] for item in selected), default=0)
                 goodput = committed * 8000 / elapsed_ms if elapsed_ms > 0 else 0
-                if committed != 64 << 20 or len(selected) != 256 or \
+                if committed != 64 << 20 or len(selected) != 1 or \
                         any(item["direction"] != direction or item["lane_mask"] != 3
                             for item in selected) or goodput < 4_000_000:
                     errors.append(f"{label}: bounded 64-MiB regression/goodput failed")
@@ -1517,7 +1570,7 @@ def evaluate_custom_stage(
                     label = f"stream64_{side}_{index}"
                     selected = groups.get(label, [])
                     committed = sum(item["requested_bytes"] for item in selected)
-                    if committed != 64 << 20 or len(selected) != 256 or \
+                    if committed != 64 << 20 or len(selected) != 1 or \
                             any(item["direction"] != direction for item in selected):
                         errors.append(f"{label}: exact bounded 64-MiB aggregate missing")
                     normal[label] = {"bytes": committed, "commands": len(selected)}
@@ -1530,9 +1583,11 @@ def evaluate_custom_stage(
             for label, (expected_bytes, unavailable) in expected_recovery.items():
                 selected = groups.get(label, [])
                 if sum(item["requested_bytes"] for item in selected) != expected_bytes or \
+                        len(selected) != 1 or \
                         any(item["unavailable"] != unavailable for item in selected):
                     errors.append(f"{label}: bounded recovery aggregate failed")
-            semantics.update({"normal_64m": normal, "object_bytes": MAX_COMMAND_BYTES,
+            semantics.update({"normal_64m": normal,
+                              "object_bytes": INTERNAL_OBJECT_BYTES,
                               "old_64m_hardware_result_inherited": False})
         elif stage in STREAM_RECOVERY_STAGES:
             label, direction, fault_stage = {
@@ -1546,7 +1601,7 @@ def evaluate_custom_stage(
             }[stage]
             selected = groups.get(label, [])
             committed = sum(item["requested_bytes"] for item in selected)
-            if committed != 64 << 20 or len(selected) != 256 or any(
+            if committed != 64 << 20 or len(selected) != 1 or any(
                 item["direction"] != direction or item["lane_mask"] != 15
                 for item in selected
             ):
@@ -1594,7 +1649,9 @@ def evaluate_custom_stage(
                                 "direction": direction, "duration_seconds": 840,
                                 "lane_mask": 15})
             semantics.update({"elapsed_ms": elapsed, "formal_windows": windows,
-                              "maximum_command_bytes": MAX_COMMAND_BYTES})
+                              "internal_object_bytes": INTERNAL_OBJECT_BYTES,
+                              "maximum_board_autonomous_aggregate_command_bytes":
+                              MAX_AGGREGATE_COMMAND_BYTES})
 
         gpio_rows, gpio_errors = base.load_ps_gpio(stage_dir)
         errors.extend(gpio_errors)
@@ -2563,7 +2620,12 @@ def main(argv: list[str] | None = None) -> int:
         "realignment": False,
         "rewiring": False,
         "maximum_lane_mask": 15,
-        "maximum_long_test_command_bytes": MAX_COMMAND_BYTES,
+        "internal_stream_object_bytes": INTERNAL_OBJECT_BYTES,
+        "maximum_staircase_level_bytes": MAX_STAIRCASE_LEVEL_BYTES,
+        "maximum_long_test_command_bytes": MAX_AGGREGATE_COMMAND_BYTES,
+        "maximum_board_autonomous_aggregate_command_bytes": (
+            MAX_AGGREGATE_COMMAND_BYTES
+        ),
         "maximum_functional_diagnostic_object_bytes": MAX_FUNCTIONAL_DIAGNOSTIC_BYTES,
         "maximum_single_formal_run_seconds": 1800,
         "manual_instrumentation": "OMITTED_BY_USER",

@@ -1130,6 +1130,8 @@ proc p10ff_run_bounded_window {label duration_sec direction lane absolute_deadli
   set next_object_id $p10ff_window_next_object_id
   set command_count 0
   set active_ms 0
+  set last_case_size 0
+  set last_case_elapsed_ms 0
   set marker_label [string toupper [string map [list "." "_" "-" "_"] $label]]
   p10_say "P10_3F_WINDOW_START_${marker_label}=$started"
   while {[clock milliseconds] < $absolute_deadline} {
@@ -1139,15 +1141,50 @@ proc p10ff_run_bounded_window {label duration_sec direction lane absolute_deadli
       after $remaining
       break
     }
-    set case_label [format "%s_%05d_262144" $label $command_count]
+    set candidate 1048576
+    set candidate_budget 5000
+    if {$remaining > 15000} {
+      set candidate 4194304
+      set candidate_budget 15000
+    }
+    if {$remaining > 45000 && ($command_count % 3) != 0} {
+      set candidate 16777216
+      set candidate_budget 42000
+    }
+    if {$remaining > 150000 && ($command_count % 3) == 2} {
+      set candidate 67108864
+      set candidate_budget 145000
+    }
+    if {$candidate > 1048576 && $last_case_size > 0 &&
+        $last_case_elapsed_ms > 0} {
+      set measured_budget [expr {
+          (($last_case_elapsed_ms * $candidate * 5) +
+           ($last_case_size * 4 - 1)) / ($last_case_size * 4) + 2000}]
+      if {$measured_budget > $candidate_budget} {
+        set candidate_budget $measured_budget
+      }
+    }
+    if {$candidate_budget + 3000 >= $remaining} {
+      set candidate 1048576
+      set candidate_budget 5000
+    }
+    if {$candidate_budget + 1000 >= $remaining} {
+      after $remaining
+      break
+    }
+    set case_label [format "%s_%05d_%d" $label $command_count $candidate]
     set timeout [expr {min(1800000, max(10000, $remaining - 1000))}]
-    set d [p10_p101_case $case_label $next_object_id 262144 \
+    set d [p10_p101_case $case_label $next_object_id $candidate \
         $direction $lane $timeout [expr {($command_count % 5) << 8}]]
     set case_started [clock milliseconds]
     p10_execute_case $d $label
-    incr active_ms [expr {max(1, [clock milliseconds] - $case_started)}]
+    set last_case_elapsed_ms [expr {
+        max(1, [clock milliseconds] - $case_started)}]
+    set last_case_size $candidate
+    incr active_ms $last_case_elapsed_ms
     p10ff_assert_safety $case_label
-    incr next_object_id
+    set consumed_ids [expr {($candidate + 262143) / 262144}]
+    incr next_object_id $consumed_ids
     incr command_count
     if {$next_object_id > 0x7FFFFFFF} {
       error "P10.3F formal object-ID range overflow"
@@ -1169,7 +1206,7 @@ proc p10ff_run_bounded_window {label duration_sec direction lane absolute_deadli
   if {$duration_sec == 840 && $active_ms < 798000} {
     error "P10.3F formal board-active coverage below 95 percent"
   }
-  p10_say "P10_3F_WINDOW_PASS_${marker_label}=cases:$command_count,elapsed_ms:$elapsed,active_ms:$active_ms,max_command_bytes:262144"
+  p10_say "P10_3F_WINDOW_PASS_${marker_label}=cases:$command_count,elapsed_ms:$elapsed,active_ms:$active_ms,max_aggregate_command_bytes:67108864,internal_object_bytes:262144"
 }
 
 proc p10ff_run_formal {label duration_sec} {
@@ -1201,11 +1238,11 @@ proc p10ff_run_formal {label duration_sec} {
   p10_say "P10_3F_FORMAL_RESULT=PASS"
 }
 
-# Repeat exact 256-KiB autonomous commands until the requested aggregate byte
-# count is reached.  This preserves the large-transfer coverage required by
-# P10.3 while honoring the later P10.3F rule that no admitted long-test command
-# may exceed 256 KiB.  A coherent safety snapshot is checked after every
-# command, before the next command is launched.
+# Execute one board-autonomous aggregate command.  The endpoint internally
+# pipelines 256-KiB objects; the host is not in the per-object fast path.  The
+# PL first-fault monitor remains active throughout the command and can kill TX
+# immediately.  A coherent safety snapshot is checked before another aggregate
+# command or stage may be admitted.
 proc p10ff_run_total {label total_bytes direction lane unavailable first_object_id} {
   global p10_max_lane_mask
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
@@ -1222,30 +1259,18 @@ proc p10ff_run_total {label total_bytes direction lane unavailable first_object_
     error "invalid P10.3F bounded aggregate transfer"
   }
   set started [clock milliseconds]
-  set remaining $total_bytes
-  set command_count 0
-  set next_object_id $first_object_id
+  set internal_object_count [expr {$total_bytes / 262144}]
   set marker_label [string toupper [string map [list "." "_" "-" "_"] $label]]
   p10_say "P10_3F_TOTAL_START_${marker_label}=$started"
-  while {$remaining > 0} {
-    p10_check_abort
-    set size [expr {min(262144, $remaining)}]
-    set case_label [format "%s_%05d_%d" $label $command_count $size]
-    set d [p10_p101_case $case_label $next_object_id $size $direction $lane \
-        120000 [expr {($command_count % 5) << 8}]]
-    dict set d unavailable $unavailable
-    p10_execute_case $d $label
-    p10ff_assert_safety $case_label
-    incr next_object_id
-    incr command_count
-    incr remaining -$size
-    if {$next_object_id > 0x7FFFFFFF} {
-      error "P10.3F aggregate object-ID range overflow"
-    }
-  }
+  p10_check_abort
+  set d [p10_p101_case $label $first_object_id $total_bytes $direction $lane \
+      300000]
+  dict set d unavailable $unavailable
+  p10_execute_case $d $label
+  p10ff_assert_safety $label
   set finished [clock milliseconds]
   set elapsed [expr {$finished - $started}]
-  p10_say "P10_3F_TOTAL_PASS_${marker_label}=commands:$command_count,bytes:$total_bytes,elapsed_ms:$elapsed,max_command_bytes:262144,unavailable_mask:$unavailable"
+  p10_say "P10_3F_TOTAL_PASS_${marker_label}=commands:1,bytes:$total_bytes,elapsed_ms:$elapsed,internal_objects:$internal_object_count,internal_object_bytes:262144,max_aggregate_command_bytes:67108864,unavailable_mask:$unavailable"
 }
 
 proc p10ff_run_window {label duration_sec direction lane} {
@@ -1988,10 +2013,9 @@ set rc [catch {
       p10_run_soak [lindex $record 1] [lindex $record 2]
     } elseif {$kind eq "P101_WINDOW"} {
       if {$p10_campaign_p103f} {
-        # P10.3F forbids an autonomous long-test command above 256 KiB.  Keep
-        # the legacy window duration and lane semantics, but execute it through
-        # the bounded implementation that gates a safety snapshot after every
-        # 256-KiB command before admitting the next command.
+        # P10.3F admits aggregate commands only after its staircase.  Each
+        # command still contains 256-KiB protocol objects; PL first-fault kill
+        # is continuous and the host gates the next aggregate on a snapshot.
         p10ff_run_window [lindex $record 1] [lindex $record 2] \
             [lindex $record 3] [lindex $record 4]
       } else {
