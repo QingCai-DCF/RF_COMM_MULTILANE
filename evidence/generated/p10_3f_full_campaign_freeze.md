@@ -2,7 +2,7 @@
 
 - Status: `PASS`
 - Artifact source commit: `5b2e9e8a22038b15308faf435163f1787054f41d`
-- Host source commit: `2b92e074030c6b4d7e01808e9750f6d071feea49`
+- Host source commit: `5d63c69ca92377cec90f0f9694b7e8b15c8cac62`
 - Hardware actions executed: `false`
 - Current-run hardware authorization: `false`
 - Manual instrumentation: `OMITTED_BY_USER`
