@@ -1,5 +1,5 @@
 {
-  "acceptance_eligible": false,
+  "acceptance_eligible": true,
   "allowed_hardware_stages": [
     "preflight",
     "module_intake",
@@ -122,10 +122,7 @@
   },
   "current_run_hardware_authorization": false,
   "eligibility_scope": "NEW_EXACT_CURRENT_RUN_AUTHORIZATION_ONLY",
-  "errors": [
-    "offline readiness gate failed: state_requirements_consistency",
-    "offline readiness gate failed: requirement_traceability"
-  ],
+  "errors": [],
   "forbidden": {
     "ethernet": true,
     "lane_mask_above_0xF": true,
@@ -136,7 +133,7 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-04T18:08:03+00:00",
+  "generated_at_utc": "2026-08-04T18:14:44+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": false,
   "hardware_first_fault_kill_active_during_each_command": true,
@@ -162,9 +159,9 @@
       "sha256": "dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4"
     },
     {
-      "bytes": 293988,
+      "bytes": 293453,
       "path": "config/project_requirements.yaml",
-      "sha256": "bc10f6915b22ee3f95fc128b8c91fe2589eea0c2075143c54522f072bede193c"
+      "sha256": "0a2503c67deb45d99ba875ae57b7306782043acf0ef0a0c4384a699b511d8525"
     },
     {
       "bytes": 65218,
@@ -177,9 +174,14 @@
       "sha256": "ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256"
     },
     {
-      "bytes": 2100,
+      "bytes": 1774,
       "path": "config/performance/p10_3f_staircase.yaml",
-      "sha256": "c7cf23fa47bd0a6494c8d074cc19d86c4820790d6926e47133d37321a95c95f8"
+      "sha256": "069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8"
+    },
+    {
+      "bytes": 1587,
+      "path": "config/performance/p10_3f_full_aggregate_runtime.yaml",
+      "sha256": "a1fd595f97e0f8701ba103867db25b276ece60e47d17e0028af948d925acc572"
     },
     {
       "bytes": 5247,
@@ -272,9 +274,9 @@
       "sha256": "55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40"
     },
     {
-      "bytes": 115560,
+      "bytes": 118777,
       "path": "scripts/run_p10_3f_full_hardware.py",
-      "sha256": "8b3208595bdd660b60a4d3e35bdc138ef204f19033ec2d56cb3983ee1cc161d0"
+      "sha256": "aae168cbb4839c2790298021e8c16c76e9d7495e25cff5f1397d7151fbbb7d2f"
     },
     {
       "bytes": 94067,
@@ -302,42 +304,42 @@
       "sha256": "7ac6113661b1097aa5684a6083f1cac168e40efae42530d5f2d7c59231780d09"
     },
     {
-      "bytes": 16588,
+      "bytes": 16663,
       "path": "tests/test_p10_3f_full_hardware.py",
-      "sha256": "a9e387a762987b4333ace0b512cc39bdc05dcb9f70c63ff0dae38b6e282bbb98"
+      "sha256": "0b496dd80ba9a52de76d5025e3cb9a4632bb11d1d175a95977c551f228be33ea"
     },
     {
       "bytes": 5036,
       "path": "evidence/generated/p10_3_repo_intake.json",
-      "sha256": "2bfb9e2c0dd8050849f2dd5516ba22b6c0344bb37d9b9a21f5dffee55b4a6cc0"
+      "sha256": "210571041388621fd5e8cf7d1d8ac9c49ad93d5db154040a3bf3ebc8b0bc84fd"
     },
     {
       "bytes": 5228,
       "path": "evidence/generated/p10_3_repo_intake.md",
-      "sha256": "ea46bbf135118d2add275884bd1282c23bcb96acb933661dd376456d4ab8f71d"
+      "sha256": "c1cba7ab4ea6cff007b3eda747d17a6fbbdc3d6bf8974afd6843571750e010aa"
     },
     {
       "bytes": 3741,
       "path": "evidence/generated/p10_3_wiring.json",
-      "sha256": "5d35128d4aab07d19d32183b1f5a28e516657478f80a08f54fb6865c0e382332"
+      "sha256": "d2239083939d94eb316d6de30e6f8f9d24dac9c53637c113c04870b6865ea440"
     },
     {
       "bytes": 4014,
       "path": "evidence/generated/p10_3_wiring.md",
-      "sha256": "c1fd7d7818d988c318318eb9a9c5f6c459140c1bbb1d053aee8c00c65c27d5ac"
+      "sha256": "7d5099ce486635e6fb362c9035124dc052239ab7a75ca339194255cee6686399"
     },
     {
       "bytes": 5647,
       "path": "evidence/generated/p10_3_module_inventory.json",
-      "sha256": "9496d90e63384a77f0218d8c01ca3650e89fe5ccd1da733a7e2e1201cdd8dbce"
+      "sha256": "be6995ffec7f9d229e13005bdc4521138d0093a5d646cf58f68b20ded293760f"
     },
     {
       "bytes": 5921,
       "path": "evidence/generated/p10_3_module_inventory.md",
-      "sha256": "56a9f5c1c0fa8740b7bec3b0e84579ece57a77144bab40362d0717b1085d3641"
+      "sha256": "2fb807fee73fe78398ee8ff1583f787f73b37b97900e63ea5804f83092f4efda"
     }
   ],
-  "host_source_commit": "1e33397153408367e4d6aa1e88f64bfdccc564a2",
+  "host_source_commit": "f113566f84ee1362ef2d86e2394bd1d2eb5ef754",
   "internal_stream_object_bytes": 262144,
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_board_autonomous_aggregate_command_bytes": 67108864,
@@ -370,7 +372,7 @@
       "log": {
         "bytes": 133,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
-        "sha256": "36108e224f1dacaa0d14c92e98f4eff6d325b532794d21d2b85529d9cc816ab8"
+        "sha256": "c5263b91ebbc1ceec20b367dc876e46d77435c9bfb5842ebc4f29b800b7adc38"
       },
       "returncode": 0,
       "status": "PASS"
@@ -461,12 +463,12 @@
         "--check"
       ],
       "log": {
-        "bytes": 523,
+        "bytes": 111,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/requirement_traceability.log",
-        "sha256": "60cb45c709b5fe9b6a4160ab4dd83972b023512d7b9c32e4fc9c26f3151b5a56"
+        "sha256": "44dff0fbdfbc50814da41d4e4c416cca8282cafcfa95c15c7f76abf48d6f4110"
       },
-      "returncode": 1,
-      "status": "FAIL"
+      "returncode": 0,
+      "status": "PASS"
     },
     "state_requirements_consistency": {
       "command": [
@@ -475,12 +477,12 @@
         "--check"
       ],
       "log": {
-        "bytes": 735,
+        "bytes": 183,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/state_requirements_consistency.log",
-        "sha256": "fab690c9d27a194edd473f52787d4a782be34ebd292482b199affc86fb3a0dc0"
+        "sha256": "30d94a2fdbbc42c42202d87c3fc5ca3cb4f550daa10c5d8c7a6e65d623cbf933"
       },
-      "returncode": 1,
-      "status": "FAIL"
+      "returncode": 0,
+      "status": "PASS"
     },
     "tcl_syntax_complete": {
       "command": [
@@ -540,6 +542,6 @@
     "streaming_64m": "e425d898d1576f5b751c5c8219532d42268fe922d25dc2ee9aee3f794022f083",
     "two_lane_regression": "90cacb29425008bb52c3393414e3bd4cbdc2a5c34dfb83300886fa51cbc13dda"
   },
-  "status": "FAIL",
+  "status": "PASS",
   "test_id": "P10_3F-FULL-CAMPAIGN-FREEZE"
 }
