@@ -62,6 +62,34 @@ TCLSH = Path(
 HW_ROOT = ROOT / "evidence/hardware/p10_3f_full"
 GENERATED = ROOT / "evidence/generated"
 GENERATED_FINAL = ROOT / "evidence/generated/p10_3f_full_hardware_final_summary.json"
+STATIC_REPO_INTAKE = GENERATED / "p10_3_repo_intake.json"
+STATIC_WIRING_INTAKE = GENERATED / "p10_3_wiring.json"
+STATIC_MODULE_INTAKE = GENERATED / "p10_3_module_inventory.json"
+STATIC_INTAKE_FILES = (
+    STATIC_REPO_INTAKE,
+    GENERATED / "p10_3_repo_intake.md",
+    STATIC_WIRING_INTAKE,
+    GENERATED / "p10_3_wiring.md",
+    STATIC_MODULE_INTAKE,
+    GENERATED / "p10_3_module_inventory.md",
+)
+STATIC_REPO_INPUTS = (
+    ROOT / "PROJECT_CONSTRAINTS.txt",
+    ROOT / "AGENTS.md",
+    ROOT / "config/project_state.json",
+    ROOT / "config/project_requirements.yaml",
+    ROOT / "config/register_map/ir_axi_regs.yaml",
+    WIRING,
+    INVENTORY,
+    ROOT / "board_profiles/ax7020_fixed_4lane/profile.yaml",
+    ROOT / "board_profiles/ax7020_rotating_4lane/profile.yaml",
+    ROOT / "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc",
+    ROOT / "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc",
+)
+ALLOWED_EXECUTION_BRANCHES = {
+    "p10.3/ax7020-stationary-4lane-hardware",
+    "codex/p10.3-fault-forensics",
+}
 EXPECTED_BUILD = {"fixed": 0x50334646, "rotating": 0x50334652}
 MAX_COMMAND_BYTES = 262_144
 MAX_FUNCTIONAL_DIAGNOSTIC_BYTES = 16 << 20
@@ -232,6 +260,7 @@ HOST_INPUTS = (
     ROOT / "board_profiles/ax7020_fixed_4lane/p10_3_runtime_role.h",
     ROOT / "board_profiles/ax7020_rotating_4lane/p10_3_runtime_role.h",
     ROOT / "scripts/archive_p10_fault_forensics.py",
+    ROOT / "scripts/prepare_p10_3_offline.py",
     ROOT / "scripts/run_p10_3_ax7020_4lane_hardware.py",
     ROOT / "scripts/run_p10_3f_staircase_hardware.py",
     Path(__file__).resolve(),
@@ -241,6 +270,7 @@ HOST_INPUTS = (
     TCL_COMPLETE_CHECK,
     ROOT / "scripts/p10_hardware_runtime.py",
     ROOT / "tests/test_p10_3f_full_hardware.py",
+    *STATIC_INTAKE_FILES,
 )
 OFFLINE_GATE_COMMANDS = {
     "tcl_syntax_complete": [
@@ -677,6 +707,81 @@ def validate_artifact_freeze() -> tuple[dict[str, Any], dict[str, Path], list[st
     return freeze, paths, errors
 
 
+def validate_static_intake_evidence() -> list[str]:
+    """Verify that the Goal-named offline intake views match current inputs.
+
+    These files are mutable generated views, not historical raw evidence.  A
+    current-artifact campaign must not silently carry forward module identities,
+    wiring hashes, branches, or canonical-input hashes from an earlier bundle.
+    """
+    errors: list[str] = []
+    try:
+        repo = load_json(STATIC_REPO_INTAKE)
+        wiring_view = load_json(STATIC_WIRING_INTAKE)
+        inventory_view = load_json(STATIC_MODULE_INTAKE)
+        wiring = base.load_yaml(WIRING)
+        inventory = base.load_yaml(INVENTORY)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        return [f"static intake evidence read failed: {exc}"]
+
+    branch = git("branch", "--show-current")
+    if branch not in ALLOWED_EXECUTION_BRANCHES or repo.get("branch") != branch:
+        errors.append("static repository-intake branch is not the current allowed branch")
+    for name, payload in (
+        ("repository", repo),
+        ("wiring", wiring_view),
+        ("module inventory", inventory_view),
+    ):
+        if payload.get("status") != "PASS" or payload.get("no_hardware") is not True or \
+                payload.get("hardware_actions_executed") is not False or \
+                payload.get("current_run_hardware_authorization", False) is not False:
+            errors.append(f"static {name} intake status/safety declaration mismatch")
+        source = str(payload.get("source_commit", ""))
+        if not re.fullmatch(r"[0-9a-f]{40}", source) or not git_is_ancestor(source):
+            errors.append(f"static {name} intake source commit is not an ancestor")
+
+    if repo.get("goal") != metadata(GOAL):
+        errors.append("static repository intake Goal binding is stale")
+    observed_inputs = {
+        item.get("path"): item for item in repo.get("inputs", [])
+        if isinstance(item, dict)
+    }
+    expected_inputs = {rel(path): metadata(path) for path in STATIC_REPO_INPUTS}
+    if observed_inputs != expected_inputs:
+        errors.append("static repository intake canonical-input set/hash is stale")
+
+    expected_wiring = metadata(WIRING)
+    if any((
+        wiring_view.get("canonical_path") != expected_wiring["path"],
+        wiring_view.get("sha256") != expected_wiring["sha256"],
+        wiring_view.get("bytes") != expected_wiring["bytes"],
+        wiring_view.get("module_positions") != wiring.get("module_positions"),
+        wiring_view.get("physical_wiring_completed") is not True,
+    )):
+        errors.append("static actual-wiring intake does not match current canonical wiring")
+
+    expected_inventory = metadata(INVENTORY)
+    installation = inventory.get("p10_3_current_installation", {})
+    active = installation.get("modules", {})
+    observed_binding = {
+        module: item.get("small_board_id")
+        for module, item in active.items() if isinstance(item, dict)
+    }
+    if any((
+        inventory_view.get("canonical_path") != expected_inventory["path"],
+        inventory_view.get("sha256") != expected_inventory["sha256"],
+        inventory_view.get("bytes") != expected_inventory["bytes"],
+        inventory_view.get("active_modules") != active,
+        inventory_view.get("active_module_count") != 8,
+        inventory_view.get("unique_small_board_id_count") != 8,
+        observed_binding != MODULE_BINDING,
+        inventory_view.get("old_f1_active") is not False,
+        inventory_view.get("old_f1_status") != "QUARANTINED_NOT_ACCEPTED",
+    )):
+        errors.append("static module-inventory intake does not match current installation")
+    return errors
+
+
 def prepare_campaign_freeze() -> dict[str, Any]:
     errors: list[str] = []
     initial_dirty = dirty_paths()
@@ -700,6 +805,7 @@ def prepare_campaign_freeze() -> dict[str, Any]:
         errors.extend(wiring_errors)
     except Exception as exc:  # readiness must fail closed on parser regressions.
         errors.append(f"wiring/inventory validation exception: {exc}")
+    errors.extend(validate_static_intake_evidence())
     plans = build_plans()
     errors.extend(validate_plans(plans))
     missing = [rel(path) for path in HOST_INPUTS if not path.is_file()]

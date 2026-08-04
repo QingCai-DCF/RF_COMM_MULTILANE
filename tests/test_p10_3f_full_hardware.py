@@ -255,6 +255,13 @@ class P103FFullHardwareTests(unittest.TestCase):
         self.assertFalse(freeze["old_hardware_pass_inherited"])
         self.assertEqual(len(artifacts), 10)
 
+    def test_goal_named_static_intake_matches_current_canonical_inputs(self) -> None:
+        self.assertEqual(runner.validate_static_intake_evidence(), [])
+        self.assertTrue(set(runner.STATIC_INTAKE_FILES).issubset(runner.HOST_INPUTS))
+        self.assertIn(
+            ROOT / "scripts/prepare_p10_3_offline.py", runner.HOST_INPUTS
+        )
+
     def test_missing_new_authorization_fails_closed_without_hardware(self) -> None:
         result = subprocess.run(
             [

@@ -19,7 +19,10 @@ import run_p10_3_ax7020_4lane_hardware as p103
 
 ROOT = Path(__file__).resolve().parents[1]
 GENERATED = ROOT / "evidence/generated"
-EXPECTED_BRANCH = "p10.3/ax7020-stationary-4lane-hardware"
+ALLOWED_BRANCHES = {
+    "p10.3/ax7020-stationary-4lane-hardware",
+    "codex/p10.3-fault-forensics",
+}
 P10_2_TAG_OBJECT = "bf7c966fcda3e17665c7eae4c0179aec99f020ff"
 P10_2_TAG_TARGET = "08771d6bf9e852c9d34bcff61add1598e120b70a"
 P10_1R_PASS_OBJECT = "c78066152e2d5ac0c673e21896fb90b9a78f7489"
@@ -99,7 +102,7 @@ def main() -> int:
     branch = git("branch", "--show-current")
     head = git("rev-parse", "HEAD")
     initial_status = git("status", "--porcelain")
-    if branch != EXPECTED_BRANCH:
+    if branch not in ALLOWED_BRANCHES:
         errors.append(f"branch mismatch: {branch}")
     if initial_status:
         errors.append("offline intake requires a clean worktree before generating evidence")
