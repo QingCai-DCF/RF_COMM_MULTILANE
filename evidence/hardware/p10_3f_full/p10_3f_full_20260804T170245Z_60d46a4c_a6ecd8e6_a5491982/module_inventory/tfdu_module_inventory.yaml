@@ -1,0 +1,273 @@
+schema_version: 2
+inventory_id: "P10_3_TFDU_EIGHT_ACTIVE_MODULE_INVENTORY"
+status: "LANES0_3_BIDIRECTIONAL_RAW_PASS_PENDING_FULL_P10_3_INTAKE"
+scope: "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE"
+generated_at_utc: "2026-08-03T15:56:34Z"
+current_run_hardware_authorization: false
+hardware_actions_executed: true
+last_updated_at_utc: "2026-08-04T12:45:51Z"
+identity_policy:
+  do_not_guess_unsupplied_marking_or_revision: true
+  accepted_identity_basis: "logical module, user-supplied small-board identifier, endpoint, connector position, and immutable acceptance evidence"
+  old_f1_reuse_forbidden: true
+  old_f1_forbidden_future_aliases: [F2, F3, R2, R3]
+p10_3_current_installation:
+  record_id: "P10_3_USER_DECLARED_EIGHT_MODULE_INSTALLATION_2026_08_04"
+  source: "Direct user statement in the current Codex task"
+  verification: "USER_PROVIDED IDENTITIES; LANES0/1/2 BIDIRECTIONAL RAW CONNECTIVITY PASS; CURRENT F3 B0020/R3 B0025 PAIR PASSED FRESH BIDIRECTIONAL RAW 64/64 AND 1024/1024 IN BOTH DIRECTIONS"
+  active_modules: [F0, F1, F2, F3, R0, R1, R2, R3]
+  lane_pairs: {lane0: "F0-R0", lane1: "F1-R1", lane2: "F2-R2", lane3: "F3-R3"}
+  old_f1_active: false
+  old_f1_status: "QUARANTINED_NOT_ACCEPTED"
+  modules:
+    F0: {small_board_id: "A0019", endpoint: "AX7020-F/JTAG:210249855178", position: "J10-A", inventory_status: "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS"}
+    F1: {small_board_id: "B0012", endpoint: "AX7020-F/JTAG:210249855178", position: "J10-B", inventory_status: "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS"}
+    F2: {small_board_id: "B0001", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-A", inventory_status: "RAW_ACCEPTED_WITH_R2_B0023_PENDING_FRAME_INTAKE"}
+    F3: {small_board_id: "B0020", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-B", inventory_status: "RAW_ACCEPTED_WITH_R3_B0025_PENDING_FRAME_INTAKE"}
+    R0: {small_board_id: "A0010", endpoint: "AX7020-R/JTAG:210512180081", position: "J10-A", inventory_status: "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS"}
+    R1: {small_board_id: "A0017", endpoint: "AX7020-R/JTAG:210512180081", position: "J10-B", inventory_status: "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS"}
+    R2: {small_board_id: "B0023", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-A", inventory_status: "RAW_ACCEPTED_WITH_F2_B0001_PENDING_FRAME_INTAKE"}
+    R3: {small_board_id: "B0025", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-B", inventory_status: "RAW_ACCEPTED_WITH_F3_B0020_PENDING_FRAME_INTAKE"}
+postfreeze_user_provided_small_board_identifiers:
+  record_id: "P10_3_USER_PROVIDED_TFDU_SMALL_BOARD_IDS_2026_08_04"
+  recorded_date_local: "2026-08-04"
+  source: "Direct user statement in the Codex task"
+  verification: "USER_PROVIDED_NOT_INDEPENDENTLY_VERIFIED"
+  interpretation: "Physical TFDU small-board identifier only; not inferred to be a PCB revision, TFDU component marking, manufacturer serial, or lot"
+  frozen_p10_2_tag_unchanged: "p10.2-4lane-offline-ready"
+  modules:
+    F0: {inventory_module_id: "F0", small_board_id: "A0019"}
+    F1: {inventory_module_id: "F1", small_board_id: "B0012"}
+    F2: {inventory_module_id: "F2", small_board_id: "B0001"}
+    F3: {inventory_module_id: "F3", small_board_id: "B0004"}
+    R0: {inventory_module_id: "R0", small_board_id: "A0010"}
+    R1: {inventory_module_id: "R1", small_board_id: "A0017"}
+    R2: {inventory_module_id: "R2", small_board_id: "B0015"}
+    R3: {inventory_module_id: "R3", small_board_id: "B0017"}
+r2_replacement_2026_08_04:
+  record_id: "P10_3_USER_REPORTED_R2_REPLACEMENT_B0015_TO_B0023"
+  recorded_date_local: "2026-08-04"
+  source: "Direct user statement in the current Codex task"
+  user_statement: "R2 B0015 was replaced by new B0023"
+  endpoint: "AX7020-R/JTAG:210512180081"
+  position: "J11-A"
+  logical_module: "R2"
+  removed_small_board_id: "B0015"
+  installed_small_board_id: "B0023"
+  identity_verification: "USER_PROVIDED_NOT_INDEPENDENTLY_VERIFIED"
+  replacement_power_state: "NOT_STATED_BY_USER; NOT_CLAIMED"
+  codex_physical_action: false
+  electronic_status: "BIDIRECTIONAL_RAW_PASS_PENDING_FRAME_INTAKE"
+  raw_retest_run_id: "p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef"
+f3_replacement_2026_08_04:
+  record_id: "P10_3_USER_REPORTED_F3_REPLACEMENT_B0004_TO_B0020"
+  recorded_date_local: "2026-08-04"
+  source: "Direct user statement in the current Codex task"
+  user_statement: "I replaced B0004 with B0020; please quickly retest lane3"
+  endpoint: "AX7020-F/JTAG:210249855178"
+  position: "J11-B"
+  logical_module: "F3"
+  removed_small_board_id: "B0004"
+  installed_small_board_id: "B0020"
+  identity_verification: "USER_PROVIDED_NOT_INDEPENDENTLY_VERIFIED"
+  replacement_power_state: "NOT_STATED_BY_USER; NOT_CLAIMED"
+  codex_physical_action: false
+  electronic_status: "BIDIRECTIONAL_RAW_FAIL_0_OF_64_EACH_DIRECTION"
+  raw_retest_run_id: "p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef"
+  historical_failure_pair: "F3=B0004 / R3=B0017"
+r3_replacement_2026_08_04:
+  record_id: "P10_3_USER_REPORTED_R3_REPLACEMENT_B0017_TO_B0025"
+  recorded_date_local: "2026-08-04"
+  source: "Direct user statement in the current Codex task"
+  user_statement: "I replaced B0017 with B0025; quickly retest raw connectivity only"
+  endpoint: "AX7020-R/JTAG:210512180081"
+  position: "J11-B"
+  logical_module: "R3"
+  removed_small_board_id: "B0017"
+  installed_small_board_id: "B0025"
+  identity_verification: "USER_PROVIDED_NOT_INDEPENDENTLY_VERIFIED"
+  replacement_power_state: "NOT_STATED_BY_USER; NOT_CLAIMED"
+  codex_physical_action: false
+  electronic_status: "BIDIRECTIONAL_RAW_PASS_PENDING_FRAME_INTAKE"
+  raw_retest_run_id: "p10_3_raw_20260804T124121Z_d4eef729_3d8cd207_a8459eef"
+  historical_failure_pair: "F3=B0020 / R3=B0017"
+accepted_baseline:
+  - module_id: "F0"
+    endpoint: "AX7020-F/JTAG:210249855178"
+    position: "J10-A"
+    pcb_revision: "NOT_RECORDED_IN_P10_1R; NOT_GUESSED"
+    tfdu_marking_or_lot: "NOT_RECORDED_IN_P10_1R; NOT_GUESSED"
+    accepted_stage: "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
+    accepted_run_ids: ["p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6", "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6"]
+    p10_3_raw_recheck_run_ids: ["p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef"]
+    p10_3_raw_recheck_status: "BIDIRECTIONAL_RAW_PASS"
+    known_failures: []
+    replacement_history: "No replacement reported."
+    inventory_status: "ACCEPTED_P10_1R"
+  - module_id: "F1"
+    endpoint: "AX7020-F/JTAG:210249855178"
+    position: "J10-B"
+    pcb_revision: "NOT_RECORDED_IN_P10_1R; NOT_GUESSED"
+    tfdu_marking_or_lot: "NOT_RECORDED_IN_P10_1R; NOT_GUESSED"
+    accepted_stage: "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
+    accepted_run_ids: ["p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6", "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6"]
+    p10_3_raw_recheck_run_ids: ["p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef"]
+    p10_3_raw_recheck_status: "BIDIRECTIONAL_RAW_PASS"
+    known_failures: []
+    historical_note: "This active F1 was installed before the accepted 2026-08-03 P10.1R exact-bundle runs; the failed historical module is separately quarantined."
+    inventory_status: "ACCEPTED_P10_1R"
+  - module_id: "R0"
+    endpoint: "AX7020-R/JTAG:210512180081"
+    position: "J10-A"
+    pcb_revision: "NOT_RECORDED_IN_P10_1R; NOT_GUESSED"
+    tfdu_marking_or_lot: "NOT_RECORDED_IN_P10_1R; NOT_GUESSED"
+    accepted_stage: "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
+    accepted_run_ids: ["p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6", "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6"]
+    p10_3_raw_recheck_run_ids: ["p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef"]
+    p10_3_raw_recheck_status: "BIDIRECTIONAL_RAW_PASS"
+    known_failures: []
+    replacement_history: "No replacement reported."
+    inventory_status: "ACCEPTED_P10_1R"
+  - module_id: "R1"
+    endpoint: "AX7020-R/JTAG:210512180081"
+    position: "J10-B"
+    pcb_revision: "NOT_RECORDED_IN_P10_1R; NOT_GUESSED"
+    tfdu_marking_or_lot: "NOT_RECORDED_IN_P10_1R; NOT_GUESSED"
+    accepted_stage: "P10_1R_AX7020_2LANE_SPEED_STABILITY_REMEDIATION"
+    accepted_run_ids: ["p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6", "p10_1r_20260803T123306Z_39df1715_56533798_df0c60f6"]
+    p10_3_raw_recheck_run_ids: ["p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef"]
+    p10_3_raw_recheck_status: "BIDIRECTIONAL_RAW_PASS"
+    known_failures: []
+    replacement_history: "No replacement reported."
+    inventory_status: "ACCEPTED_P10_1R"
+quarantine:
+  - historical_record_id: "FAILED_FIXED_J10_B_MODULE_PRE_P10_1R"
+    historical_endpoint: "AX7020-F/JTAG:210249855178"
+    historical_position: "J10-B"
+    pcb_revision: "NOT_RECORDED; NOT_GUESSED"
+    tfdu_marking_or_lot: "NOT_RECORDED; NOT_GUESSED"
+    accepted_stage: null
+    accepted_run_ids: []
+    known_failures:
+      - "Historical fixed J10-B to rotating J10-B directional connectivity failures before the current F1 was installed."
+      - "Not part of the accepted P10.1R artifact/run bundle."
+    history: "Removed before accepted P10.1R run p10_1r_20260803T103315Z_39df1715_56533798_df0c60f6."
+    inventory_status: "QUARANTINED_NOT_ACCEPTED"
+    eligible_for_future_four_lane_use: false
+  - historical_record_id: "REMOVED_R2_B0015_AFTER_P10_3_RAW_FAILURE"
+    small_board_id: "B0015"
+    historical_endpoint: "AX7020-R/JTAG:210512180081"
+    historical_position: "J11-A"
+    accepted_stage: null
+    accepted_run_ids: []
+    known_failures:
+      - "P10.3 run p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef observed R2-to-F2 raw connectivity failure: F2 received 5 of 64 requested raw events."
+      - "The end-to-end failure did not uniquely attribute the fault to B0015."
+    history: "User reported replacing this R2 small board with new B0023 on 2026-08-04. Historical B0015 evidence remains unchanged."
+    inventory_status: "QUARANTINED_NOT_ACCEPTED"
+    eligible_for_future_four_lane_use: false
+  - historical_record_id: "REMOVED_F3_B0004_AFTER_P10_3_BIDIRECTIONAL_RAW_FAILURE"
+    small_board_id: "B0004"
+    historical_endpoint: "AX7020-F/JTAG:210249855178"
+    historical_position: "J11-B"
+    accepted_stage: null
+    accepted_run_ids: []
+    known_failures:
+      - "F3-to-R3 requested 64 raw events; F3 physical TX count was 64 and R3 raw RX count was 0."
+      - "R3-to-F3 requested 64 raw events; R3 physical TX count was 64 and F3 raw RX count was 0."
+      - "The end-to-end failures did not uniquely attribute the fault to B0004."
+    history: "User reported replacing this F3 small board with B0020 on 2026-08-04. Historical B0004 evidence remains unchanged."
+    inventory_status: "QUARANTINED_NOT_ACCEPTED"
+    eligible_for_future_four_lane_use: false
+  - historical_record_id: "REMOVED_R3_B0017_AFTER_P10_3_BIDIRECTIONAL_RAW_FAILURE"
+    small_board_id: "B0017"
+    historical_endpoint: "AX7020-R/JTAG:210512180081"
+    historical_position: "J11-B"
+    accepted_stage: null
+    accepted_run_ids: []
+    known_failures:
+      - "With F3 B0020, F3-to-R3 requested 64 raw events; F3 physical TX count was 64 and R3 raw RX count was 0."
+      - "With F3 B0020, R3-to-F3 requested 64 raw events; R3 physical TX count was 64 and F3 raw RX count was 0."
+      - "The end-to-end failures did not uniquely attribute the fault to B0017."
+    history: "User reported replacing this R3 small board with B0025 on 2026-08-04. Historical B0017 evidence remains unchanged."
+    inventory_status: "QUARANTINED_NOT_ACCEPTED"
+    eligible_for_future_four_lane_use: false
+pending_electronic_intake:
+  - {module_id: "F2", small_board_id: "B0001", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-A", accepted_stage: "P10_3_LANE2_RAW_CONNECTIVITY_RETEST_ONLY", accepted_run_ids: ["p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef"], raw_recheck_run_ids: ["p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef"], known_failures: [], inventory_status: "RAW_ACCEPTED_PENDING_FRAME_INTAKE", intake_status: ["SAFE_IDLE_PASS", "RAW_BIDIRECTIONAL_PASS", "PENDING_FRAME_ACCEPTANCE", "SHUTDOWN_RECHECK_PASS"]}
+  - {module_id: "F3", small_board_id: "B0020", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-B", accepted_stage: "P10_3_LANE3_B0020_B0025_RAW_CONNECTIVITY_RETEST_ONLY", accepted_run_ids: ["p10_3_raw_20260804T124121Z_d4eef729_3d8cd207_a8459eef"], raw_recheck_run_ids: ["p10_3_raw_20260804T124121Z_d4eef729_3d8cd207_a8459eef"], historical_pair_failure_run_ids: ["p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef"], known_failures: [], inventory_status: "RAW_ACCEPTED_PENDING_FRAME_INTAKE", intake_status: ["SAFE_IDLE_PASS", "RAW_BIDIRECTIONAL_PASS", "PENDING_FRAME_ACCEPTANCE", "SHUTDOWN_RECHECK_PASS"]}
+  - {module_id: "R2", small_board_id: "B0023", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-A", accepted_stage: "P10_3_LANE2_RAW_CONNECTIVITY_RETEST_ONLY", accepted_run_ids: ["p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef"], raw_recheck_run_ids: ["p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef"], known_failures: [], inventory_status: "RAW_ACCEPTED_PENDING_FRAME_INTAKE", intake_status: ["SAFE_IDLE_PASS", "RAW_BIDIRECTIONAL_PASS", "PENDING_FRAME_ACCEPTANCE", "SHUTDOWN_RECHECK_PASS"]}
+  - {module_id: "R3", small_board_id: "B0025", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-B", accepted_stage: "P10_3_LANE3_B0020_B0025_RAW_CONNECTIVITY_RETEST_ONLY", accepted_run_ids: ["p10_3_raw_20260804T124121Z_d4eef729_3d8cd207_a8459eef"], raw_recheck_run_ids: ["p10_3_raw_20260804T124121Z_d4eef729_3d8cd207_a8459eef"], known_failures: [], inventory_status: "RAW_ACCEPTED_PENDING_FRAME_INTAKE", intake_status: ["SAFE_IDLE_PASS", "RAW_BIDIRECTIONAL_PASS", "PENDING_FRAME_ACCEPTANCE", "SHUTDOWN_RECHECK_PASS"]}
+evidence:
+  p10_1r_final: "evidence/generated/p10_1r_final_summary.json"
+  p10_1r_checkpoint: "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4"
+  replacement_source: "config/p10_1r_current_run_hardware_authorization.json:pre_run_user_hardware_change"
+  p10_3_lane2_raw_retest:
+    status: "PASS"
+    evidence_class: "RAW_PHYSICAL_ONLY"
+    run_id: "p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef"
+    generated_summary: "evidence/generated/p10_3_lane2_raw_connectivity_retest.json"
+    F2_to_R2: {raw_64: "64/64 PASS", raw_1024: "1024/1024 PASS"}
+    R2_to_F2: {raw_64: "64/64 PASS", raw_1024: "1024/1024 PASS"}
+    f2_to_r2_stage_summary: {path: "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef/f2_to_r2/stage_summary.json", sha256: "650655be36ddc78ad390000d2fc3a6cd94462d4ba7c73e7aab99c5a147c4ad43"}
+    r2_to_f2_stage_summary: {path: "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef/r2_to_f2/stage_summary.json", sha256: "db96c52db135b4f00444c06d81cc70c795c0dac055c68d7b3a965e6f4bdcb38b"}
+    orchestrator_result: {path: "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json", sha256: "590f93b73a5d94c9ceb5413102ec4bfe56633c44f85fde5e381f6538b7adf6e8"}
+    evidence_manifest: {path: "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef/final/run_evidence_sha256_manifest.json", sha256: "e5ebb1bbbd417c1f13081570194c99ef2b6c03127a409630ddd6f4a49b2b5033"}
+    scope_boundary: "Raw lane2 physical-connectivity only; full module frame intake and all downstream P10.3 stages remain pending."
+  p10_3_all_lane_raw_recheck:
+    status: "FAIL_AT_LANE3"
+    evidence_class: "RAW_PHYSICAL_ONLY"
+    run_id: "p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef"
+    lane0: {F0_to_R0: "64/64 and 1024/1024 PASS", R0_to_F0: "64/64 and 1024/1024 PASS"}
+    lane1: {F1_to_R1: "64/64 and 1024/1024 PASS", R1_to_F1: "64/64 and 1024/1024 PASS"}
+    lane2: {F2_to_R2: "64/64 and 1024/1024 PASS", R2_to_F2: "64/64 and 1024/1024 PASS"}
+    lane3: {F3_to_R3: "0/64 FAIL (sender physical TX 64)", R3_to_F3: "0/64 FAIL (sender physical TX 64)"}
+    module_intake_summary: {path: "evidence/hardware/p10_3/p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef/module_intake/stage_summary.json", sha256: "62e017d5b3da6e98ba510385ae2c9707c6fd5eefa9ccc2735c8ac71e1c69bacd"}
+    orchestrator_result: {path: "evidence/hardware/p10_3/p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json", sha256: "4f6c68131d6b0a46a18ed25879b60cf8cdf074cc3ad09d5dbe6ab25af833d6d0"}
+    evidence_manifest: {path: "evidence/hardware/p10_3/p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef/final/run_evidence_sha256_manifest.json", sha256: "0df9db7809c16ed67628f2b087f668804b926b105c7811d233852115248beac8"}
+    shutdown: {fixed: "PASS", rotating: "PASS", checkpoints: 6}
+    scope_boundary: "Raw physical-connectivity evidence only; lane3 failure blocks framed intake and every downstream P10.3 acceptance stage."
+  p10_3_lane3_reverse_raw_diagnostic:
+    status: "FAIL"
+    evidence_class: "RAW_PHYSICAL_ONLY"
+    run_id: "p10_3_raw_20260804T121239Z_d4eef729_3d8cd207_a8459eef"
+    direction: "R3_TO_F3"
+    result: "0/64 FAIL; R3 final-path physical TX count 64; F3 raw RX count 0"
+    tx_high_max_cycles: 8
+    rolling_duty_high_max_cycles: 504
+    safety_fault_masks: {fixed: 0, rotating: 0}
+    stage_summary: {path: "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T121239Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/stage_summary.json", sha256: "eb5394d4349acfc936c5d858dcd8673c7d04ba15bb44120b7973ea5a784eb6e2"}
+    orchestrator_result: {path: "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T121239Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json", sha256: "82be85a6e3b8ae78a09d0f5487d34f821a035162b3e5c924af95bfd70f6fdef8"}
+    evidence_manifest: {path: "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T121239Z_d4eef729_3d8cd207_a8459eef/final/run_evidence_sha256_manifest.json", sha256: "1864920a9d9708b3754a60b2ff836598f4ad514fdd0c0abcae619bd0d0892a64"}
+    shutdown: {fixed: "PASS", rotating: "PASS", checkpoints: 5}
+    opposite_direction_preserved: {run_id: "p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef", result: "F3_TO_R3 0/64 FAIL; sender physical TX 64"}
+    interpretation: "Both lane3 physical directions are blocked. This does not uniquely attribute the fault to F3, R3, power, wiring, or optical alignment; physical review is required before campaign continuation."
+  p10_3_lane3_b0020_bidirectional_raw_retest:
+    status: "FAIL"
+    evidence_class: "RAW_PHYSICAL_ONLY"
+    run_id: "p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef"
+    active_pair: {F3: "B0020", R3: "B0017"}
+    F3_to_R3: {raw_64: "0/64 FAIL; F3 final-path physical TX count 64", raw_1024: "NOT_RUN_FAIL_CLOSED"}
+    R3_to_F3: {raw_64: "0/64 FAIL; R3 final-path physical TX count 64", raw_1024: "NOT_RUN_FAIL_CLOSED"}
+    tx_high_max_cycles: 8
+    tx_high_max_ns_at_64mhz: 125
+    rolling_duty_high_max_cycles: 504
+    rolling_duty_percent: 0.7875
+    safety_fault_masks: {fixed: 0, rotating: 0}
+    f3_to_r3_stage_summary: {path: "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/f3_to_r3/stage_summary.json", sha256: "ba957438350e176721767b68824531009d268dd2a982abb58110cb7663582667"}
+    r3_to_f3_stage_summary: {path: "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/stage_summary.json", sha256: "54485ac3d60e7be01f74082001b809b0329a6dda91bf9174fad55611507c1df7"}
+    orchestrator_result: {path: "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json", sha256: "198356a522ff5f72ed89e044d461b58b74c25a14d6e8ddef92f7ae38ad0dd75b"}
+    evidence_manifest: {path: "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/final/run_evidence_sha256_manifest.json", sha256: "101bac05ca0dd8e12d53016b0126996f3471a703ac7b0a3b7e0d36ef47b6d1fb"}
+    shutdown: {fixed: "PASS", rotating: "PASS", checkpoints: 7}
+    prior_B0004_failures_preserved: true
+    interpretation: "Replacing F3 B0004 with B0020 did not restore lane3. B0004 alone cannot explain the current failure, but this result does not uniquely identify R3, B0020, power, J11-B wiring, FPGA I/O, or optical alignment as the cause."
+  p10_3_lane3_b0020_b0025_bidirectional_raw_retest:
+    status: "PASS"
+    evidence_class: "RAW_PHYSICAL_ONLY"
+    run_id: "p10_3_raw_20260804T124121Z_d4eef729_3d8cd207_a8459eef"
+    active_pair: {F3: "B0020", R3: "B0025"}
+    F3_to_R3: {raw_64: "64/64 PASS", raw_1024: "1024/1024 PASS"}
+    R3_to_F3: {raw_64: "64/64 PASS", raw_1024: "1024/1024 PASS"}
+    compact_summary: {path: "evidence/generated/p10_3_lane3_b0020_b0025_raw_compact.json", sha256: "0cf2df3a14203db8f790351feeddb52664a03d6bfb295e564668fd2977a61649"}
+    raw_archive: {path: "evidence/hardware/p10_3_raw_compact/p10_3_raw_20260804T124121Z_d4eef729_3d8cd207_a8459eef.zip", sha256: "052ce5c9a24eebebc33f48872ed356a0d5785234382eb49abab980b6eb5a315f", inner_manifest_files: 103, inner_manifest_verification: "PASS"}
+    shutdown: {fixed: "PASS", rotating: "PASS", checkpoints: 7}
+    scope_boundary: "Current lane3 pair raw physical connectivity only; framed intake and downstream P10.3 acceptance remain pending."

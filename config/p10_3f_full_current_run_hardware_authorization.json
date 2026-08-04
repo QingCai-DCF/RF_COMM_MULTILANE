@@ -1,45 +1,5 @@
 {
-  "schema_version": 1,
-  "authorization_id": "P10_3F-FULL-CURRENT-RUN-IMMUTABLE",
-  "status": "AUTHORIZED_CURRENT_RUN",
-  "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_WITH_FIRST_FAULT_FORENSICS",
-  "run_id": "p10_3f_full_20260804T170245Z_60d46a4c_a6ecd8e6_a5491982",
-  "authorized": true,
-  "consumed": false,
-  "current_run_hardware_authorization": true,
-  "no_hardware": false,
-  "authorization_created_at_utc": "2026-08-04T17:02:45Z",
-  "user_authorization_received_at_utc": "2026-08-04T17:02:45Z",
-  "user_authorization_statement": "我授权所有需要的操作，继续",
-  "user_authorization_context": "Direct response to the immediately preceding exact current-run authorization request for campaign freeze SHA256 65c257374bb8fdd7101695839a6d135f6fb72d26d7adfad58b2b21bc4980206c; interpreted only within frozen P10.3/P10.3F scope and its prohibitions.",
-  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
-  "campaign_freeze_path": "evidence/generated/p10_3f_full_campaign_freeze.json",
-  "campaign_freeze_sha256": "65c257374bb8fdd7101695839a6d135f6fb72d26d7adfad58b2b21bc4980206c",
-  "artifact_source_commit": "5b2e9e8a22038b15308faf435163f1787054f41d",
-  "host_source_commit": "60d46a4c363f03428a2523073f2808fbcc9ae668",
-  "fixed_jtag_serial": "210249855178",
-  "rotating_jtag_serial": "210512180081",
-  "board_binding": {
-    "fixed": "AX7020-F/JTAG:210249855178",
-    "rotating": "AX7020-R/JTAG:210512180081"
-  },
-  "module_binding": {
-    "F0": "A0019",
-    "F1": "B0012",
-    "F2": "B0001",
-    "F3": "B0020",
-    "R0": "A0010",
-    "R1": "A0017",
-    "R2": "B0023",
-    "R3": "B0025"
-  },
   "actual_wiring_sha256": "551f518f476deaa9219b826f2985d08baab5e953d92a4f734bb28ba6613bf2a1",
-  "module_inventory_sha256": "85d915625b2f43fc5640f15a91b7ec1587615261bccb68568b22173d6ed21f6b",
-  "fixed_profile_sha256": "6c05c738333f80836d141a833e45592342b3d83b62369d6eb91d5ba3f907c571",
-  "rotating_profile_sha256": "b79b87c90b56d442e3b3db228a49523aea72bd730a200a13d82a0e31d44560e8",
-  "fixed_xdc_sha256": "1360cf7871a635e0160b30074e12dc9b8c09aaeea046447d0e8e7357a99fb5f1",
-  "rotating_xdc_sha256": "95a049709b4ffe84156be3bce6653f0f7b8757750b9a30f543415eb290631b9b",
-  "register_map_sha256": "36ce57e7409865fe0dddda1e8a863647a4bd652e0ee612156ec27bc75072e5ae",
   "allowed_stages": [
     "preflight",
     "module_intake",
@@ -65,23 +25,7 @@
     "performance",
     "formal_30min"
   ],
-  "maximum_lane_mask": 15,
-  "maximum_long_test_command_bytes": 262144,
-  "maximum_functional_diagnostic_object_bytes": 16777216,
-  "maximum_single_formal_run_seconds": 1800,
-  "ethernet_allowed": false,
-  "movement_rotation_realignment_or_rewiring_allowed": false,
-  "two_hour_test_allowed": false,
-  "p11_allowed": false,
-  "manual_instrumentation": "OMITTED_BY_USER",
-  "retry_policy": "Goal-bounded stage execution; every new run_id requires its own immutable authorization record and shutdown-before.",
-  "shutdown_policy": {
-    "archive_before_independent_shutdown": true,
-    "clear_frozen_capture_before_shutdown_program": false,
-    "shutdown_before_every_stage": true,
-    "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
-    "verify_both_shutdown_markers": true
-  },
+  "artifact_source_commit": "5b2e9e8a22038b15308faf435163f1787054f41d",
   "artifacts": [
     {
       "bytes": 369449,
@@ -164,6 +108,38 @@
       "sha256": "6a5cce6f21fa2800292c1869a009ff50c9adeaec5571a1f2a649fc8e1c1a3e7b"
     }
   ],
+  "authorization_boundaries": {
+    "archive_before_independent_shutdown": true,
+    "maximum_lane_mask": 15,
+    "network_used": false,
+    "no_hardware_movement": true,
+    "no_product_final_acceptance": true,
+    "no_realignment": true,
+    "no_rewiring": true,
+    "no_rotation": true,
+    "no_two_hour_test": true,
+    "p11_not_started": true,
+    "shutdown_before_every_stage": true,
+    "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
+    "verify_both_shutdown_markers": true
+  },
+  "authorization_created_at_utc": "2026-08-04T17:02:45Z",
+  "authorization_id": "P10_3F-FULL-CURRENT-RUN-IMMUTABLE",
+  "authorized": true,
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "campaign_freeze_path": "evidence/generated/p10_3f_full_campaign_freeze.json",
+  "campaign_freeze_sha256": "65c257374bb8fdd7101695839a6d135f6fb72d26d7adfad58b2b21bc4980206c",
+  "consumed": true,
+  "consumed_at_utc": "2026-08-04T17:05:33+00:00",
+  "current_run_hardware_authorization": false,
+  "ethernet_allowed": false,
+  "fixed_jtag_serial": "210249855178",
+  "fixed_profile_sha256": "6c05c738333f80836d141a833e45592342b3d83b62369d6eb91d5ba3f907c571",
+  "fixed_xdc_sha256": "1360cf7871a635e0160b30074e12dc9b8c09aaeea046447d0e8e7357a99fb5f1",
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "host_inputs": [
     {
       "bytes": 31921,
@@ -356,19 +332,45 @@
       "sha256": "56a9f5c1c0fa8740b7bec3b0e84579ece57a77144bab40362d0717b1085d3641"
     }
   ],
-  "authorization_boundaries": {
-    "network_used": false,
-    "maximum_lane_mask": 15,
-    "no_hardware_movement": true,
-    "no_rotation": true,
-    "no_realignment": true,
-    "no_rewiring": true,
-    "no_two_hour_test": true,
-    "p11_not_started": true,
-    "no_product_final_acceptance": true,
-    "shutdown_before_every_stage": true,
+  "host_source_commit": "60d46a4c363f03428a2523073f2808fbcc9ae668",
+  "manual_instrumentation": "OMITTED_BY_USER",
+  "maximum_functional_diagnostic_object_bytes": 16777216,
+  "maximum_lane_mask": 15,
+  "maximum_long_test_command_bytes": 262144,
+  "maximum_single_formal_run_seconds": 1800,
+  "module_binding": {
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0001",
+    "F3": "B0020",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0023",
+    "R3": "B0025"
+  },
+  "module_inventory_sha256": "85d915625b2f43fc5640f15a91b7ec1587615261bccb68568b22173d6ed21f6b",
+  "movement_rotation_realignment_or_rewiring_allowed": false,
+  "no_hardware": false,
+  "p11_allowed": false,
+  "register_map_sha256": "36ce57e7409865fe0dddda1e8a863647a4bd652e0ee612156ec27bc75072e5ae",
+  "result": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T170245Z_60d46a4c_a6ecd8e6_a5491982/final/orchestrator_result.json",
+  "retry_policy": "Goal-bounded stage execution; every new run_id requires its own immutable authorization record and shutdown-before.",
+  "rotating_jtag_serial": "210512180081",
+  "rotating_profile_sha256": "b79b87c90b56d442e3b3db228a49523aea72bd730a200a13d82a0e31d44560e8",
+  "rotating_xdc_sha256": "95a049709b4ffe84156be3bce6653f0f7b8757750b9a30f543415eb290631b9b",
+  "run_id": "p10_3f_full_20260804T170245Z_60d46a4c_a6ecd8e6_a5491982",
+  "schema_version": 1,
+  "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_WITH_FIRST_FAULT_FORENSICS",
+  "shutdown_policy": {
     "archive_before_independent_shutdown": true,
+    "clear_frozen_capture_before_shutdown_program": false,
+    "shutdown_before_every_stage": true,
     "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
     "verify_both_shutdown_markers": true
-  }
+  },
+  "status": "CONSUMED_AFTER_P10_3F_FULL_FAIL",
+  "two_hour_test_allowed": false,
+  "user_authorization_context": "Direct response to the immediately preceding exact current-run authorization request for campaign freeze SHA256 65c257374bb8fdd7101695839a6d135f6fb72d26d7adfad58b2b21bc4980206c; interpreted only within frozen P10.3/P10.3F scope and its prohibitions.",
+  "user_authorization_received_at_utc": "2026-08-04T17:02:45Z",
+  "user_authorization_statement": "我授权所有需要的操作，继续"
 }

@@ -1,7 +1,7 @@
 # P10.3 current-run hardware authorization
 
-Status: `CONSUMED_AFTER_P10_3_FAIL`
+Status: `CONSUMED_AFTER_P10_3F_FULL_FAIL`
 
-Run ID: `p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef`
+Run ID: `p10_3f_full_20260804T170245Z_60d46a4c_a6ecd8e6_a5491982`
 
-The adjacent machine-readable JSON and its raw-evidence paths are authoritative.
+The adjacent machine-readable JSON and its hashed raw-evidence references are authoritative.
