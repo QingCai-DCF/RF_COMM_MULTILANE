@@ -27,7 +27,7 @@
   ],
   "artifact_bundle_sha256": "883c044cce75e9d802bd268403e85684d558b3f480c5f67ecaa16a51d4c99ecd",
   "artifact_freeze": "evidence/generated/p10_3_artifact_freeze.json",
-  "artifact_freeze_commit": "23c71c9cd5ecf371164b3083e2cb0aeede7ed318",
+  "artifact_freeze_commit": "11cffb891b439dcd16763bd2c407a159f18f5179",
   "artifact_freeze_sha256": "80f713cc13de26494fa702069bb96a41dfe489f1c6ac5899687fedcb8c2473d7",
   "artifacts": [
     {
@@ -112,15 +112,14 @@
     }
   ],
   "authorization_id": "P10_3-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "23c71c9cd5ecf371164b3083e2cb0aeede7ed318",
+  "authorization_parent_commit": "11cffb891b439dcd16763bd2c407a159f18f5179",
   "board_binding": {
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
   "branch": "p10.3/ax7020-stationary-4lane-hardware",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-04T09:32:05+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "external_goal": {
     "bytes": 31921,
     "path": "C:\\Users\\user\\Downloads\\P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
@@ -136,7 +135,7 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-04T09:29:54+00:00",
+  "generated_at_utc": "2026-08-04T09:34:03+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_movement": false,
   "inputs": {
@@ -218,7 +217,7 @@
     },
     "scripts/hw/p10_dual_xsdb_stage.tcl": {
       "bytes": 73420,
-      "sha256": "7f717c0eb94e3b5fbc93aa58bf175401327cd479c7a8817f63fe74848429436a"
+      "sha256": "5008ec6dde5739ee55dba9f7dd9c2ec58455772de5254c6614613ffdf905b6d3"
     },
     "scripts/hw/p10_program_dual_shutdown.tcl": {
       "bytes": 8112,
@@ -350,7 +349,6 @@
     "two_lane_regression": "72b75b23f7e4e83278b78e1b6d9223c2f3de48cdd92b84fdcb622eabe57e7c0b"
   },
   "realignment": false,
-  "result": "evidence/hardware/p10_3/p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json",
   "retry_limits": {
     "diagnostic_run_ids_per_stage": 2,
     "jtag_connect": 3,
@@ -358,7 +356,7 @@
   },
   "rewiring": false,
   "rotation": false,
-  "run_id": "p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef",
+  "run_id": "p10_3_20260804T093403Z_d4eef729_3d8cd207_a8459eef",
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
   "shutdown_policy": {
@@ -371,7 +369,7 @@
     "verify_both": true
   },
   "source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
-  "status": "CONSUMED_AFTER_P10_3_FAIL",
+  "status": "AUTHORIZED",
   "two_hour_test": false,
   "user_authorization_received_on": "2026-08-04",
   "user_authorization_statement": "User explicitly authorized automated P10_3 AX7020 stationary four-lane hardware acceptance for the current two boards and eight modules, mask<=0xF, no Ethernet/movement/rotation/realignment/rewiring, no two-hour run, and no P11."
