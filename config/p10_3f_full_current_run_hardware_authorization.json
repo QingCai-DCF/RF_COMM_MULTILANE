@@ -123,7 +123,7 @@
     "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
     "verify_both_shutdown_markers": true
   },
-  "authorization_created_at_utc": "2026-08-04T17:14:47Z",
+  "authorization_created_at_utc": "2026-08-04T17:29:41Z",
   "authorization_id": "P10_3F-FULL-CURRENT-RUN-IMMUTABLE",
   "authorized": true,
   "board_binding": {
@@ -131,10 +131,9 @@
     "rotating": "AX7020-R/JTAG:210512180081"
   },
   "campaign_freeze_path": "evidence/generated/p10_3f_full_campaign_freeze.json",
-  "campaign_freeze_sha256": "89f8a4c6cd2a42d383c0552bc4bc03d67b76c06143d56792bfe8dacd8108b51d",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-04T17:24:05+00:00",
-  "current_run_hardware_authorization": false,
+  "campaign_freeze_sha256": "ad678ea18053f503bd48ccafc0b13567c5ad3ac7a878984e7ffbfa5bee3a7261",
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "ethernet_allowed": false,
   "fixed_jtag_serial": "210249855178",
   "fixed_profile_sha256": "6c05c738333f80836d141a833e45592342b3d83b62369d6eb91d5ba3f907c571",
@@ -277,9 +276,9 @@
       "sha256": "702a611606d69b8183a23b6d196055cbd2de63a8f04b00c5e4a2639ac141a61f"
     },
     {
-      "bytes": 15145,
+      "bytes": 16185,
       "path": "scripts/hw/p10_3f_fault_forensics.tcl",
-      "sha256": "abb2da5f61a21cb4c49c4fe9c1a42aeca015c540657c59891bc502e37bbb2119"
+      "sha256": "574eda79a89237631436d600574a9e7f9ec3f73b59bdb55b3c7ce6b2c6b556b2"
     },
     {
       "bytes": 8149,
@@ -297,9 +296,9 @@
       "sha256": "7ac6113661b1097aa5684a6083f1cac168e40efae42530d5f2d7c59231780d09"
     },
     {
-      "bytes": 13624,
+      "bytes": 14114,
       "path": "tests/test_p10_3f_full_hardware.py",
-      "sha256": "46740cc41e77b2390b46a381aeb9c54813d2cd32c4d6e495a21982a1d8c77f83"
+      "sha256": "7e81f3ff93913804729412e5fa873791c7243966202b97af628e8e90b12df549"
     },
     {
       "bytes": 5036,
@@ -332,7 +331,7 @@
       "sha256": "56a9f5c1c0fa8740b7bec3b0e84579ece57a77144bab40362d0717b1085d3641"
     }
   ],
-  "host_source_commit": "2c098a8ee7625cb13d81ae21a56ff3b118cdfb79",
+  "host_source_commit": "6e8d939a267fe492c970d316ab84d135c1c10c6a",
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_functional_diagnostic_object_bytes": 16777216,
   "maximum_lane_mask": 15,
@@ -353,12 +352,11 @@
   "no_hardware": false,
   "p11_allowed": false,
   "register_map_sha256": "36ce57e7409865fe0dddda1e8a863647a4bd652e0ee612156ec27bc75072e5ae",
-  "result": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T171447Z_2c098a8e_a6ecd8e6_a5491982/final/orchestrator_result.json",
   "retry_policy": "Goal-bounded stage execution; every new run_id requires its own immutable authorization record and shutdown-before.",
   "rotating_jtag_serial": "210512180081",
   "rotating_profile_sha256": "b79b87c90b56d442e3b3db228a49523aea72bd730a200a13d82a0e31d44560e8",
   "rotating_xdc_sha256": "95a049709b4ffe84156be3bce6653f0f7b8757750b9a30f543415eb290631b9b",
-  "run_id": "p10_3f_full_20260804T171447Z_2c098a8e_a6ecd8e6_a5491982",
+  "run_id": "p10_3f_full_20260804T172941Z_6e8d939a_a6ecd8e6_a5491982",
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_WITH_FIRST_FAULT_FORENSICS",
   "shutdown_policy": {
@@ -368,9 +366,9 @@
     "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
     "verify_both_shutdown_markers": true
   },
-  "status": "CONSUMED_AFTER_P10_3F_FULL_FAIL",
+  "status": "AUTHORIZED_CURRENT_RUN",
   "two_hour_test_allowed": false,
-  "user_authorization_context": "Current campaign-level standing authorization for all operations needed to continue the frozen P10.3/P10.3F goal. This retry changes only the host evaluator/test binding after preserving the prior false-negative run; all FPGA/XSA/BSP/ELF hashes, board/module bindings, runtime limits, shutdown policy, and prohibitions remain exact.",
-  "user_authorization_received_at_utc": "2026-08-04T17:14:47Z",
+  "user_authorization_context": "Current campaign-level standing authorization for all operations needed to continue the frozen P10.3/P10.3F goal. This retry changes only the host forensic digest conversion/error reporting and regression-test binding after preserving the prior fail-closed evidence; all FPGA/XSA/BSP/ELF hashes, board/module bindings, runtime limits, shutdown policy, and prohibitions remain exact.",
+  "user_authorization_received_at_utc": "2026-08-04T17:29:41Z",
   "user_authorization_statement": "我授权所有需要的操作，继续"
 }
