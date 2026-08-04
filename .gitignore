@@ -44,6 +44,9 @@ build/
 !artifacts/p10_3/**/*.bit
 !artifacts/p10_3/**/*.xsa
 !artifacts/p10_3/**/*.elf
+!artifacts/p10_3_fault_forensics/**/*.bit
+!artifacts/p10_3_fault_forensics/**/*.xsa
+!artifacts/p10_3_fault_forensics/**/*.elf
 !evidence/generated/p10_2_raw/**/*.log
 !evidence/generated/p10_2_software/**/*.log
 !evidence/generated/p10_2_software/**/*.elf
@@ -52,6 +55,10 @@ build/
 !evidence/generated/p10_3_raw/**/*.log
 !evidence/generated/vitis/p10_3_4lane_runtime/**/*.log
 !evidence/generated/vivado/p10_3_4lane/**/*.xsa
+!evidence/generated/p10_3_fault_forensics_xsim/raw/*/*.log
+!evidence/generated/p10_3_fault_forensics_offline_raw/**/*.log
+!evidence/generated/p10_3_fault_forensics_freeze_raw/**/*.log
+!evidence/generated/vitis/p10_3_fault_forensics_runtime/**/*.log
 !evidence/hardware/p10_3/**/*.log
 /evidence/generated/vitis/p10_ax7020_runtime/p10_crypto_test.exe
 /evidence/generated/vitis/p10_1_ax7020_pl_activity_led_runtime/p10_crypto_test.exe

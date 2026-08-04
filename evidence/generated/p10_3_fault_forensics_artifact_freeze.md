@@ -1,0 +1,20 @@
+# P10.3F immutable artifact freeze
+
+- Status: `PASS`
+- Source commit: `5b2e9e8a22038b15308faf435163f1787054f41d`
+- Hardware actions executed: `false`
+- Old hardware PASS inherited: `false`
+- Manual instrumentation: `OMITTED_BY_USER`
+
+## Artifacts
+
+- `fixed:shutdown_bitstream` — `227e41e23ae9081b8e879dc6aca6b50120332ca002029ccf44e2059dee179561` — `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/227e41e23ae9081b8e879dc6aca6b50120332ca002029ccf44e2059dee179561/p10_ax7020_fixed_shutdown.bit`
+- `fixed:functional_bitstream` — `a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03` — `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03/p10_ax7020_fixed_functional.bit`
+- `fixed:xsa` — `64f04eab3491b905f3d32db4ddae1f9537e713b3a0f0554a89357d4dccca5b56` — `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/64f04eab3491b905f3d32db4ddae1f9537e713b3a0f0554a89357d4dccca5b56/p10_ax7020_fixed_functional.xsa`
+- `fixed:bsp` — `330ebffd7de59df6fa6e6c20e39187885b521a73fba7d85697ed13e81a388600` — `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/330ebffd7de59df6fa6e6c20e39187885b521a73fba7d85697ed13e81a388600/p10_ax7020_fixed_bsp.zip`
+- `fixed:elf` — `328d6bccb2071485ebcd04c8e32052efe8057fe1d0007bcfe1868d9d827ff775` — `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/328d6bccb2071485ebcd04c8e32052efe8057fe1d0007bcfe1868d9d827ff775/p10_fixed_runtime.elf`
+- `rotating:shutdown_bitstream` — `ec749d8058384ff52a2a04fe36a0fa1ce99346a87eeefe967e0f320cddb23ed2` — `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/ec749d8058384ff52a2a04fe36a0fa1ce99346a87eeefe967e0f320cddb23ed2/p10_ax7020_rotating_shutdown.bit`
+- `rotating:functional_bitstream` — `a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00` — `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00/p10_ax7020_rotating_functional.bit`
+- `rotating:xsa` — `480162c4eda88f758b5098eb493685bc0469d0b28f28d89244bdcee86efc001c` — `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/480162c4eda88f758b5098eb493685bc0469d0b28f28d89244bdcee86efc001c/p10_ax7020_rotating_functional.xsa`
+- `rotating:bsp` — `83e74bd963c23a639fd5dfb28d554e83264b79272ab1c4da4883a98216d586e0` — `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/83e74bd963c23a639fd5dfb28d554e83264b79272ab1c4da4883a98216d586e0/p10_ax7020_rotating_bsp.zip`
+- `rotating:elf` — `6a5cce6f21fa2800292c1869a009ff50c9adeaec5571a1f2a649fc8e1c1a3e7b` — `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/6a5cce6f21fa2800292c1869a009ff50c9adeaec5571a1f2a649fc8e1c1a3e7b/p10_rotating_runtime.elf`

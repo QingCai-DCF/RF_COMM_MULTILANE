@@ -1,0 +1,248 @@
+{
+  "branch": "codex/p10.3-fault-forensics",
+  "build_evidence": {
+    "functional": {
+      "bytes": 25384,
+      "path": "evidence/generated/p10_3_fault_forensics_functional_build_summary.json",
+      "sha256": "44da5b1ca9a0e45057f6600edaf8b658f01a965df262ab7b217a5eb0b8998cab"
+    },
+    "ps_runtime": {
+      "bytes": 12798,
+      "path": "evidence/generated/p10_3_fault_forensics_ps_runtime_build_summary.json",
+      "sha256": "7350d68b198aadb4955792d552751cf4d4030d0f19dd03193a29a708d0c28462"
+    },
+    "shutdown": {
+      "bytes": 10578,
+      "path": "evidence/generated/p10_3_fault_forensics_shutdown_build_summary.json",
+      "sha256": "375d1ee220ccb21c21a6170286af710ec7d33f03668a6b58dc5d665c8e8b43ea"
+    },
+    "xsim": {
+      "bytes": 9645,
+      "path": "evidence/generated/p10_3_fault_forensics_xsim/summary.json",
+      "sha256": "906c602d4d14f275b1743fcba7a29534cee61791f25175e980e6808bf23d0dea"
+    }
+  },
+  "checks": {
+    "canonical_consistency": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_p8a_consistency.py",
+        "--check"
+      ],
+      "log": {
+        "bytes": 183,
+        "path": "evidence/generated/p10_3_fault_forensics_offline_raw/canonical_consistency.log",
+        "sha256": "30d94a2fdbbc42c42202d87c3fc5ca3cb4f550daa10c5d8c7a6e65d623cbf933"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "host_unit_tests": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-m",
+        "unittest",
+        "-v",
+        "tests.test_p10_3f_fault_forensics"
+      ],
+      "log": {
+        "bytes": 1366,
+        "path": "evidence/generated/p10_3_fault_forensics_offline_raw/host_unit_tests.log",
+        "sha256": "b36ed6d2230f07f97fb9785c5f05f63d532c1819da97baad9e08189a6d56f72d"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "no_hardware_static_scan": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_no_hardware_calls.py"
+      ],
+      "log": {
+        "bytes": 31,
+        "path": "evidence/generated/p10_3_fault_forensics_offline_raw/no_hardware_static_scan.log",
+        "sha256": "22a36fafd58a794d360a159b85137bb06f7478d2aaad089567ffebfbc8d60a5c"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "python_compile": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-m",
+        "py_compile",
+        "scripts/archive_p10_fault_forensics.py",
+        "scripts/run_p10_3f_staircase_hardware.py",
+        "scripts/run_p10_3f_fault_forensics_offline.py",
+        "scripts/freeze_p10_3f_artifacts.py",
+        "scripts/finalize_p10_3f_offline.py"
+      ],
+      "log": {
+        "bytes": 0,
+        "path": "evidence/generated/p10_3_fault_forensics_offline_raw/python_compile.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "register_map_verify": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_register_headers.py",
+        "--verify"
+      ],
+      "log": {
+        "bytes": 149,
+        "path": "evidence/generated/p10_3_fault_forensics_offline_raw/register_map_verify.log",
+        "sha256": "ff646b0cefb22946e16ce04b810511e9f5f8c96289b8069d74c67fb3750b7498"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "requirement_traceability": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_requirement_traceability.py",
+        "--check"
+      ],
+      "log": {
+        "bytes": 111,
+        "path": "evidence/generated/p10_3_fault_forensics_offline_raw/requirement_traceability.log",
+        "sha256": "44dff0fbdfbc50814da41d4e4c416cca8282cafcfa95c15c7f76abf48d6f4110"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    }
+  },
+  "current_run_hardware_authorization": false,
+  "electrical_or_optical_measurement_claimed": false,
+  "errors": [],
+  "generated_at_utc": "2026-08-04T14:55:14+00:00",
+  "hardware_actions_executed": false,
+  "manual_instrumentation": "OMITTED_BY_USER",
+  "no_hardware": true,
+  "old_hardware_pass_inherited": false,
+  "schema_version": 1,
+  "scope": "P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP",
+  "source_commit": "5b2e9e8a22038b15308faf435163f1787054f41d",
+  "source_inputs": [
+    {
+      "bytes": 65218,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "36ce57e7409865fe0dddda1e8a863647a4bd652e0ee612156ec27bc75072e5ae"
+    },
+    {
+      "bytes": 2856,
+      "path": "config/safety/p10_3_fault_forensics.yaml",
+      "sha256": "ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256"
+    },
+    {
+      "bytes": 1774,
+      "path": "config/performance/p10_3f_staircase.yaml",
+      "sha256": "069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8"
+    },
+    {
+      "bytes": 287292,
+      "path": "config/project_requirements.yaml",
+      "sha256": "7bcf5a4f4a6a70e42e5740900a51e4fcb1599f9aea92e13063af5e156786cdd3"
+    },
+    {
+      "bytes": 6767,
+      "path": "docs/design/P10_3_FIRST_FAULT_FORENSICS.md",
+      "sha256": "c31d97c57c71169f75fe5c85f3e6db4add326320a2e0d9054bb2c51cf8fe1490"
+    },
+    {
+      "bytes": 29664,
+      "path": "rtl/p10_fault_forensics.sv",
+      "sha256": "e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3"
+    },
+    {
+      "bytes": 111433,
+      "path": "rtl/p9_optical_transport_core.sv",
+      "sha256": "0e65dd39e77a79495bb47c6755a4dc9225a0997f629177fa149724c434c75b71"
+    },
+    {
+      "bytes": 55722,
+      "path": "rtl/p9_axi_dma_peripheral.sv",
+      "sha256": "4e62c43952a81a64843ee69549504be48455584acb0db7c6d97a59887cd52e07"
+    },
+    {
+      "bytes": 15023,
+      "path": "scripts/archive_p10_fault_forensics.py",
+      "sha256": "45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c"
+    },
+    {
+      "bytes": 12105,
+      "path": "scripts/hw/p10_3f_fault_forensics.tcl",
+      "sha256": "be53ba9f83601754580b2c077496d530098d8da0ad2ae52fc1a6f37ab4709d96"
+    },
+    {
+      "bytes": 81256,
+      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+      "sha256": "144b3085cc86582783fce8ada6b18260c671069c4ca914238eeb77544b893a6b"
+    },
+    {
+      "bytes": 23750,
+      "path": "scripts/run_p10_3f_staircase_hardware.py",
+      "sha256": "55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40"
+    },
+    {
+      "bytes": 9616,
+      "path": "scripts/run_p10_3f_fault_forensics_offline.py",
+      "sha256": "2031f92a1ca8857a1c6c68ae4df98f1f634327951519ee7427792cc7c684e1e5"
+    },
+    {
+      "bytes": 10908,
+      "path": "scripts/freeze_p10_3f_artifacts.py",
+      "sha256": "000c2225a8a4885647d471368114d4f07110c795804d86b84f4cf12609392d28"
+    },
+    {
+      "bytes": 10213,
+      "path": "scripts/finalize_p10_3f_offline.py",
+      "sha256": "126a1b8dfdbcaf26e87a1e0880217eb2fd60c524d334d64fa1b47ee67a55a9f3"
+    },
+    {
+      "bytes": 28503,
+      "path": "scripts/build_p10_ax7020_functional.py",
+      "sha256": "f8957d17a3b475048f2766f49836d2e596329cf8b4e455add2655202c70e2f19"
+    },
+    {
+      "bytes": 14902,
+      "path": "scripts/build_p10_ax7020_shutdown.py",
+      "sha256": "138dac49e496466308e64188186ca899a5e0fe496e61ed713487ed1734fb6718"
+    },
+    {
+      "bytes": 25368,
+      "path": "scripts/build_p10_ps_runtime.py",
+      "sha256": "0c07842ec076bffcb8bd9b3b34268aacd0763ee39a3418116a399f6967fc1b1a"
+    },
+    {
+      "bytes": 9258,
+      "path": "scripts/run_p10_2_xsim.py",
+      "sha256": "99598e695aab9789867b6ddf34a210ecffa2cbd09628a3910f6ee8f91f30d39b"
+    },
+    {
+      "bytes": 21198,
+      "path": "scripts/vivado/build_p10_ax7020_functional.tcl",
+      "sha256": "51283f4108d11e0c8a9e06d70ce02af5da5dfb5482cbb6408f6db878d159e469"
+    },
+    {
+      "bytes": 13113,
+      "path": "sim/tb/tb_p10_fault_forensics.sv",
+      "sha256": "2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4"
+    },
+    {
+      "bytes": 3601,
+      "path": "sim/tb/tb_p10_forensic_safety_integration.sv",
+      "sha256": "df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752"
+    },
+    {
+      "bytes": 8757,
+      "path": "tests/test_p10_3f_fault_forensics.py",
+      "sha256": "c1f1a9a7f81e10fb6701890d828642c5c376aa84bc1bcd27357fbbc8033bdac8"
+    }
+  ],
+  "source_worktree_dirty": false,
+  "status": "PASS",
+  "test_id": "P10_3F-FIRST-FAULT-FORENSICS-OFFLINE"
+}

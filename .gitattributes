@@ -111,3 +111,11 @@ evidence/hardware/p10_3_raw_connectivity/** -text -eol -whitespace
 # Preserve byte-exact P10.3 campaign evidence, including vendor CRLF output
 # and raw PSV/TCL records covered by each run's SHA256 manifest.
 evidence/hardware/p10_3/** -text -eol -whitespace
+
+# Preserve the P10.3F content-addressed bundle and byte-exact offline evidence.
+# Simulator and vendor logs are SHA256-bound and retain their original spacing.
+artifacts/p10_3_fault_forensics/** -text -eol -whitespace
+evidence/generated/p10_3_fault_forensics_* -text -eol -whitespace
+evidence/generated/p10_3_fault_forensics_*/** -text -eol -whitespace
+evidence/generated/vivado/p10_3_fault_forensics*/** -text -eol -whitespace
+evidence/generated/vitis/p10_3_fault_forensics_runtime/** -text -eol -whitespace
