@@ -335,7 +335,10 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
     if CAMPAIGN == "p10_3":
         xparam_checks.update({
             "ps_gpio_device": bool(re.search(
-                r"#define\s+XPAR_XGPIOPS_0_DEVICE_ID\s+0", xparam_text)),
+                r"#define\s+XPAR_PS7_GPIO_0_DEVICE_ID\s+0", xparam_text)),
+            "ps_gpio_canonical_alias": bool(re.search(
+                r"#define\s+XPAR_XGPIOPS_0_DEVICE_ID\s+"
+                r"XPAR_PS7_GPIO_0_DEVICE_ID", xparam_text)),
             "ps_gpio_base": bool(re.search(
                 r"#define\s+XPAR_PS7_GPIO_0_BASEADDR\s+0xE000A000", xparam_text)),
         })

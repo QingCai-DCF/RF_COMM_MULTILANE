@@ -24,7 +24,7 @@ SUMMARY_PATHS = {
     "functional": GENERATED / "p10_3_functional_build_summary.json",
     "shutdown": GENERATED / "p10_3_shutdown_build_summary.json",
     "ps_runtime": GENERATED / "p10_3_ps_runtime_build_summary.json",
-    "xsim": GENERATED / "p10_3_xsim_summary.json",
+    "xsim": GENERATED / "p10_3_xsim/summary.json",
 }
 GATE_COMMANDS = {
     "p10_2_verify_existing": [sys.executable, "scripts/verify_p10_2_existing.py"],
