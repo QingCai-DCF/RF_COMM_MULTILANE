@@ -66,6 +66,22 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
         self.assertIn("set prior_fault [p10_read32 $sender 0x43C0073C]", tcl)
         self.assertIn("P10_ASYNC_LANE_INJECTION=", tcl)
 
+    def test_module_intake_proves_both_raw_directions_before_frames(self) -> None:
+        cases = [item for item in self.runner.build_plans()["module_intake"]
+                 if isinstance(item, self.runner.Case)]
+        labels = [item.label for item in cases]
+        raw_labels = [
+            f"intake_{module}_raw_{count}"
+            for module in ("F2", "R2", "F3", "R3")
+            for count in (64, 1024)
+        ]
+        self.assertEqual(labels[1:1 + len(raw_labels)], raw_labels)
+        first_frame = min(index for index, item in enumerate(cases)
+                          if item.command == 3)
+        last_raw = max(index for index, item in enumerate(cases)
+                       if item.command == 2)
+        self.assertGreater(first_frame, last_raw)
+
     def test_command13_fields_and_object_ids_are_unambiguous(self) -> None:
         plans = self.runner.build_plans()
         intervals = []

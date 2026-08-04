@@ -299,6 +299,301 @@ module tb_4lane_dual_endpoint;
   end
 endmodule
 
+// P10.3 hardware intake sends a 100-frame object over one physical lane after
+// priming the receiver endpoint first.  The earlier four-lane suite stopped at
+// raw pulses, so it could not detect a cumulative-ACK progress failure after
+// the first 32-frame selective-repeat window.
+module tb_p10_3_single_lane_ack_progress;
+  localparam integer L = 4;
+  localparam integer OBJECT_BYTES = 247 * 100;
+  localparam integer TFDU_RECOVERY_CYCLES = 4096;
+
+  reg clk = 0;
+  reg rst_n = 0;
+  always #7.8125 clk = ~clk;
+
+  reg receiver_enable = 0;
+  reg arm_request = 0;
+  reg full_shutdown_request = 0;
+  reg clear_counters = 0;
+  reg fixed_start_object = 0;
+  reg rotating_start_object = 0;
+
+  reg fixed_s_valid = 0;
+  wire fixed_s_ready;
+  reg [31:0] fixed_s_data = 0;
+  reg [3:0] fixed_s_keep = 0;
+  reg fixed_s_last = 0;
+  wire rotating_m_valid;
+  wire [3:0] rotating_m_keep;
+  wire rotating_m_last;
+
+  wire [L-1:0] fixed_txd;
+  wire [L-1:0] fixed_sd;
+  wire [L-1:0] rotating_txd;
+  wire [L-1:0] rotating_sd;
+  reg [12:0] fixed_recovery [0:L-1];
+  reg [12:0] rotating_recovery [0:L-1];
+  wire [L-1:0] fixed_recovery_clear;
+  wire [L-1:0] rotating_recovery_clear;
+  wire [L-1:0] fixed_rxd =
+      ~((rotating_txd & fixed_recovery_clear) | fixed_txd);
+  wire [L-1:0] rotating_rxd =
+      ~((fixed_txd & rotating_recovery_clear) | rotating_txd);
+
+  wire [2*L-1:0] fixed_phy_ready;
+  wire [2*L-1:0] rotating_phy_ready;
+  wire [2*L-1:0] fixed_safety_fault;
+  wire [2*L-1:0] rotating_safety_fault;
+  wire fixed_armed;
+  wire rotating_armed;
+  wire fixed_object_active;
+  wire rotating_object_active;
+  wire fixed_object_done;
+  wire rotating_object_done;
+  wire fixed_object_fail;
+  wire rotating_object_fail;
+  wire [31:0] fixed_object_error;
+  wire [31:0] rotating_object_error;
+  wire [31:0] fixed_attempts;
+  wire [31:0] fixed_retries;
+  wire [31:0] fixed_retry_exhausted;
+  wire [31:0] fixed_timeouts;
+  wire [31:0] fixed_ack_good;
+  wire [31:0] rotating_data_good;
+  wire [31:0] rotating_ack_snapshots;
+  wire [31:0] rotating_ack_frames;
+  wire [15:0] fixed_tx_ack_base;
+  wire [15:0] rotating_rx_base;
+
+  reg fixed_done_seen = 0;
+  reg rotating_done_seen = 0;
+  integer received_bytes = 0;
+  reg received_last = 0;
+  integer lane;
+
+  generate
+    genvar recovery_lane;
+    for (recovery_lane = 0; recovery_lane < L;
+         recovery_lane = recovery_lane + 1) begin : g_recovery_clear
+      assign fixed_recovery_clear[recovery_lane] =
+          fixed_recovery[recovery_lane] == 0;
+      assign rotating_recovery_clear[recovery_lane] =
+          rotating_recovery[recovery_lane] == 0;
+    end
+  endgenerate
+
+  always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      for (lane = 0; lane < L; lane = lane + 1) begin
+        fixed_recovery[lane] <= 0;
+        rotating_recovery[lane] <= 0;
+      end
+      fixed_done_seen <= 0;
+      rotating_done_seen <= 0;
+      received_bytes <= 0;
+      received_last <= 0;
+    end else begin
+      for (lane = 0; lane < L; lane = lane + 1) begin
+        if (fixed_txd[lane])
+          fixed_recovery[lane] <= TFDU_RECOVERY_CYCLES;
+        else if (fixed_recovery[lane] != 0)
+          fixed_recovery[lane] <= fixed_recovery[lane] - 1'b1;
+        if (rotating_txd[lane])
+          rotating_recovery[lane] <= TFDU_RECOVERY_CYCLES;
+        else if (rotating_recovery[lane] != 0)
+          rotating_recovery[lane] <= rotating_recovery[lane] - 1'b1;
+      end
+      if (fixed_object_done) fixed_done_seen <= 1;
+      if (rotating_object_done) rotating_done_seen <= 1;
+      if (rotating_m_valid) begin
+        received_bytes <= received_bytes + rotating_m_keep[0] +
+            rotating_m_keep[1] + rotating_m_keep[2] + rotating_m_keep[3];
+        if (rotating_m_last) received_last <= 1;
+      end
+    end
+  end
+
+  p9_optical_transport_core #(
+    .CLK_HZ(64_000_000), .LANE_COUNT(L), .WINDOW_SIZE(32),
+    .SACK_BITS(32), .DEPLOYMENT_ROLE(1)
+  ) fixed_endpoint (
+    .clk(clk), .rst_n(rst_n), .receiver_enable_i(receiver_enable),
+    .arm_request_i(arm_request), .disarm_request_i(1'b0),
+    .full_shutdown_request_i(full_shutdown_request),
+    .clear_counters_i(clear_counters),
+    .start_object_i(fixed_start_object), .abort_object_i(1'b0),
+    .cfg_lane_mask_i(4'h4), .cfg_lane_weights_i(32'h0101_0101),
+    .cfg_rate_select_i(2'd2), .cfg_direction_i(1'b0),
+    .cfg_session_epoch_i(32'hA101_0001), .cfg_path_epoch_i(16'h0103),
+    .cfg_object_id_i(32'h3300_0000), .cfg_initial_sequence_i(16'h0000),
+    .cfg_fault_flags_i(32'd0), .cfg_drop_data_count_i(8'd0),
+    .cfg_drop_ack_count_i(8'd0), .cfg_lane_unavailable_i(4'd0),
+    .raw_start_i(1'b0), .raw_direction_i(1'b0), .raw_lane_mask_i(4'd0),
+    .raw_pulse_target_i(32'd0), .raw_spacing_cycles_i(32'd1024),
+    .s_axis_tvalid_i(fixed_s_valid), .s_axis_tready_o(fixed_s_ready),
+    .s_axis_tdata_i(fixed_s_data), .s_axis_tkeep_i(fixed_s_keep),
+    .s_axis_tlast_i(fixed_s_last), .m_axis_tready_i(1'b1),
+    .a_rxd_i(fixed_rxd), .a_txd_o(fixed_txd), .a_sd_o(fixed_sd),
+    .b_rxd_i(4'hf), .endpoint_armed_o(fixed_armed),
+    .phy_ready_mask_o(fixed_phy_ready),
+    .safety_fault_mask_o(fixed_safety_fault),
+    .object_active_o(fixed_object_active), .object_done_o(fixed_object_done),
+    .object_fail_o(fixed_object_fail), .object_error_o(fixed_object_error),
+    .tx_ack_base_o(fixed_tx_ack_base), .tx_attempt_count_o(fixed_attempts),
+    .tx_retry_count_o(fixed_retries),
+    .tx_retry_exhausted_count_o(fixed_retry_exhausted),
+    .tx_timeout_count_o(fixed_timeouts),
+    .physical_ack_frames_good_o(fixed_ack_good)
+  );
+
+  p9_optical_transport_core #(
+    .CLK_HZ(64_000_000), .LANE_COUNT(L), .WINDOW_SIZE(32),
+    .SACK_BITS(32), .DEPLOYMENT_ROLE(2)
+  ) rotating_endpoint (
+    .clk(clk), .rst_n(rst_n), .receiver_enable_i(receiver_enable),
+    .arm_request_i(arm_request), .disarm_request_i(1'b0),
+    .full_shutdown_request_i(full_shutdown_request),
+    .clear_counters_i(clear_counters),
+    .start_object_i(rotating_start_object), .abort_object_i(1'b0),
+    .cfg_lane_mask_i(4'h4), .cfg_lane_weights_i(32'h0101_0101),
+    .cfg_rate_select_i(2'd2), .cfg_direction_i(1'b0),
+    .cfg_session_epoch_i(32'hA101_0001), .cfg_path_epoch_i(16'h0103),
+    .cfg_object_id_i(32'h3300_0000), .cfg_initial_sequence_i(16'h0000),
+    .cfg_fault_flags_i(32'd0), .cfg_drop_data_count_i(8'd0),
+    .cfg_drop_ack_count_i(8'd0), .cfg_lane_unavailable_i(4'd0),
+    .raw_start_i(1'b0), .raw_direction_i(1'b0), .raw_lane_mask_i(4'd0),
+    .raw_pulse_target_i(32'd0), .raw_spacing_cycles_i(32'd1024),
+    .s_axis_tvalid_i(1'b0), .s_axis_tdata_i(32'd0),
+    .s_axis_tkeep_i(4'd0), .s_axis_tlast_i(1'b0),
+    .m_axis_tvalid_o(rotating_m_valid), .m_axis_tready_i(1'b1),
+    .m_axis_tkeep_o(rotating_m_keep), .m_axis_tlast_o(rotating_m_last),
+    .a_rxd_i(4'hf), .b_rxd_i(rotating_rxd), .b_txd_o(rotating_txd),
+    .b_sd_o(rotating_sd), .endpoint_armed_o(rotating_armed),
+    .phy_ready_mask_o(rotating_phy_ready),
+    .safety_fault_mask_o(rotating_safety_fault),
+    .object_active_o(rotating_object_active),
+    .object_done_o(rotating_object_done),
+    .object_fail_o(rotating_object_fail),
+    .object_error_o(rotating_object_error), .rx_base_sequence_o(rotating_rx_base),
+    .physical_data_frames_good_o(rotating_data_good),
+    .ack_aggregation_count_o(rotating_ack_snapshots),
+    .ack_frames_sent_o(rotating_ack_frames)
+  );
+
+  task automatic stream_payload;
+    integer offset;
+    integer byte_index;
+    reg [31:0] word_value;
+    reg [3:0] keep_value;
+    begin
+      offset = 0;
+      while (offset < OBJECT_BYTES) begin
+        word_value = 0;
+        keep_value = 0;
+        for (byte_index = 0; byte_index < 4; byte_index = byte_index + 1) begin
+          if (offset + byte_index < OBJECT_BYTES) begin
+            word_value[8*byte_index +: 8] =
+                ((offset + byte_index) * 37) ^ ((offset + byte_index) >> 2) ^ 8'hc9;
+            keep_value[byte_index] = 1;
+          end
+        end
+        @(negedge clk);
+        fixed_s_valid = 1;
+        fixed_s_data = word_value;
+        fixed_s_keep = keep_value;
+        fixed_s_last = offset + 4 >= OBJECT_BYTES;
+        while (!fixed_s_ready && !fixed_object_fail && !rotating_object_fail)
+          @(posedge clk);
+        if (fixed_object_fail || rotating_object_fail)
+          $fatal(1, "P10.3 object failed while AXI input was active");
+        @(posedge clk);
+        @(negedge clk);
+        fixed_s_valid = 0;
+        fixed_s_last = 0;
+        offset = offset + 4;
+      end
+    end
+  endtask
+
+  integer watchdog;
+  initial begin
+    repeat (8) @(posedge clk);
+    rst_n = 1;
+    receiver_enable = 1;
+    watchdog = 0;
+    while ((fixed_phy_ready != 8'h0f || rotating_phy_ready != 8'hf0) &&
+           watchdog < 100_000) begin
+      @(posedge clk); #1; watchdog = watchdog + 1;
+    end
+    if (fixed_phy_ready != 8'h0f || rotating_phy_ready != 8'hf0)
+      $fatal(1, "P10.3 startup failed ready=%h/%h", fixed_phy_ready,
+             rotating_phy_ready);
+    @(negedge clk); arm_request = 1;
+    @(posedge clk); @(negedge clk); arm_request = 0;
+    repeat (4) @(posedge clk);
+    if (!fixed_armed || !rotating_armed)
+      $fatal(1, "P10.3 arm failed");
+    @(negedge clk); clear_counters = 1;
+    @(posedge clk); @(negedge clk); clear_counters = 0;
+
+    // Match the XSDB runner: receiver command reaches ACTIVE before source
+    // launch; the bounded delay represents JTAG mailbox turnaround.
+    @(negedge clk); rotating_start_object = 1;
+    @(posedge clk); @(negedge clk); rotating_start_object = 0;
+    watchdog = 0;
+    while (!rotating_object_active && !rotating_object_fail && watchdog < 1000) begin
+      @(posedge clk); #1; watchdog = watchdog + 1;
+    end
+    if (!rotating_object_active || rotating_object_fail)
+      $fatal(1, "P10.3 receiver did not prime error=%08x", rotating_object_error);
+    repeat (1000) @(posedge clk);
+    @(negedge clk); fixed_start_object = 1;
+    @(posedge clk); @(negedge clk); fixed_start_object = 0;
+    stream_payload();
+
+    watchdog = 0;
+    while (!(fixed_done_seen && rotating_done_seen) &&
+           !fixed_object_fail && !rotating_object_fail &&
+           watchdog < 20_000_000) begin
+      @(posedge clk); #1; watchdog = watchdog + 1;
+    end
+    if (fixed_object_fail || rotating_object_fail ||
+        !(fixed_done_seen && rotating_done_seen)) begin
+      $display("P10_3_ACK_DIAG fail=%0b/%0b error=%08x/%08x attempts=%0d retries=%0d exhausted=%0d timeouts=%0d data_good=%0d physical_ack=%0d ack_snapshots=%0d ack_handshakes=%0d tx_base=%0d rx_base=%0d phase=%0d/%0d turnaround=%0b local_ack=%0b stale=%0b pending=%0d",
+          fixed_object_fail, rotating_object_fail, fixed_object_error,
+          rotating_object_error, fixed_attempts, fixed_retries,
+          fixed_retry_exhausted, fixed_timeouts, rotating_data_good,
+          fixed_ack_good, rotating_ack_snapshots, rotating_ack_frames,
+          fixed_tx_ack_base, rotating_rx_base, fixed_endpoint.phase_q,
+          rotating_endpoint.phase_q,
+          rotating_endpoint.endpoint_turnaround_pending_q,
+          rotating_endpoint.dp_local_ack_valid,
+          rotating_endpoint.dp_local_ack_snapshot_stale,
+          rotating_endpoint.u_data_plane.u_ack_aggregator.pending_frames);
+      $fatal(1, "P10.3 single-lane ACK progress failed");
+    end
+    if (received_bytes != OBJECT_BYTES || !received_last ||
+        rotating_data_good != 100 || fixed_ack_good < 4 ||
+        fixed_retry_exhausted != 0 || fixed_retries != 0 ||
+        fixed_safety_fault != 0 || rotating_safety_fault != 0)
+      $fatal(1, "P10.3 clean transfer mismatch bytes=%0d last=%0b data=%0d ack=%0d retry=%0d exhausted=%0d fault=%h/%h",
+          received_bytes, received_last, rotating_data_good, fixed_ack_good,
+          fixed_retries, fixed_retry_exhausted, fixed_safety_fault,
+          rotating_safety_fault);
+
+    receiver_enable = 0;
+    @(negedge clk); full_shutdown_request = 1;
+    repeat (4) @(posedge clk); #1;
+    if (fixed_txd != 0 || rotating_txd != 0 || fixed_sd != 4'hf ||
+        rotating_sd != 4'hf || fixed_armed || rotating_armed)
+      $fatal(1, "P10.3 final shutdown failed");
+    $display("TB_P10_3_SINGLE_LANE_ACK_PROGRESS=PASS frames=%0d ack=%0d",
+             rotating_data_good, fixed_ack_good);
+    $finish;
+  end
+endmodule
+
 module tb_2lane_4lane_regression;
   p10_2_core_elaboration_fixture #(.LANE_COUNT(2)) legacy();
   p10_2_core_elaboration_fixture #(.LANE_COUNT(4)) four_lane();

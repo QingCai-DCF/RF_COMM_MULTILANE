@@ -49,6 +49,10 @@ TESTS = (
     ("tb_p10_2_lane_count_elaboration", "TB_P10_2_LANE_COUNT_ELABORATION=PASS",
      [*CORE, ELAB]),
 )
+P10_3_TESTS = (
+    ("tb_p10_3_single_lane_ack_progress",
+     "TB_P10_3_SINGLE_LANE_ACK_PROGRESS=PASS", [*CORE, SUITE]),
+)
 
 
 def sha(path: Path) -> str:
@@ -96,7 +100,8 @@ def main() -> int:
     parser.add_argument("--output-dir")
     parser.add_argument("--campaign", choices=("p10_2", "p10_3"),
                         default="p10_2")
-    parser.add_argument("--only", choices=[test[0] for test in TESTS])
+    parser.add_argument(
+        "--only", choices=[test[0] for test in (*TESTS, *P10_3_TESTS)])
     args = parser.parse_args()
     if os.environ.get("NO_HARDWARE", "1") != "1" or os.environ.get(
             "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "false":
@@ -119,7 +124,12 @@ def main() -> int:
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     raw = output / "raw" / run_id
     raw.mkdir(parents=True)
-    selected = [test for test in TESTS if args.only is None or args.only == test[0]]
+    available = (*TESTS, *P10_3_TESTS) if args.campaign == "p10_3" else TESTS
+    selected = [test for test in available
+                if args.only is None or args.only == test[0]]
+    if not selected:
+        print("P10_2_XSIM_REFUSED=TEST_NOT_IN_CAMPAIGN", file=sys.stderr)
+        return 2
     results = [run_one(top, marker, list(sources), raw)
                for top, marker, sources in selected]
     status = "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL"

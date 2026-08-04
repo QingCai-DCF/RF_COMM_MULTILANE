@@ -509,7 +509,10 @@ def build_plans() -> dict[str, list[PlanItem]]:
     intake: list[PlanItem] = []
     intake.append(Case("intake_receive_only_5000ms", 11, idle=5000,
                        timeout=15_000))
-    for lane, lane_name in ((4, "lane2"), (8, "lane3")):
+    # Establish both raw optical directions before any framed traffic.  If an
+    # ACK-return path is absent or intermittent, direct receiver evidence is
+    # preserved without first spending a full selective-repeat retry budget.
+    for lane in (4, 8):
         lane_index = int(math.log2(lane))
         for direction, module in ((0, f"F{lane_index}"),
                                   (1, f"R{lane_index}")):
@@ -519,6 +522,10 @@ def build_plans() -> dict[str, list[PlanItem]]:
                     lane=lane, direction=direction, rate=2,
                     rawtarget=count, spacing=1024, timeout=30_000,
                 ))
+    for lane in (4, 8):
+        lane_index = int(math.log2(lane))
+        for direction, module in ((0, f"F{lane_index}"),
+                                  (1, f"R{lane_index}")):
             intake.extend([
                 object_case(
                     f"intake_{module}_counter_100f", size=247 * 100,
