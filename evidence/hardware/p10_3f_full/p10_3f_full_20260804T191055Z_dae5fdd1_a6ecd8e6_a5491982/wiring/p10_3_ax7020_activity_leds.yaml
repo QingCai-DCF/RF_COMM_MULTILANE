@@ -1,0 +1,60 @@
+schema_version: 1
+contract_id: "P10_3_AX7020_PL_AND_PS_ACTIVITY_LEDS"
+status: "PASS_OFFLINE_DESIGN_PENDING_CURRENT_ARTIFACT_HARDWARE_EVIDENCE"
+scope: "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE"
+requirements: ["P10_3-LED-001", "P10_3-LED-002"]
+boards: ["AX7020-F/JTAG:210249855178", "AX7020-R/JTAG:210512180081"]
+official_sources:
+  user_manual:
+    path: "C:/Users/user/Documents/RF_COMM_MULTILANE/hardware_AX7020/AX7020UserManualV2.2/AX7020UserManualV2.2.rst"
+    sha256: "d5451ad97ad1b54edd646b3258d03c95b4f485d47b1da1a58a7aea2526b20f16"
+    references: ["lines 815-845 PS LED table and active-low behavior", "lines 212-214 Bank 500 VCCO=3.3 V"]
+  schematic:
+    path: "C:/Users/user/Documents/RF_COMM_MULTILANE/hardware_AX7020/01_SCH/AX7020开发板原理图V2.0.pdf"
+    sha256: "e35eb1b654774a6f314de0140f5608d38a1c6be72d1c3e1008f5e288ac83c87e"
+    references: ["sheet 4 of 16 PS MIO package pins", "sheet 12 of 16 PS/PL LED circuits"]
+pl_leds:
+  voltage_bank: {bank: 35, vcco_volts: 3.3, iostandard: "LVCMOS33"}
+  electrical: {active_low: true, drive_ma: 4, slew: "SLOW", series_resistor_ohms: 330, color: "RED"}
+  pins:
+    LED1: {package_pin: "M14", role_semantics: {fixed: "F0 activity", rotating: "R0 activity"}, lane: 0}
+    LED2: {package_pin: "M15", role_semantics: {fixed: "F1 activity", rotating: "R1 activity"}, lane: 1}
+    LED3: {package_pin: "K16", role_semantics: {fixed: "F2 activity", rotating: "R2 activity"}, lane: 2}
+    LED4: {package_pin: "J16", role_semantics: {fixed: "F3 activity", rotating: "R3 activity"}, lane: 3}
+  event_definition:
+    tx: "final permitted physical Txd event after every safety kill"
+    rx: "synchronized CRC-valid remote frame accepted by receive admission; never raw Rxd"
+    combine: "TX OR RX for the corresponding lane"
+    hold: "shared integral 1 ms tick; 200 ms visible hold; repeated activity refreshes hold"
+  reset_fault_shutdown_default: "4'b1111; all LEDs off with highest combinational priority"
+  safety_role: "MONITOR_ONLY_NO_FEEDBACK_OR_BACKPRESSURE"
+ps_leds:
+  voltage_bank: {bank: 500, vcco_volts: 3.3, gpio_controller: "PS7 GPIO bank 0"}
+  electrical: {active_low: true, color: "RED", default_unconfigured: "high-impedance/pull-up, off"}
+  pins:
+    PS_LED1: {schematic_designator: "LED3", mio: 0, package_pin: "E6", resistor: "R75", series_resistor_ohms: 390, semantic: "MM2S TX descriptors in flight"}
+    PS_LED2: {schematic_designator: "LED4", mio: 13, package_pin: "E8", resistor: "R76", series_resistor_ohms: 390, semantic: "S2MM RX descriptors posted/in flight"}
+  runtime_definition:
+    begin: "increment only after BdRingToHw and successful DMA engine start"
+    end: "decrement only after successful hardware completion reclamation"
+    rx_limitation: "posted S2MM descriptor means ready-or-receiving; it is not cycle-exact proof of AXI data"
+    raw_command: "no PS DMA descriptor; both PS activity LEDs remain off"
+    init_order: ["disable output-enable", "preload both latches HIGH/off", "set output direction", "enable output", "verify direction/output-enable/readback HIGH"]
+    cleanup: "force both off and zero counters on DMA reset, shutdown, command return, error and normal exit"
+  mux_conflict_audit:
+    qspi: "disabled; AX7020 single QSPI uses MIO1..6"
+    boot_straps: "MIO0 and MIO13 are not MIO2..8 boot straps"
+    ethernet_usb_sdio: "disabled"
+    uart: "UART1 remains on MIO48..49"
+  safety_role: "DIAGNOSTIC_ONLY_NOT_TFDU_SHUTDOWN_NOT_OPTICAL_SUCCESS_NOT_SAFETY_EVIDENCE"
+artifact_policy:
+  new_build_ids: {fixed: "0x50333446", rotating: "0x50333452"}
+  old_hardware_pass_inherited: false
+  exact_new_bitstream_xsa_bsp_elf_sha256_required: true
+pending_direct_evidence:
+  - "new XSA GPIO mux and generated ps7_init audit"
+  - "new BSP gpiops/xparameters audit"
+  - "new ELF symbol and OCM-boundary audit"
+  - "XSIM PL LED reset/shutdown/activity regression"
+  - "current-bundle JTAG PS GPIO DIRM/OEN/DATA_RO telemetry"
+  - "physical LED visibility is not inferred from register state"

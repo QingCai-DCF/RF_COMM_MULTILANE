@@ -1,0 +1,97 @@
+{
+  "archives": [
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982\\forensics\\fault_capture\\fixed.p10ff.bin",
+      "binary_sha256": "da3d32a6e647d123564231f12f73cee443a080fd2d18700d7effd846ffbb889d",
+      "digest_words_little_endian": [
+        "0xA6323DDA",
+        "0x23D147E6",
+        "0xF1314256",
+        "0xE4CE732F",
+        "0xFD80A043",
+        "0x0D70182D",
+        "0x46D8FF7E",
+        "0x9D88BBFF"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982\\forensics\\fault_capture\\fixed.p10ff.json",
+      "role": "fixed",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982\\forensics\\fault_capture\\fixed.p10ff.sha256",
+      "status": "FROZEN"
+    },
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982\\forensics\\fault_capture\\rotating.p10ff.bin",
+      "binary_sha256": "a61892ef62a07e66423b17f91472291009490c64d4c0f33491ca87bbba812a6e",
+      "digest_words_little_endian": [
+        "0xEF9218A6",
+        "0x667EA062",
+        "0xF9173B42",
+        "0x10297214",
+        "0x640C4909",
+        "0x34F3C0D4",
+        "0xBB87CA91",
+        "0x6E2A81BA"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982\\forensics\\fault_capture\\rotating.p10ff.json",
+      "role": "rotating",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982\\forensics\\fault_capture\\rotating.p10ff.sha256",
+      "status": "FROZEN"
+    }
+  ],
+  "capture_process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\scripts\\hw\\p10_3f_fault_forensics.tcl",
+      "capture",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982\\forensics\\fault_capture",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\config\\p10_3f_full_current_run_hardware_authorization.json",
+      "p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982",
+      "0x50334646",
+      "0x50334652",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982\\forensics\\fault_capture\\capture.result.txt"
+    ],
+    "elapsed_seconds": 5.9381899000145495,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982/forensics/fault_capture/capture.stderr.log",
+    "stdout": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982/forensics/fault_capture/capture.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 180
+  },
+  "commit_process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\scripts\\hw\\p10_3f_fault_forensics.tcl",
+      "commit",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982\\forensics\\fault_capture",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\config\\p10_3f_full_current_run_hardware_authorization.json",
+      "p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982",
+      "0x50334646",
+      "0x50334652",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3f_full\\p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982\\forensics\\fault_capture\\commit.result.txt",
+      "da3d32a6e647d123564231f12f73cee443a080fd2d18700d7effd846ffbb889d",
+      "a61892ef62a07e66423b17f91472291009490c64d4c0f33491ca87bbba812a6e"
+    ],
+    "elapsed_seconds": 0.7252700999379158,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982/forensics/fault_capture/commit.stderr.log",
+    "stdout": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982/forensics/fault_capture/commit.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 180
+  },
+  "errors": [],
+  "explicit_clear_executed": false,
+  "force_terminal_fault": false,
+  "frozen_roles": [
+    "fixed",
+    "rotating"
+  ],
+  "generated_at_utc": "2026-08-04T19:20:41+00:00",
+  "label": "fault_capture",
+  "schema_version": 1,
+  "status": "PASS"
+}
