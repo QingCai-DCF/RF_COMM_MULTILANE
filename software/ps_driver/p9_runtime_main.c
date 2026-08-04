@@ -1094,7 +1094,7 @@ static int p9_configure_object(volatile p9_mailbox_t *m) {
   p9_pl_write(IR_REG_P9_OBJECT_ID, m->object_id);
   p9_pl_write(IR_REG_P9_INITIAL_SEQUENCE, m->initial_sequence & 0xffffU);
   p9_pl_write(IR_REG_P9_PROTOCOL_FAULT_FLAGS,
-              m->protocol_fault_flags & 0xfffU);
+              m->protocol_fault_flags & 0x7ffffU);
   p9_pl_write(IR_REG_P9_FAULT_INJECTION,
               (m->drop_data_count & 0xffU) |
                   ((m->drop_ack_count & 0xffU) << 8) |

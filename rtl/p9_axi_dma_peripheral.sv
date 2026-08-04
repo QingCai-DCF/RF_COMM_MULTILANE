@@ -145,6 +145,18 @@ module p9_axi_dma_peripheral #(
   logic [31:0] tx_stale_ack_count;
   logic [31:0] tx_out_of_window_ack_count;
   logic [31:0] tx_migration_count;
+  logic [LANE_COUNT-1:0] effective_lane_unavailable;
+  logic auto_migration_armed;
+  logic auto_migration_triggered;
+  logic [LANE_COUNT-1:0] auto_migration_target_mask;
+  logic [15:0] auto_migration_trigger_sequence;
+  logic [15:0] auto_migration_trigger_ack_base;
+  logic [5:0] auto_migration_trigger_outstanding;
+  logic [31:0] auto_migration_trigger_attempt_count;
+  logic [31:0] auto_migration_trigger_physical_tx_count;
+  logic [31:0] auto_migration_trigger_count;
+  logic [31:0] auto_migration_trigger_migration_count;
+  logic [31:0] auto_migration_trigger_scheduled_count;
   logic [31:0] rx_duplicate_count;
   logic [31:0] rx_out_of_order_count;
   logic [31:0] rx_old_count;
@@ -569,7 +581,7 @@ module p9_axi_dma_peripheral #(
                 startup_done_mask[LANE_COUNT-1:0],
                 phy_ready_mask[LANE_COUNT-1:0]};
             p10_2_snapshot_q[2] <= {{(32-2*LANE_COUNT){1'b0}},
-                                     cfg_lane_unavailable_q,
+                                     effective_lane_unavailable,
                                      cfg_lane_mask_q};
             p10_2_snapshot_q[3] <= rx_admission_status;
             p10_2_snapshot_q[4] <= tx_attempt_count;
@@ -730,7 +742,7 @@ module p9_axi_dma_peripheral #(
       12'h738: reg_rd_data = cfg_object_q;
       12'h73C: begin
         reg_rd_data = {16'd0, cfg_drop_ack_q, cfg_drop_data_q};
-        reg_rd_data[16 +: LANE_COUNT] = cfg_lane_unavailable_q;
+        reg_rd_data[16 +: LANE_COUNT] = effective_lane_unavailable;
       end
       12'h740: begin
         reg_rd_data = 0;
@@ -832,6 +844,29 @@ module p9_axi_dma_peripheral #(
       12'h8B0: reg_rd_data = physical_preamble_by_lane[63:32];
       12'h8B4: reg_rd_data = physical_symbol_error_by_lane[31:0];
       12'h8B8: reg_rd_data = physical_symbol_error_by_lane[63:32];
+      12'h8BC: begin
+        reg_rd_data = 0;
+        reg_rd_data[0] = auto_migration_armed;
+        reg_rd_data[1] = auto_migration_triggered;
+        reg_rd_data[2] = |auto_migration_target_mask;
+        reg_rd_data[4 +: LANE_COUNT] = auto_migration_target_mask;
+        reg_rd_data[8 +: LANE_COUNT] = effective_lane_unavailable;
+      end
+      12'h8C0: reg_rd_data = {auto_migration_trigger_ack_base,
+                              auto_migration_trigger_sequence};
+      12'h8C4: begin
+        reg_rd_data = 0;
+        reg_rd_data[5:0] = auto_migration_trigger_outstanding;
+      end
+      12'h8C8: reg_rd_data = auto_migration_trigger_attempt_count;
+      12'h8CC: reg_rd_data = auto_migration_trigger_physical_tx_count;
+      12'h8D0: reg_rd_data = auto_migration_trigger_count;
+      12'h8D4: begin
+        reg_rd_data = 0;
+        reg_rd_data[LANE_COUNT-1:0] = effective_lane_unavailable;
+      end
+      12'h8D8: reg_rd_data = auto_migration_trigger_migration_count;
+      12'h8DC: reg_rd_data = auto_migration_trigger_scheduled_count;
       12'hA00: reg_rd_data = 0;
       12'hA04: reg_rd_data = p10_1r_snapshot_generation_q;
       12'hA08: reg_rd_data = 32'h5231_0101;
@@ -1127,6 +1162,23 @@ module p9_axi_dma_peripheral #(
     .duty_window_cycles_o(duty_window_cycles),
     .duty_hard_limit_cycles_o(duty_hard_limit_cycles),
     .duty_target_limit_cycles_o(duty_target_limit_cycles),
+    .effective_lane_unavailable_o(effective_lane_unavailable),
+    .auto_migration_armed_o(auto_migration_armed),
+    .auto_migration_triggered_o(auto_migration_triggered),
+    .auto_migration_target_mask_o(auto_migration_target_mask),
+    .auto_migration_trigger_sequence_o(auto_migration_trigger_sequence),
+    .auto_migration_trigger_ack_base_o(auto_migration_trigger_ack_base),
+    .auto_migration_trigger_outstanding_o(
+        auto_migration_trigger_outstanding),
+    .auto_migration_trigger_attempt_count_o(
+        auto_migration_trigger_attempt_count),
+    .auto_migration_trigger_physical_tx_count_o(
+        auto_migration_trigger_physical_tx_count),
+    .auto_migration_trigger_count_o(auto_migration_trigger_count),
+    .auto_migration_trigger_migration_count_o(
+        auto_migration_trigger_migration_count),
+    .auto_migration_trigger_scheduled_count_o(
+        auto_migration_trigger_scheduled_count),
     .rx_admission_status_o(rx_admission_status),
     .rx_raw_while_local_tx_flat_o(rx_raw_while_local_tx_flat),
     .rx_blanked_raw_pulse_flat_o(rx_blanked_raw_pulse_flat),

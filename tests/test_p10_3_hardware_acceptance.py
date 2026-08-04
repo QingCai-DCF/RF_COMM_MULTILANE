@@ -70,31 +70,27 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
             self.runner.MIGRATION_TARGET_WEIGHTS,
         )
         self.assertTrue(all(
-            item.unavailable == (0xF ^ item.injectmask)
+            item.unavailable == 0
             for item in injected
         ))
         self.assertTrue(all(
-            item.faultflags == self.runner.MIGRATION_PROTOCOL_FAULT_FLAGS ==
-            (1 << 4)
+            item.faultflags == self.runner.migration_protocol_fault_flags(
+                item.injectmask
+            )
             for item in injected
         ))
+        self.assertEqual(
+            self.runner.MIGRATION_PROTOCOL_FAULT_FLAGS,
+            (1 << 4) | (1 << 16),
+        )
         tcl = STAGE_TCL.read_text(encoding="utf-8")
         self.assertIn("$command in {3 13} && [dict get $d injectmask] != 0", tcl)
-        self.assertIn("set prior_fault [p10_read32 $sender 0x43C0073C]", tcl)
-        self.assertIn("P10_ASYNC_LANE_INJECTION=", tcl)
-        self.assertIn("P10_MIGRATION_PRECONDITION_", tcl)
-        self.assertIn("$injection_pre_outstanding >= 1", tcl)
-        self.assertIn("$injection_pre_outstanding <= 32", tcl)
-        self.assertIn("$injection_pre_target_crc_bad > 0", tcl)
-        self.assertIn("$injection_pre_ack_base == $injection_initial_sequence", tcl)
-        self.assertIn(
-            "set receiver_all_lanes [expr {$receiver_prior_fault & 0x0000FFFF}]",
-            tcl,
-        )
-        self.assertIn(
-            "$injection_post_write_ack_base != $injection_initial_sequence",
-            tcl,
-        )
+        self.assertIn("P10_ATOMIC_LANE_INJECTION=", tcl)
+        self.assertIn("set injection_atomic_status [p10_read32 $sender 0x43C008BC]", tcl)
+        self.assertIn("$injection_trigger_ack_base != $injection_initial_sequence", tcl)
+        self.assertIn("$injection_trigger_physical_tx_count <=", tcl)
+        self.assertIn("$injection_trigger_migration_count != 0", tcl)
+        self.assertIn("$injection_pre_target_crc_bad <= 0", tcl)
 
     def test_degrade_static_mask_classifier_excludes_inflight_setup_masks(self) -> None:
         cases = [item for item in self.runner.build_plans()["degrade"]
@@ -110,7 +106,7 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             [detail["unavailable"] for detail in details
              if detail["injectmask"]],
-            [14, 13, 11, 7],
+            [0, 0, 0, 0],
         )
 
     def test_module_intake_proves_both_raw_directions_before_frames(self) -> None:

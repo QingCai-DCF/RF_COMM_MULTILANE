@@ -659,7 +659,9 @@
         {"name": "REORDER_HOLD_ONCE", "bit": 6, "access": "RW"},
         {"name": "ACK_SACK_LOSS_ONCE", "bit": 7, "access": "RW"},
         {"name": "MAPPING_INVALID_LANE_MASK", "lsb": 8, "width": 2, "access": "RW"},
-        {"name": "DUTY_THROTTLE_LANE_MASK", "lsb": 10, "width": 2, "access": "RW"}
+        {"name": "DUTY_THROTTLE_LANE_MASK", "lsb": 10, "width": 2, "access": "RW"},
+        {"name": "AUTO_UNAVAILABLE_AFTER_BAD_CRC", "bit": 16, "access": "RW"},
+        {"name": "AUTO_UNAVAILABLE_TARGET_LANE", "lsb": 17, "width": 2, "access": "RW"}
       ]
     },
     {"name": "P9_RX_OUT_OF_ORDER_COUNT", "offset": "0x0868", "access": "RO", "description": "Current-run accepted out-of-order frame count"},
@@ -683,6 +685,25 @@
     {"name": "P10_1_PHYSICAL_PREAMBLE_LANE1", "offset": "0x08B0", "access": "RO", "description": "P10.1 lane1 physical preamble count"},
     {"name": "P10_1_PHYSICAL_SYMBOL_ERROR_LANE0", "offset": "0x08B4", "access": "RO", "description": "P10.1 lane0 physical symbol error count"},
     {"name": "P10_1_PHYSICAL_SYMBOL_ERROR_LANE1", "offset": "0x08B8", "access": "RO", "description": "P10.1 lane1 physical symbol error count"},
+    {
+      "name": "P9_AUTO_MIGRATION_STATUS", "offset": "0x08BC", "access": "RO",
+      "description": "Atomic bad-CRC retry-migration arm, trigger, target and effective lane-unavailable state",
+      "fields": [
+        {"name": "ARMED", "bit": 0, "access": "RO"},
+        {"name": "TRIGGERED", "bit": 1, "access": "RO"},
+        {"name": "TARGET_VALID", "bit": 2, "access": "RO"},
+        {"name": "TARGET_MASK", "lsb": 4, "width": 4, "access": "RO"},
+        {"name": "EFFECTIVE_UNAVAILABLE_MASK", "lsb": 8, "width": 4, "access": "RO"}
+      ]
+    },
+    {"name": "P9_AUTO_MIGRATION_SEQUENCE", "offset": "0x08C0", "access": "RO", "description": "Atomic trigger sequence in bits 15:0 and pre-trigger cumulative ACK base in bits 31:16"},
+    {"name": "P9_AUTO_MIGRATION_WINDOW", "offset": "0x08C4", "access": "RO", "description": "Atomic trigger-time outstanding frame count in bits 5:0"},
+    {"name": "P9_AUTO_MIGRATION_ATTEMPT_COUNT", "offset": "0x08C8", "access": "RO", "description": "TX attempt count atomically captured when the bad-CRC target frame completed"},
+    {"name": "P9_AUTO_MIGRATION_PHYSICAL_TX_COUNT", "offset": "0x08CC", "access": "RO", "description": "Target module physical Txd pulse count atomically captured at trigger"},
+    {"name": "P9_AUTO_MIGRATION_TRIGGER_COUNT", "offset": "0x08D0", "access": "RO", "description": "Explicit-clear current-run atomic auto-migration trigger count"},
+    {"name": "P9_EFFECTIVE_LANE_UNAVAILABLE", "offset": "0x08D4", "access": "RO", "description": "Live external OR validation-internal lane-unavailable mask"},
+    {"name": "P9_AUTO_MIGRATION_PREVIOUS_MIGRATION_COUNT", "offset": "0x08D8", "access": "RO", "description": "TX migration count atomically captured at trigger; must be zero for the direct current-object precondition"},
+    {"name": "P9_AUTO_MIGRATION_TARGET_SCHEDULED_COUNT", "offset": "0x08DC", "access": "RO", "description": "Target-lane scheduler frame count atomically captured at trigger"},
     {"name": "P10_1_PERF_CAPS", "offset": "0x0900", "access": "RO", "description": "P10.1 autonomous performance capability identity"},
     {"name": "P10_1_PERF_VERSION", "offset": "0x0904", "access": "RO", "description": "P10.1 performance command and metric schema version"},
     {

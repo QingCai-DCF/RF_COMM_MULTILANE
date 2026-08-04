@@ -172,6 +172,21 @@ module p9_optical_transport_core #(
   output wire [31:0]  duty_window_cycles_o,
   output wire [31:0]  duty_hard_limit_cycles_o,
   output wire [31:0]  duty_target_limit_cycles_o,
+  // Validation-only atomic retry-migration evidence.  This path can only
+  // restrict scheduler lane eligibility; it never creates permit, PHY
+  // readiness, duty headroom, or a physical TX request.
+  output wire [LANE_COUNT-1:0] effective_lane_unavailable_o,
+  output wire         auto_migration_armed_o,
+  output wire         auto_migration_triggered_o,
+  output wire [LANE_COUNT-1:0] auto_migration_target_mask_o,
+  output wire [15:0]  auto_migration_trigger_sequence_o,
+  output wire [15:0]  auto_migration_trigger_ack_base_o,
+  output wire [5:0]   auto_migration_trigger_outstanding_o,
+  output wire [31:0]  auto_migration_trigger_attempt_count_o,
+  output wire [31:0]  auto_migration_trigger_physical_tx_count_o,
+  output wire [31:0]  auto_migration_trigger_count_o,
+  output wire [31:0]  auto_migration_trigger_migration_count_o,
+  output wire [31:0]  auto_migration_trigger_scheduled_count_o,
   output wire [31:0]  rx_admission_status_o,
   output wire [LANE_COUNT*32-1:0] rx_raw_while_local_tx_flat_o,
   output wire [LANE_COUNT*32-1:0] rx_blanked_raw_pulse_flat_o,
@@ -200,6 +215,8 @@ module p9_optical_transport_core #(
   localparam integer ROLE_P9_DUAL = 0;
   localparam integer ROLE_FIXED_A = 1;
   localparam integer ROLE_ROTATING_B = 2;
+  localparam integer AUTO_MIGRATION_ENABLE_BIT = 16;
+  localparam integer AUTO_MIGRATION_TARGET_LSB = 17;
   localparam integer ENDPOINT_MIN_FRAME_DUTY_GUARD_CYCLES = 17_984;
   localparam integer ENDPOINT_MAX_DATA_FRAME_SYMBOLS = 1_116;
   localparam integer ENDPOINT_DUTY_WINDOW_SYMBOLS = 2_000;
@@ -336,6 +353,21 @@ module p9_optical_transport_core #(
   reg [15:0] object_initial_sequence_q;
   reg [31:0] fault_flags_remaining_q;
   reg [2:0] fault_attempt_budget_q;
+  reg auto_migration_mode_q;
+  reg auto_migration_armed_q;
+  reg auto_migration_triggered_q;
+  reg [LANE_WIDTH-1:0] auto_migration_target_lane_q;
+  reg [LANE_COUNT-1:0] auto_migration_target_mask_q;
+  reg [15:0] auto_migration_trigger_sequence_q;
+  reg [15:0] auto_migration_trigger_ack_base_q;
+  reg [5:0] auto_migration_trigger_outstanding_q;
+  reg [31:0] auto_migration_trigger_attempt_count_q;
+  reg [31:0] auto_migration_trigger_physical_tx_count_q;
+  reg [31:0] auto_migration_trigger_count_q;
+  reg [31:0] auto_migration_trigger_migration_count_q;
+  reg [31:0] auto_migration_trigger_scheduled_count_q;
+  reg [LANE_COUNT-1:0] lane_auto_migration_pending_q;
+  reg [15:0] lane_auto_migration_sequence_q [0:LANE_COUNT-1];
   reg duplicate_ack_validation_pending_q;
   reg [31:0] duplicate_ack_validation_start_q;
   reg session_reset_pulse_q;
@@ -373,6 +405,31 @@ module p9_optical_transport_core #(
   wire local_receiver = !endpoint_mode || !local_sender;
   wire endpoint_phy_ready_all = endpoint_mode ? &local_phy_ready :
       (&a_phy_ready && &b_phy_ready);
+  wire cfg_auto_migration_request =
+      cfg_fault_flags_i[AUTO_MIGRATION_ENABLE_BIT];
+  wire [1:0] cfg_auto_migration_target_lane =
+      cfg_fault_flags_i[AUTO_MIGRATION_TARGET_LSB +: 2];
+  wire cfg_auto_migration_target_valid =
+      cfg_auto_migration_target_lane < LANE_COUNT;
+  wire [LANE_COUNT-1:0] cfg_auto_migration_target_mask =
+      {{(LANE_COUNT-1){1'b0}}, 1'b1} << cfg_auto_migration_target_lane;
+  wire cfg_auto_migration_config_valid = endpoint_mode &&
+      cfg_auto_migration_request &&
+      cfg_fault_flags_i[4] && cfg_fault_flags_i[3:0] == 0 &&
+      cfg_auto_migration_target_valid &&
+      |(cfg_lane_mask_i & cfg_auto_migration_target_mask) &&
+      !(|(cfg_lane_unavailable_i & cfg_auto_migration_target_mask));
+  // Before the deliberately CRC-bad target frame completes, admit only that
+  // target.  On serializer completion atomically swap to target-unavailable.
+  // External unavailable bits are always ORed and can never be overridden.
+  wire [LANE_COUNT-1:0] auto_migration_internal_unavailable_mask =
+      auto_migration_armed_q ? ~auto_migration_target_mask_q :
+      (auto_migration_triggered_q ? auto_migration_target_mask_q :
+                                   {LANE_COUNT{1'b0}});
+  wire [LANE_COUNT-1:0] effective_lane_unavailable =
+      cfg_lane_unavailable_i | auto_migration_internal_unavailable_mask;
+  wire [LANE_COUNT-1:0] effective_lane_mask =
+      object_lane_mask_q & ~effective_lane_unavailable;
 
   assign endpoint_armed_o = endpoint_armed_q;
   assign tx_kill_active_o = tx_kill;
@@ -400,6 +457,25 @@ module p9_optical_transport_core #(
   assign object_error_o = object_error_q;
   assign physical_drop_data_count_o = dropped_data_count_q;
   assign physical_drop_ack_count_o = dropped_ack_count_q;
+  assign effective_lane_unavailable_o = effective_lane_unavailable;
+  assign auto_migration_armed_o = auto_migration_armed_q;
+  assign auto_migration_triggered_o = auto_migration_triggered_q;
+  assign auto_migration_target_mask_o = auto_migration_target_mask_q;
+  assign auto_migration_trigger_sequence_o =
+      auto_migration_trigger_sequence_q;
+  assign auto_migration_trigger_ack_base_o =
+      auto_migration_trigger_ack_base_q;
+  assign auto_migration_trigger_outstanding_o =
+      auto_migration_trigger_outstanding_q;
+  assign auto_migration_trigger_attempt_count_o =
+      auto_migration_trigger_attempt_count_q;
+  assign auto_migration_trigger_physical_tx_count_o =
+      auto_migration_trigger_physical_tx_count_q;
+  assign auto_migration_trigger_count_o = auto_migration_trigger_count_q;
+  assign auto_migration_trigger_migration_count_o =
+      auto_migration_trigger_migration_count_q;
+  assign auto_migration_trigger_scheduled_count_o =
+      auto_migration_trigger_scheduled_count_q;
 
   // AXI-stream ingress and immutable selective-repeat payload store.
   (* ram_style="block" *) reg [7:0] tx_store [0:LANE_COUNT-1][0:STORE_BYTES-1];
@@ -557,6 +633,13 @@ module p9_optical_transport_core #(
   wire [LANE_WIDTH-1:0] dp_attempt_lane;
   wire [15:0] dp_attempt_path;
   wire dp_attempt_retry;
+  wire auto_migration_target_attempt = auto_migration_mode_q &&
+      auto_migration_armed_q &&
+      dp_attempt_lane == auto_migration_target_lane_q;
+  wire fault_attempt_eligible = fault_attempt_budget_q != 0 &&
+      (!auto_migration_mode_q || auto_migration_target_attempt);
+  wire auto_migration_bad_crc_attempt = fault_attempt_eligible &&
+      fault_flags_remaining_q[4] && auto_migration_mode_q;
   reg dp_peer_ack_valid_q;
   reg [31:0] dp_peer_ack_session_q;
   reg [15:0] dp_peer_ack_base_q;
@@ -603,8 +686,6 @@ module p9_optical_transport_core #(
        dp_local_ack_credit != {10'd0, dp_rx_credit});
   wire [3:0] dp_scheduler_defer;
   wire [LANE_COUNT-1:0] lane_runtime_ready;
-  wire [LANE_COUNT-1:0] effective_lane_mask =
-      object_lane_mask_q & ~cfg_lane_unavailable_i;
   // The validation-only masks exercise the real scheduler defer paths.  They
   // can only remove a lane; they cannot create permit, mapping or duty
   // headroom.  Physical target-duty headroom remains independently enforced.
@@ -639,7 +720,8 @@ module p9_optical_transport_core #(
     .session_epoch_i(object_session_q), .path_epoch_i(object_path_q),
     .path_epoch_valid_i(1'b1), .lane_weights_i(object_lane_weights_q),
     .active_lane_mask_i(effective_lane_mask), .lane_ready_i(lane_runtime_ready),
-    .lane_health_i(~cfg_lane_unavailable_i), .mapping_valid_i(mapping_valid_mask),
+    .lane_health_i(~effective_lane_unavailable),
+    .mapping_valid_i(mapping_valid_mask),
     .frame_admission_i({LANE_COUNT{1'b1}}),
     .lane_tx_permit_i({LANE_COUNT{endpoint_armed_q}}),
     .duty_headroom_i(physical_duty_headroom_mask &
@@ -781,6 +863,8 @@ module p9_optical_transport_core #(
   wire [LANE_COUNT-1:0] serializer_pulse;
   wire [LANE_COUNT-1:0] serializer_busy;
   wire [LANE_COUNT-1:0] serializer_done;
+  wire [31:0] a_tx_count [0:LANE_COUNT-1];
+  wire [31:0] b_tx_count [0:LANE_COUNT-1];
   reg [LANE_COUNT-1:0] serializer_busy_d;
   reg [6:0] receive_tail [0:LANE_COUNT-1];
   reg [LANE_COUNT-1:0] receive_tail_destination_b;
@@ -928,6 +1012,20 @@ module p9_optical_transport_core #(
       drop_ack_remaining_q <= 0;
       fault_flags_remaining_q <= 0;
       fault_attempt_budget_q <= 0;
+      auto_migration_mode_q <= 0;
+      auto_migration_armed_q <= 0;
+      auto_migration_triggered_q <= 0;
+      auto_migration_target_lane_q <= 0;
+      auto_migration_target_mask_q <= 0;
+      auto_migration_trigger_sequence_q <= 0;
+      auto_migration_trigger_ack_base_q <= 0;
+      auto_migration_trigger_outstanding_q <= 0;
+      auto_migration_trigger_attempt_count_q <= 0;
+      auto_migration_trigger_physical_tx_count_q <= 0;
+      auto_migration_trigger_count_q <= 0;
+      auto_migration_trigger_migration_count_q <= 0;
+      auto_migration_trigger_scheduled_count_q <= 0;
+      lane_auto_migration_pending_q <= 0;
       duplicate_ack_validation_pending_q <= 0;
       duplicate_ack_validation_start_q <= 0;
       dropped_data_count_q <= 0;
@@ -961,12 +1059,29 @@ module p9_optical_transport_core #(
         frame_duty_guard_q[copy_lane] <= 0;
         frame_schedule_valid_q[copy_lane] <= 0;
         frame_schedule_direction_q[copy_lane] <= 0;
+        lane_auto_migration_sequence_q[copy_lane] <= 0;
       end
     end else begin
       dp_local_ack_ready_q <= 0;
       if (clear_counters_i) begin
         dropped_data_count_q <= 0;
         dropped_ack_count_q <= 0;
+        if (!object_active_q) begin
+          auto_migration_mode_q <= 0;
+          auto_migration_armed_q <= 0;
+          auto_migration_triggered_q <= 0;
+          auto_migration_target_lane_q <= 0;
+          auto_migration_target_mask_q <= 0;
+          auto_migration_trigger_sequence_q <= 0;
+          auto_migration_trigger_ack_base_q <= 0;
+          auto_migration_trigger_outstanding_q <= 0;
+          auto_migration_trigger_attempt_count_q <= 0;
+          auto_migration_trigger_physical_tx_count_q <= 0;
+          auto_migration_trigger_count_q <= 0;
+          auto_migration_trigger_migration_count_q <= 0;
+          auto_migration_trigger_scheduled_count_q <= 0;
+          lane_auto_migration_pending_q <= 0;
+        end
       end
       for (copy_lane = 0; copy_lane < LANE_COUNT; copy_lane = copy_lane + 1) begin
         serializer_busy_d[copy_lane] <= serializer_busy[copy_lane];
@@ -977,6 +1092,32 @@ module p9_optical_transport_core #(
             frame_schedule_valid_q[copy_lane] <= 1;
             frame_schedule_direction_q[copy_lane] <= object_direction_q;
           end
+          if (lane_auto_migration_pending_q[copy_lane] &&
+              auto_migration_armed_q && !auto_migration_triggered_q) begin
+            // serializer_done is the final accepted physical-frame event, not
+            // a host-timing proxy.  The deliberately invalid CRC makes this
+            // exact sequence unacknowledgeable.  Swap lane eligibility in the
+            // same PL clock so JTAG latency cannot race cumulative ACK state.
+            auto_migration_armed_q <= 0;
+            auto_migration_triggered_q <= 1;
+            auto_migration_trigger_sequence_q <=
+                lane_auto_migration_sequence_q[copy_lane];
+            auto_migration_trigger_ack_base_q <= tx_ack_base_o;
+            auto_migration_trigger_outstanding_q <=
+                tx_outstanding_count_o;
+            auto_migration_trigger_attempt_count_q <= tx_attempt_count_o;
+            auto_migration_trigger_physical_tx_count_q <= local_is_a ?
+                a_tx_count[copy_lane] : b_tx_count[copy_lane];
+            auto_migration_trigger_count_q <=
+                auto_migration_trigger_count_q + 1'b1;
+            auto_migration_trigger_migration_count_q <=
+                tx_migration_count_o;
+            auto_migration_trigger_scheduled_count_q <=
+                scheduler_frames_flat_o[32*copy_lane +: 32];
+            fault_attempt_budget_q <= 0;
+            fault_flags_remaining_q[4] <= 0;
+          end
+          lane_auto_migration_pending_q[copy_lane] <= 0;
         end else if (frame_duty_guard_q[copy_lane] != 0) begin
           frame_duty_guard_q[copy_lane] <= frame_duty_guard_q[copy_lane] - 1'b1;
         end
@@ -1007,7 +1148,23 @@ module p9_optical_transport_core #(
             (cfg_drop_ack_count_i == 8'hff ? 8'hff :
              cfg_drop_ack_count_i + 1'b1) : cfg_drop_ack_count_i;
         fault_flags_remaining_q <= cfg_fault_flags_i;
-        fault_attempt_budget_q <= (cfg_fault_flags_i[4:0] != 0) ? 3 : 0;
+        fault_attempt_budget_q <= (cfg_fault_flags_i[4:0] != 0) ?
+            (cfg_auto_migration_request ? 3'd1 : 3'd3) : 3'd0;
+        auto_migration_mode_q <= cfg_auto_migration_config_valid;
+        auto_migration_armed_q <= cfg_auto_migration_config_valid &&
+            (local_is_a ? !cfg_direction_i : cfg_direction_i);
+        auto_migration_triggered_q <= 0;
+        auto_migration_target_lane_q <= cfg_auto_migration_config_valid ?
+            cfg_auto_migration_target_lane[LANE_WIDTH-1:0] : {LANE_WIDTH{1'b0}};
+        auto_migration_target_mask_q <= cfg_auto_migration_config_valid ?
+            cfg_auto_migration_target_mask : {LANE_COUNT{1'b0}};
+        auto_migration_trigger_sequence_q <= 0;
+        auto_migration_trigger_ack_base_q <= 0;
+        auto_migration_trigger_outstanding_q <= 0;
+        auto_migration_trigger_attempt_count_q <= 0;
+        auto_migration_trigger_physical_tx_count_q <= 0;
+        auto_migration_trigger_migration_count_q <= 0;
+        auto_migration_trigger_scheduled_count_q <= 0;
         duplicate_ack_validation_pending_q <= cfg_fault_flags_i[5];
         duplicate_ack_validation_start_q <= tx_duplicate_ack_count_o;
         endpoint_tx_burst_count_q <= 0;
@@ -1018,6 +1175,8 @@ module p9_optical_transport_core #(
         endpoint_turnaround_settle_timer_q <= 0;
         for (copy_lane = 0; copy_lane < LANE_COUNT; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
+          lane_auto_migration_pending_q[copy_lane] <= 0;
+          lane_auto_migration_sequence_q[copy_lane] <= 0;
           receive_tail[copy_lane] <= 0;
           if (!frame_schedule_valid_q[copy_lane] ||
               frame_schedule_direction_q[copy_lane] != cfg_direction_i) begin
@@ -1031,6 +1190,8 @@ module p9_optical_transport_core #(
         phase_q <= PH_DATA;
         fault_flags_remaining_q <= 0;
         fault_attempt_budget_q <= 0;
+        auto_migration_mode_q <= 0;
+        auto_migration_armed_q <= 0;
         duplicate_ack_validation_pending_q <= 0;
         endpoint_tx_burst_count_q <= 0;
         endpoint_waiting_for_ack_q <= 0;
@@ -1040,6 +1201,7 @@ module p9_optical_transport_core #(
         endpoint_turnaround_settle_timer_q <= 0;
         for (copy_lane = 0; copy_lane < LANE_COUNT; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
+          lane_auto_migration_pending_q[copy_lane] <= 0;
           frame_schedule_valid_q[copy_lane] <= 0;
         end
       end else if (!object_active_q) begin
@@ -1048,6 +1210,9 @@ module p9_optical_transport_core #(
         drop_ack_remaining_q <= 0;
         fault_flags_remaining_q <= 0;
         fault_attempt_budget_q <= 0;
+        auto_migration_mode_q <= 0;
+        auto_migration_armed_q <= 0;
+        lane_auto_migration_pending_q <= 0;
         duplicate_ack_validation_pending_q <= 0;
         endpoint_tx_burst_count_q <= 0;
         endpoint_waiting_for_ack_q <= 0;
@@ -1100,19 +1265,23 @@ module p9_optical_transport_core #(
                 dp_attempt_payload_ref * MAX_PAYLOAD_BYTES;
             lane_start_pending[dp_attempt_lane] <= 1;
             lane_frame_ack[dp_attempt_lane] <= 0;
+            lane_auto_migration_pending_q[dp_attempt_lane] <=
+                auto_migration_bad_crc_attempt;
+            lane_auto_migration_sequence_q[dp_attempt_lane] <=
+                dp_attempt_sequence;
             // Each test flag corrupts exactly the first non-dropped DATA
             // attempt.  The immutable slot metadata remains unchanged, so a
             // bounded retry exercises recovery with the canonical values.
             lane_session[dp_attempt_lane] <=
-                (fault_attempt_budget_q != 0 && fault_flags_remaining_q[0]) ?
+                (fault_attempt_eligible && fault_flags_remaining_q[0]) ?
                 object_session_q - 1'b1 : object_session_q;
             lane_path[dp_attempt_lane] <=
-                (fault_attempt_budget_q != 0 && fault_flags_remaining_q[1]) ?
+                (fault_attempt_eligible && fault_flags_remaining_q[1]) ?
                 object_path_q - 16'd2 : dp_attempt_path;
             lane_sequence[dp_attempt_lane] <=
-                (fault_attempt_budget_q != 0 && fault_flags_remaining_q[2]) ?
+                (fault_attempt_eligible && fault_flags_remaining_q[2]) ?
                 dp_attempt_sequence + WINDOW_SIZE :
-                ((fault_attempt_budget_q != 0 && fault_flags_remaining_q[3]) ?
+                ((fault_attempt_eligible && fault_flags_remaining_q[3]) ?
                  // Keep every bounded injected attempt strictly behind the
                  // receiver's object-start base.  Subtracting one from each
                  // attempt's own sequence can alias a later payload onto the
@@ -1121,7 +1290,7 @@ module p9_optical_transport_core #(
                  dp_attempt_sequence);
             lane_length[dp_attempt_lane] <= dp_attempt_payload_length;
             lane_crc[dp_attempt_lane] <=
-                (fault_attempt_budget_q != 0 && fault_flags_remaining_q[4]) ?
+                (fault_attempt_eligible && fault_flags_remaining_q[4]) ?
                 tx_slot_crc[dp_attempt_payload_ref] ^ 32'h0000_0001 :
                 tx_slot_crc[dp_attempt_payload_ref];
             lane_flags[dp_attempt_lane] <= {
@@ -1140,7 +1309,7 @@ module p9_optical_transport_core #(
                 endpoint_tx_burst_count_q <= endpoint_tx_burst_count_q + 1'b1;
               end
             end
-            if (fault_attempt_budget_q != 0) begin
+            if (fault_attempt_eligible) begin
               fault_attempt_budget_q <= fault_attempt_budget_q - 1'b1;
               if (fault_attempt_budget_q == 1)
                 fault_flags_remaining_q[4:0] <= 0;
@@ -1342,8 +1511,6 @@ module p9_optical_transport_core #(
   // paths and exact sliding-duty accountants.
   wire [31:0] a_raw_count [0:LANE_COUNT-1];
   wire [31:0] b_raw_count [0:LANE_COUNT-1];
-  wire [31:0] a_tx_count [0:LANE_COUNT-1];
-  wire [31:0] b_tx_count [0:LANE_COUNT-1];
   wire [31:0] a_high_current [0:LANE_COUNT-1];
   wire [31:0] b_high_current [0:LANE_COUNT-1];
   wire [31:0] a_high_max [0:LANE_COUNT-1];
@@ -2308,6 +2475,8 @@ module p9_optical_transport_core #(
         if (start_object_i) begin
           object_done_q <= 0;
           if (!endpoint_armed_q || raw_busy_q || cfg_lane_mask_i == 0 ||
+              (cfg_auto_migration_request &&
+               !cfg_auto_migration_config_valid) ||
               (cfg_lane_mask_i & ~cfg_lane_unavailable_i) == 0 ||
               (cfg_lane_mask_i & ~cfg_lane_unavailable_i &
                mapping_valid_mask & injected_duty_headroom_mask) == 0 ||

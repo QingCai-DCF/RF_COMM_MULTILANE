@@ -9,7 +9,7 @@
 # FastTrack current-run authorization and fail-closed outer wrapper.
 
 set p10_expected_register_map_version 0x0A000003
-set p10_expected_register_map_hash_low 0x5072E5AE
+set p10_expected_register_map_hash_low 0xFFA1C1B3
 
 proc p10_sanitize {value} {
   return [string map [list "\r" " " "\n" " " "=" "_" "|" "_"] $value]
@@ -610,7 +610,7 @@ proc p10_wait_receiver_primed {role d} {
       $last_p10_1_sequence]
 }
 
-proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_p10_1_dump rotating_p10_1_dump fixed_p10_1r_dump rotating_p10_1r_dump fixed_status rotating_status fixed_state rotating_state window {injection_applied 0} {injection_readback 0} {injection_timestamp_ms 0} {injection_sender NA} {injection_preconditions_verified 0} {injection_pre_outstanding 0} {injection_pre_target_scheduled 0} {injection_pre_target_physical_tx 0} {injection_pre_dropped_ack 0} {injection_pre_migration_count 0} {injection_initial_sequence 0} {injection_pre_ack_base 0} {injection_baseline_physical_ack_good 0} {injection_pre_physical_ack_good 0} {injection_post_write_ack_base 0} {injection_baseline_target_crc_bad 0} {injection_pre_target_crc_bad 0}} {
+proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_p10_1_dump rotating_p10_1_dump fixed_p10_1r_dump rotating_p10_1r_dump fixed_status rotating_status fixed_state rotating_state window {injection_applied 0} {injection_readback 0} {injection_timestamp_ms 0} {injection_sender NA} {injection_preconditions_verified 0} {injection_pre_outstanding 0} {injection_pre_target_scheduled 0} {injection_pre_target_physical_tx 0} {injection_pre_dropped_ack 0} {injection_pre_migration_count 0} {injection_initial_sequence 0} {injection_pre_ack_base 0} {injection_baseline_physical_ack_good 0} {injection_pre_physical_ack_good 0} {injection_post_write_ack_base 0} {injection_baseline_target_crc_bad 0} {injection_pre_target_crc_bad 0} {injection_atomic_status 0} {injection_trigger_sequence 0} {injection_trigger_ack_base 0} {injection_trigger_outstanding 0} {injection_trigger_attempt_count 0} {injection_trigger_physical_tx_count 0} {injection_trigger_count 0} {injection_trigger_migration_count 0} {injection_trigger_scheduled_count 0}} {
   global p10_observation_handle
   set values [list [dict get $d label] [dict get $d command] [dict get $d expected_status] \
       [dict get $d flags] [dict get $d lane] [dict get $d direction] [dict get $d rate] \
@@ -630,7 +630,12 @@ proc p10_record_observation {d sequence started finished fixed_dump rotating_dum
       $injection_initial_sequence $injection_pre_ack_base \
       $injection_baseline_physical_ack_good \
       $injection_pre_physical_ack_good $injection_post_write_ack_base \
-      $injection_baseline_target_crc_bad $injection_pre_target_crc_bad
+      $injection_baseline_target_crc_bad $injection_pre_target_crc_bad \
+      $injection_atomic_status $injection_trigger_sequence \
+      $injection_trigger_ack_base $injection_trigger_outstanding \
+      $injection_trigger_attempt_count $injection_trigger_physical_tx_count \
+      $injection_trigger_count $injection_trigger_migration_count \
+      $injection_trigger_scheduled_count
   puts $p10_observation_handle [join $values "|"]
   flush $p10_observation_handle
 }
@@ -699,6 +704,15 @@ proc p10_execute_case {d {window "NA"}} {
   set injection_post_write_ack_base 0
   set injection_baseline_target_crc_bad 0
   set injection_pre_target_crc_bad 0
+  set injection_atomic_status 0
+  set injection_trigger_sequence 0
+  set injection_trigger_ack_base 0
+  set injection_trigger_outstanding 0
+  set injection_trigger_attempt_count 0
+  set injection_trigger_physical_tx_count 0
+  set injection_trigger_count 0
+  set injection_trigger_migration_count 0
+  set injection_trigger_scheduled_count 0
   set migration_lane_index -1
   set migration_module_index -1
   set migration_lane_word -1
@@ -798,52 +812,78 @@ proc p10_execute_case {d {window "NA"}} {
         error "P10 source completed before lane-fault injection write"
       }
       if {$command == 3} {
-        # A blind wall-clock injection can land after every target-lane frame
-        # has already been acknowledged.  This vector begins with only the
-        # target lane schedulable and deliberately corrupts the first physical
-        # DATA attempts at the CRC field.  Prove target scheduling, physical TX,
-        # and receiver-side CRC rejection from coherent pre-launch baselines;
-        # ACK base must remain at the initial sequence.  The lane-fault write
-        # then atomically swaps from target-only to the three healthy lanes.
-        # No ACK is suppressed.
-        set precondition_deadline [expr {[clock milliseconds] + 40}]
-        while {[clock milliseconds] < $precondition_deadline} {
+        # The PL itself now binds the deliberately bad CRC, physical target
+        # frame completion, unchanged cumulative ACK base and lane-health swap
+        # into one clocked event.  XSDB only reads the persistent result; host
+        # timing cannot decide whether the precondition held.
+        set expected_atomic_flags [expr {(1 << 4) | (1 << 16) |
+            ($migration_lane_index << 17)}]
+        if {[dict get $d unavailable] != 0 ||
+            [dict get $d faultflags] != $expected_atomic_flags} {
+          error "P10 command-3 migration lacks the frozen atomic PL configuration"
+        }
+        set trigger_deadline [expr {[clock milliseconds] + 10000}]
+        while {[clock milliseconds] < $trigger_deadline} {
           p10_check_abort
-          set pre_state [p10_read32 $sender 0x0002000C]
-          set pre_status [p10_read32 $sender 0x43C0071C]
-          if {$pre_state != 3 || ($pre_status & 0x4) == 0} {
-            error "P10 source completed before migration precondition"
+          set injection_atomic_status [p10_read32 $sender 0x43C008BC]
+          if {($injection_atomic_status & 0x2) != 0} { break }
+          set trigger_state [p10_read32 $sender 0x0002000C]
+          if {$trigger_state in {4 5 6}} {
+            error "P10 source completed before the atomic migration trigger"
           }
-          set snapshot_before [p10_read32 $sender 0x43C00B04]
-          p10_write32 $sender 0x43C00B00 1
           after 1
-          set snapshot_generation [p10_read32 $sender 0x43C00B04]
-          set snapshot_schema [p10_read32 $sender 0x43C00B08]
-          if {$snapshot_generation <= $snapshot_before ||
-              ($snapshot_generation & 1) != 0 || $snapshot_schema != 0x50310201} {
-            error "P10 migration precondition snapshot is not coherent"
-          }
-          set current_target_scheduled [p10_read32 $sender \
-              [expr {0x43C00B0C + 4*$migration_lane_word}]]
-          set current_target_physical_tx [p10_read32 $sender \
-              [expr {0x43C00B0C + 4*$migration_module_word}]]
-          if {$current_target_scheduled < $migration_baseline_target_scheduled ||
-              $current_target_physical_tx < $migration_baseline_target_physical_tx} {
-            error "P10 migration target counter regressed across baseline"
-          }
-          set injection_pre_target_scheduled [expr {
-              $current_target_scheduled - $migration_baseline_target_scheduled}]
-          set injection_pre_target_physical_tx [expr {
-              $current_target_physical_tx - $migration_baseline_target_physical_tx}]
-          set window_state [p10_read32 $sender 0x43C0075C]
-          set injection_pre_outstanding [expr {($window_state >> 16) & 0x3F}]
-          set injection_pre_migration_count [p10_read32 $sender 0x43C00774]
-          set current_dropped_ack [p10_read32 $receiver 0x43C007AC]
-          set injection_pre_dropped_ack [expr {
-              $current_dropped_ack - $migration_baseline_dropped_ack}]
-          set tx_sequence_state [p10_read32 $sender 0x43C00758]
-          set injection_pre_ack_base [expr {($tx_sequence_state >> 16) & 0xFFFF}]
-          set injection_pre_physical_ack_good [p10_read32 $sender 0x43C007A0]
+        }
+        if {($injection_atomic_status & 0x2) == 0} {
+          error "P10 atomic migration trigger was not observed"
+        }
+        set atomic_target_mask [expr {($injection_atomic_status >> 4) & 0xF}]
+        set atomic_unavailable_mask [expr {($injection_atomic_status >> 8) & 0xF}]
+        set atomic_sequence [p10_read32 $sender 0x43C008C0]
+        set injection_trigger_sequence [expr {$atomic_sequence & 0xFFFF}]
+        set injection_trigger_ack_base [expr {($atomic_sequence >> 16) & 0xFFFF}]
+        set injection_trigger_outstanding [expr {
+            [p10_read32 $sender 0x43C008C4] & 0x3F}]
+        set injection_trigger_attempt_count [p10_read32 $sender 0x43C008C8]
+        set injection_trigger_physical_tx_count [p10_read32 $sender 0x43C008CC]
+        set injection_trigger_count [p10_read32 $sender 0x43C008D0]
+        set injection_trigger_migration_count [p10_read32 $sender 0x43C008D8]
+        set injection_trigger_scheduled_count [p10_read32 $sender 0x43C008DC]
+        set effective_readback [p10_read32 $sender 0x43C008D4]
+        if {($injection_atomic_status & 0x1) != 0 ||
+            ($injection_atomic_status & 0x4) == 0 ||
+            $atomic_target_mask != [dict get $d injectmask] ||
+            $atomic_unavailable_mask != [dict get $d injectmask] ||
+            ($effective_readback & 0xF) != [dict get $d injectmask] ||
+            $injection_trigger_sequence != $injection_initial_sequence ||
+            $injection_trigger_ack_base != $injection_initial_sequence ||
+            $injection_trigger_outstanding < 1 ||
+            $injection_trigger_outstanding > 32 ||
+            $injection_trigger_attempt_count < 1 ||
+            $injection_trigger_physical_tx_count <=
+                $migration_baseline_target_physical_tx ||
+            $injection_trigger_count != 1 ||
+            $injection_trigger_migration_count != 0 ||
+            $injection_trigger_scheduled_count <=
+                $migration_baseline_target_scheduled} {
+          error "P10 atomic migration trigger evidence is inconsistent"
+        }
+        set injection_pre_outstanding $injection_trigger_outstanding
+        set injection_pre_target_scheduled [expr {
+            $injection_trigger_scheduled_count -
+            $migration_baseline_target_scheduled}]
+        set injection_pre_target_physical_tx [expr {
+            $injection_trigger_physical_tx_count -
+            $migration_baseline_target_physical_tx}]
+        set injection_pre_migration_count $injection_trigger_migration_count
+        set injection_pre_ack_base $injection_trigger_ack_base
+        set injection_post_write_ack_base $injection_trigger_ack_base
+        set current_dropped_ack [p10_read32 $receiver 0x43C007AC]
+        set injection_pre_dropped_ack [expr {
+            $current_dropped_ack - $migration_baseline_dropped_ack}]
+        set injection_pre_physical_ack_good [p10_read32 $sender 0x43C007A0]
+
+        set crc_deadline [expr {[clock milliseconds] + 2000}]
+        while {[clock milliseconds] < $crc_deadline} {
           set receiver_snapshot_before [p10_read32 $receiver 0x43C00B04]
           p10_write32 $receiver 0x43C00B00 1
           after 1
@@ -852,7 +892,7 @@ proc p10_execute_case {d {window "NA"}} {
           if {$receiver_snapshot_generation <= $receiver_snapshot_before ||
               ($receiver_snapshot_generation & 1) != 0 ||
               $receiver_snapshot_schema != 0x50310201} {
-            error "P10 migration receiver snapshot is not coherent"
+            error "P10 atomic migration receiver snapshot is not coherent"
           }
           set current_target_crc_bad [p10_read32 $receiver \
               [expr {0x43C00B0C + 4*($migration_lane_word + 6)}]]
@@ -861,66 +901,49 @@ proc p10_execute_case {d {window "NA"}} {
           }
           set injection_pre_target_crc_bad [expr {
               $current_target_crc_bad - $injection_baseline_target_crc_bad}]
-          if {$injection_pre_outstanding >= 1 &&
-              $injection_pre_outstanding <= 32 &&
-              $injection_pre_target_scheduled > 0 &&
-              $injection_pre_target_physical_tx > 0 &&
-              $injection_pre_target_crc_bad > 0 &&
-              $injection_pre_dropped_ack == 0 &&
-              $injection_pre_migration_count == 0 &&
-              $injection_pre_ack_base == $injection_initial_sequence} {
-            set injection_preconditions_verified 1
-            break
-          }
-          if {$injection_pre_migration_count != 0} {
-            error "P10 migration occurred before lane-fault injection"
-          }
+          if {$injection_pre_target_crc_bad > 0} { break }
           after 1
         }
-        if {!$injection_preconditions_verified} {
-          error [format "P10 migration precondition absent outstanding=%d scheduled_delta=%d physical_tx_delta=%d target_crc_bad_delta=%d dropped_ack=%d ack_base=%d physical_ack_good=%d" \
-              $injection_pre_outstanding $injection_pre_target_scheduled \
-              $injection_pre_target_physical_tx \
-              $injection_pre_target_crc_bad $injection_pre_dropped_ack \
-              $injection_pre_ack_base $injection_pre_physical_ack_good]
+        if {$injection_pre_target_crc_bad <= 0 ||
+            $injection_pre_dropped_ack != 0} {
+          error "P10 atomic target frame was not directly rejected by CRC"
         }
-        p10_say [format "P10_MIGRATION_PRECONDITION_%s=outstanding:%d,target_scheduled_delta:%d,target_physical_tx_delta:%d,target_crc_bad_delta:%d,dropped_ack:%d,prior_migrations:%d,initial_sequence:%d,ack_base:%d,baseline_physical_ack_good:%d,pre_physical_ack_good:%d" \
-            [string toupper [dict get $d label]] $injection_pre_outstanding \
-            $injection_pre_target_scheduled $injection_pre_target_physical_tx \
-            $injection_pre_target_crc_bad $injection_pre_dropped_ack \
-            $injection_pre_migration_count \
-            $injection_initial_sequence $injection_pre_ack_base \
-            $injection_baseline_physical_ack_good \
-            $injection_pre_physical_ack_good]
-      }
-      global p10_max_lane_mask
-      # Command 13 reuses the legacy dropdata/dropack mailbox words for ACK
-      # threshold/outstanding.  They must never become physical drop counts.
-      # Preserve any already-configured bounded physical drop bits and update
-      # only the authorized live lane-unavailable mask.
-      set prior_fault [p10_read32 $sender 0x43C0073C]
-      set injected [expr {($prior_fault & 0x0000FFFF) |
-          (([dict get $d injectmask] & $p10_max_lane_mask) << 16)}]
-      p10_write32 $sender 0x43C0073C $injected
-      set readback [p10_read32 $sender 0x43C0073C]
-      set injection_readback_mask [expr {0x0000FFFF | ($p10_max_lane_mask << 16)}]
-      if {($readback & $injection_readback_mask) != $injected} {
-        error "P10 asynchronous lane-fault injection readback mismatch"
-      }
-      if {$command == 3} {
-        set post_write_sequence_state [p10_read32 $sender 0x43C00758]
-        set injection_post_write_ack_base [expr {
-            ($post_write_sequence_state >> 16) & 0xFFFF}]
-        if {$injection_post_write_ack_base != $injection_initial_sequence} {
-          error "P10 ACK base advanced before lane-fault write was verified"
+        set injection_preconditions_verified 1
+        set injection_applied 1
+        set injection_readback [p10_read32 $sender 0x43C0073C]
+        if {(($injection_readback >> 16) & 0xF) !=
+            [dict get $d injectmask]} {
+          error "P10 atomic effective lane-unavailable readback mismatch"
         }
+        set injection_timestamp_ms [clock milliseconds]
+        set injection_sender $sender
+        p10_say [format "P10_ATOMIC_LANE_INJECTION=%s:sender=%s,mask=0x%X,status=0x%08X,sequence=%d,ack_base=%d,outstanding=%d,attempts=%d,physical_tx=%d,crc_bad_delta=%d" \
+            [dict get $d label] $sender [dict get $d injectmask] \
+            $injection_atomic_status $injection_trigger_sequence \
+            $injection_trigger_ack_base $injection_trigger_outstanding \
+            $injection_trigger_attempt_count \
+            $injection_trigger_physical_tx_count \
+            $injection_pre_target_crc_bad]
+      } else {
+        global p10_max_lane_mask
+        # Autonomous command 13 retains the bounded host-controlled lane mask.
+        set prior_fault [p10_read32 $sender 0x43C0073C]
+        set injected [expr {($prior_fault & 0x0000FFFF) |
+            (([dict get $d injectmask] & $p10_max_lane_mask) << 16)}]
+        p10_write32 $sender 0x43C0073C $injected
+        set readback [p10_read32 $sender 0x43C0073C]
+        set injection_readback_mask [expr {
+            0x0000FFFF | ($p10_max_lane_mask << 16)}]
+        if {($readback & $injection_readback_mask) != $injected} {
+          error "P10 asynchronous lane-fault injection readback mismatch"
+        }
+        set injection_applied 1
+        set injection_readback $readback
+        set injection_timestamp_ms [clock milliseconds]
+        set injection_sender $sender
+        p10_say [format "P10_ASYNC_LANE_INJECTION=%s:sender=%s,mask=0x%X,readback=0x%08X" \
+            [dict get $d label] $sender [dict get $d injectmask] $readback]
       }
-      set injection_applied 1
-      set injection_readback $readback
-      set injection_timestamp_ms [clock milliseconds]
-      set injection_sender $sender
-      p10_say [format "P10_ASYNC_LANE_INJECTION=%s:sender=%s,mask=0x%X,readback=0x%08X" \
-          [dict get $d label] $sender [dict get $d injectmask] $readback]
     }
   } else {
     p10_publish_case fixed $d $sequence
@@ -956,7 +979,12 @@ proc p10_execute_case {d {window "NA"}} {
       $injection_pre_migration_count $injection_initial_sequence \
       $injection_pre_ack_base $injection_baseline_physical_ack_good \
       $injection_pre_physical_ack_good $injection_post_write_ack_base \
-      $injection_baseline_target_crc_bad $injection_pre_target_crc_bad
+      $injection_baseline_target_crc_bad $injection_pre_target_crc_bad \
+      $injection_atomic_status $injection_trigger_sequence \
+      $injection_trigger_ack_base $injection_trigger_outstanding \
+      $injection_trigger_attempt_count $injection_trigger_physical_tx_count \
+      $injection_trigger_count $injection_trigger_migration_count \
+      $injection_trigger_scheduled_count
   p10_record_ps_gpio $sequence "[dict get $d label]_terminal"
 
   set expected [dict get $d expected_status]
@@ -1940,7 +1968,7 @@ file mkdir [file dirname $p10_result_file]
 set p10_result_handle [open $p10_result_file w]
 set p10_observation_file [file join $p10_dump_dir observations.psv]
 set p10_observation_handle [open $p10_observation_file w]
-puts $p10_observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|sequence|fixed_status|rotating_status|fixed_state|rotating_state|fixed_dump_path|rotating_dump_path|fixed_p10_1_dump_path|rotating_p10_1_dump_path|fixed_p10_1r_dump_path|rotating_p10_1r_dump_path|injection_applied|injection_readback|injection_timestamp_ms|injection_sender|injection_preconditions_verified|injection_pre_outstanding|injection_pre_target_scheduled|injection_pre_target_physical_tx|injection_pre_dropped_ack|injection_pre_migration_count|injection_initial_sequence|injection_pre_ack_base|injection_baseline_physical_ack_good|injection_pre_physical_ack_good|injection_post_write_ack_base|injection_baseline_target_crc_bad|injection_pre_target_crc_bad"
+puts $p10_observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|sequence|fixed_status|rotating_status|fixed_state|rotating_state|fixed_dump_path|rotating_dump_path|fixed_p10_1_dump_path|rotating_p10_1_dump_path|fixed_p10_1r_dump_path|rotating_p10_1r_dump_path|injection_applied|injection_readback|injection_timestamp_ms|injection_sender|injection_preconditions_verified|injection_pre_outstanding|injection_pre_target_scheduled|injection_pre_target_physical_tx|injection_pre_dropped_ack|injection_pre_migration_count|injection_initial_sequence|injection_pre_ack_base|injection_baseline_physical_ack_good|injection_pre_physical_ack_good|injection_post_write_ack_base|injection_baseline_target_crc_bad|injection_pre_target_crc_bad|injection_atomic_status|injection_trigger_sequence|injection_trigger_ack_base|injection_trigger_outstanding|injection_trigger_attempt_count|injection_trigger_physical_tx_count|injection_trigger_count|injection_trigger_migration_count|injection_trigger_scheduled_count"
 flush $p10_observation_handle
 set p10_telemetry_file [file join $p10_dump_dir p10_1r_telemetry.psv]
 set p10_telemetry_handle [open $p10_telemetry_file w]

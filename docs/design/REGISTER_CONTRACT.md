@@ -3,7 +3,7 @@
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
 - Register map version: `P10-3` (`0x0A000003`)
-- Canonical source SHA256: `36ce57e7409865fe0dddda1e8a863647a4bd652e0ee612156ec27bc75072e5ae`
+- Canonical source SHA256: `8783951ad23bb2d966aa36b2da01892f807b94cdf10dfda0512a609fffa1c1b3`
 - Compatibility: P0-P10.2 offsets and meanings are preserved; P10.3F appends a reset-independent first-fault forensic window at 0x0D10-0x0D80.
 
 | Name | Offset | Access | Description |
@@ -329,6 +329,15 @@
 | `P10_1_PHYSICAL_PREAMBLE_LANE1` | `0x08B0` | `RO` | P10.1 lane1 physical preamble count |
 | `P10_1_PHYSICAL_SYMBOL_ERROR_LANE0` | `0x08B4` | `RO` | P10.1 lane0 physical symbol error count |
 | `P10_1_PHYSICAL_SYMBOL_ERROR_LANE1` | `0x08B8` | `RO` | P10.1 lane1 physical symbol error count |
+| `P9_AUTO_MIGRATION_STATUS` | `0x08BC` | `RO` | Atomic bad-CRC retry-migration arm, trigger, target and effective lane-unavailable state |
+| `P9_AUTO_MIGRATION_SEQUENCE` | `0x08C0` | `RO` | Atomic trigger sequence in bits 15:0 and pre-trigger cumulative ACK base in bits 31:16 |
+| `P9_AUTO_MIGRATION_WINDOW` | `0x08C4` | `RO` | Atomic trigger-time outstanding frame count in bits 5:0 |
+| `P9_AUTO_MIGRATION_ATTEMPT_COUNT` | `0x08C8` | `RO` | TX attempt count atomically captured when the bad-CRC target frame completed |
+| `P9_AUTO_MIGRATION_PHYSICAL_TX_COUNT` | `0x08CC` | `RO` | Target module physical Txd pulse count atomically captured at trigger |
+| `P9_AUTO_MIGRATION_TRIGGER_COUNT` | `0x08D0` | `RO` | Explicit-clear current-run atomic auto-migration trigger count |
+| `P9_EFFECTIVE_LANE_UNAVAILABLE` | `0x08D4` | `RO` | Live external OR validation-internal lane-unavailable mask |
+| `P9_AUTO_MIGRATION_PREVIOUS_MIGRATION_COUNT` | `0x08D8` | `RO` | TX migration count atomically captured at trigger; must be zero for the direct current-object precondition |
+| `P9_AUTO_MIGRATION_TARGET_SCHEDULED_COUNT` | `0x08DC` | `RO` | Target-lane scheduler frame count atomically captured at trigger |
 | `P10_1_PERF_CAPS` | `0x0900` | `RO` | P10.1 autonomous performance capability identity |
 | `P10_1_PERF_VERSION` | `0x0904` | `RO` | P10.1 performance command and metric schema version |
 | `P10_1_PERF_COMMAND` | `0x0908` | `RW` | Versioned PERF_CAPS/CONFIG/START/STATUS/SNAPSHOT/STOP/ABORT/CLEAR command |

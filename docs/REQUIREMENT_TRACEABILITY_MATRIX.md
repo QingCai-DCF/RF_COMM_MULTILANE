@@ -6,8 +6,8 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 242
-PASS: 190
-PENDING: 47
+PASS: 186
+PENDING: 51
 FAIL: 5
 WAIVED: 0
 ```
@@ -251,10 +251,10 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_3-PERF-002` | `PENDING` | P10_3_FOUR_LANE_PERFORMANCE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-PERF-002` | `evidence/generated/p10_3_performance.json` | Rotating-to-fixed application goodput shall be at least 8 Mbit/s under the frozen four-lane test contract. |
 | `P10_3-SOAK-001` | `PENDING` | P10_3_STATIONARY_30MIN | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-SOAK-001` | `evidence/generated/p10_3_formal_30min.json` | A single stationary four-lane formal run shall last 1800 seconds with bounded telemetry gaps and zero integrity, protocol, descriptor, deadlock, or safety errors. |
 | `P10_3-EVID-001` | `PENDING` | P10_3_EVIDENCE_CONSISTENCY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-EVID-001` | `evidence/generated/p10_3_evidence_consistency.json` | Every P10.3 PASS claim shall bind exact boards, modules, wiring, artifacts, run ID, raw logs, and a consistent SHA256 manifest. |
-| `P10_3F-OFF-001` | `PASS` | P10_3F_FIRST_FAULT_SAFETY_PATH | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-001` | `evidence/generated/p10_3_fault_forensics_offline.json` | A detected local TFDU safety fault or terminal object failure shall freeze the first-fault recorder and force endpoint-wide physical TX kill and full shutdown without waiting for software evidence handling. |
-| `P10_3F-OFF-002` | `PASS` | P10_3F_RESET_INDEPENDENT_CAPTURE | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-002` | `evidence/generated/p10_3_fault_forensics_offline.json` | The first-fault snapshot and event history shall not be cleared by functional reset or functional shutdown and shall clear only after complete ordered readout, nonzero SHA256 commit, verified full shutdown, and the explicit two-key clear command. |
-| `P10_3F-OFF-003` | `PASS` | P10_3F_SNAPSHOT_EVENT_ARCHIVE | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-003` | `evidence/generated/p10_3_fault_forensics_offline.json` | Each endpoint shall retain a 64-word four-module first-fault snapshot and a BRAM-backed circular event log with 248 pre-fault records and eight post-fault records, and the archive tool shall emit exact raw binary, parsed JSON, and SHA256 evidence. |
-| `P10_3F-OFF-004` | `PASS` | P10_3F_STAIRCASE_THEN_BOARD_AUTONOMOUS_AGGREGATION | `P10_3F_FULL_CAMPAIGN_HOST_REMEDIATION` | `P10_3F-OFF-004` | `evidence/generated/p10_3f_full_campaign_freeze.json` | The long-test contract shall first pass bidirectional 1, 4, 16, 64, and 256 KiB staircase levels with a safety snapshot gate after each direction; later board-autonomous commands may contain multiple 256 KiB internal objects up to 64 MiB, with continuous PL first-fault TX kill during each command and a coherent safety snapshot before another aggregate command is admitted, while every formal run remains bounded to 1800 seconds. |
+| `P10_3F-OFF-001` | `PENDING` | P10_3F_FIRST_FAULT_SAFETY_PATH | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-001` | `evidence/generated/p10_3_fault_forensics_offline.json` | A detected local TFDU safety fault or terminal object failure shall freeze the first-fault recorder and force endpoint-wide physical TX kill and full shutdown without waiting for software evidence handling. |
+| `P10_3F-OFF-002` | `PENDING` | P10_3F_RESET_INDEPENDENT_CAPTURE | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-002` | `evidence/generated/p10_3_fault_forensics_offline.json` | The first-fault snapshot and event history shall not be cleared by functional reset or functional shutdown and shall clear only after complete ordered readout, nonzero SHA256 commit, verified full shutdown, and the explicit two-key clear command. |
+| `P10_3F-OFF-003` | `PENDING` | P10_3F_SNAPSHOT_EVENT_ARCHIVE | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-003` | `evidence/generated/p10_3_fault_forensics_offline.json` | Each endpoint shall retain a 64-word four-module first-fault snapshot and a BRAM-backed circular event log with 248 pre-fault records and eight post-fault records, and the archive tool shall emit exact raw binary, parsed JSON, and SHA256 evidence. |
+| `P10_3F-OFF-004` | `PENDING` | P10_3F_STAIRCASE_THEN_BOARD_AUTONOMOUS_AGGREGATION | `P10_3F_FULL_CAMPAIGN_HOST_REMEDIATION` | `P10_3F-OFF-004` | `evidence/generated/p10_3f_full_campaign_freeze.json` | The long-test contract shall first pass bidirectional 1, 4, 16, 64, and 256 KiB staircase levels with a safety snapshot gate after each direction; later board-autonomous commands may contain multiple 256 KiB internal objects up to 64 MiB, with continuous PL first-fault TX kill during each command and a coherent safety snapshot before another aggregate command is admitted, while every formal run remains bounded to 1800 seconds. |
 | `P10_3F-HW-001` | `PENDING` | P10_3F_CURRENT_HARDWARE_FAULT_PATH | `P10_3F_HARDWARE_REACCEPTANCE` | `P10_3F-HW-001` | `evidence/generated/p10_3f_hardware/final/summary.json` | Current-artifact hardware evidence shall demonstrate that an injected or naturally detected fault kills all local physical transmitters and asserts full shutdown before any XSDB evidence read. |
 | `P10_3F-HW-002` | `PENDING` | P10_3F_CURRENT_HARDWARE_ARCHIVE_SHUTDOWN | `P10_3F_HARDWARE_REACCEPTANCE` | `P10_3F-HW-002` | `evidence/generated/p10_3f_hardware/final/summary.json` | On current hardware, any frozen evidence shall be read completely, archived as raw binary and parsed JSON with verified SHA256, committed in PL, and followed by programming and verification of both role-bound independent shutdown bitstreams without clearing the capture first. |
 | `P10_3F-HW-003` | `PENDING` | P10_3F_CURRENT_HARDWARE_STAIRCASE_FORMAL | `P10_3F_HARDWARE_REACCEPTANCE` | `P10_3F-HW-003` | `evidence/generated/p10_3f_hardware/final/summary.json` | Current hardware shall pass both directions at each 1, 4, 16, 64, and 256 KiB level, passing the safety gate before advancement, then pass the separately bounded 1800-second stationary formal stage. |
@@ -1386,56 +1386,3 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `P10_2-HWPREP-002`
 
 - `evidence/generated/p10_2_p10_3_readiness.json` — `565c66693fad55688eb03f59b1c3cc7a9b2908ad896c9ff08c1d51a40e729b63`
-
-### `P10_3F-OFF-001`
-
-- `rtl/p10_fault_forensics.sv` — `e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3`
-- `sim/tb/tb_p10_fault_forensics.sv` — `2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4`
-- `sim/tb/tb_p10_forensic_safety_integration.sv` — `df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752`
-- `config/safety/p10_3_fault_forensics.yaml` — `ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256`
-- `config/performance/p10_3f_staircase.yaml` — `069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8`
-- `scripts/archive_p10_fault_forensics.py` — `45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c`
-- `scripts/run_p10_3f_staircase_hardware.py` — `55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40`
-- `evidence/generated/p10_3_fault_forensics_xsim/summary.json` — `906c602d4d14f275b1743fcba7a29534cee61791f25175e980e6808bf23d0dea`
-- `evidence/generated/p10_3_fault_forensics_offline.json` — `803fe567c4d8e3bb9a30dcd04174b9f22a70772fa0506981efe5c939821a9d8d`
-- `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03/p10_ax7020_fixed_functional.bit` — `a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03`
-- `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00/p10_ax7020_rotating_functional.bit` — `a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00`
-
-### `P10_3F-OFF-002`
-
-- `rtl/p10_fault_forensics.sv` — `e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3`
-- `sim/tb/tb_p10_fault_forensics.sv` — `2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4`
-- `sim/tb/tb_p10_forensic_safety_integration.sv` — `df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752`
-- `config/safety/p10_3_fault_forensics.yaml` — `ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256`
-- `config/performance/p10_3f_staircase.yaml` — `069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8`
-- `scripts/archive_p10_fault_forensics.py` — `45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c`
-- `scripts/run_p10_3f_staircase_hardware.py` — `55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40`
-- `evidence/generated/p10_3_fault_forensics_xsim/summary.json` — `906c602d4d14f275b1743fcba7a29534cee61791f25175e980e6808bf23d0dea`
-- `evidence/generated/p10_3_fault_forensics_offline.json` — `803fe567c4d8e3bb9a30dcd04174b9f22a70772fa0506981efe5c939821a9d8d`
-- `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03/p10_ax7020_fixed_functional.bit` — `a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03`
-- `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00/p10_ax7020_rotating_functional.bit` — `a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00`
-
-### `P10_3F-OFF-003`
-
-- `rtl/p10_fault_forensics.sv` — `e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3`
-- `sim/tb/tb_p10_fault_forensics.sv` — `2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4`
-- `sim/tb/tb_p10_forensic_safety_integration.sv` — `df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752`
-- `config/safety/p10_3_fault_forensics.yaml` — `ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256`
-- `config/performance/p10_3f_staircase.yaml` — `069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8`
-- `scripts/archive_p10_fault_forensics.py` — `45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c`
-- `scripts/run_p10_3f_staircase_hardware.py` — `55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40`
-- `evidence/generated/p10_3_fault_forensics_xsim/summary.json` — `906c602d4d14f275b1743fcba7a29534cee61791f25175e980e6808bf23d0dea`
-- `evidence/generated/p10_3_fault_forensics_offline.json` — `803fe567c4d8e3bb9a30dcd04174b9f22a70772fa0506981efe5c939821a9d8d`
-- `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03/p10_ax7020_fixed_functional.bit` — `a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03`
-- `artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00/p10_ax7020_rotating_functional.bit` — `a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00`
-
-### `P10_3F-OFF-004`
-
-- `config/performance/p10_3f_staircase.yaml` — `069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8`
-- `config/performance/p10_3f_full_aggregate_runtime.yaml` — `a1fd595f97e0f8701ba103867db25b276ece60e47d17e0028af948d925acc572`
-- `docs/design/P10_3_FIRST_FAULT_FORENSICS.md` — `8ec7fff919919ac9eb76d50dceb143329e644a95eb6c7b285a86f8621615069c`
-- `scripts/run_p10_3_ax7020_4lane_hardware.py` — `453cc04e2a38e1140b137c262362b0e80f1f634c0c2c6f7f3c076d6277004439`
-- `scripts/run_p10_3f_full_hardware.py` — `aae168cbb4839c2790298021e8c16c76e9d7495e25cff5f1397d7151fbbb7d2f`
-- `scripts/hw/p10_dual_xsdb_stage.tcl` — `1e8f513d4e38e1d7337a2adb14babfaadeb4fd1c3d817dcb1e5a916ac559b9e7`
-- `tests/test_p10_3_hardware_acceptance.py` — `a503b3998b2095fc3b61c394594fdd959f0db64f1ee97e4d66dc0919abeadf37`
-- `tests/test_p10_3f_full_hardware.py` — `0b496dd80ba9a52de76d5025e3cb9a4632bb11d1d175a95977c551f228be33ea`

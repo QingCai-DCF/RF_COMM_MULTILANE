@@ -51,6 +51,7 @@ SOURCE_PATHS = (
     "scripts/build_p10_ps_runtime.py",
     "scripts/run_p10_2_xsim.py",
     "scripts/vivado/build_p10_ax7020_functional.tcl",
+    "sim/tb/tb_p10_2_4lane_suite.sv",
     "sim/tb/tb_p10_fault_forensics.sv",
     "sim/tb/tb_p10_forensic_safety_integration.sv",
     "tests/test_p10_3f_fault_forensics.py",
@@ -171,6 +172,7 @@ def main() -> int:
     }
     required_xsim = {
         "tb_p10_fault_forensics", "tb_p10_3_single_lane_ack_progress",
+        "tb_p10_3_atomic_lane_migration",
         "tb_p10_forensic_safety_integration",
         "tb_4lane_dual_endpoint", "tb_p10_2_lane_count_elaboration",
     }

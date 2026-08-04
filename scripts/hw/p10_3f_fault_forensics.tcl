@@ -8,7 +8,7 @@
 
 set p10_ff_base 0x43C00000
 set p10_ff_register_map_version 0x0A000003
-set p10_ff_register_map_hash_low 0x5072E5AE
+set p10_ff_register_map_hash_low 0xFFA1C1B3
 
 proc p10ff_say {line} {
   global p10ff_result_handle

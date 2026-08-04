@@ -52,6 +52,8 @@ TESTS = (
 P10_3_TESTS = (
     ("tb_p10_3_single_lane_ack_progress",
      "TB_P10_3_SINGLE_LANE_ACK_PROGRESS=PASS", [*CORE, SUITE]),
+    ("tb_p10_3_atomic_lane_migration",
+     "TB_P10_3_ATOMIC_LANE_MIGRATION=PASS", [*CORE, SUITE]),
     ("tb_p10_fault_forensics", "P10_FAULT_FORENSICS_XSIM=PASS",
      ["rtl/p10_fault_forensics.sv", "sim/tb/tb_p10_fault_forensics.sv"]),
     ("tb_p10_forensic_safety_integration",

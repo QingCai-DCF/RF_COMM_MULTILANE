@@ -4481,7 +4481,7 @@ requirements:
 - requirement_id: P10_3-DEG-001
   requirement_text: The endpoint shall degrade and recover across four, three, two, and one available lane without false commit.
   profile: P10_3_DEGRADED_MODES
-  verification_method: Inject live unavailable-lane masks and verify persistent exclusion, progress, recovery, and integrity; for each in-flight migration case start target-only with bounded CRC corruption, capture coherent pre-launch sender/receiver baselines, then directly prove a current-object target-lane scheduling delta, physical-TX delta, and receiver CRC-rejection delta within a one-to-32-frame unacknowledged window, unchanged initial ACK base, zero ACK suppression, and zero prior migrations before atomically swapping to the three healthy lanes and reading back the fault; re-read the unchanged ACK base after the write and require terminal retry migration on a healthy lane.
+  verification_method: Inject live unavailable-lane masks and verify persistent exclusion, progress, recovery, and integrity; for each in-flight migration case arm the validation-only PL atomic migration diagnostic with the selected target lane, require its first accepted physical DATA attempt to carry a deliberately invalid CRC, and in the same PL clock as that serializer-complete event replace target-only internal eligibility with target-unavailable eligibility. Read back the frozen trigger sequence, cumulative ACK base, one-to-32-frame outstanding count, attempt count, target physical-TX count, target scheduler count, zero prior migrations, trigger count of one, effective unavailable mask, and receiver target-lane CRC rejection; then require terminal retry migration on a healthy lane. External unavailable bits must remain ORed, the diagnostic may only remove lane eligibility, and no permit, PHY-ready, duty-headroom, or TX safety condition may be bypassed.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-DEG-001
@@ -4492,7 +4492,7 @@ requirements:
 - requirement_id: P10_3-ARQ-001
   requirement_text: Four-lane selective-repeat, 32-frame SACK, scheduler fairness, and cross-lane retry migration shall pass.
   profile: P10_3_FOUR_LANE_ARQ
-  verification_method: Run deterministic loss, wrap, scheduler, and migration experiments with zero integrity errors; the migration experiment shall use target-only bounded CRC corruption and pre-launch counter baselines to directly prove a current-object target-lane physical transmission and receiver CRC rejection in a one-to-32-frame unacknowledged pre-fault window, unchanged initial ACK base before and after the target-to-healthy lane-fault swap, zero ACK suppression, zero pre-fault migrations, and non-zero terminal cross-lane retry migration.
+  verification_method: Run deterministic loss, wrap, scheduler, and migration experiments with zero integrity errors; each migration experiment shall use the validation-only PL atomic trigger to prove a deliberately CRC-bad current-object target-lane physical transmission, receiver CRC rejection, frozen initial ACK base, one-to-32 outstanding frames, one trigger, zero prior migrations, exact effective target-unavailable readback, and non-zero terminal cross-lane retry migration. The target-only to target-unavailable transition must occur in PL on serializer completion rather than through a host-timed JTAG write, and all normal lane-health, permit, duty, pulse-width, SD, Mode, and TX-kill safety paths remain mandatory.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-ARQ-001
@@ -4575,31 +4575,9 @@ requirements:
   verification_scope: P10_3F_OFFLINE_ARTIFACT
   test_id: P10_3F-OFF-001
   evidence_path: evidence/generated/p10_3_fault_forensics_offline.json
-  status: PASS
+  status: PENDING
   waiver: null
-  artifact_hashes:
-  - path: rtl/p10_fault_forensics.sv
-    sha256: e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3
-  - path: sim/tb/tb_p10_fault_forensics.sv
-    sha256: 2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4
-  - path: sim/tb/tb_p10_forensic_safety_integration.sv
-    sha256: df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752
-  - path: config/safety/p10_3_fault_forensics.yaml
-    sha256: ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256
-  - path: config/performance/p10_3f_staircase.yaml
-    sha256: 069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8
-  - path: scripts/archive_p10_fault_forensics.py
-    sha256: 45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c
-  - path: scripts/run_p10_3f_staircase_hardware.py
-    sha256: 55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40
-  - path: evidence/generated/p10_3_fault_forensics_xsim/summary.json
-    sha256: 906c602d4d14f275b1743fcba7a29534cee61791f25175e980e6808bf23d0dea
-  - path: evidence/generated/p10_3_fault_forensics_offline.json
-    sha256: 803fe567c4d8e3bb9a30dcd04174b9f22a70772fa0506981efe5c939821a9d8d
-  - path: artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03/p10_ax7020_fixed_functional.bit
-    sha256: a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03
-  - path: artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00/p10_ax7020_rotating_functional.bit
-    sha256: a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00
+  artifact_hashes: []
 - requirement_id: P10_3F-OFF-002
   requirement_text: The first-fault snapshot and event history shall not be cleared by functional reset or functional shutdown and shall clear only after complete ordered readout, nonzero SHA256 commit, verified full shutdown, and the explicit two-key clear command.
   profile: P10_3F_RESET_INDEPENDENT_CAPTURE
@@ -4608,31 +4586,9 @@ requirements:
   verification_scope: P10_3F_OFFLINE_ARTIFACT
   test_id: P10_3F-OFF-002
   evidence_path: evidence/generated/p10_3_fault_forensics_offline.json
-  status: PASS
+  status: PENDING
   waiver: null
-  artifact_hashes:
-  - path: rtl/p10_fault_forensics.sv
-    sha256: e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3
-  - path: sim/tb/tb_p10_fault_forensics.sv
-    sha256: 2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4
-  - path: sim/tb/tb_p10_forensic_safety_integration.sv
-    sha256: df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752
-  - path: config/safety/p10_3_fault_forensics.yaml
-    sha256: ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256
-  - path: config/performance/p10_3f_staircase.yaml
-    sha256: 069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8
-  - path: scripts/archive_p10_fault_forensics.py
-    sha256: 45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c
-  - path: scripts/run_p10_3f_staircase_hardware.py
-    sha256: 55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40
-  - path: evidence/generated/p10_3_fault_forensics_xsim/summary.json
-    sha256: 906c602d4d14f275b1743fcba7a29534cee61791f25175e980e6808bf23d0dea
-  - path: evidence/generated/p10_3_fault_forensics_offline.json
-    sha256: 803fe567c4d8e3bb9a30dcd04174b9f22a70772fa0506981efe5c939821a9d8d
-  - path: artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03/p10_ax7020_fixed_functional.bit
-    sha256: a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03
-  - path: artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00/p10_ax7020_rotating_functional.bit
-    sha256: a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00
+  artifact_hashes: []
 - requirement_id: P10_3F-OFF-003
   requirement_text: Each endpoint shall retain a 64-word four-module first-fault snapshot and a BRAM-backed circular event log with 248 pre-fault records and eight post-fault records, and the archive tool shall emit exact raw binary, parsed JSON, and SHA256 evidence.
   profile: P10_3F_SNAPSHOT_EVENT_ARCHIVE
@@ -4641,31 +4597,9 @@ requirements:
   verification_scope: P10_3F_OFFLINE_ARTIFACT
   test_id: P10_3F-OFF-003
   evidence_path: evidence/generated/p10_3_fault_forensics_offline.json
-  status: PASS
+  status: PENDING
   waiver: null
-  artifact_hashes:
-  - path: rtl/p10_fault_forensics.sv
-    sha256: e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3
-  - path: sim/tb/tb_p10_fault_forensics.sv
-    sha256: 2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4
-  - path: sim/tb/tb_p10_forensic_safety_integration.sv
-    sha256: df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752
-  - path: config/safety/p10_3_fault_forensics.yaml
-    sha256: ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256
-  - path: config/performance/p10_3f_staircase.yaml
-    sha256: 069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8
-  - path: scripts/archive_p10_fault_forensics.py
-    sha256: 45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c
-  - path: scripts/run_p10_3f_staircase_hardware.py
-    sha256: 55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40
-  - path: evidence/generated/p10_3_fault_forensics_xsim/summary.json
-    sha256: 906c602d4d14f275b1743fcba7a29534cee61791f25175e980e6808bf23d0dea
-  - path: evidence/generated/p10_3_fault_forensics_offline.json
-    sha256: 803fe567c4d8e3bb9a30dcd04174b9f22a70772fa0506981efe5c939821a9d8d
-  - path: artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03/p10_ax7020_fixed_functional.bit
-    sha256: a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03
-  - path: artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00/p10_ax7020_rotating_functional.bit
-    sha256: a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00
+  artifact_hashes: []
 - requirement_id: P10_3F-OFF-004
   requirement_text: The long-test contract shall first pass bidirectional 1, 4, 16, 64, and 256 KiB staircase levels with a safety snapshot gate after each direction; later board-autonomous commands may contain multiple 256 KiB internal objects up to 64 MiB, with continuous PL first-fault TX kill during each command and a coherent safety snapshot before another aggregate command is admitted, while every formal run remains bounded to 1800 seconds.
   profile: P10_3F_STAIRCASE_THEN_BOARD_AUTONOMOUS_AGGREGATION
@@ -4674,25 +4608,9 @@ requirements:
   verification_scope: P10_3F_OFFLINE_TOOLING
   test_id: P10_3F-OFF-004
   evidence_path: evidence/generated/p10_3f_full_campaign_freeze.json
-  status: PASS
+  status: PENDING
   waiver: null
-  artifact_hashes:
-  - path: config/performance/p10_3f_staircase.yaml
-    sha256: 069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8
-  - path: config/performance/p10_3f_full_aggregate_runtime.yaml
-    sha256: a1fd595f97e0f8701ba103867db25b276ece60e47d17e0028af948d925acc572
-  - path: docs/design/P10_3_FIRST_FAULT_FORENSICS.md
-    sha256: 8ec7fff919919ac9eb76d50dceb143329e644a95eb6c7b285a86f8621615069c
-  - path: scripts/run_p10_3_ax7020_4lane_hardware.py
-    sha256: 453cc04e2a38e1140b137c262362b0e80f1f634c0c2c6f7f3c076d6277004439
-  - path: scripts/run_p10_3f_full_hardware.py
-    sha256: aae168cbb4839c2790298021e8c16c76e9d7495e25cff5f1397d7151fbbb7d2f
-  - path: scripts/hw/p10_dual_xsdb_stage.tcl
-    sha256: 1e8f513d4e38e1d7337a2adb14babfaadeb4fd1c3d817dcb1e5a916ac559b9e7
-  - path: tests/test_p10_3_hardware_acceptance.py
-    sha256: a503b3998b2095fc3b61c394594fdd959f0db64f1ee97e4d66dc0919abeadf37
-  - path: tests/test_p10_3f_full_hardware.py
-    sha256: 0b496dd80ba9a52de76d5025e3cb9a4632bb11d1d175a95977c551f228be33ea
+  artifact_hashes: []
 - requirement_id: P10_3F-HW-001
   requirement_text: Current-artifact hardware evidence shall demonstrate that an injected or naturally detected fault kills all local physical transmitters and asserts full shutdown before any XSDB evidence read.
   profile: P10_3F_CURRENT_HARDWARE_FAULT_PATH

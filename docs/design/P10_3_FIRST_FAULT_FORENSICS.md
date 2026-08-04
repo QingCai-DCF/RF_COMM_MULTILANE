@@ -162,6 +162,63 @@ promote the prior run's partial results. A new immutable host bundle,
 current-run authorization, complete campaign, evidence manifest, and verified
 dual-board shutdown are still required for acceptance.
 
+## Immutable lane-3 host-race run
+
+The immutable run
+`p10_3f_full_20260804T204115Z_b77883df_a6ecd8e6_a5491982` also remains FAIL
+evidence and is not reclassified. It completed every stage through the static
+mask matrix. Direct in-flight migration cases for lanes 0, 1, and 2 completed,
+and each captured a target-lane physical transmission, receiver CRC rejection,
+unchanged initial ACK base, zero dropped ACKs, and zero prior migrations before
+the host wrote the lane-unavailable mask. In the lane-3 case the same trigger
+precondition was observed (`outstanding=3`, target scheduled delta `23`, target
+physical-TX delta `23006`, target CRC-bad delta `3`, ACK base `0`, and zero prior
+migrations), but the cumulative ACK base advanced after the observation and
+before XSDB could complete and verify the mask write. The stage therefore
+failed closed with `P10 ACK base advanced before lane-fault write was verified`;
+lane 3 and its recovery case were not published as complete.
+
+The run's frozen forensic archives and all earlier stage evidence remain
+immutable. The final independent shutdown reported `SHUTDOWN_FIXED=PASS` and
+`SHUTDOWN_ROTATING=PASS`. These partial results are not inherited by a new
+artifact bundle or used to claim current hardware acceptance.
+
+## PL-atomic retry-migration trigger
+
+The remediation removes host latency from the target-to-healthy transition.
+Protocol fault flag bit 16 requests the validation-only atomic diagnostic and
+bits 17:18 select the target lane; bit 4 must also request bad CRC, bits 3:0
+must be clear, the target must be selected and externally available, and any
+invalid combination makes object start fail closed. The sender initially makes
+only the target lane internally eligible. When the deliberately CRC-bad target
+DATA frame reaches the final accepted `serializer_done` event, the same PL
+clock clears target-only eligibility and marks that target unavailable. Any
+externally supplied unavailable mask is always ORed with this internal mask and
+can never be overridden.
+
+The transition simultaneously freezes the target mask, frame sequence,
+cumulative ACK base, outstanding count, total attempt count, target physical
+Txd pulse count, trigger count, prior migration count, and target scheduler
+count. Registers `P9_AUTO_MIGRATION_STATUS` through
+`P9_AUTO_MIGRATION_TARGET_SCHEDULED_COUNT` expose that evidence. The host no
+longer writes the lane-fault mask for this command; it only reads the frozen PL
+event and the receiver's independent target-lane CRC-bad counter, then requires
+successful completion with a nonzero terminal retry-migration count. The
+diagnostic evidence survives a functional shutdown, but an explicit inactive
+counter clear or a new object may reset it. It is separate from the
+first-fault snapshot, whose reset/shutdown persistence and archive-before-clear
+contract are unchanged.
+
+This diagnostic can only restrict scheduler eligibility. It cannot create or
+raise `GLOBAL_PERMIT`, endpoint arm, lane permit, PHY readiness, duty headroom,
+frame admission, or a physical TX request, and it cannot bypass SD, Mode,
+continuous-high, rolling-duty, one-hot, TX-kill, or first-fault full-shutdown
+logic. Because the RTL, register map, firmware, and hardware scripts changed,
+the old bitstreams and every prior hardware result remain bound only to their
+old hashes. A new immutable bitstream/XSA/BSP/ELF bundle, complete offline
+gates, current-run authorization, full hardware campaign, and verified
+dual-board shutdown are required.
+
 ## Evidence limits
 
 The PL counters and event recorder can show what the implemented digital logic requested and what its internal safety monitors observed. They are not a substitute for an oscilloscope, rail-current measurement, module temperature measurement, or optical detector. Because the user excluded those manual measurements, this follow-up cannot independently prove actual pin voltage, optical pulse energy, rail droop, current, or temperature.

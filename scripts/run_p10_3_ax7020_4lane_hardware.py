@@ -149,19 +149,26 @@ EXPECTED_ROLE = {
         "local_indices": (4, 5, 6, 7),
     },
 }
-# Migration evidence is captured before the first cumulative-ACK boundary.
-# No ACK is deliberately suppressed: the XSDB stage must observe a small live
-# window, prove that the target lane physically transmitted into that exact
-# unacknowledged window, and apply the lane fault while ACK base is unchanged.
+# Migration evidence is captured by one atomic PL event, not by a sequence of
+# JTAG reads and a later write.  The target is the only internally eligible
+# lane until its deliberately bad-CRC physical frame completes; that same PL
+# clock makes the target unavailable and releases the other externally healthy
+# lanes.  No ACK is deliberately suppressed.
 MIGRATION_ACK_SUPPRESSION = 0
 MIGRATION_OUTSTANDING_MAX = 32
-MIGRATION_PROTOCOL_FAULT_FLAGS = 1 << 4
+MIGRATION_PROTOCOL_FAULT_FLAGS = (1 << 4) | (1 << 16)
 MIGRATION_TARGET_WEIGHTS = {
     1: 0x010101FF,
     2: 0x0101FF01,
     4: 0x01FF0101,
     8: 0xFF010101,
 }
+
+
+def migration_protocol_fault_flags(failed_lane: int) -> int:
+    if failed_lane not in MIGRATION_TARGET_WEIGHTS:
+        raise ValueError("migration fault must select exactly one P10.3 lane")
+    return MIGRATION_PROTOCOL_FAULT_FLAGS | (int(math.log2(failed_lane)) << 17)
 MODULES = ("F0", "F1", "F2", "F3", "R0", "R1", "R2", "R3")
 P103_SCHEMA = 0x50310201
 TARGET_DUTY_CYCLES = 11520
@@ -640,8 +647,8 @@ def build_plans() -> dict[str, list[PlanItem]]:
             object_id=ids.allocate(), injectmask=failed_lane,
             injectdelay=0, physical_drop_ack=MIGRATION_ACK_SUPPRESSION,
             weights=MIGRATION_TARGET_WEIGHTS[failed_lane],
-            unavailable=15 ^ failed_lane,
-            protocol_fault_flags=MIGRATION_PROTOCOL_FAULT_FLAGS,
+            unavailable=0,
+            protocol_fault_flags=migration_protocol_fault_flags(failed_lane),
             timeout=300_000,
         ))
         degrade.append(object_case(
@@ -672,8 +679,8 @@ def build_plans() -> dict[str, list[PlanItem]]:
         object_case("arq_retry_migration", size=16 << 20, direction=1,
                     lane=15, object_id=ids.allocate(), injectmask=1,
                     injectdelay=0, weights=MIGRATION_TARGET_WEIGHTS[1],
-                    unavailable=14,
-                    protocol_fault_flags=MIGRATION_PROTOCOL_FAULT_FLAGS,
+                    unavailable=0,
+                    protocol_fault_flags=migration_protocol_fault_flags(1),
                     physical_drop_ack=MIGRATION_ACK_SUPPRESSION,
                     timeout=300_000),
         object_case("scheduler_fair_f2r", size=16 << 20, direction=0,
@@ -1203,6 +1210,12 @@ def integer_row(row: dict[str, str]) -> dict[str, Any]:
         "injection_post_write_ack_base",
         "injection_baseline_target_crc_bad",
         "injection_pre_target_crc_bad",
+        "injection_atomic_status", "injection_trigger_sequence",
+        "injection_trigger_ack_base", "injection_trigger_outstanding",
+        "injection_trigger_attempt_count",
+        "injection_trigger_physical_tx_count", "injection_trigger_count",
+        "injection_trigger_migration_count",
+        "injection_trigger_scheduled_count",
     }
     return {key: int(value, 0) if key in numbers and value else value
             for key, value in row.items()}
@@ -1327,7 +1340,7 @@ def generic_pair(row: dict[str, Any], fixed_words: list[int],
             "duplicate_ack": snapshot(34),
             "out_of_window_ack": snapshot(36),
             "initial_sequence": snapshot(88) & 0xFFFF,
-            "protocol_fault_flags": snapshot(89) & 0xFFF,
+            "protocol_fault_flags": snapshot(89) & 0x7FFFF,
             "rx_out_of_order": snapshot(90),
             "rx_old": snapshot(91),
             "rx_future": snapshot(92),
@@ -1674,6 +1687,24 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
                                "injection_baseline_target_crc_bad", 0),
                            "injection_pre_target_crc_bad": row.get(
                                "injection_pre_target_crc_bad", 0),
+                           "injection_atomic_status": row.get(
+                               "injection_atomic_status", 0),
+                           "injection_trigger_sequence": row.get(
+                               "injection_trigger_sequence", 0),
+                           "injection_trigger_ack_base": row.get(
+                               "injection_trigger_ack_base", 0),
+                           "injection_trigger_outstanding": row.get(
+                               "injection_trigger_outstanding", 0),
+                           "injection_trigger_attempt_count": row.get(
+                               "injection_trigger_attempt_count", 0),
+                           "injection_trigger_physical_tx_count": row.get(
+                               "injection_trigger_physical_tx_count", 0),
+                           "injection_trigger_count": row.get(
+                               "injection_trigger_count", 0),
+                           "injection_trigger_migration_count": row.get(
+                               "injection_trigger_migration_count", 0),
+                           "injection_trigger_scheduled_count": row.get(
+                               "injection_trigger_scheduled_count", 0),
                            "plan_fields": {key: row[key] for key in (
                                "command", "flags", "lane", "direction", "rate",
                                "weights", "size", "ring", "cache", "object",
@@ -1871,10 +1902,9 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
                 if detail["plan_fields"]["dropack"] != MIGRATION_ACK_SUPPRESSION or \
                         detail["plan_fields"]["weights"] != \
                         MIGRATION_TARGET_WEIGHTS[detail["injectmask"]] or \
-                        detail["plan_fields"]["unavailable"] != \
-                        (15 ^ detail["injectmask"]) or \
+                        detail["plan_fields"]["unavailable"] != 0 or \
                         detail["plan_fields"]["faultflags"] != \
-                        MIGRATION_PROTOCOL_FAULT_FLAGS or \
+                        migration_protocol_fault_flags(detail["injectmask"]) or \
                         detail["injection_preconditions_verified"] != 1 or \
                         not 1 <= detail["injection_pre_outstanding"] <= \
                         MIGRATION_OUTSTANDING_MAX or \
@@ -1885,7 +1915,21 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
                         detail["injection_pre_migration_count"] != 0 or \
                         detail["injection_initial_sequence"] != initial_sequence or \
                         detail["injection_pre_ack_base"] != initial_sequence or \
-                        detail["injection_post_write_ack_base"] != initial_sequence:
+                        detail["injection_post_write_ack_base"] != initial_sequence or \
+                        detail["injection_atomic_status"] & 0x7 != 0x6 or \
+                        (detail["injection_atomic_status"] >> 4) & 0xF != \
+                        detail["injectmask"] or \
+                        (detail["injection_atomic_status"] >> 8) & 0xF != \
+                        detail["injectmask"] or \
+                        detail["injection_trigger_sequence"] != initial_sequence or \
+                        detail["injection_trigger_ack_base"] != initial_sequence or \
+                        not 1 <= detail["injection_trigger_outstanding"] <= \
+                        MIGRATION_OUTSTANDING_MAX or \
+                        detail["injection_trigger_attempt_count"] <= 0 or \
+                        detail["injection_trigger_physical_tx_count"] <= 0 or \
+                        detail["injection_trigger_count"] != 1 or \
+                        detail["injection_trigger_migration_count"] != 0 or \
+                        detail["injection_trigger_scheduled_count"] <= 0:
                     errors.append(
                         f"{detail['label']}:unacked migration precondition not directly observed")
                 if detail["injection_applied"] != 1 or \
@@ -1917,8 +1961,25 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
                                      "injection_post_write_ack_base"],
                                  "baseline_target_crc_bad": detail[
                                      "injection_baseline_target_crc_bad"],
-                                 "pre_target_crc_bad_delta": detail[
-                                     "injection_pre_target_crc_bad"]})
+                                  "pre_target_crc_bad_delta": detail[
+                                     "injection_pre_target_crc_bad"],
+                                 "atomic_status": f"0x{detail['injection_atomic_status']:08X}",
+                                 "trigger_sequence": detail[
+                                     "injection_trigger_sequence"],
+                                 "trigger_ack_base": detail[
+                                     "injection_trigger_ack_base"],
+                                 "trigger_outstanding": detail[
+                                     "injection_trigger_outstanding"],
+                                 "trigger_attempt_count": detail[
+                                     "injection_trigger_attempt_count"],
+                                 "trigger_physical_tx_count": detail[
+                                     "injection_trigger_physical_tx_count"],
+                                 "trigger_count": detail[
+                                     "injection_trigger_count"],
+                                 "trigger_previous_migration_count": detail[
+                                     "injection_trigger_migration_count"],
+                                 "trigger_target_scheduled_count": detail[
+                                     "injection_trigger_scheduled_count"]})
         if sorted(set(static_masks)) != [1, 2, 3, 4, 7, 8] or len(inflight) != 4:
             errors.append("degrade single-lane/4-to-3-to-2-to-1 matrix incomplete")
         semantics.update({"static_unavailable_masks": static_masks,
@@ -1979,10 +2040,9 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
             if migration["plan_fields"]["dropack"] != MIGRATION_ACK_SUPPRESSION or \
                     migration["plan_fields"]["weights"] != \
                     MIGRATION_TARGET_WEIGHTS[migration["injectmask"]] or \
-                    migration["plan_fields"]["unavailable"] != \
-                    (15 ^ migration["injectmask"]) or \
+                    migration["plan_fields"]["unavailable"] != 0 or \
                     migration["plan_fields"]["faultflags"] != \
-                    MIGRATION_PROTOCOL_FAULT_FLAGS or \
+                    migration_protocol_fault_flags(migration["injectmask"]) or \
                     migration["injection_preconditions_verified"] != 1 or \
                     not 1 <= migration["injection_pre_outstanding"] <= \
                     MIGRATION_OUTSTANDING_MAX or \
@@ -1993,7 +2053,21 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
                     migration["injection_pre_migration_count"] != 0 or \
                     migration["injection_initial_sequence"] != initial_sequence or \
                     migration["injection_pre_ack_base"] != initial_sequence or \
-                    migration["injection_post_write_ack_base"] != initial_sequence:
+                    migration["injection_post_write_ack_base"] != initial_sequence or \
+                    migration["injection_atomic_status"] & 0x7 != 0x6 or \
+                    (migration["injection_atomic_status"] >> 4) & 0xF != \
+                    migration["injectmask"] or \
+                    (migration["injection_atomic_status"] >> 8) & 0xF != \
+                    migration["injectmask"] or \
+                    migration["injection_trigger_sequence"] != initial_sequence or \
+                    migration["injection_trigger_ack_base"] != initial_sequence or \
+                    not 1 <= migration["injection_trigger_outstanding"] <= \
+                    MIGRATION_OUTSTANDING_MAX or \
+                    migration["injection_trigger_attempt_count"] <= 0 or \
+                    migration["injection_trigger_physical_tx_count"] <= 0 or \
+                    migration["injection_trigger_count"] != 1 or \
+                    migration["injection_trigger_migration_count"] != 0 or \
+                    migration["injection_trigger_scheduled_count"] <= 0:
                 errors.append("ARQ unacked migration precondition not directly observed")
             if migration["injection_applied"] != 1 or \
                     migration[f"{sender_role}_p10_2"]["migration_count"] == 0:

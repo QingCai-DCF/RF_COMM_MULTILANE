@@ -598,6 +598,309 @@ module tb_p10_3_single_lane_ack_progress;
   end
 endmodule
 
+// Prove that the P10.3 validation-only retry-migration trigger is one atomic
+// PL event.  Lane3 is the only eligible DATA lane until its deliberately bad
+// CRC frame physically completes; that same clock disables lane3 and releases
+// lanes0..2.  No host write participates in the precondition or lane swap.
+module tb_p10_3_atomic_lane_migration;
+  localparam integer L = 4;
+  localparam integer OBJECT_BYTES = 247 * 4;
+  localparam integer TFDU_RECOVERY_CYCLES = 4096;
+  localparam [31:0] ATOMIC_FAULT_FLAGS =
+      (32'd1 << 4) | (32'd1 << 16) | (32'd3 << 17);
+
+  reg clk = 0;
+  reg rst_n = 0;
+  always #7.8125 clk = ~clk;
+
+  reg receiver_enable = 0;
+  reg arm_request = 0;
+  reg full_shutdown_request = 0;
+  reg clear_counters = 0;
+  reg fixed_start_object = 0;
+  reg rotating_start_object = 0;
+  reg fixed_s_valid = 0;
+  wire fixed_s_ready;
+  reg [31:0] fixed_s_data = 0;
+  reg [3:0] fixed_s_keep = 0;
+  reg fixed_s_last = 0;
+  wire rotating_m_valid;
+  wire [3:0] rotating_m_keep;
+  wire rotating_m_last;
+
+  wire [L-1:0] fixed_txd;
+  wire [L-1:0] fixed_sd;
+  wire [L-1:0] rotating_txd;
+  wire [L-1:0] rotating_sd;
+  reg [12:0] fixed_recovery [0:L-1];
+  reg [12:0] rotating_recovery [0:L-1];
+  wire [L-1:0] fixed_recovery_clear;
+  wire [L-1:0] rotating_recovery_clear;
+  wire [L-1:0] fixed_rxd =
+      ~((rotating_txd & fixed_recovery_clear) | fixed_txd);
+  wire [L-1:0] rotating_rxd =
+      ~((fixed_txd & rotating_recovery_clear) | rotating_txd);
+
+  wire [2*L-1:0] fixed_phy_ready;
+  wire [2*L-1:0] rotating_phy_ready;
+  wire [2*L-1:0] fixed_safety_fault;
+  wire [2*L-1:0] rotating_safety_fault;
+  wire fixed_armed;
+  wire rotating_armed;
+  wire fixed_object_done;
+  wire rotating_object_done;
+  wire fixed_object_fail;
+  wire rotating_object_fail;
+  wire [31:0] fixed_object_error;
+  wire [31:0] rotating_object_error;
+  wire [31:0] fixed_retry_count;
+  wire [31:0] fixed_retry_exhausted;
+  wire [31:0] fixed_migration_count;
+  wire [L*32-1:0] fixed_scheduler_migrations;
+  wire [L*32-1:0] rotating_crc_bad_by_lane;
+  wire [2*L*32-1:0] fixed_tx_counts;
+  wire [L-1:0] fixed_effective_unavailable;
+  wire fixed_auto_armed;
+  wire fixed_auto_triggered;
+  wire [L-1:0] fixed_auto_target_mask;
+  wire [15:0] fixed_trigger_sequence;
+  wire [15:0] fixed_trigger_ack_base;
+  wire [5:0] fixed_trigger_outstanding;
+  wire [31:0] fixed_trigger_attempt_count;
+  wire [31:0] fixed_trigger_physical_tx_count;
+  wire [31:0] fixed_trigger_count;
+  wire [31:0] fixed_trigger_previous_migration_count;
+  wire [31:0] fixed_trigger_scheduled_count;
+
+  reg fixed_done_seen = 0;
+  reg rotating_done_seen = 0;
+  integer received_bytes = 0;
+  reg received_last = 0;
+  integer lane;
+  integer watchdog;
+  integer healthy_tx;
+
+  generate
+    genvar recovery_lane;
+    for (recovery_lane = 0; recovery_lane < L;
+         recovery_lane = recovery_lane + 1) begin : g_atomic_recovery
+      assign fixed_recovery_clear[recovery_lane] =
+          fixed_recovery[recovery_lane] == 0;
+      assign rotating_recovery_clear[recovery_lane] =
+          rotating_recovery[recovery_lane] == 0;
+    end
+  endgenerate
+
+  always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      for (lane = 0; lane < L; lane = lane + 1) begin
+        fixed_recovery[lane] <= 0;
+        rotating_recovery[lane] <= 0;
+      end
+      fixed_done_seen <= 0;
+      rotating_done_seen <= 0;
+      received_bytes <= 0;
+      received_last <= 0;
+    end else begin
+      for (lane = 0; lane < L; lane = lane + 1) begin
+        if (fixed_txd[lane])
+          fixed_recovery[lane] <= TFDU_RECOVERY_CYCLES;
+        else if (fixed_recovery[lane] != 0)
+          fixed_recovery[lane] <= fixed_recovery[lane] - 1'b1;
+        if (rotating_txd[lane])
+          rotating_recovery[lane] <= TFDU_RECOVERY_CYCLES;
+        else if (rotating_recovery[lane] != 0)
+          rotating_recovery[lane] <= rotating_recovery[lane] - 1'b1;
+      end
+      if (fixed_object_done) fixed_done_seen <= 1;
+      if (rotating_object_done) rotating_done_seen <= 1;
+      if (rotating_m_valid) begin
+        received_bytes <= received_bytes + rotating_m_keep[0] +
+            rotating_m_keep[1] + rotating_m_keep[2] + rotating_m_keep[3];
+        if (rotating_m_last) received_last <= 1;
+      end
+    end
+  end
+
+  p9_optical_transport_core #(
+    .CLK_HZ(64_000_000), .LANE_COUNT(L), .WINDOW_SIZE(32),
+    .SACK_BITS(32), .RTO_CYCLES(200_000), .DEPLOYMENT_ROLE(1)
+  ) fixed_endpoint (
+    .clk(clk), .rst_n(rst_n), .receiver_enable_i(receiver_enable),
+    .arm_request_i(arm_request), .disarm_request_i(1'b0),
+    .full_shutdown_request_i(full_shutdown_request),
+    .forensic_fault_hold_i(1'b0), .clear_counters_i(clear_counters),
+    .start_object_i(fixed_start_object), .abort_object_i(1'b0),
+    .cfg_lane_mask_i(4'hf), .cfg_lane_weights_i(32'hff01_0101),
+    .cfg_rate_select_i(2'd2), .cfg_direction_i(1'b0),
+    .cfg_session_epoch_i(32'hA103_1001), .cfg_path_epoch_i(16'h0310),
+    .cfg_object_id_i(32'h3310_0001), .cfg_initial_sequence_i(16'd0),
+    .cfg_fault_flags_i(ATOMIC_FAULT_FLAGS),
+    .cfg_drop_data_count_i(8'd0), .cfg_drop_ack_count_i(8'd0),
+    .cfg_lane_unavailable_i(4'd0), .raw_start_i(1'b0),
+    .raw_direction_i(1'b0), .raw_lane_mask_i(4'd0),
+    .raw_pulse_target_i(32'd0), .raw_spacing_cycles_i(32'd1024),
+    .s_axis_tvalid_i(fixed_s_valid), .s_axis_tready_o(fixed_s_ready),
+    .s_axis_tdata_i(fixed_s_data), .s_axis_tkeep_i(fixed_s_keep),
+    .s_axis_tlast_i(fixed_s_last), .m_axis_tready_i(1'b1),
+    .a_rxd_i(fixed_rxd), .a_txd_o(fixed_txd), .a_sd_o(fixed_sd),
+    .b_rxd_i(4'hf), .endpoint_armed_o(fixed_armed),
+    .phy_ready_mask_o(fixed_phy_ready),
+    .safety_fault_mask_o(fixed_safety_fault),
+    .object_done_o(fixed_object_done), .object_fail_o(fixed_object_fail),
+    .object_error_o(fixed_object_error),
+    .tx_retry_count_o(fixed_retry_count),
+    .tx_retry_exhausted_count_o(fixed_retry_exhausted),
+    .tx_migration_count_o(fixed_migration_count),
+    .scheduler_migrations_flat_o(fixed_scheduler_migrations),
+    .physical_tx_counts_flat_o(fixed_tx_counts),
+    .effective_lane_unavailable_o(fixed_effective_unavailable),
+    .auto_migration_armed_o(fixed_auto_armed),
+    .auto_migration_triggered_o(fixed_auto_triggered),
+    .auto_migration_target_mask_o(fixed_auto_target_mask),
+    .auto_migration_trigger_sequence_o(fixed_trigger_sequence),
+    .auto_migration_trigger_ack_base_o(fixed_trigger_ack_base),
+    .auto_migration_trigger_outstanding_o(fixed_trigger_outstanding),
+    .auto_migration_trigger_attempt_count_o(fixed_trigger_attempt_count),
+    .auto_migration_trigger_physical_tx_count_o(
+        fixed_trigger_physical_tx_count),
+    .auto_migration_trigger_count_o(fixed_trigger_count),
+    .auto_migration_trigger_migration_count_o(
+        fixed_trigger_previous_migration_count),
+    .auto_migration_trigger_scheduled_count_o(fixed_trigger_scheduled_count)
+  );
+
+  p9_optical_transport_core #(
+    .CLK_HZ(64_000_000), .LANE_COUNT(L), .WINDOW_SIZE(32),
+    .SACK_BITS(32), .RTO_CYCLES(200_000), .DEPLOYMENT_ROLE(2)
+  ) rotating_endpoint (
+    .clk(clk), .rst_n(rst_n), .receiver_enable_i(receiver_enable),
+    .arm_request_i(arm_request), .disarm_request_i(1'b0),
+    .full_shutdown_request_i(full_shutdown_request),
+    .forensic_fault_hold_i(1'b0), .clear_counters_i(clear_counters),
+    .start_object_i(rotating_start_object), .abort_object_i(1'b0),
+    .cfg_lane_mask_i(4'hf), .cfg_lane_weights_i(32'hff01_0101),
+    .cfg_rate_select_i(2'd2), .cfg_direction_i(1'b0),
+    .cfg_session_epoch_i(32'hA103_1001), .cfg_path_epoch_i(16'h0310),
+    .cfg_object_id_i(32'h3310_0001), .cfg_initial_sequence_i(16'd0),
+    .cfg_fault_flags_i(ATOMIC_FAULT_FLAGS),
+    .cfg_drop_data_count_i(8'd0), .cfg_drop_ack_count_i(8'd0),
+    .cfg_lane_unavailable_i(4'd0), .raw_start_i(1'b0),
+    .raw_direction_i(1'b0), .raw_lane_mask_i(4'd0),
+    .raw_pulse_target_i(32'd0), .raw_spacing_cycles_i(32'd1024),
+    .s_axis_tvalid_i(1'b0), .s_axis_tdata_i(32'd0),
+    .s_axis_tkeep_i(4'd0), .s_axis_tlast_i(1'b0),
+    .m_axis_tvalid_o(rotating_m_valid), .m_axis_tready_i(1'b1),
+    .m_axis_tkeep_o(rotating_m_keep), .m_axis_tlast_o(rotating_m_last),
+    .a_rxd_i(4'hf), .b_rxd_i(rotating_rxd), .b_txd_o(rotating_txd),
+    .b_sd_o(rotating_sd), .endpoint_armed_o(rotating_armed),
+    .phy_ready_mask_o(rotating_phy_ready),
+    .safety_fault_mask_o(rotating_safety_fault),
+    .object_done_o(rotating_object_done),
+    .object_fail_o(rotating_object_fail),
+    .object_error_o(rotating_object_error),
+    .physical_crc_bad_by_lane_o(rotating_crc_bad_by_lane)
+  );
+
+  task automatic stream_payload;
+    integer offset;
+    integer byte_index;
+    reg [31:0] word_value;
+    reg [3:0] keep_value;
+    begin
+      offset = 0;
+      while (offset < OBJECT_BYTES) begin
+        word_value = 0;
+        keep_value = 0;
+        for (byte_index = 0; byte_index < 4; byte_index = byte_index + 1) begin
+          if (offset + byte_index < OBJECT_BYTES) begin
+            word_value[8*byte_index +: 8] =
+                ((offset + byte_index) * 37) ^ 8'h5a;
+            keep_value[byte_index] = 1;
+          end
+        end
+        @(negedge clk);
+        fixed_s_valid = 1;
+        fixed_s_data = word_value;
+        fixed_s_keep = keep_value;
+        fixed_s_last = offset + 4 >= OBJECT_BYTES;
+        while (!fixed_s_ready && !fixed_object_fail && !rotating_object_fail)
+          @(posedge clk);
+        @(posedge clk); @(negedge clk);
+        fixed_s_valid = 0;
+        fixed_s_last = 0;
+        offset = offset + 4;
+      end
+    end
+  endtask
+
+  initial begin
+    repeat (8) @(posedge clk);
+    rst_n = 1;
+    receiver_enable = 1;
+    watchdog = 0;
+    while ((fixed_phy_ready != 8'h0f || rotating_phy_ready != 8'hf0) &&
+           watchdog < 100_000) begin
+      @(posedge clk); #1; watchdog = watchdog + 1;
+    end
+    if (fixed_phy_ready != 8'h0f || rotating_phy_ready != 8'hf0)
+      $fatal(1, "atomic migration PHY startup failed");
+    @(negedge clk); arm_request = 1;
+    @(posedge clk); @(negedge clk); arm_request = 0;
+    repeat (4) @(posedge clk);
+    if (!fixed_armed || !rotating_armed)
+      $fatal(1, "atomic migration endpoint arm failed");
+    @(negedge clk); clear_counters = 1;
+    @(posedge clk); @(negedge clk); clear_counters = 0;
+    @(negedge clk); rotating_start_object = 1;
+    @(posedge clk); @(negedge clk); rotating_start_object = 0;
+    repeat (64) @(posedge clk);
+    @(negedge clk); fixed_start_object = 1;
+    @(posedge clk); @(negedge clk); fixed_start_object = 0;
+    stream_payload();
+
+    watchdog = 0;
+    while (!(fixed_done_seen && rotating_done_seen) &&
+           !fixed_object_fail && !rotating_object_fail &&
+           watchdog < 4_000_000) begin
+      @(posedge clk); #1; watchdog = watchdog + 1;
+    end
+    healthy_tx = fixed_tx_counts[31:0] + fixed_tx_counts[63:32] +
+        fixed_tx_counts[95:64];
+    if (fixed_object_fail || rotating_object_fail ||
+        !(fixed_done_seen && rotating_done_seen))
+      $fatal(1, "atomic migration object failed error=%08x/%08x",
+             fixed_object_error, rotating_object_error);
+    if (!fixed_auto_triggered || fixed_auto_armed ||
+        fixed_auto_target_mask != 4'h8 ||
+        fixed_effective_unavailable != 4'h8 ||
+        fixed_trigger_sequence != 0 || fixed_trigger_ack_base != 0 ||
+        fixed_trigger_outstanding < 1 || fixed_trigger_outstanding > 32 ||
+        fixed_trigger_attempt_count < 1 ||
+        fixed_trigger_physical_tx_count < 1 || fixed_trigger_count != 1 ||
+        fixed_trigger_previous_migration_count != 0 ||
+        fixed_trigger_scheduled_count < 1)
+      $fatal(1, "atomic trigger evidence mismatch");
+    if (fixed_migration_count < 1 || fixed_retry_count < 1 ||
+        fixed_retry_exhausted != 0 ||
+        rotating_crc_bad_by_lane[127:96] < 1 ||
+        fixed_tx_counts[127:96] < 1 || healthy_tx < 1 ||
+        received_bytes != OBJECT_BYTES || !received_last ||
+        fixed_safety_fault != 0 || rotating_safety_fault != 0)
+      $fatal(1, "atomic retry migration did not complete directly");
+
+    receiver_enable = 0;
+    @(negedge clk); full_shutdown_request = 1;
+    repeat (4) @(posedge clk); #1;
+    if (fixed_txd != 0 || rotating_txd != 0 || fixed_sd != 4'hf ||
+        rotating_sd != 4'hf || fixed_armed || rotating_armed)
+      $fatal(1, "atomic migration final shutdown failed");
+    $display("TB_P10_3_ATOMIC_LANE_MIGRATION=PASS target=lane3 migrations=%0d retries=%0d",
+             fixed_migration_count, fixed_retry_count);
+    $finish;
+  end
+endmodule
+
 module tb_2lane_4lane_regression;
   p10_2_core_elaboration_fixture #(.LANE_COUNT(2)) legacy();
   p10_2_core_elaboration_fixture #(.LANE_COUNT(4)) four_lane();
