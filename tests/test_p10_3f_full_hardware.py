@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -21,6 +22,11 @@ class P103FFullHardwareTests(unittest.TestCase):
         self.assertEqual(tuple(first), runner.STAGES)
         self.assertEqual(first, second)
         self.assertEqual(runner.validate_plans(first), [])
+        staircase_end = max(runner.STAGES.index(stage)
+                            for stage in runner.STAIRCASE_STAGES)
+        self.assertLess(staircase_end, runner.STAGES.index("fault_capture"))
+        self.assertLess(staircase_end, runner.STAGES.index("raw_8x8"))
+        self.assertLess(staircase_end, runner.STAGES.index("two_lane_regression"))
         for stage, text in first.items():
             self.assertTrue(text.endswith("\n"), stage)
             text.encode("ascii")
@@ -81,6 +87,10 @@ class P103FFullHardwareTests(unittest.TestCase):
         tcl = runner.STAGE_TCL.read_text(encoding="utf-8")
         self.assertIn("if {$p10_campaign_p103f} {", tcl)
         self.assertIn("p10ff_assert_safety $case_label", tcl)
+        self.assertIn("if {$p10_campaign_p103f} {", tcl)
+        self.assertIn("p10ff_run_window [lindex $record 1]", tcl)
+        self.assertIn("$lane < 1", tcl)
+        self.assertIn("set next_object_id $p10ff_window_next_object_id", tcl)
 
     def test_controlled_fault_kills_before_forensic_archive_and_shutdown_reprogram(self) -> None:
         plans = runner.build_plans()
@@ -99,12 +109,18 @@ class P103FFullHardwareTests(unittest.TestCase):
         ):
             self.assertIn(token, tcl)
         source = Path(runner.__file__).read_text(encoding="utf-8")
-        capture = source.index("forensic.capture_and_archive(stage, run_root, auth, env)")
+        capture = source.index("forensic_summary = capture_and_archive(")
         shutdown = source.index(
             'after = guarded_shutdown(run_root, auth, artifacts, f"{stage}_after", env)'
         )
         self.assertLess(capture, shutdown)
         self.assertIn("clear_frozen_capture_before_shutdown_program\": False", source)
+        forensic_tcl = runner.FORENSIC_TCL.read_text(encoding="utf-8")
+        self.assertIn("proc p10ff_abort_before_capture", forensic_tcl)
+        self.assertIn("P10_FF_ABORT_BEFORE_CAPTURE=PASS", forensic_tcl)
+        self.assertIn("abort_capture", forensic_tcl)
+        self.assertIn("force_terminal_fault=True", source)
+        self.assertIn("raise RuntimeError(f\"{stage} forensic archive failed\")", source)
         self.assertLess(
             runner.STAGES.index("stream_dma_reset_fault"),
             runner.STAGES.index("stream_dma_reset_recovery_64m"),
@@ -113,6 +129,77 @@ class P103FFullHardwareTests(unittest.TestCase):
             runner.STAGES.index("stream_service_reset_fault"),
             runner.STAGES.index("stream_service_reset_recovery_64m"),
         )
+
+    def test_custom_observation_shape_is_exact_and_bounded(self) -> None:
+        plan = runner.build_plans()["staircase_1k"]
+        rows = []
+        sequence = 1
+        for line in plan.splitlines():
+            fields = line.split()
+            if not fields or fields[0] != "CASE":
+                continue
+            row = {"label": fields[1], "window": "NA", "sequence": sequence}
+            row.update(dict(zip(
+                runner.base.CASE_ROW_FIELDS,
+                (int(value, 0) for value in fields[2:29]),
+            )))
+            rows.append(row)
+            sequence += 1
+        rows.append({
+            "label": "staircase_1k_endpoint_shutdown",
+            "window": "NA",
+            "sequence": sequence,
+            "command": 10,
+        })
+        self.assertEqual(
+            runner.validate_custom_observation_shape("staircase_1k", rows, plan),
+            [],
+        )
+        rows[0]["size"] = runner.MAX_COMMAND_BYTES + 1
+        self.assertTrue(any(
+            "differs from immutable plan" in error
+            for error in runner.validate_custom_observation_shape(
+                "staircase_1k", rows, plan
+            )
+        ))
+
+    def test_manifest_verification_rejects_tamper_and_extra_files(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            run_root = Path(directory) / "p10_3f_full_test"
+            (run_root / "final").mkdir(parents=True)
+            evidence = run_root / "evidence.bin"
+            evidence.write_bytes(b"immutable")
+            runner.evidence_manifest(run_root, "PASS")
+            self.assertEqual(runner.verify_evidence_manifest(run_root), [])
+            evidence.write_bytes(b"tampered")
+            self.assertTrue(any(
+                "hash/size mismatch" in error
+                for error in runner.verify_evidence_manifest(run_root)
+            ))
+            evidence.write_bytes(b"immutable")
+            runner.evidence_manifest(run_root, "PASS")
+            (run_root / "late.txt").write_text("late", encoding="ascii")
+            self.assertTrue(any(
+                "file-set mismatch" in error
+                for error in runner.verify_evidence_manifest(run_root)
+            ))
+
+    def test_goal_named_publication_set_is_complete(self) -> None:
+        required = {
+            "module_intake", "raw_8x8", "per_lane_phy",
+            "two_lane_regression", "four_lane_raw", "mask_matrix",
+            "degraded_modes", "arq_scheduler", "dma_ddr_cache",
+            "streaming_64m", "performance", "formal_30min",
+        }
+        self.assertEqual(set(runner.PUBLISHED_STAGE_GROUPS), required)
+        source = Path(runner.__file__).read_text(encoding="utf-8")
+        self.assertIn('GENERATED / f"p10_3_{name}"', source)
+        for name in (
+            "p10_3_shutdown", "p10_3_evidence_consistency",
+            "p10_3_final_summary",
+            "p10_3f_hardware/final/summary",
+        ):
+            self.assertIn(name, source)
 
     def test_tcl_sources_are_parser_complete(self) -> None:
         result = subprocess.run(
@@ -174,7 +261,7 @@ class P103FFullHardwareTests(unittest.TestCase):
                 sys.executable,
                 str(Path(runner.__file__)),
                 "--run-id",
-                "p10_3f_full_20260804T000000Z_deadbeef",
+                "p10_3f_full_20260804T000000Z_deadbeef_deadbeef_deadbeef",
                 "--authorization",
                 str(ROOT / "config/does_not_exist.json"),
                 "--validate-only",
@@ -194,7 +281,8 @@ class P103FFullHardwareTests(unittest.TestCase):
         self.assertEqual(result.returncode, 3)
         self.assertIn("authorization/campaign freeze read failed", result.stdout)
         self.assertFalse((ROOT / "evidence/hardware/p10_3f_full/"
-                          "p10_3f_full_20260804T000000Z_deadbeef").exists())
+                          "p10_3f_full_20260804T000000Z_deadbeef_"
+                          "deadbeef_deadbeef").exists())
 
 
 if __name__ == "__main__":

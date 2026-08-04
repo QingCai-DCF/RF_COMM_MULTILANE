@@ -1112,10 +1112,11 @@ proc p10_run_p101_formal {label duration_sec} {
 }
 
 proc p10ff_run_bounded_window {label duration_sec direction lane absolute_deadline} {
-  global p10_max_lane_mask
+  global p10_max_lane_mask p10ff_window_next_object_id
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
       $duration_sec < 10 || $duration_sec > 840 || $direction ni {0 1} ||
-      $lane != $p10_max_lane_mask || $absolute_deadline <= 0} {
+      ![string is integer -strict $lane] || $lane < 1 ||
+      $lane > $p10_max_lane_mask || $absolute_deadline <= 0} {
     error "invalid P10.3F bounded window"
   }
   set started [clock milliseconds]
@@ -1123,8 +1124,10 @@ proc p10ff_run_bounded_window {label duration_sec direction lane absolute_deadli
       $absolute_deadline > $started + $duration_sec * 1000} {
     error "invalid P10.3F absolute deadline"
   }
-  set next_object_id [expr {0x6F000000 ^ (($direction & 1) << 27) ^
-      (($duration_sec & 0x3FF) << 12)}]
+  # A stage can contain several windows with identical duration/direction but
+  # different lane masks.  Allocate monotonically from one stage-local range
+  # so every observed object remains unique and independently auditable.
+  set next_object_id $p10ff_window_next_object_id
   set command_count 0
   set active_ms 0
   set marker_label [string toupper [string map [list "." "_" "-" "_"] $label]]
@@ -1153,6 +1156,7 @@ proc p10ff_run_bounded_window {label duration_sec direction lane absolute_deadli
       error "P10.3F bounded window exceeded its deadline"
     }
   }
+  set p10ff_window_next_object_id $next_object_id
   set finished [clock milliseconds]
   set elapsed [expr {$finished - $started}]
   if {$finished < $absolute_deadline || $finished > $absolute_deadline + 500 ||
@@ -1715,6 +1719,7 @@ if {[llength $argv] == 18} {
 set p10_connected 0
 set p10_active_target_id -1
 set p10_command_sequence 1000
+set p10ff_window_next_object_id 0x6F000000
 set p10_active_case_label "boot"
 set p10ff_fault_terminal 0
 set p10ff_expected_fault_stage [expr {$p10_stage eq "P10_3F-STREAMING_FAULT"}]
@@ -1982,8 +1987,17 @@ set rc [catch {
     } elseif {$kind eq "SOAK"} {
       p10_run_soak [lindex $record 1] [lindex $record 2]
     } elseif {$kind eq "P101_WINDOW"} {
-      p10_run_p101_window [lindex $record 1] [lindex $record 2] \
-          [lindex $record 3] [lindex $record 4] [lindex $record 5]
+      if {$p10_campaign_p103f} {
+        # P10.3F forbids an autonomous long-test command above 256 KiB.  Keep
+        # the legacy window duration and lane semantics, but execute it through
+        # the bounded implementation that gates a safety snapshot after every
+        # 256-KiB command before admitting the next command.
+        p10ff_run_window [lindex $record 1] [lindex $record 2] \
+            [lindex $record 3] [lindex $record 4]
+      } else {
+        p10_run_p101_window [lindex $record 1] [lindex $record 2] \
+            [lindex $record 3] [lindex $record 4] [lindex $record 5]
+      }
     } elseif {$kind eq "P101_PSRESET"} {
       p10_execute_ps_service_reset [lindex $record 1] [lindex $record 2] \
           [lindex $record 3] [lindex $record 4] [lindex $record 5] \

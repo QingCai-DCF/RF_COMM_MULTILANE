@@ -60,11 +60,16 @@ TCLSH = Path(
     r"D:\Xilinx\Vivado\2023.1\tps\win64\git-2.16.2\mingw64\bin\tclsh.exe"
 )
 HW_ROOT = ROOT / "evidence/hardware/p10_3f_full"
+GENERATED = ROOT / "evidence/generated"
 GENERATED_FINAL = ROOT / "evidence/generated/p10_3f_full_hardware_final_summary.json"
 EXPECTED_BUILD = {"fixed": 0x50334646, "rotating": 0x50334652}
 MAX_COMMAND_BYTES = 262_144
 MAX_FUNCTIONAL_DIAGNOSTIC_BYTES = 16 << 20
-RUN_RE = re.compile(r"^p10_3f_full_[0-9]{8}T[0-9]{6}Z_[0-9a-f]{8}$")
+RUN_RE = re.compile(
+    r"^p10_3f_full_(?P<utc>[0-9]{8}T[0-9]{6}Z)_"
+    r"(?P<host>[0-9a-f]{8})_(?P<fixed>[0-9a-f]{8})_"
+    r"(?P<rotating>[0-9a-f]{8})$"
+)
 
 BASE_STAGES = (
     "preflight",
@@ -87,6 +92,11 @@ STAIRCASE_STAGES = (
 STAGES = (
     "preflight",
     "module_intake",
+    # The user-required 1/4/16/64/256-KiB progression must precede every
+    # longer diagnostic, aggregate, performance, or formal transfer.  No later
+    # stage is admitted until both directions at every level pass their safety
+    # snapshot gate.
+    *STAIRCASE_STAGES,
     "fault_capture",
     "raw_8x8",
     "per_lane_phy",
@@ -96,7 +106,6 @@ STAGES = (
     "degrade",
     "arq_sack",
     "dma",
-    *STAIRCASE_STAGES,
     "streaming_64m",
     "stream_dma_reset_fault",
     "stream_dma_reset_recovery_64m",
@@ -173,6 +182,33 @@ SHUTDOWN_POLICY = {
     "verify_both_shutdown_markers": True,
     "clear_frozen_capture_before_shutdown_program": False,
 }
+RUN_DIRECTORIES = (
+    "authorization", "wiring", "module_inventory", "artifacts", "stages",
+    "forensics", "fault_forensics", "staircase", "target_identity",
+    "safe_boot", "power_preflight", "module_intake", "raw_8x8",
+    "per_lane_phy", "two_lane_regression", "four_lane_raw", "mask_matrix",
+    "degraded_modes", "arq_scheduler", "dma_ddr_cache", "streaming_64m",
+    "performance_f2r", "performance_r2f", "formal_30min", "shutdown",
+    "raw_logs", "final",
+)
+PUBLISHED_STAGE_GROUPS = {
+    "module_intake": ("module_intake",),
+    "raw_8x8": ("raw_8x8",),
+    "per_lane_phy": ("per_lane_phy",),
+    "two_lane_regression": ("two_lane_regression",),
+    "four_lane_raw": ("four_lane_raw",),
+    "mask_matrix": ("mask_matrix",),
+    "degraded_modes": ("degrade",),
+    "arq_scheduler": ("arq_sack",),
+    "dma_ddr_cache": ("dma",),
+    "streaming_64m": (
+        "streaming_64m", "stream_dma_reset_fault",
+        "stream_dma_reset_recovery_64m", "stream_service_reset_fault",
+        "stream_service_reset_recovery_64m",
+    ),
+    "performance": ("performance",),
+    "formal_30min": ("formal_30min",),
+}
 HOST_INPUTS = (
     GOAL,
     ROOT / "AGENTS.md",
@@ -184,8 +220,17 @@ HOST_INPUTS = (
     ROOT / "config/performance/p10_3f_staircase.yaml",
     WIRING,
     INVENTORY,
+    ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
+    ROOT / "docs/hardware/P10_3_AS_WIRED_RECORD.md",
+    ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
+    ROOT / "config/hardware/p10_2_ax7020_4lane_wiring.yaml",
+    ROOT / "docs/hardware/P10_2_AX7020_4LANE_WIRING_PROPOSAL.md",
+    ROOT / "board_profiles/ax7020_fixed_4lane/profile.yaml",
+    ROOT / "board_profiles/ax7020_rotating_4lane/profile.yaml",
     ROOT / "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc",
     ROOT / "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc",
+    ROOT / "board_profiles/ax7020_fixed_4lane/p10_3_runtime_role.h",
+    ROOT / "board_profiles/ax7020_rotating_4lane/p10_3_runtime_role.h",
     ROOT / "scripts/archive_p10_fault_forensics.py",
     ROOT / "scripts/run_p10_3_ax7020_4lane_hardware.py",
     ROOT / "scripts/run_p10_3f_staircase_hardware.py",
@@ -469,6 +514,14 @@ def validate_plans(plans: dict[str, str]) -> list[str]:
     object_ranges: list[tuple[int, int, str]] = []
     if tuple(plans) != STAGES:
         errors.append("full stage order mismatch")
+    staircase_end = max(STAGES.index(stage) for stage in STAIRCASE_STAGES)
+    for later in (
+        "fault_capture", "raw_8x8", "per_lane_phy", "two_lane_regression",
+        "four_lane_raw", "mask_matrix", "degrade", "arq_sack", "dma",
+        "streaming_64m", "performance", "formal_30min",
+    ):
+        if STAGES.index(later) <= staircase_end:
+            errors.append(f"{later}: admitted before bounded staircase completed")
     for stage, text in plans.items():
         try:
             text.encode("ascii")
@@ -776,6 +829,31 @@ def validate_authorization(
         record = load_json(path)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         return {}, {}, [f"authorization/campaign freeze read failed: {exc}"]
+    run_match = RUN_RE.fullmatch(run_id)
+    if run_match is None:
+        errors.append("run ID does not satisfy the content-bound P10.3F format")
+    else:
+        artifacts_by_key = {
+            artifact_key(item): item
+            for item in campaign.get("artifacts", [])
+            if isinstance(item, dict)
+        }
+        expected_run_parts = {
+            "host": str(campaign.get("host_source_commit", ""))[:8],
+            "fixed": str(
+                artifacts_by_key.get("fixed:functional_bitstream", {}).get(
+                    "sha256", ""
+                )
+            )[:8],
+            "rotating": str(
+                artifacts_by_key.get("rotating:functional_bitstream", {}).get(
+                    "sha256", ""
+                )
+            )[:8],
+        }
+        for name, value in expected_run_parts.items():
+            if run_match.group(name) != value:
+                errors.append(f"run ID {name} digest prefix mismatch")
     expected = {
         "schema_version": 1,
         "authorization_id": "P10_3F-FULL-CURRENT-RUN-IMMUTABLE",
@@ -939,6 +1017,155 @@ def read_rows(stage_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
             return [], [f"observation ledger parse failed: {exc}"]
 
 
+def validate_custom_observation_shape(
+    stage: str, rows: list[dict[str, Any]], plan_text: str
+) -> list[str]:
+    """Bind custom-stage observations to the immutable plan, in exact order.
+
+    The Tcl process returning PASS is necessary but not sufficient evidence.
+    This independent host check rejects skipped, duplicated, reordered, enlarged,
+    or out-of-plan autonomous transfers and verifies actual object-ID separation.
+    """
+    errors: list[str] = []
+    expected_fault = stage in EXPECTED_FAULT_STAGES
+    shutdown_positions = [
+        index for index, row in enumerate(rows)
+        if str(row.get("label", "")).endswith("_endpoint_shutdown")
+    ]
+    if expected_fault:
+        if shutdown_positions:
+            errors.append("terminal-fault stage recorded an unexpected mailbox shutdown")
+        body = rows
+    else:
+        if shutdown_positions != [len(rows) - 1]:
+            errors.append("exactly one final functional endpoint-shutdown row required")
+        body = rows[:-1] if shutdown_positions == [len(rows) - 1] else rows
+
+    cursor = 0
+
+    def consume_dynamic(
+        label: str, direction: int, lane: int, unavailable: int = 0,
+        total_bytes: int | None = None, first_object: int | None = None,
+    ) -> None:
+        nonlocal cursor
+        selected: list[dict[str, Any]] = []
+        while cursor < len(body) and body[cursor].get("window") == label:
+            selected.append(body[cursor])
+            cursor += 1
+        if not selected:
+            errors.append(f"{label}: dynamic window has no autonomous command")
+            return
+        for index, row in enumerate(selected):
+            if row.get("command") != 13 or row.get("direction") != direction or \
+                    row.get("lane") != lane or row.get("unavailable") != unavailable or \
+                    not str(row.get("label", "")).startswith(label) or \
+                    not 1 <= row.get("size", 0) <= MAX_COMMAND_BYTES:
+                errors.append(f"{label}: dynamic command {index} differs from bounded plan")
+            if first_object is not None and row.get("object") != first_object + index:
+                errors.append(f"{label}: object-ID sequence mismatch at command {index}")
+        if total_bytes is not None:
+            if sum(row.get("size", 0) for row in selected) != total_bytes:
+                errors.append(f"{label}: aggregate byte count mismatch")
+            expected_count = (total_bytes + MAX_COMMAND_BYTES - 1) // MAX_COMMAND_BYTES
+            if len(selected) != expected_count:
+                errors.append(f"{label}: aggregate command count mismatch")
+
+    records = [
+        line.split() for line in plan_text.splitlines()
+        if line.split() and not line.lstrip().startswith("#")
+    ]
+    for fields in records:
+        kind = fields[0]
+        if kind == "P10FF_CHECKPOINT":
+            continue
+        if kind == "P10FF_ABORT_FAULT":
+            if stage != "fault_capture":
+                errors.append("out-of-stage direct fault record")
+            continue
+        if kind == "CASE":
+            if cursor >= len(body):
+                errors.append(f"missing immutable case {fields[1]}")
+                continue
+            row = body[cursor]
+            cursor += 1
+            if row.get("label") != fields[1]:
+                errors.append(f"case order mismatch: expected {fields[1]}")
+                continue
+            expected_fields = dict(zip(base.CASE_ROW_FIELDS, (
+                int(fields[2], 0), int(fields[3], 0), int(fields[4], 0),
+                int(fields[5], 0), int(fields[6], 0), int(fields[7], 0),
+                int(fields[8], 0), int(fields[9], 0), int(fields[10], 0),
+                int(fields[11], 0), int(fields[12], 0), int(fields[13], 0),
+                int(fields[14], 0), int(fields[15], 0), int(fields[16], 0),
+                int(fields[17], 0), int(fields[18], 0), int(fields[19], 0),
+                int(fields[20], 0), int(fields[21], 0), int(fields[22], 0),
+                int(fields[23], 0), int(fields[24], 0), int(fields[25], 0),
+                int(fields[26], 0), int(fields[27], 0), int(fields[28], 0),
+            )))
+            for name, value in expected_fields.items():
+                if row.get(name) != value:
+                    errors.append(f"{fields[1]}:{name} differs from immutable plan")
+        elif kind == "P101_PSRESET":
+            if cursor >= len(body):
+                errors.append(f"missing service-reset vector {fields[1]}")
+            else:
+                row = body[cursor]
+                cursor += 1
+                direction = int(fields[3], 0)
+                sender = "fixed" if direction == 0 else "rotating"
+                expected_flag = 1 << (22 if fields[2] == sender else 23)
+                expected = {
+                    "label": fields[1],
+                    "window": "PS_SERVICE_RESET",
+                    "command": 13,
+                    "flags": expected_flag,
+                    "direction": direction,
+                    "lane": int(fields[4], 0),
+                    "size": int(fields[5], 0),
+                    "object": int(fields[6], 0),
+                    "unavailable": 0,
+                }
+                for name, value in expected.items():
+                    if row.get(name) != value:
+                        errors.append(
+                            f"{fields[1]}:{name} differs from immutable service-reset plan"
+                        )
+        elif kind == "P10FF_TOTAL":
+            consume_dynamic(
+                fields[1], int(fields[3], 0), int(fields[4], 0),
+                int(fields[5], 0), int(fields[2], 0), int(fields[6], 0),
+            )
+        elif kind == "P10FF_WINDOW":
+            consume_dynamic(fields[1], int(fields[3], 0), int(fields[4], 0))
+        elif kind == "P10FF_FORMAL":
+            root = fields[1]
+            for suffix, direction in (
+                ("warmup_f2r", 0), ("warmup_r2f", 1),
+                ("formal_f2r", 0), ("formal_r2f", 1),
+            ):
+                consume_dynamic(f"{root}_{suffix}", direction, 15)
+        else:
+            errors.append(f"unsupported custom plan record: {kind}")
+    if cursor != len(body):
+        errors.append(f"{len(body) - cursor} extra or reordered observations")
+    sequences = [row.get("sequence") for row in rows]
+    if len(set(sequences)) != len(sequences):
+        errors.append("duplicate command sequence in observation ledger")
+    intervals: list[tuple[int, int, str]] = []
+    for row in body:
+        if row.get("command") not in (3, 13):
+            continue
+        count = base.stream_object_count(row["size"]) if row["command"] == 13 else 1
+        intervals.append((row["object"], row["object"] + count - 1, row["label"]))
+    ordered = sorted(intervals)
+    for previous, current in zip(ordered, ordered[1:]):
+        if current[0] <= previous[1]:
+            errors.append(
+                f"observed object-ID overlap: {previous[2]} and {current[2]}"
+            )
+    return errors
+
+
 def load_custom_details(
     stage_dir: Path, rows: list[dict[str, Any]]
 ) -> tuple[list[dict[str, Any]], list[str]]:
@@ -1065,6 +1292,9 @@ def evaluate_custom_stage(
         errors.append("stage/safe-boot PASS marker missing")
     rows, row_errors = read_rows(stage_dir)
     errors.extend(row_errors)
+    errors.extend(validate_custom_observation_shape(
+        stage, rows, build_plans()[stage]
+    ))
     if stage in EXPECTED_FAULT_STAGES:
         fault_label = {
             "fault_capture": "controlled_terminal_abort",
@@ -1208,7 +1438,8 @@ def evaluate_custom_stage(
                     errors.append(f"{label}: 300-second performance target failed")
                 windows.append({"label": label, "committed_bytes": committed,
                                 "application_goodput_bps": goodput,
-                                "commands": len(selected)})
+                                "commands": len(selected), "direction": direction,
+                                "duration_seconds": 300, "lane_mask": 15})
             semantics["windows"] = windows
         elif stage == "formal_30min":
             elapsed = int(markers.get("P10_3F_FORMAL_ELAPSED_MS", "0"))
@@ -1229,7 +1460,9 @@ def evaluate_custom_stage(
                     errors.append(f"{label}: formal goodput/coverage failed")
                 windows.append({"label": label, "committed_bytes": committed,
                                 "application_goodput_bps": goodput,
-                                "active_ms": active_ms, "commands": len(selected)})
+                                "active_ms": active_ms, "commands": len(selected),
+                                "direction": direction, "duration_seconds": 840,
+                                "lane_mask": 15})
             semantics.update({"elapsed_ms": elapsed, "formal_windows": windows,
                               "maximum_command_bytes": MAX_COMMAND_BYTES})
 
@@ -1296,6 +1529,96 @@ def evaluate_stage(
     return evaluate_custom_stage(stage, stage_dir, process, forensic_summary)
 
 
+def capture_and_archive(
+    label: str,
+    run_root: Path,
+    auth: Path,
+    env: dict[str, str],
+    *,
+    force_terminal_fault: bool = False,
+) -> dict[str, Any]:
+    """Capture, canonically archive, hash, and commit a volatile PL recorder.
+
+    This full-campaign implementation intentionally does not modify the earlier
+    staircase runner whose exact hash is part of immutable offline PASS evidence.
+    """
+    out = run_root / "forensics" / label
+    out.mkdir(parents=True, exist_ok=True)
+    capture_result = out / "capture.result.txt"
+    command = [
+        str(XSDB), FORENSIC_TCL,
+        "abort_capture" if force_terminal_fault else "capture",
+        "tcp:localhost:3121", EXPECTED_FIXED_SERIAL, EXPECTED_ROTATING_SERIAL,
+        out, auth, run_root.name, f"0x{EXPECTED_BUILD['fixed']:08X}",
+        f"0x{EXPECTED_BUILD['rotating']:08X}", capture_result,
+    ]
+    process = run_bounded(
+        [str(item) for item in command],
+        out / "capture.stdout.log",
+        out / "capture.stderr.log",
+        180,
+        env,
+    )
+    errors: list[str] = []
+    archives: list[dict[str, Any]] = []
+    markers = parse_markers(capture_result)
+    if process.get("returncode") != 0 or process.get("timed_out") or \
+            markers.get("P10_FF_FORENSIC_RESULT") != "PASS":
+        errors.append("forensic XSDB capture failed")
+    if not errors:
+        try:
+            for role in ("fixed", "rotating"):
+                archives.append(
+                    forensic.write_archive(
+                        forensic.parse_psv(out / f"{role}.p10ff.psv"), out
+                    )
+                )
+        except (OSError, ValueError, RuntimeError) as exc:
+            errors.append(f"forensic binary/JSON archive failed: {exc}")
+    frozen = [item for item in archives if item.get("status") == "FROZEN"]
+    commit_process = None
+    if frozen and not errors:
+        digest = {item["role"]: item["binary_sha256"] for item in frozen}
+        commit_result = out / "commit.result.txt"
+        commit_command = [
+            str(XSDB), str(FORENSIC_TCL), "commit", "tcp:localhost:3121",
+            EXPECTED_FIXED_SERIAL, EXPECTED_ROTATING_SERIAL, str(out), str(auth),
+            run_root.name, f"0x{EXPECTED_BUILD['fixed']:08X}",
+            f"0x{EXPECTED_BUILD['rotating']:08X}", str(commit_result),
+            digest.get("fixed", "NONE"), digest.get("rotating", "NONE"),
+        ]
+        commit_process = run_bounded(
+            commit_command,
+            out / "commit.stdout.log",
+            out / "commit.stderr.log",
+            180,
+            env,
+        )
+        if commit_process.get("returncode") != 0 or commit_process.get("timed_out") or \
+                parse_markers(commit_result).get("P10_FF_FORENSIC_RESULT") != "PASS":
+            errors.append("forensic archive commit failed")
+    if force_terminal_fault:
+        if markers.get("P10_FF_ABORT_BEFORE_CAPTURE") != "PASS":
+            errors.append("forced terminal abort marker missing")
+        if {item["role"] for item in frozen} != {"fixed", "rotating"}:
+            errors.append("forced terminal abort did not archive both endpoint recorders")
+    summary = {
+        "schema_version": 1,
+        "status": "PASS" if not errors else "FAIL",
+        "label": label,
+        "capture_process": process,
+        "commit_process": commit_process,
+        "archives": archives,
+        "frozen_roles": [item["role"] for item in frozen],
+        "force_terminal_fault": force_terminal_fault,
+        "explicit_clear_executed": False,
+        "errors": errors,
+        "generated_at_utc": utc_now(),
+    }
+    write_json(out / "summary.json", summary)
+    return summary
+
+
 def guarded_shutdown(
     run_root: Path,
     auth: Path,
@@ -1306,20 +1629,595 @@ def guarded_shutdown(
     return forensic.guarded_shutdown(run_root, auth, artifacts, label, env)
 
 
+def initialize_run_root(run_root: Path, auth: Path) -> list[dict[str, Any]]:
+    """Create a self-contained immutable-input envelope before touching JTAG."""
+    run_root.mkdir(parents=True, exist_ok=False)
+    for name in RUN_DIRECTORIES:
+        (run_root / name).mkdir(parents=True, exist_ok=False)
+    copies = (
+        (auth, run_root / "authorization/immutable_authorization.json"),
+        (GOAL, run_root / "authorization/goal.md"),
+        (CAMPAIGN_FREEZE, run_root / "artifacts/campaign_freeze.json"),
+        (ARTIFACT_FREEZE, run_root / "artifacts/base_artifact_freeze.json"),
+        (WIRING, run_root / "wiring/p10_3_actual_wiring.yaml"),
+        (ROOT / "docs/hardware/P10_3_AS_WIRED_RECORD.md",
+         run_root / "wiring/P10_3_AS_WIRED_RECORD.md"),
+        (ROOT / "config/hardware/p10_2_ax7020_4lane_wiring.yaml",
+         run_root / "wiring/p10_2_ax7020_4lane_wiring.yaml"),
+        (ROOT / "docs/hardware/P10_2_AX7020_4LANE_WIRING_PROPOSAL.md",
+         run_root / "wiring/P10_2_AX7020_4LANE_WIRING_PROPOSAL.md"),
+        (ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
+         run_root / "wiring/p10_3_ax7020_activity_leds.yaml"),
+        (ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
+         run_root / "wiring/P10_3_AX7020_ACTIVITY_LED_DESIGN.md"),
+        (INVENTORY, run_root / "module_inventory/tfdu_module_inventory.yaml"),
+        (ROOT / "config/safety/p10_3_fault_forensics.yaml",
+         run_root / "artifacts/p10_3_fault_forensics.yaml"),
+        (ROOT / "config/performance/p10_3f_staircase.yaml",
+         run_root / "artifacts/p10_3f_staircase.yaml"),
+        (ROOT / "board_profiles/ax7020_fixed_4lane/profile.yaml",
+         run_root / "artifacts/fixed/profile.yaml"),
+        (ROOT / "board_profiles/ax7020_rotating_4lane/profile.yaml",
+         run_root / "artifacts/rotating/profile.yaml"),
+        (ROOT / "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc",
+         run_root / "artifacts/fixed/ax7020_fixed_4lane.generated.xdc"),
+        (ROOT / "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc",
+         run_root / "artifacts/rotating/ax7020_rotating_4lane.generated.xdc"),
+        (ROOT / "board_profiles/ax7020_fixed_4lane/p10_3_runtime_role.h",
+         run_root / "artifacts/fixed/p10_3_runtime_role.h"),
+        (ROOT / "board_profiles/ax7020_rotating_4lane/p10_3_runtime_role.h",
+         run_root / "artifacts/rotating/p10_3_runtime_role.h"),
+    )
+    records: list[dict[str, Any]] = []
+    for source, destination in copies:
+        if not source.is_file():
+            raise RuntimeError(f"immutable run input missing: {rel(source)}")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+        if sha256(source) != sha256(destination):
+            raise RuntimeError(f"immutable run input copy mismatch: {destination}")
+        records.append({
+            "source": rel(source),
+            "path": destination.relative_to(run_root).as_posix(),
+            "sha256": sha256(destination),
+            "bytes": destination.stat().st_size,
+        })
+    write_json(run_root / "authorization/immutable_input_copy_manifest.json", {
+        "schema_version": 1,
+        "status": "PASS",
+        "files": records,
+        "generated_at_utc": utc_now(),
+    })
+    write_text(
+        run_root / "authorization/NO_MOVEMENT_NETWORK_ATTESTATION.txt",
+        "ETHERNET=false\nMOVEMENT=false\nROTATION=false\nREALIGNMENT=false\n"
+        "REWIRING=false\nMAX_LANE_MASK=0xF\nTWO_HOUR=false\nP11=false\n"
+        "MANUAL_INSTRUMENTATION=OMITTED_BY_USER\n",
+    )
+    return records
+
+
+def write_summary_pair(path_base: Path, payload: dict[str, Any], title: str) -> None:
+    write_json(path_base.with_suffix(".json"), payload)
+    write_text(
+        path_base.with_suffix(".md"),
+        f"# {title}\n\n"
+        f"Status: `{payload.get('status', 'NOT_RECORDED')}`\n\n"
+        f"Run ID: `{payload.get('run_id', 'NONE')}`\n\n"
+        "The adjacent machine-readable JSON and its hashed raw-evidence "
+        "references are authoritative.\n",
+    )
+
+
+def run_metadata(path: Path, run_root: Path) -> dict[str, Any]:
+    return {
+        "path": path.resolve().relative_to(run_root.resolve()).as_posix(),
+        "sha256": sha256(path),
+        "bytes": path.stat().st_size,
+    }
+
+
 def evidence_manifest(run_root: Path, status: str) -> dict[str, Any]:
+    target = run_root / "final/run_evidence_sha256_manifest.json"
     records = []
     for path in sorted(run_root.rglob("*")):
-        if path.is_file() and path.name != "run_evidence_sha256_manifest.json":
-            records.append(metadata(path))
+        if path.is_file() and path != target:
+            records.append(run_metadata(path, run_root))
     payload = {
         "schema_version": 1,
-        "status": status,
+        "test_id": "P10_3F-FULL-HW-EVIDENCE-MANIFEST",
+        "status": "INDEX_GENERATED",
+        "acceptance_status": status,
         "run_id": run_root.name,
         "files": records,
         "generated_at_utc": utc_now(),
     }
-    write_json(run_root / "final/run_evidence_sha256_manifest.json", payload)
+    write_json(target, payload)
     return payload
+
+
+def verify_evidence_manifest(run_root: Path) -> list[str]:
+    errors: list[str] = []
+    target = run_root / "final/run_evidence_sha256_manifest.json"
+    try:
+        value = load_json(target)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        return [f"evidence manifest unreadable: {exc}"]
+    if value.get("schema_version") != 1 or value.get("run_id") != run_root.name or \
+            value.get("status") != "INDEX_GENERATED":
+        errors.append("evidence manifest identity/status mismatch")
+    seen: set[str] = set()
+    files = value.get("files")
+    if not isinstance(files, list):
+        return [*errors, "evidence manifest files is not a list"]
+    for item in files:
+        if not isinstance(item, dict):
+            errors.append("malformed evidence manifest record")
+            continue
+        name = item.get("path", "")
+        candidate = (run_root / str(name)).resolve()
+        if not isinstance(name, str) or not name or "\\" in name or \
+                name in seen or not base.inside(candidate, run_root) or \
+                not candidate.is_file():
+            errors.append(f"manifest duplicate/missing/outside path: {name}")
+            continue
+        seen.add(name)
+        if candidate.stat().st_size != item.get("bytes") or \
+                sha256(candidate) != item.get("sha256"):
+            errors.append(f"manifest hash/size mismatch: {name}")
+    expected = {
+        path.relative_to(run_root).as_posix()
+        for path in run_root.rglob("*")
+        if path.is_file() and path != target
+    }
+    if seen != expected:
+        errors.append(
+            f"manifest file-set mismatch missing={sorted(expected - seen)} "
+            f"extra={sorted(seen - expected)}"
+        )
+    return errors
+
+
+def stage_reference(
+    item: dict[str, Any] | None, stage: str, run_root: Path
+) -> dict[str, Any]:
+    path = run_root / "stages" / stage / "stage_summary.json"
+    reference: dict[str, Any] = {
+        "stage": stage,
+        "status": item.get("status") if item else "NOT_EXECUTED",
+        "test_id": item.get("test_id") if item else None,
+        "errors": item.get("errors", []) if item else ["stage not executed"],
+        "semantics": item.get("semantics", {}) if item else {},
+    }
+    if path.is_file():
+        record = run_metadata(path, run_root)
+        record["repository_path"] = rel(path)
+        reference["raw_summary"] = record
+    else:
+        reference["raw_summary"] = None
+    return reference
+
+
+def common_evidence_binding(
+    summary: dict[str, Any], run_root: Path, authorization: dict[str, Any]
+) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "run_id": run_root.name,
+        "scope": SCOPE,
+        "goal_sha256": GOAL_SHA256,
+        "artifact_source_commit": authorization["artifact_source_commit"],
+        "host_source_commit": authorization["host_source_commit"],
+        "campaign_freeze": {
+            "path": rel(CAMPAIGN_FREEZE),
+            "sha256": sha256(CAMPAIGN_FREEZE),
+        },
+        "base_artifact_freeze": {
+            "path": rel(ARTIFACT_FREEZE),
+            "sha256": sha256(ARTIFACT_FREEZE),
+        },
+        "artifacts": authorization["artifacts"],
+        "board_binding": {
+            "fixed": f"AX7020-F/JTAG:{EXPECTED_FIXED_SERIAL}",
+            "rotating": f"AX7020-R/JTAG:{EXPECTED_ROTATING_SERIAL}",
+        },
+        "module_binding": MODULE_BINDING,
+        "actual_wiring_sha256": sha256(WIRING),
+        "module_inventory_sha256": sha256(INVENTORY),
+        "hardware_actions_executed": summary["hardware_actions_executed"],
+        "network_used": False,
+        "movement": False,
+        "rotation": False,
+        "realignment": False,
+        "rewiring": False,
+        "maximum_lane_mask_authorized": "0xF",
+        "two_hour_test": False,
+        "p11": False,
+        "manual_instrumentation": "OMITTED_BY_USER",
+        "old_hardware_pass_inherited": False,
+    }
+
+
+def grouped_stage_payload(
+    name: str,
+    stages: tuple[str, ...],
+    by_stage: dict[str, dict[str, Any]],
+    run_root: Path,
+    common: dict[str, Any],
+) -> dict[str, Any]:
+    references = [stage_reference(by_stage.get(stage), stage, run_root) for stage in stages]
+    return {
+        **common,
+        "test_id": f"P10_3F-FULL-{name.upper()}",
+        "summary_name": name,
+        "status": "PASS" if all(
+            reference["status"] == "PASS" for reference in references
+        ) else "FAIL",
+        "stage_evidence": references,
+    }
+
+
+def collect_campaign_metrics(stage_results: list[dict[str, Any]]) -> dict[str, Any]:
+    by_stage = {item.get("stage"): item for item in stage_results}
+    details = [
+        detail
+        for item in stage_results
+        for detail in item.get("details", [])
+        if isinstance(detail, dict)
+    ]
+    module_index = {
+        "F0": ("fixed_p10_2", 0), "F1": ("fixed_p10_2", 1),
+        "F2": ("fixed_p10_2", 2), "F3": ("fixed_p10_2", 3),
+        "R0": ("rotating_p10_2", 4), "R1": ("rotating_p10_2", 5),
+        "R2": ("rotating_p10_2", 6), "R3": ("rotating_p10_2", 7),
+    }
+    max_duty: dict[str, int | None] = {}
+    max_continuous: dict[str, int | None] = {}
+    module_hard_fault: dict[str, int | None] = {}
+    for module, (snapshot_name, index) in module_index.items():
+        observed = [
+            detail[snapshot_name]["modules"][index]
+            for detail in details
+            if isinstance(detail.get(snapshot_name), dict) and
+            isinstance(detail[snapshot_name].get("modules"), list) and
+            len(detail[snapshot_name]["modules"]) > index
+        ]
+        max_duty[module] = max(
+            (int(item.get("duty_high_max", 0)) for item in observed), default=None
+        )
+        max_continuous[module] = max(
+            (int(item.get("tx_high_max", 0)) for item in observed), default=None
+        )
+        module_hard_fault[module] = max(
+            (int(item.get("hard_fault", 0)) for item in observed), default=None
+        )
+
+    counter_aliases = {
+        "crc_bad": ("physical_crc_bad",),
+        "sha_mismatch": ("sha_mismatch_count",),
+        "partial_commit": ("partial_commit_count",),
+        "duplicate_commit": ("duplicate_commit_count",),
+        "stale_commit": ("stale_commit_count",),
+        "retry_exhausted": ("retry_exhausted_count", "retry_exhausted"),
+        "descriptor_leak": ("descriptor_leak_count", "descriptor_leak"),
+        "double_completion": ("tx_double_completion", "rx_double_completion"),
+        "transport_timeout": ("tx_timeouts",),
+    }
+    counters: dict[str, int | None] = {}
+    for output, aliases in counter_aliases.items():
+        values: list[int] = []
+        for detail in details:
+            for role in ("fixed", "rotating"):
+                role_detail = detail.get(role)
+                if not isinstance(role_detail, dict):
+                    role_detail = detail.get(f"{role}_mailbox")
+                if not isinstance(role_detail, dict):
+                    continue
+                values.extend(
+                    int(role_detail[key])
+                    for key in aliases
+                    if isinstance(role_detail.get(key), (int, bool))
+                )
+        counters[output] = max(values, default=None)
+    lane_crc = [
+        int(lane.get("crc_bad", 0))
+        for detail in details
+        for snapshot_name in ("fixed_p10_2", "rotating_p10_2")
+        if isinstance(detail.get(snapshot_name), dict)
+        for lane in detail[snapshot_name].get("lanes", [])
+        if isinstance(lane, dict)
+    ]
+    if lane_crc:
+        counters["crc_bad"] = max(
+            [value for value in (counters["crc_bad"], max(lane_crc)) if value is not None]
+        )
+    process_timeouts = [
+        bool(item.get("process", {}).get("timed_out"))
+        for item in stage_results
+        if isinstance(item.get("process"), dict)
+    ]
+    if process_timeouts:
+        counters["deadlock"] = max(
+            int(any(process_timeouts)), int(counters.get("transport_timeout") or 0)
+        )
+    else:
+        counters["deadlock"] = None
+    counters["duty_violation"] = None if not any(
+        value is not None for value in max_duty.values()
+    ) else int(any(
+        (max_duty[module] or 0) > 11520 or (module_hard_fault[module] or 0) != 0
+        for module in module_index
+    ))
+    counters["continuous_high_violation"] = None if not any(
+        value is not None for value in max_continuous.values()
+    ) else int(any((value or 0) > 64 for value in max_continuous.values()))
+
+    performance_windows = by_stage.get("performance", {}).get(
+        "semantics", {}
+    ).get("windows", [])
+    performance_by_direction = {
+        int(item.get("direction", 0 if "f2r" in item.get("label", "") else 1)): item
+        for item in performance_windows
+        if isinstance(item, dict)
+    }
+    formal = by_stage.get("formal_30min", {}).get("semantics", {})
+    formal_windows = formal.get("formal_windows", [])
+    formal_by_direction = {
+        int(item.get("direction", 0 if "f2r" in item.get("label", "") else 1)): item
+        for item in formal_windows
+        if isinstance(item, dict)
+    }
+    max_masks = [
+        int(detail["lane_mask"])
+        for detail in details
+        if isinstance(detail.get("lane_mask"), int)
+    ]
+    return {
+        "application_goodput_bps": {
+            "F_TO_R": performance_by_direction.get(0, {}).get(
+                "application_goodput_bps"
+            ),
+            "R_TO_F": performance_by_direction.get(1, {}).get(
+                "application_goodput_bps"
+            ),
+        },
+        "formal": {
+            "runtime_seconds": (
+                formal.get("elapsed_ms") / 1000
+                if isinstance(formal.get("elapsed_ms"), (int, float)) else None
+            ),
+            "committed_bytes_f_to_r": formal_by_direction.get(0, {}).get(
+                "committed_bytes"
+            ),
+            "committed_bytes_r_to_f": formal_by_direction.get(1, {}).get(
+                "committed_bytes"
+            ),
+        },
+        "maximum_duty_cycles": max_duty,
+        "maximum_continuous_high_cycles": max_continuous,
+        "module_hard_fault": module_hard_fault,
+        "counters": counters,
+        "maximum_lane_mask_observed": (
+            f"0x{max(max_masks):X}" if max_masks else None
+        ),
+        "direct_observation_count": len(details),
+    }
+
+
+def materialize_run_views(
+    summary: dict[str, Any], run_root: Path, authorization: dict[str, Any]
+) -> dict[str, dict[str, Any]]:
+    by_stage = {item["stage"]: item for item in summary["stages"]}
+    common = common_evidence_binding(summary, run_root, authorization)
+    payloads: dict[str, dict[str, Any]] = {}
+    preflight = grouped_stage_payload(
+        "safe_boot", ("preflight",), by_stage, run_root, common
+    )
+    payloads["target_identity"] = {
+        **preflight,
+        "test_id": "P10_3F-FULL-TARGET-IDENTITY",
+        "summary_name": "target_identity",
+        "expected_build_ids": {
+            role: f"0x{value:08X}" for role, value in EXPECTED_BUILD.items()
+        },
+    }
+    payloads["safe_boot"] = preflight
+    payloads["power_preflight"] = {
+        **preflight,
+        "test_id": "P10_3F-FULL-POWER-PREFLIGHT",
+        "summary_name": "power_preflight",
+        "external_four_lane_power_acceptance": "OMITTED_BY_USER",
+        "user_power_arrangement_attestation": True,
+        "user_attestation_is_external_measurement": False,
+        "internal_no_brownout_is_external_measurement": False,
+    }
+    for name, stages in PUBLISHED_STAGE_GROUPS.items():
+        payloads[name] = grouped_stage_payload(name, stages, by_stage, run_root, common)
+    payloads["staircase"] = grouped_stage_payload(
+        "bounded_staircase", STAIRCASE_STAGES, by_stage, run_root, common
+    )
+    payloads["fault_forensics"] = grouped_stage_payload(
+        "fault_forensics", EXPECTED_FAULT_STAGES, by_stage, run_root, common
+    )
+
+    run_view = {
+        "target_identity": "target_identity/summary",
+        "safe_boot": "safe_boot/summary",
+        "power_preflight": "power_preflight/summary",
+        "module_intake": "module_intake/summary",
+        "raw_8x8": "raw_8x8/summary",
+        "per_lane_phy": "per_lane_phy/summary",
+        "two_lane_regression": "two_lane_regression/summary",
+        "four_lane_raw": "four_lane_raw/summary",
+        "mask_matrix": "mask_matrix/summary",
+        "degraded_modes": "degraded_modes/summary",
+        "arq_scheduler": "arq_scheduler/summary",
+        "dma_ddr_cache": "dma_ddr_cache/summary",
+        "streaming_64m": "streaming_64m/summary",
+        "formal_30min": "formal_30min/summary",
+        "staircase": "staircase/summary",
+        "fault_forensics": "fault_forensics/summary",
+    }
+    for name, destination in run_view.items():
+        write_summary_pair(
+            run_root / destination,
+            payloads[name],
+            f"P10.3 {name.replace('_', ' ')}",
+        )
+    performance = payloads["performance"]
+    windows = by_stage.get("performance", {}).get("semantics", {}).get("windows", [])
+    for direction, directory in ((0, "performance_f2r"), (1, "performance_r2f")):
+        selected = [
+            item for item in windows
+            if int(item.get("direction", 0 if "f2r" in item.get("label", "") else 1))
+            == direction
+        ]
+        directional = {
+            **performance,
+            "test_id": f"P10_3F-FULL-PERFORMANCE-{'F2R' if direction == 0 else 'R2F'}",
+            "direction": direction,
+            "windows": selected,
+            "status": "PASS" if performance["status"] == "PASS" and
+            len(selected) == 1 and
+            selected[0].get("application_goodput_bps", 0) >= 8_000_000 else "FAIL",
+        }
+        write_summary_pair(
+            run_root / directory / "direction_summary",
+            directional,
+            f"P10.3 performance {'F to R' if direction == 0 else 'R to F'}",
+        )
+    return payloads
+
+
+def shutdown_payload(
+    summary: dict[str, Any], run_root: Path, authorization: dict[str, Any]
+) -> dict[str, Any]:
+    common = common_evidence_binding(summary, run_root, authorization)
+    return {
+        **common,
+        "test_id": "P10_3F-FULL-SHUTDOWN",
+        "summary_name": "shutdown",
+        "status": "PASS" if summary["SHUTDOWN_FIXED"] == "PASS" and
+        summary["SHUTDOWN_ROTATING"] == "PASS" else "FAIL",
+        "SHUTDOWN_FIXED": summary["SHUTDOWN_FIXED"],
+        "SHUTDOWN_ROTATING": summary["SHUTDOWN_ROTATING"],
+        "shutdowns": summary["shutdowns"],
+        "raw_root": rel(run_root / "shutdown"),
+    }
+
+
+def publish_generated_evidence(
+    summary: dict[str, Any],
+    consistency: dict[str, Any],
+    payloads: dict[str, dict[str, Any]],
+    shutdown: dict[str, Any],
+    run_root: Path,
+) -> None:
+    for name in (
+        "target_identity", "safe_boot", "power_preflight", "module_intake",
+        "raw_8x8", "per_lane_phy", "two_lane_regression", "four_lane_raw",
+        "mask_matrix", "degraded_modes", "arq_scheduler", "dma_ddr_cache",
+        "streaming_64m", "performance", "formal_30min",
+    ):
+        write_summary_pair(
+            GENERATED / f"p10_3_{name}", payloads[name],
+            f"P10.3 {name.replace('_', ' ')}",
+        )
+    write_summary_pair(
+        GENERATED / "p10_3_shutdown", shutdown, "P10.3 dual-endpoint shutdown"
+    )
+    write_summary_pair(
+        GENERATED / "p10_3_evidence_consistency", consistency,
+        "P10.3 evidence consistency",
+    )
+    write_summary_pair(
+        GENERATED / "p10_3_final_summary", summary,
+        "P10.3 stationary four-lane hardware acceptance",
+    )
+    write_summary_pair(
+        GENERATED / "p10_3f_hardware/final/summary", summary,
+        "P10.3F current-artifact hardware acceptance",
+    )
+    write_summary_pair(
+        GENERATED / "p10_3f_hardware/staircase/summary", payloads["staircase"],
+        "P10.3F bounded staircase",
+    )
+    write_summary_pair(
+        GENERATED / "p10_3f_hardware/fault_forensics/summary",
+        payloads["fault_forensics"], "P10.3F first-fault forensics",
+    )
+    write_json(GENERATED_FINAL, summary)
+
+
+def finalize_run_evidence(
+    summary: dict[str, Any], run_root: Path, authorization: dict[str, Any]
+) -> tuple[str, dict[str, Any]]:
+    """Materialize Goal-named evidence and verify the complete run file set."""
+    status = str(summary["status"])
+    write_json(run_root / "final/orchestrator_result.json", summary)
+    write_summary_pair(
+        run_root / "final/p10_3_final_summary", summary,
+        "P10.3 stationary four-lane hardware acceptance",
+    )
+    payloads = materialize_run_views(summary, run_root, authorization)
+    shutdown = shutdown_payload(summary, run_root, authorization)
+    write_summary_pair(
+        run_root / "shutdown/summary", shutdown, "P10.3 dual-endpoint shutdown"
+    )
+    evidence_manifest(run_root, status)
+    first_errors = verify_evidence_manifest(run_root)
+    consistency = {
+        **common_evidence_binding(summary, run_root, authorization),
+        "test_id": "P10_3F-FULL-EVIDENCE-CONSISTENCY",
+        "status": "PASS" if not first_errors else "FAIL",
+        "manifest": rel(run_root / "final/run_evidence_sha256_manifest.json"),
+        "verified_complete_file_set": not first_errors,
+        "errors": first_errors,
+        "generated_at_utc": utc_now(),
+    }
+    write_summary_pair(
+        run_root / "final/p10_3_evidence_consistency", consistency,
+        "P10.3 evidence consistency",
+    )
+    evidence_manifest(run_root, status)
+    final_errors = verify_evidence_manifest(run_root)
+    if final_errors:
+        status = "FAIL"
+        summary["status"] = "FAIL"
+        summary["errors"].extend(final_errors)
+        consistency["status"] = "FAIL"
+        consistency["verified_complete_file_set"] = False
+        consistency["errors"] = final_errors
+        write_json(run_root / "final/orchestrator_result.json", summary)
+        write_summary_pair(
+            run_root / "final/p10_3_final_summary", summary,
+            "P10.3 stationary four-lane hardware acceptance",
+        )
+        write_summary_pair(
+            run_root / "final/p10_3_evidence_consistency", consistency,
+            "P10.3 evidence consistency",
+        )
+        evidence_manifest(run_root, status)
+    try:
+        publish_generated_evidence(summary, consistency, payloads, shutdown, run_root)
+    except Exception as exc:
+        status = "FAIL"
+        summary["status"] = "FAIL"
+        summary["errors"].append(f"generated evidence publication failed: {exc}")
+        consistency["status"] = "FAIL"
+        consistency["errors"].append(str(exc))
+        write_json(run_root / "final/orchestrator_result.json", summary)
+        write_summary_pair(
+            run_root / "final/p10_3_final_summary", summary,
+            "P10.3 stationary four-lane hardware acceptance",
+        )
+        write_summary_pair(
+            run_root / "final/p10_3_evidence_consistency", consistency,
+            "P10.3 evidence consistency",
+        )
+        evidence_manifest(run_root, status)
+        write_json(GENERATED_FINAL, summary)
+    return status, consistency
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -1360,17 +2258,45 @@ def main(argv: list[str] | None = None) -> int:
                          indent=2, ensure_ascii=False), file=sys.stderr)
         return 3
 
-    for name in ("authorization", "artifacts", "stages", "forensics", "shutdown",
-                 "raw_logs", "final"):
-        (run_root / name).mkdir(parents=True, exist_ok=False)
-    shutil.copy2(auth, run_root / "authorization/immutable_authorization.json")
-    shutil.copy2(CAMPAIGN_FREEZE, run_root / "artifacts/campaign_freeze.json")
-    shutil.copy2(ARTIFACT_FREEZE, run_root / "artifacts/base_artifact_freeze.json")
+    try:
+        initialize_run_root(run_root, auth)
+    except Exception as exc:
+        print(
+            f"P10_3F_FULL_RUN_ROOT_INITIALIZATION=FAIL\nERROR={exc}",
+            file=sys.stderr,
+        )
+        return 3
     ps7: dict[str, Path] = {}
-    for role in ("fixed", "rotating"):
-        destination = run_root / "artifacts" / role / "ps7_init.tcl"
-        extract_ps7_init(artifacts[f"{role}:xsa"], destination)
-        ps7[role] = destination
+    derived: list[dict[str, Any]] = []
+    initialization_errors: list[str] = []
+    try:
+        for role in ("fixed", "rotating"):
+            destination = run_root / "artifacts" / role / "ps7_init.tcl"
+            extract_ps7_init(artifacts[f"{role}:xsa"], destination)
+            ps7[role] = destination
+            derived.append({
+                "role": role,
+                "source_xsa": metadata(artifacts[f"{role}:xsa"]),
+                "derived": run_metadata(destination, run_root),
+            })
+    except Exception as exc:
+        initialization_errors.append(f"PS7 init extraction failed: {exc}")
+    write_json(run_root / "artifacts/derived_artifact_manifest.json", {
+        "schema_version": 1,
+        "status": "PASS" if not initialization_errors else "FAIL",
+        "files": derived,
+        "errors": initialization_errors,
+        "generated_at_utc": utc_now(),
+    })
+    write_json(run_root / "artifacts/authorized_artifact_manifest.json", {
+        "schema_version": 1,
+        "status": "PASS" if not initialization_errors else "FAIL",
+        "artifact_source_commit": record["artifact_source_commit"],
+        "host_source_commit": record["host_source_commit"],
+        "artifacts": record["artifacts"],
+        "errors": initialization_errors,
+        "generated_at_utc": utc_now(),
+    })
 
     env = {
         **os.environ,
@@ -1383,15 +2309,19 @@ def main(argv: list[str] | None = None) -> int:
     stage_results: list[dict[str, Any]] = []
     forensic_results: list[dict[str, Any]] = []
     shutdown_results: list[dict[str, Any]] = []
-    campaign_errors: list[str] = []
+    campaign_errors: list[str] = list(initialization_errors)
+    hardware_actions = False
     functional_loaded = False
     active_stage: str | None = None
     active_archived = False
     try:
+        if initialization_errors:
+            raise RuntimeError("artifact derivation precondition failed")
         server_proc, server = start_hw_server(run_root / "raw_logs")
         write_json(run_root / "raw_logs/hw_server.json", server)
         if server.get("status") != "PASS":
             raise RuntimeError(server.get("reason", "hw_server unavailable"))
+        hardware_actions = True
         initial = guarded_shutdown(run_root, auth, artifacts, "initial", env)
         shutdown_results.append(initial)
         if initial.get("status") != "PASS":
@@ -1407,12 +2337,24 @@ def main(argv: list[str] | None = None) -> int:
             process, stage_dir = invoke_stage(
                 stage, plans[stage], run_root, auth, artifacts, ps7, env
             )
-            forensic_summary = forensic.capture_and_archive(stage, run_root, auth, env)
+            process_failed = bool(
+                process.get("returncode") != 0 or process.get("timed_out")
+            )
+            forensic_summary = capture_and_archive(
+                stage, run_root, auth, env,
+                force_terminal_fault=process_failed,
+            )
             forensic_results.append(forensic_summary)
-            active_archived = True
+            active_archived = forensic_summary.get("status") == "PASS"
+            if not active_archived:
+                # Do not reconfigure the FPGA and destroy a possibly frozen,
+                # unarchived recorder.  The finally path first retries a forced
+                # terminal abort/capture, then performs the independent dual
+                # shutdown even if that retry cannot be archived.
+                raise RuntimeError(f"{stage} forensic archive failed")
             after = guarded_shutdown(run_root, auth, artifacts, f"{stage}_after", env)
             shutdown_results.append(after)
-            functional_loaded = False
+            functional_loaded = after.get("status") != "PASS"
             result = evaluate_stage(stage, stage_dir, process, forensic_summary)
             result["shutdown_after_status"] = after.get("status")
             stage_results.append(result)
@@ -1430,13 +2372,17 @@ def main(argv: list[str] | None = None) -> int:
     finally:
         if functional_loaded and active_stage is not None and not active_archived:
             try:
-                forensic_results.append(
-                    forensic.capture_and_archive(
-                        f"{active_stage}_finally_before_shutdown", run_root, auth, env
-                    )
+                retry_archive = capture_and_archive(
+                    f"{active_stage}_finally_before_shutdown", run_root, auth, env,
+                    force_terminal_fault=True,
                 )
+                forensic_results.append(retry_archive)
+                active_archived = retry_archive.get("status") == "PASS"
+                if not active_archived:
+                    campaign_errors.append("finally forensic archive failed closed")
             except BaseException as exc:
                 campaign_errors.append(f"finally forensic archive failed: {exc}")
+        hardware_actions = True
         emergency = guarded_shutdown(run_root, auth, artifacts, "finally", env)
         shutdown_results.append(emergency)
         if emergency.get("status") != "PASS":
@@ -1453,7 +2399,21 @@ def main(argv: list[str] | None = None) -> int:
     all_shutdown = bool(shutdown_results) and all(
         item.get("status") == "PASS" for item in shutdown_results
     )
-    status = "PASS" if all_stages and all_shutdown and not campaign_errors else "FAIL"
+    core_stages = STAGES[:STAGES.index("performance")]
+    core_pass = all(
+        next(
+            (item.get("status") for item in stage_results if item.get("stage") == stage),
+            None,
+        ) == "PASS"
+        for stage in core_stages
+    )
+    if all_stages and all_shutdown and not campaign_errors:
+        status = "PASS"
+    elif all_shutdown and core_pass:
+        status = "PARTIAL"
+    else:
+        status = "FAIL"
+    metrics = collect_campaign_metrics(stage_results)
     summary = {
         "schema_version": 1,
         "test_id": "P10_3F-FULL-HARDWARE-FINAL",
@@ -1464,7 +2424,7 @@ def main(argv: list[str] | None = None) -> int:
         "host_source_commit": record["host_source_commit"],
         "goal_sha256": GOAL_SHA256,
         "campaign_freeze_sha256": sha256(CAMPAIGN_FREEZE),
-        "hardware_actions_executed": True,
+        "hardware_actions_executed": hardware_actions,
         "ethernet_used": False,
         "movement": False,
         "rotation": False,
@@ -1476,7 +2436,15 @@ def main(argv: list[str] | None = None) -> int:
         "maximum_single_formal_run_seconds": 1800,
         "manual_instrumentation": "OMITTED_BY_USER",
         "old_hardware_pass_inherited": False,
+        "current_run_hardware_authorization": False,
+        "artifacts": record["artifacts"],
+        "board_binding": {
+            "fixed": f"AX7020-F/JTAG:{EXPECTED_FIXED_SERIAL}",
+            "rotating": f"AX7020-R/JTAG:{EXPECTED_ROTATING_SERIAL}",
+        },
         "module_binding": MODULE_BINDING,
+        "active_modules": list(MODULE_BINDING),
+        "historical_failed_modules_active": False,
         "stages": stage_results,
         "forensics": forensic_results,
         "shutdowns": shutdown_results,
@@ -1486,12 +2454,13 @@ def main(argv: list[str] | None = None) -> int:
         "SHUTDOWN_ROTATING": "PASS" if all_shutdown and all(
             item.get("SHUTDOWN_ROTATING") == "PASS" for item in shutdown_results
         ) else "FAIL",
+        "external_four_lane_power_acceptance": "OMITTED_BY_USER",
+        "external_tfdu_duty": "OMITTED_BY_USER",
+        "metrics": metrics,
         "errors": campaign_errors,
         "generated_at_utc": utc_now(),
     }
-    write_json(run_root / "final/summary.json", summary)
-    evidence_manifest(run_root, status)
-    write_json(GENERATED_FINAL, summary)
+    status, consistency = finalize_run_evidence(summary, run_root, record)
     consumed = dict(record)
     consumed.update(
         {
@@ -1499,10 +2468,24 @@ def main(argv: list[str] | None = None) -> int:
             "current_run_hardware_authorization": False,
             "consumed": True,
             "consumed_at_utc": utc_now(),
-            "result": rel(run_root / "final/summary.json"),
+            "result": rel(run_root / "final/orchestrator_result.json"),
         }
     )
     write_json(AUTH, consumed)
+    write_summary_pair(GENERATED / "p10_3_authorization", {
+        "schema_version": 1,
+        "test_id": "P10_3F-FULL-HARDWARE-AUTHORIZATION",
+        "status": consumed["status"],
+        "run_id": args.run_id,
+        "authorization": rel(AUTH),
+        "immutable_authorization": rel(
+            run_root / "authorization/immutable_authorization.json"
+        ),
+        "current_run_hardware_authorization": False,
+        "consumed": True,
+        "result": consumed["result"],
+        "evidence_consistency": consistency["status"],
+    }, "P10.3 current-run hardware authorization")
     print(f"P10_3F_FULL_HARDWARE={status}")
     print(f"P10_3F_FULL_RUN_ID={args.run_id}")
     print(f"SHUTDOWN_FIXED={summary['SHUTDOWN_FIXED']}")

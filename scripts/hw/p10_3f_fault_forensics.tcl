@@ -120,6 +120,75 @@ proc p10ff_wait_frozen_tail {role} {
   return $status
 }
 
+# On a host/JTAG timeout or wrapper exception the PL may still have an active
+# object without having raised its own safety fault.  Before reading any frozen
+# snapshot/event word, atomically request the implemented terminal-object abort
+# on both endpoints, verify persistent kill/full shutdown, and prove that no
+# final physical-TX counter advances for a bounded interval.  An already-frozen
+# first fault is never overwritten.
+proc p10ff_abort_before_capture {out_dir} {
+  set abort_requested {}
+  foreach role {fixed rotating} {
+    set status [p10ff_read32 $role 0x0D14]
+    if {($status & 1) == 0} {
+      p10ff_write32 $role 0x0718 0x00000020
+      lappend abort_requested $role
+    }
+  }
+  set deadline [expr {[clock milliseconds] + 1000}]
+  set ready 0
+  while {[clock milliseconds] < $deadline} {
+    set ready 1
+    foreach role {fixed rotating} {
+      set status [p10ff_read32 $role 0x0D14]
+      if {($status & 0x000001C3) != 0x000001C3} { set ready 0 }
+    }
+    if {$ready} { break }
+    after 1
+  }
+  if {!$ready} {
+    error "P10.3F emergency abort did not reach frozen kill/full shutdown"
+  }
+  set before_counts {}
+  foreach role {fixed rotating} {
+    set values {}
+    foreach offset {0x07E4 0x07E8 0x07EC 0x07F0} {
+      lappend values [p10ff_read32 $role $offset]
+    }
+    dict set before_counts $role $values
+  }
+  after 10
+  set direct [file join $out_dir "emergency_abort_before_forensic_read.psv"]
+  set handle [open $direct w]
+  puts $handle "role|ff_status|fault_cause|effective_tx_enable_mask|physical_tx_counts_before|physical_tx_counts_after"
+  foreach role {fixed rotating} {
+    set after_counts {}
+    foreach offset {0x07E4 0x07E8 0x07EC 0x07F0} {
+      lappend after_counts [p10ff_read32 $role $offset]
+    }
+    set status [p10ff_read32 $role 0x0D14]
+    set cause [p10ff_read32 $role 0x0D24]
+    set effective [expr {[p10ff_read32 $role 0x0424] & 0xF}]
+    set prior [dict get $before_counts $role]
+    puts $handle [join [list $role [format "0x%08X" $status] \
+        [format "0x%08X" $cause] [format "0x%X" $effective] \
+        [join $prior ,] [join $after_counts ,]] "|"]
+    # Preserve a pre-existing first fault, whatever its original cause.  Only
+    # endpoints that were unfrozen when this procedure began must report the
+    # terminal-object-abort cause that we just requested.
+    set cause_ok [expr {[lsearch -exact $abort_requested $role] < 0 ||
+        ($cause & 0x10) != 0}]
+    if {($status & 0x000001C3) != 0x000001C3 || !$cause_ok ||
+        $effective != 0 || $after_counts ne $prior} {
+      close $handle
+      error "P10.3F emergency abort pre-read safety evidence failed for $role"
+    }
+  }
+  close $handle
+  p10ff_say "P10_FF_ABORT_BEFORE_CAPTURE=PASS"
+  p10ff_say "P10_FF_ABORT_DIRECT_EVIDENCE=$direct"
+}
+
 proc p10ff_capture_role {role expected_build out_dir} {
   p10ff_verify_identity $role $expected_build
   # Full shutdown is requested before any evidence read.  Frozen safety state
@@ -269,7 +338,9 @@ file mkdir [file dirname $p10ff_result]
 set p10ff_result_handle [open $p10ff_result w]
 
 set rc [catch {
-  if {$p10ff_mode ni {capture commit clear}} { error "invalid P10.3F forensic mode" }
+  if {$p10ff_mode ni {capture abort_capture commit clear}} {
+    error "invalid P10.3F forensic mode"
+  }
   if {![regexp {^p10_3f_[A-Za-z0-9_.-]+$} $p10ff_run_id]} {
     error "unsafe P10.3F run ID"
   }
@@ -284,7 +355,11 @@ set rc [catch {
   connect -url $p10ff_url
   set p10ff_connected 1
   p10ff_wait_targets
-  if {$p10ff_mode eq "capture"} {
+  if {$p10ff_mode eq "abort_capture"} {
+    p10ff_abort_before_capture $p10ff_out_dir
+    p10ff_capture_role fixed $p10ff_expected_build(fixed) $p10ff_out_dir
+    p10ff_capture_role rotating $p10ff_expected_build(rotating) $p10ff_out_dir
+  } elseif {$p10ff_mode eq "capture"} {
     p10ff_capture_role fixed $p10ff_expected_build(fixed) $p10ff_out_dir
     p10ff_capture_role rotating $p10ff_expected_build(rotating) $p10ff_out_dir
   } elseif {$p10ff_mode eq "commit"} {
