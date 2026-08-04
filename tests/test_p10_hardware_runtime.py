@@ -200,6 +200,87 @@ class P10HardwareRuntimeTests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(detail["pl_build_id"], "0x50315246")
 
+    def test_generic_raw_evaluator_fails_closed_for_four_lane_contract(self) -> None:
+        roles = {
+            "fixed": {
+                **self.runtime.EXPECTED_ROLE["fixed"],
+                "local_indices": (0, 1, 2, 3),
+            },
+            "rotating": {
+                **self.runtime.EXPECTED_ROLE["rotating"],
+                "local_indices": (4, 5, 6, 7),
+            },
+        }
+
+        def mailbox(role: str) -> list[int]:
+            expected = roles[role]
+            words = [0] * 256
+            words[0] = self.runtime.EXPECTED_MAILBOX_MAGIC
+            words[1] = self.runtime.EXPECTED_MAILBOX_SCHEMA
+            words[2] = expected["firmware"]
+            words[3] = 4
+            words[7] = 1
+            words[8] = 0
+            words[32] = 0x5031305A
+            words[33] = expected["build"]
+            words[34] = expected["profile"]
+            words[35] = self.runtime.EXPECTED_REGISTER_MAP_VERSION
+            words[36] = self.runtime.EXPECTED_REGISTER_MAP_HASH_LOW
+            words[37] = self.runtime.EXPECTED_CAPABILITIES
+            words[39] = 0x40400000
+            words[40] = 1
+            words[49] = 64
+            words[50] = 32
+            words[self.runtime.PL_SNAPSHOT_START] = 0x5031305A
+            words[self.runtime.PL_SNAPSHOT_START + 7] = 0x2
+            words[self.runtime.PL_SNAPSHOT_START + 85] = (
+                self.runtime.P10_DUTY_WINDOW_CYCLES
+            )
+            words[self.runtime.PL_SNAPSHOT_START + 86] = (
+                self.runtime.P10_DUTY_HARD_MAX_HIGH_CYCLES
+            )
+            words[self.runtime.PL_SNAPSHOT_START + 87] = (
+                self.runtime.P10_DUTY_TARGET_MAX_HIGH_CYCLES
+            )
+            return words
+
+        row = {
+            "label": "four_lane_raw_guard",
+            "command": 2,
+            "lane": 4,
+            "direction": 1,
+            "rate": 2,
+            "size": 0,
+            "window": "DIRECT_RAW",
+            "sequence": 1,
+            "expected_status": 0,
+            "rawtarget": 64,
+        }
+        errors, detail = self.runtime.evaluate_pair(
+            row, mailbox("fixed"), mailbox("rotating"), roles
+        )
+        self.assertEqual(
+            errors,
+            [
+                "four_lane_raw_guard: generic raw evaluator supports only the "
+                "legacy two-lane mailbox layout; use profile-specific "
+                "physical-module snapshots"
+            ],
+        )
+        self.assertEqual(
+            detail["raw_matrix"],
+            {
+                "status": "UNSUPPORTED_FAIL_CLOSED",
+                "reason": (
+                    "generic raw evaluator supports only the legacy two-lane "
+                    "mailbox layout; use profile-specific physical-module snapshots"
+                ),
+                "lane_counts": {"fixed": 4, "rotating": 4},
+                "sender_role": "rotating",
+                "receiver_role": "fixed",
+            },
+        )
+
     def test_runtime_requires_explicit_hardware_enable_and_finally_shutdown(self) -> None:
         text = RUNTIME.read_text(encoding="utf-8")
         for marker in (

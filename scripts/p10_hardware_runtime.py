@@ -914,6 +914,25 @@ def evaluate_pair(
     if row["command"] == 2:
         sender_role = "fixed" if row["direction"] == 0 else "rotating"
         receiver_role = "rotating" if row["direction"] == 0 else "fixed"
+        role_contract = expected_roles or EXPECTED_ROLE
+        lane_counts = {
+            role: len(role_contract[role]["local_indices"])
+            for role in ("fixed", "rotating")
+        }
+        if lane_counts != {"fixed": 2, "rotating": 2}:
+            reason = (
+                "generic raw evaluator supports only the legacy two-lane "
+                "mailbox layout; use profile-specific physical-module snapshots"
+            )
+            errors.append(f"{row['label']}: {reason}")
+            pair_detail["raw_matrix"] = {
+                "status": "UNSUPPORTED_FAIL_CLOSED",
+                "reason": reason,
+                "lane_counts": lane_counts,
+                "sender_role": sender_role,
+                "receiver_role": receiver_role,
+            }
+            return errors, pair_detail
         sender = fixed if sender_role == "fixed" else rotating
         receiver = rotating if receiver_role == "rotating" else fixed
         sender_base = 0 if sender_role == "fixed" else 2
