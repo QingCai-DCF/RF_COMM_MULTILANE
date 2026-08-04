@@ -133,6 +133,35 @@ integrity and safety gates, and a non-zero terminal migration count. The
 target-only start, controlled CRC fault, and target weighting are confined to
 these migration diagnostics and do not alter normal scheduler fairness vectors.
 
+## Immutable CRC-migration run and evaluator boundary
+
+The immutable run
+`p10_3f_full_20260804T200335Z_e77e3ad4_a6ecd8e6_a5491982` remains FAIL
+evidence and is not reclassified. Its XSDB degradation stage returned PASS and
+directly observed 32 outstanding frames on every target lane, a target-lane CRC
+rejection delta of three on every target lane, unchanged ACK base zero before
+and immediately after each fault write, zero dropped ACKs, zero prior
+migrations, exact fault-mask readback, and terminal retry-migration counts of
+3, 3, 4, and 11 for lanes 0 through 3 respectively. Target-lane scheduled-frame
+deltas were 13, 19, 13, and 10; target physical-TX deltas were 11489, 18841,
+12581, and 9128. These are current-object observations rather than historical
+counter inference.
+
+The host evaluator nevertheless failed that run because it added each
+injected case's target-only setup mask (`0xE`, `0xD`, `0xB`, `0x7`) to the
+standalone static-degrade matrix. The standalone matrix is independently
+defined by unavailable masks `0x1`, `0x2`, `0x4`, `0x8`, `0x3`, and `0x7`;
+injection setup masks are not additional static-matrix cases. The corrected
+classifier excludes every case with a nonzero `injectmask` from that static
+inventory while retaining all direct migration checks unchanged.
+
+The failed run ended with `SHUTDOWN_FIXED=PASS`,
+`SHUTDOWN_ROTATING=PASS`, `TFDU_SHUTDOWN_PROGRAMMED=1`, and
+`SHUTDOWN_EXIT=0`. The host-only classifier correction does not inherit or
+promote the prior run's partial results. A new immutable host bundle,
+current-run authorization, complete campaign, evidence manifest, and verified
+dual-board shutdown are still required for acceptance.
+
 ## Evidence limits
 
 The PL counters and event recorder can show what the implemented digital logic requested and what its internal safety monitors observed. They are not a substitute for an oscilloscope, rail-current measurement, module temperature measurement, or optical detector. Because the user excluded those manual measurements, this follow-up cannot independently prove actual pin voltage, optical pulse energy, rail droop, current, or temperature.

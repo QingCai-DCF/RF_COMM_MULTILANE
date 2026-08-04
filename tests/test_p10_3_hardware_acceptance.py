@@ -96,6 +96,23 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
             tcl,
         )
 
+    def test_degrade_static_mask_classifier_excludes_inflight_setup_masks(self) -> None:
+        cases = [item for item in self.runner.build_plans()["degrade"]
+                 if isinstance(item, self.runner.Case)]
+        details = [
+            {"unavailable": item.unavailable, "injectmask": item.injectmask}
+            for item in cases
+        ]
+        self.assertEqual(
+            self.runner.static_degrade_unavailable_masks(details),
+            [1, 2, 4, 8, 3, 7],
+        )
+        self.assertEqual(
+            [detail["unavailable"] for detail in details
+             if detail["injectmask"]],
+            [14, 13, 11, 7],
+        )
+
     def test_module_intake_proves_both_raw_directions_before_frames(self) -> None:
         cases = [item for item in self.runner.build_plans()["module_intake"]
                  if isinstance(item, self.runner.Case)]

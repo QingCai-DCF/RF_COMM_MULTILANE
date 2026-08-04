@@ -1577,6 +1577,15 @@ def load_ps_gpio(stage_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
     return rows, errors
 
 
+def static_degrade_unavailable_masks(details: Iterable[dict[str, Any]]) -> list[int]:
+    """Return only the standalone degrade-matrix masks, not injection setup masks."""
+    return [
+        detail["unavailable"]
+        for detail in details
+        if detail["unavailable"] and not detail["injectmask"]
+    ]
+
+
 def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict[str, Any]:
     errors: list[str] = []
     markers = parse_markers(stage_dir / "xsdb.result.txt")
@@ -1846,7 +1855,7 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
         semantics.update({"masks": masks, "directions_per_mask": per_mask_counts,
                           "case_count": len(non_shutdown)})
     elif stage == "degrade":
-        static_masks: list[int] = []
+        static_masks = static_degrade_unavailable_masks(non_shutdown)
         inflight: list[dict[str, Any]] = []
         for detail in non_shutdown:
             expected_unavailable = detail["injectmask"] or detail["unavailable"]
@@ -1855,8 +1864,6 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any]) -> dict
                 injected=bool(detail["injectmask"]),
                 require_all_selected=True,
             ))
-            if detail["unavailable"]:
-                static_masks.append(detail["unavailable"])
             if detail["injectmask"]:
                 sender_role, _ = path_roles(detail)
                 sender_snap = detail[f"{sender_role}_p10_2"]
