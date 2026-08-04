@@ -27,7 +27,7 @@
   ],
   "artifact_bundle_sha256": "883c044cce75e9d802bd268403e85684d558b3f480c5f67ecaa16a51d4c99ecd",
   "artifact_freeze": "evidence/generated/p10_3_artifact_freeze.json",
-  "artifact_freeze_commit": "e3f9488d07ab71e7bb73a359f7a264bc09ba8848",
+  "artifact_freeze_commit": "e90ab7ee71d65dfb67d3d6621292c3e4a7a19855",
   "artifact_freeze_sha256": "80f713cc13de26494fa702069bb96a41dfe489f1c6ac5899687fedcb8c2473d7",
   "artifacts": [
     {
@@ -112,15 +112,14 @@
     }
   ],
   "authorization_id": "P10_3-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "e3f9488d07ab71e7bb73a359f7a264bc09ba8848",
+  "authorization_parent_commit": "e90ab7ee71d65dfb67d3d6621292c3e4a7a19855",
   "board_binding": {
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
   "branch": "p10.3/ax7020-stationary-4lane-hardware",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-04T09:42:11+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "external_goal": {
     "bytes": 31921,
     "path": "C:\\Users\\user\\Downloads\\P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
@@ -136,7 +135,7 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-04T09:38:23+00:00",
+  "generated_at_utc": "2026-08-04T10:04:28+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_movement": false,
   "inputs": {
@@ -233,12 +232,12 @@
       "sha256": "138e74e3c3013f17610e2a620217ba5cb47efecae3dbff24f2e09ee80e28436a"
     },
     "scripts/run_p10_2_xsim.py": {
-      "bytes": 7804,
-      "sha256": "ec12e38a95d8951c51ecd97d96815760ffe3c93a80a54b1b0b911ee1ee47b15b"
+      "bytes": 8164,
+      "sha256": "70b657777bdb652a1305c6b321b360ca122badb2b675274cd5608efb6c304a10"
     },
     "scripts/run_p10_3_ax7020_4lane_hardware.py": {
-      "bytes": 123018,
-      "sha256": "f89afc781dcea0d2f4b31d0f6f50ef68c07266bf55637fd6cc73e99127db1b5f"
+      "bytes": 123398,
+      "sha256": "99cbef600d1a595d812976bd70c4e14caecc5fcc3902b66e4b0ce63d7403ece1"
     },
     "scripts/verify_p10_1r_existing.py": {
       "bytes": 7509,
@@ -341,7 +340,7 @@
     "formal_30min": "c3db70f74887c63791529852ed0600be810c27cb0683f90e6dd17f145717cabc",
     "four_lane_raw": "7737cfe68be0ac673a831a00e0bafa44780f8d114e46f71de573b9f84eed793e",
     "mask_matrix": "693fe70c08e2fee3916adf6c5951c4b025daab8302f8f82ec38bfba2b7ab0b22",
-    "module_intake": "40aaecd172eecd29f1a1af8058eca1eec37a1189c154e64e6667ab45bc210167",
+    "module_intake": "10ea95eafbe567edc2dd680a725b8d098bb563f0c13565771c2f56b76000aa8d",
     "per_lane_phy": "8353ac7f7500bd73938ba8af2a0719485184ff8c0bae345b8b8993e01ce330de",
     "performance": "8c9c4bf3be3a00da148a8b95835691e461f8ecbb664e0f06cc83551d1991f469",
     "preflight": "56cf7e734882d844edfefdd424fef42373d3b6b6b2c4887b5c19ed42c14955ed",
@@ -350,7 +349,6 @@
     "two_lane_regression": "72b75b23f7e4e83278b78e1b6d9223c2f3de48cdd92b84fdcb622eabe57e7c0b"
   },
   "realignment": false,
-  "result": "evidence/hardware/p10_3/p10_3_20260804T093823Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json",
   "retry_limits": {
     "diagnostic_run_ids_per_stage": 2,
     "jtag_connect": 3,
@@ -358,7 +356,7 @@
   },
   "rewiring": false,
   "rotation": false,
-  "run_id": "p10_3_20260804T093823Z_d4eef729_3d8cd207_a8459eef",
+  "run_id": "p10_3_20260804T100428Z_d4eef729_3d8cd207_a8459eef",
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
   "shutdown_policy": {
@@ -371,7 +369,7 @@
     "verify_both": true
   },
   "source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
-  "status": "CONSUMED_AFTER_P10_3_FAIL",
+  "status": "AUTHORIZED",
   "two_hour_test": false,
   "user_authorization_received_on": "2026-08-04",
   "user_authorization_statement": "User explicitly authorized automated P10_3 AX7020 stationary four-lane hardware acceptance for the current two boards and eight modules, mask<=0xF, no Ethernet/movement/rotation/realignment/rewiring, no two-hour run, and no P11."
