@@ -4,7 +4,7 @@
 - Test ID: `P10_3-INV-001`
 - Hardware actions executed: `false`
 
-- Source commit: `76def779519491a083e9c36fe98532ebe6203c43`
+- Source commit: `cf6d5fadc5c3bd8964edce6297f775170d8d341e`
 - Canonical SHA256: `85d915625b2f43fc5640f15a91b7ec1587615261bccb68568b22173d6ed21f6b`
 
 ```json
@@ -142,7 +142,7 @@
   "schema_version": 1,
   "scope": "P10_3_MODULE_INVENTORY",
   "sha256": "85d915625b2f43fc5640f15a91b7ec1587615261bccb68568b22173d6ed21f6b",
-  "source_commit": "76def779519491a083e9c36fe98532ebe6203c43",
+  "source_commit": "cf6d5fadc5c3bd8964edce6297f775170d8d341e",
   "status": "PASS",
   "test_id": "P10_3-INV-001",
   "unique_small_board_id_count": 8

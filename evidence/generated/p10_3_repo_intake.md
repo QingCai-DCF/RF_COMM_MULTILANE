@@ -4,7 +4,7 @@
 - Test ID: `P10_3-REPOSITORY-INTAKE`
 - Hardware actions executed: `false`
 
-- Source commit: `76def779519491a083e9c36fe98532ebe6203c43`
+- Source commit: `cf6d5fadc5c3bd8964edce6297f775170d8d341e`
 
 ```json
 {
@@ -63,14 +63,14 @@
       "sha256": "dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4"
     },
     {
-      "bytes": 294709,
+      "bytes": 289128,
       "path": "config/project_requirements.yaml",
-      "sha256": "370dd0ceb5df7d5f440bee2bcb7704ef3730d3b8b77e3fea6a08cdbd321be655"
+      "sha256": "27935cb09f03a5134f05191cc53aaa8732cc63da9021f83e6e871f9b715e0569"
     },
     {
-      "bytes": 65218,
+      "bytes": 67360,
       "path": "config/register_map/ir_axi_regs.yaml",
-      "sha256": "36ce57e7409865fe0dddda1e8a863647a4bd652e0ee612156ec27bc75072e5ae"
+      "sha256": "8783951ad23bb2d966aa36b2da01892f807b94cdf10dfda0512a609fffa1c1b3"
     },
     {
       "bytes": 5247,
@@ -107,9 +107,9 @@
   "no_hardware": true,
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
-  "source_commit": "76def779519491a083e9c36fe98532ebe6203c43",
+  "source_commit": "cf6d5fadc5c3bd8964edce6297f775170d8d341e",
   "source_tree_clean_before_generation": true,
-  "started_at_utc": "2026-08-04T20:38:59+00:00",
+  "started_at_utc": "2026-08-04T21:52:38+00:00",
   "status": "PASS",
   "test_id": "P10_3-REPOSITORY-INTAKE",
   "tools": {
