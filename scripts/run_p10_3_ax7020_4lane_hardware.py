@@ -152,7 +152,7 @@ EXPECTED_ROLE = {
 MODULES = ("F0", "F1", "F2", "F3", "R0", "R1", "R2", "R3")
 P103_SCHEMA = 0x50310201
 TARGET_DUTY_CYCLES = 11520
-HARD_DUTY_CYCLES = 12800
+HARD_DUTY_MAX_CYCLES = 12799
 
 
 def utc_now() -> str:
@@ -1229,7 +1229,8 @@ def snapshot_errors(label: str, role: str, snap: dict[str, Any]) -> list[str]:
         if snap[field] != 0:
             errors.append(f"{label}:{role}:{field}={snap[field]}")
     if (snap["duty_window_cycles"], snap["hard_limit_cycles"],
-            snap["target_limit_cycles"]) != (64000, HARD_DUTY_CYCLES, TARGET_DUTY_CYCLES):
+            snap["target_limit_cycles"]) != (
+                64000, HARD_DUTY_MAX_CYCLES, TARGET_DUTY_CYCLES):
         errors.append(f"{label}:{role}:duty configuration mismatch")
     local = range(4) if role == "fixed" else range(4, 8)
     for module in local:
@@ -1238,7 +1239,7 @@ def snapshot_errors(label: str, role: str, snap: dict[str, Any]) -> list[str]:
             errors.append(f"{label}:{role}:module{module}:Txd high >1us")
         if item["duty_high_max"] > TARGET_DUTY_CYCLES:
             errors.append(f"{label}:{role}:module{module}:duty target exceeded")
-        if item["duty_high_max"] >= HARD_DUTY_CYCLES or item["hard_fault"]:
+        if item["duty_high_max"] > HARD_DUTY_MAX_CYCLES or item["hard_fault"]:
             errors.append(f"{label}:{role}:module{module}:hard duty violation")
     return errors
 

@@ -95,7 +95,7 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
         words = [0] * 128
         words[0] = (247 << 24) | (32 << 16) | (4 << 8) | 8
         words[124] = 64000
-        words[125] = self.runner.HARD_DUTY_CYCLES
+        words[125] = self.runner.HARD_DUTY_MAX_CYCLES
         words[126] = self.runner.TARGET_DUTY_CYCLES
         words[127] = self.runner.P103_SCHEMA
         generation = 2
@@ -171,6 +171,45 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
             manifest["register_map_version_value"].upper(),
         )
         self.assertEqual(hash_low.group(1).upper(), manifest["hash_low"].upper())
+
+    def test_strict_duty_boundary_matches_generated_rtl_contract(self) -> None:
+        safety = (
+            ROOT / "rtl/generated/tfdu_safety_config.svh"
+        ).read_text(encoding="utf-8")
+        hard_max = re.search(
+            r"TFDU_SAFETY_CANONICAL_HARD_MAX_HIGH_CYCLES (\d+)", safety
+        )
+        target_max = re.search(
+            r"TFDU_SAFETY_CANONICAL_TARGET_MAX_HIGH_CYCLES (\d+)", safety
+        )
+        self.assertIsNotNone(hard_max)
+        self.assertIsNotNone(target_max)
+        self.assertEqual(self.runner.HARD_DUTY_MAX_CYCLES, int(hard_max.group(1)))
+        self.assertEqual(self.runner.TARGET_DUTY_CYCLES, int(target_max.group(1)))
+
+        module = {"tx_high_max": 0, "duty_high_max": 12799, "hard_fault": 0}
+        snapshot = {
+            "schema": self.runner.P103_SCHEMA,
+            "payload_bytes": 247,
+            "window_size": 32,
+            "lane_count": 4,
+            "module_count": 8,
+            "safety_fault_mask": 0,
+            "overlap_violation": 0,
+            "admission_violation": 0,
+            "non_target_accepted": 0,
+            "cross_lane_accepted": 0,
+            "duty_window_cycles": 64000,
+            "hard_limit_cycles": 12799,
+            "target_limit_cycles": 11520,
+            "modules": [dict(module) for _ in range(8)],
+        }
+        at_max = self.runner.snapshot_errors("boundary", "fixed", snapshot)
+        self.assertFalse(any("configuration mismatch" in item for item in at_max))
+        self.assertFalse(any("hard duty violation" in item for item in at_max))
+        snapshot["modules"][0]["duty_high_max"] = 12800
+        above_max = self.runner.snapshot_errors("boundary", "fixed", snapshot)
+        self.assertTrue(any("hard duty violation" in item for item in above_max))
 
 
 if __name__ == "__main__":
