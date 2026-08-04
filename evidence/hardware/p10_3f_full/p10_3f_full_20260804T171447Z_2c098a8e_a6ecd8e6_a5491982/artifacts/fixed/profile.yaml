@@ -1,0 +1,47 @@
+schema_version: 2
+profile_id: "P10_2_AX7020_FIXED_4LANE"
+status: "PASS_OFFLINE_PROFILE_PENDING_PHYSICAL_WIRING_AND_P10_3_AUTHORIZATION"
+node_role: "fixed"
+proposed_board_id: "AX7020-F"
+physical_board_identity: "JTAG_CABLE_SERIAL:210249855178"
+physical_board_identity_method: "JTAG_CABLE_SERIAL"
+physical_pcb_revision: "PENDING_PRE_WIRING_SILKSCREEN_CHECK; NOT_GUESSED"
+common_profile: "board_profiles/ax7020_common/board_identity.yaml"
+exact_documented_board_model: "ALINX AX7020"
+exact_documented_fpga_marking: "XC7Z020-2CLG400I"
+vivado_part: "xc7z020clg400-2"
+clock_reset:
+  ps_input_clock_mhz: 33.333333
+  pl_fclk_mhz: 64.0
+  reset: "role-local active-low fabric reset from PS reset infrastructure"
+ddr_ps_preset:
+  source: "official ALINX AX7020 Vivado 2023.1 ps_config.tcl"
+  sha256: "b9212817e1333a73c9a317217e0636b6a1636e2306095296fbe6eff6bf10f217"
+pinmap: "board_profiles/ax7020_fixed_4lane/pinmap.csv"
+xdc: "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc"
+lane_count: 4
+physical_module_count: 4
+lane_mask_width: 4
+max_lane_mask: 15
+allowed_lane_masks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+modules: [F0, F1, F2, F3]
+module_positions:
+  lane0: "J10-A"
+  lane1: "J10-B"
+  lane2: "J11-A"
+  lane3: "J11-B"
+register_map: "config/register_map/ir_axi_regs.yaml"
+register_map_version: "P10_2-1"
+window_size: 32
+sack_bits: 32
+single_global_permit_channels_per_endpoint: 1
+network_required: false
+hardware_admission: false
+blocking_conditions:
+  - "F2/F3/R2/R3 physical inventory and pinout verification"
+  - "eight-module safe-idle and raw acceptance"
+  - "physical wiring against frozen proposal"
+  - "new P10.3 current-run hardware authorization"
+no_hardware: true
+current_run_hardware_authorization: false
+no_2h_qualification: true

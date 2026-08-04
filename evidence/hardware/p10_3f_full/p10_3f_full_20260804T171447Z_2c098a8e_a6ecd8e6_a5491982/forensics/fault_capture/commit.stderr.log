@@ -1,0 +1,11 @@
+char map list unbalanced
+    while executing
+"string map [list \"\n\" \" \" \"=\" \"_\"] $error_text"
+    invoked from within
+"if {$rc != 0} {
+  foreach role {fixed rotating} {
+    catch {p10ff_write32 $role 0x0718 0x0000001A}
+  }
+  p10ff_say "P10_FF_FORENSIC_RESULT=FAIL"
+  p1..."
+    (file "C:\Users\user\Documents\RF_COMM_MULTILANE_P10_3\scripts\hw\p10_3f_fault_forensics.tcl" line 375)
