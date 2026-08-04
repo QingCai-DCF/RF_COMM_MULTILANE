@@ -4,22 +4,7 @@
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
-  "errors": [
-    "p10_3_identity:fixed:duty configuration mismatch",
-    "p10_3_identity:rotating:duty configuration mismatch",
-    "p10_3_receive_only_5000ms:fixed:duty configuration mismatch",
-    "p10_3_receive_only_5000ms:rotating:duty configuration mismatch",
-    "p10_3_ring32:fixed:duty configuration mismatch",
-    "p10_3_ring32:rotating:duty configuration mismatch",
-    "p10_3_dma_reset_idle:fixed:duty configuration mismatch",
-    "p10_3_dma_reset_idle:rotating:duty configuration mismatch",
-    "p10_3_pl_soft_reset:fixed:duty configuration mismatch",
-    "p10_3_pl_soft_reset:rotating:duty configuration mismatch",
-    "p10_3_identity_after_reset:fixed:duty configuration mismatch",
-    "p10_3_identity_after_reset:rotating:duty configuration mismatch",
-    "P10_3-PREFLIGHT_endpoint_shutdown:fixed:duty configuration mismatch",
-    "P10_3-PREFLIGHT_endpoint_shutdown:rotating:duty configuration mismatch"
-  ],
+  "errors": [],
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": true,
   "maximum_lane_mask": 15,
@@ -27,11 +12,11 @@
   "movement": false,
   "network_used": false,
   "p11": false,
-  "raw_summary": "evidence/hardware/p10_3/p10_3_20260804T093403Z_d4eef729_3d8cd207_a8459eef/safe_boot/stage_summary.json",
+  "raw_summary": "evidence/hardware/p10_3/p10_3_20260804T093823Z_d4eef729_3d8cd207_a8459eef/safe_boot/stage_summary.json",
   "realignment": false,
   "rewiring": false,
   "rotation": false,
-  "run_id": "p10_3_20260804T093403Z_d4eef729_3d8cd207_a8459eef",
+  "run_id": "p10_3_20260804T093823Z_d4eef729_3d8cd207_a8459eef",
   "schema_version": 1,
   "semantics": {
     "ps_led_gpio": {
@@ -47,7 +32,7 @@
     }
   },
   "source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
-  "status": "FAIL",
+  "status": "PASS",
   "summary_name": "target_identity",
   "test_id": "P10_3-HW-PREFLIGHT",
   "two_hour_test": false

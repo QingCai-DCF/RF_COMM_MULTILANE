@@ -1,0 +1,376 @@
+{
+  "active_modules": [
+    "F0",
+    "F1",
+    "F2",
+    "F3",
+    "R0",
+    "R1",
+    "R2",
+    "R3"
+  ],
+  "actual_wiring_sha256": "51e65e9f993068a25ed113b9be0648319875eb8b02b8e7b524bba76249346603",
+  "allowed_stages": [
+    "preflight",
+    "module_intake",
+    "raw_8x8",
+    "per_lane_phy",
+    "two_lane_regression",
+    "four_lane_raw",
+    "mask_matrix",
+    "degrade",
+    "arq_sack",
+    "dma",
+    "streaming_64m",
+    "performance",
+    "formal_30min"
+  ],
+  "artifact_bundle_sha256": "883c044cce75e9d802bd268403e85684d558b3f480c5f67ecaa16a51d4c99ecd",
+  "artifact_freeze": "evidence/generated/p10_3_artifact_freeze.json",
+  "artifact_freeze_commit": "e3f9488d07ab71e7bb73a359f7a264bc09ba8848",
+  "artifact_freeze_sha256": "80f713cc13de26494fa702069bb96a41dfe489f1c6ac5899687fedcb8c2473d7",
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/027159d3b028aa164ed25858c868b70bc014514c0f220af731c82470cbcafc28/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "027159d3b028aa164ed25858c868b70bc014514c0f220af731c82470cbcafc28"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/3d8cd20747f311c9467f4269bc7b10d7d16ffaeca4e5d888a15a8e883dbf5bcd/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "3d8cd20747f311c9467f4269bc7b10d7d16ffaeca4e5d888a15a8e883dbf5bcd"
+    },
+    {
+      "bytes": 1235605,
+      "kind": "xsa",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/50ccc34a1015e008c9e5a2a85f3679f3bd2cf8dd9090d8aab78acc737d0d62b9/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "50ccc34a1015e008c9e5a2a85f3679f3bd2cf8dd9090d8aab78acc737d0d62b9"
+    },
+    {
+      "bytes": 1970211,
+      "kind": "bsp",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/d0c57af71efe5c4a9a984a6b74334414035996fb1352f96931796f1881650cae/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "d0c57af71efe5c4a9a984a6b74334414035996fb1352f96931796f1881650cae"
+    },
+    {
+      "bytes": 567708,
+      "kind": "elf",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/f4c9bd6fa8ae8bbbad3a927f19759c8605c253258613d72271c8aa202e27fa3a/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "f4c9bd6fa8ae8bbbad3a927f19759c8605c253258613d72271c8aa202e27fa3a"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/204d79b7f01fc6b755316c011d09df958996c0ee9628b68492b842ff28e2847d/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "204d79b7f01fc6b755316c011d09df958996c0ee9628b68492b842ff28e2847d"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/a8459eeff9df4373f80112e5cc5892864900eeb95afd6a5bb949008d52262846/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "a8459eeff9df4373f80112e5cc5892864900eeb95afd6a5bb949008d52262846"
+    },
+    {
+      "bytes": 1242318,
+      "kind": "xsa",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/fe43bdb9f85753393c69e8466478a5e598ac7c6b31149b1459b28e55a1a9256c/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "fe43bdb9f85753393c69e8466478a5e598ac7c6b31149b1459b28e55a1a9256c"
+    },
+    {
+      "bytes": 1970419,
+      "kind": "bsp",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/fab469f35477b56fe25d37f0c2c4b94e648b308ea73cc75abd81483e3a1ae1e1/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "fab469f35477b56fe25d37f0c2c4b94e648b308ea73cc75abd81483e3a1ae1e1"
+    },
+    {
+      "bytes": 568156,
+      "kind": "elf",
+      "path": "artifacts/p10_3/d4eef729e91c60fc7a72fa68c95fcd4a569fcffc/fd2edb95306323e4c8796368d3425487994e7471b115b8543d20053f10d6f01a/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "fd2edb95306323e4c8796368d3425487994e7471b115b8543d20053f10d6f01a"
+    }
+  ],
+  "authorization_id": "P10_3-CURRENT-RUN-IMMUTABLE",
+  "authorization_parent_commit": "e3f9488d07ab71e7bb73a359f7a264bc09ba8848",
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "branch": "p10.3/ax7020-stationary-4lane-hardware",
+  "consumed": false,
+  "current_run_hardware_authorization": true,
+  "external_goal": {
+    "bytes": 31921,
+    "path": "C:\\Users\\user\\Downloads\\P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
+    "sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+  },
+  "forbidden": {
+    "ethernet": true,
+    "lane_mask_above_0xF": true,
+    "movement": true,
+    "p11": true,
+    "realignment": true,
+    "rewiring": true,
+    "rotation": true,
+    "two_hour_test": true
+  },
+  "generated_at_utc": "2026-08-04T09:38:23+00:00",
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "hardware_movement": false,
+  "inputs": {
+    "AGENTS.md": {
+      "bytes": 9946,
+      "sha256": "6677e4589355aa96dd434f8eb5ab9567c97efcb87ca5b3aae137efbd6776aebb"
+    },
+    "PROJECT_CONSTRAINTS.txt": {
+      "bytes": 77090,
+      "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
+    },
+    "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc": {
+      "bytes": 4550,
+      "sha256": "1360cf7871a635e0160b30074e12dc9b8c09aaeea046447d0e8e7357a99fb5f1"
+    },
+    "board_profiles/ax7020_fixed_4lane/p10_3_runtime_role.h": {
+      "bytes": 282,
+      "sha256": "347fe7f3dfc76b9344af03967c7c30130431e71a915d9f34ade56d6599570d3c"
+    },
+    "board_profiles/ax7020_fixed_4lane/profile.yaml": {
+      "bytes": 1769,
+      "sha256": "6c05c738333f80836d141a833e45592342b3d83b62369d6eb91d5ba3f907c571"
+    },
+    "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc": {
+      "bytes": 4553,
+      "sha256": "95a049709b4ffe84156be3bce6653f0f7b8757750b9a30f543415eb290631b9b"
+    },
+    "board_profiles/ax7020_rotating_4lane/p10_3_runtime_role.h": {
+      "bytes": 285,
+      "sha256": "661603b4c192dcd6b77495765d706aeb52f496639e24a3c1786de6148949bb8f"
+    },
+    "board_profiles/ax7020_rotating_4lane/profile.yaml": {
+      "bytes": 1784,
+      "sha256": "b79b87c90b56d442e3b3db228a49523aea72bd730a200a13d82a0e31d44560e8"
+    },
+    "config/hardware/p10_2_ax7020_4lane_wiring.yaml": {
+      "bytes": 23677,
+      "sha256": "5b53408fe10c6cf1a04f4e5c88cc18eb5a400a91f987b27ec42c77c2bbec7dad"
+    },
+    "config/hardware/p10_3_actual_wiring.yaml": {
+      "bytes": 4765,
+      "sha256": "51e65e9f993068a25ed113b9be0648319875eb8b02b8e7b524bba76249346603"
+    },
+    "config/hardware/p10_3_ax7020_activity_leds.yaml": {
+      "bytes": 3998,
+      "sha256": "a525f5c2accda201e33a5f36a31a8e435a2b77c5a7c77afba9b8da851c6efbb1"
+    },
+    "config/hardware/tfdu_module_inventory.yaml": {
+      "bytes": 7774,
+      "sha256": "1293702c8d80e1365ee022ecadd72761cda81d6c190f8f7babf7f8b0396e92a9"
+    },
+    "config/project_requirements.yaml": {
+      "bytes": 281788,
+      "sha256": "51c4c11122384fcfaba76239d6ab7a047566d6c9febf0691bc4d701f1be0ae77"
+    },
+    "config/project_state.json": {
+      "bytes": 48812,
+      "sha256": "dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4"
+    },
+    "config/register_map/ir_axi_regs.yaml": {
+      "bytes": 60830,
+      "sha256": "96cf5c2923cdbbea7f5c0b0d00e49fd815d0756848dadb6f2954cd5f185a4159"
+    },
+    "docs/hardware/P10_3_AS_WIRED_RECORD.md": {
+      "bytes": 3012,
+      "sha256": "c88ab81bd584515cfd1fd18e77df5130b632ccebbcde931e463c5f8ecbdfd574"
+    },
+    "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md": {
+      "bytes": 2940,
+      "sha256": "7f8efdfc03662fa668a042ace129e2592747d8fc92784d5566ba11f91b98bfc8"
+    },
+    "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md": {
+      "bytes": 31921,
+      "sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+    },
+    "scripts/freeze_p10_3_artifacts.py": {
+      "bytes": 10950,
+      "sha256": "10c0393793309242818fe538723fc3e11b59824544d7f79439dbb0ba041716c0"
+    },
+    "scripts/hw/p10_dual_xsdb_stage.tcl": {
+      "bytes": 73420,
+      "sha256": "5008ec6dde5739ee55dba9f7dd9c2ec58455772de5254c6614613ffdf905b6d3"
+    },
+    "scripts/hw/p10_program_dual_shutdown.tcl": {
+      "bytes": 8112,
+      "sha256": "f9c156783e13494e41f215f72b5608ff42e46a2114c4288c2de4acd3e63c4995"
+    },
+    "scripts/p10_hardware_runtime.py": {
+      "bytes": 69509,
+      "sha256": "06cd86b1143c215969401535084338478b5fe63f9992846d25af51f942ad2a44"
+    },
+    "scripts/prepare_p10_3_offline.py": {
+      "bytes": 10316,
+      "sha256": "138e74e3c3013f17610e2a620217ba5cb47efecae3dbff24f2e09ee80e28436a"
+    },
+    "scripts/run_p10_2_xsim.py": {
+      "bytes": 7804,
+      "sha256": "ec12e38a95d8951c51ecd97d96815760ffe3c93a80a54b1b0b911ee1ee47b15b"
+    },
+    "scripts/run_p10_3_ax7020_4lane_hardware.py": {
+      "bytes": 123018,
+      "sha256": "f89afc781dcea0d2f4b31d0f6f50ef68c07266bf55637fd6cc73e99127db1b5f"
+    },
+    "scripts/verify_p10_1r_existing.py": {
+      "bytes": 7509,
+      "sha256": "35a6ed8f13eafd5f1d8395a7061d89626b3ebeeb9bc859f6d2ca3b391fe2e04f"
+    },
+    "scripts/verify_p10_2_existing.py": {
+      "bytes": 6930,
+      "sha256": "8ccae299ec95f795809fda0589eeae077270510ddcf41584d16908d0a5a4597c"
+    },
+    "scripts/verify_p10_frozen_existing.py": {
+      "bytes": 6772,
+      "sha256": "5a9bbe1bc9a31286b277b24d558accab83fccca11a8d3b2ffc4a9f384b2bf8d7"
+    }
+  },
+  "lane_masks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "lane_pairs": {
+    "lane0": "F0-R0",
+    "lane1": "F1-R1",
+    "lane2": "F2-R2",
+    "lane3": "F3-R3"
+  },
+  "maximum_lane_mask": 15,
+  "maximum_single_formal_run_seconds": 1800,
+  "module_binding": {
+    "F0": {
+      "endpoint": "fixed",
+      "lane": 0,
+      "position": "J10-A",
+      "small_board_id": "A0019"
+    },
+    "F1": {
+      "endpoint": "fixed",
+      "lane": 1,
+      "position": "J10-B",
+      "small_board_id": "B0012"
+    },
+    "F2": {
+      "endpoint": "fixed",
+      "lane": 2,
+      "position": "J11-A",
+      "small_board_id": "B0001"
+    },
+    "F3": {
+      "endpoint": "fixed",
+      "lane": 3,
+      "position": "J11-B",
+      "small_board_id": "B0004"
+    },
+    "R0": {
+      "endpoint": "rotating",
+      "lane": 0,
+      "position": "J10-A",
+      "small_board_id": "A0010"
+    },
+    "R1": {
+      "endpoint": "rotating",
+      "lane": 1,
+      "position": "J10-B",
+      "small_board_id": "A0017"
+    },
+    "R2": {
+      "endpoint": "rotating",
+      "lane": 2,
+      "position": "J11-A",
+      "small_board_id": "B0015"
+    },
+    "R3": {
+      "endpoint": "rotating",
+      "lane": 3,
+      "position": "J11-B",
+      "small_board_id": "B0017"
+    }
+  },
+  "module_inventory_sha256": "1293702c8d80e1365ee022ecadd72761cda81d6c190f8f7babf7f8b0396e92a9",
+  "network_used": false,
+  "old_f1_selected": false,
+  "old_f1_status": "QUARANTINED_NOT_ACCEPTED",
+  "p11": false,
+  "part": "xc7z020clg400-2",
+  "plan_sha256": {
+    "arq_sack": "07a0b45ed91e58059026771054903903aa1c694f5851e72bb27cef44781011e9",
+    "degrade": "50580cdd48eb2e9ee80ab9f20d9a0c61fa7f443cb75595db1c239bdf6f263046",
+    "dma": "8c42fd2bbf9953e2b1a8de73bd35ef9cd7dbe594b706e071c3bb4f8703f5d96d",
+    "formal_30min": "c3db70f74887c63791529852ed0600be810c27cb0683f90e6dd17f145717cabc",
+    "four_lane_raw": "7737cfe68be0ac673a831a00e0bafa44780f8d114e46f71de573b9f84eed793e",
+    "mask_matrix": "693fe70c08e2fee3916adf6c5951c4b025daab8302f8f82ec38bfba2b7ab0b22",
+    "module_intake": "40aaecd172eecd29f1a1af8058eca1eec37a1189c154e64e6667ab45bc210167",
+    "per_lane_phy": "8353ac7f7500bd73938ba8af2a0719485184ff8c0bae345b8b8993e01ce330de",
+    "performance": "8c9c4bf3be3a00da148a8b95835691e461f8ecbb664e0f06cc83551d1991f469",
+    "preflight": "56cf7e734882d844edfefdd424fef42373d3b6b6b2c4887b5c19ed42c14955ed",
+    "raw_8x8": "fcf3849374bdb9d6119f916a4ffd0043c0adb672a04c12cdc6f943d7747e4ff1",
+    "streaming_64m": "d2ea0b8c07f8b21d583b0d37862e13d4de0e57e0db657880e0f069ea2ee7c2d0",
+    "two_lane_regression": "72b75b23f7e4e83278b78e1b6d9223c2f3de48cdd92b84fdcb622eabe57e7c0b"
+  },
+  "realignment": false,
+  "retry_limits": {
+    "diagnostic_run_ids_per_stage": 2,
+    "jtag_connect": 3,
+    "program_per_operation": 2
+  },
+  "rewiring": false,
+  "rotation": false,
+  "run_id": "p10_3_20260804T093823Z_d4eef729_3d8cd207_a8459eef",
+  "schema_version": 1,
+  "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
+  "shutdown_policy": {
+    "after_each_stage": true,
+    "before": true,
+    "on_ctrl_c": true,
+    "on_error": true,
+    "on_normal_exit": true,
+    "on_timeout": true,
+    "verify_both": true
+  },
+  "source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
+  "status": "AUTHORIZED",
+  "two_hour_test": false,
+  "user_authorization_received_on": "2026-08-04",
+  "user_authorization_statement": "User explicitly authorized automated P10_3 AX7020 stationary four-lane hardware acceptance for the current two boards and eight modules, mask<=0xF, no Ethernet/movement/rotation/realignment/rewiring, no two-hour run, and no P11."
+}
