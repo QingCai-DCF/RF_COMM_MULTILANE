@@ -3,7 +3,7 @@ record_id: "P10_3_AX7020_STATIONARY_4LANE_ACTUAL_AS_WIRED"
 status: "USER_DECLARED_PHYSICAL_WIRING_COMPLETE_PENDING_ELECTRONIC_INTAKE"
 recorded_at_local: "2026-08-04"
 scope: "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE"
-user_source: "Current Codex task: explicit installed F0..F3/R0..R3 topology; on 2026-08-04 the user reported replacing R2 B0015 with new B0023; old-F1 quarantine and current safety boundaries remain in force"
+user_source: "Current Codex task: explicit installed F0..F3/R0..R3 topology; on 2026-08-04 the user reported replacing R2 B0015 with B0023 and later replacing F3 B0004 with B0020; old-F1 quarantine and current safety boundaries remain in force"
 goal:
   external_path: "C:/Users/user/Downloads/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md"
   external_sha256: "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
@@ -26,7 +26,7 @@ module_positions:
   F0: {endpoint: fixed, connector: J10, position: A, lane: 0, small_board_id: "A0019"}
   F1: {endpoint: fixed, connector: J10, position: B, lane: 1, small_board_id: "B0012"}
   F2: {endpoint: fixed, connector: J11, position: A, lane: 2, small_board_id: "B0001"}
-  F3: {endpoint: fixed, connector: J11, position: B, lane: 3, small_board_id: "B0004"}
+  F3: {endpoint: fixed, connector: J11, position: B, lane: 3, small_board_id: "B0020"}
   R0: {endpoint: rotating, connector: J10, position: A, lane: 0, small_board_id: "A0010"}
   R1: {endpoint: rotating, connector: J10, position: B, lane: 1, small_board_id: "A0017"}
   R2: {endpoint: rotating, connector: J11, position: A, lane: 2, small_board_id: "B0023"}
@@ -62,8 +62,9 @@ power_and_ground:
 physical_state_declaration:
   P10_3_PHYSICAL_WIRING_COMPLETED: true
   modules_installed: [F0, F1, F2, F3, R0, R1, R2, R3]
-  pre_run_user_module_replacement: "R2 B0015 replaced by new B0023"
-  replacement_source: "Direct user statement on 2026-08-04; identity not independently read by Codex"
+  pre_run_user_module_replacements: ["R2 B0015 replaced by B0023", "F3 B0004 replaced by B0020"]
+  latest_pre_run_user_module_replacement: "F3 B0004 replaced by B0020"
+  replacement_source: "Direct user statements on 2026-08-04; identities not independently read by Codex"
   replacement_power_state: "NOT_STATED_BY_USER; NOT_CLAIMED"
   codex_physical_action_for_replacement: false
   old_f1_quarantined: true

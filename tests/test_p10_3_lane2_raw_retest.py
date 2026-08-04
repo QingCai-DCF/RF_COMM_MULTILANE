@@ -81,21 +81,30 @@ class P103Lane2RawRetestTests(unittest.TestCase):
             self.assertIn(marker, source)
         self.assertIn("deliberately continue", source)
 
-    def test_lane3_mode_is_exactly_the_missing_reverse_direction(self) -> None:
+    def test_lane3_replacement_mode_is_exactly_bidirectional_raw_only(self) -> None:
         try:
             self.runner.configure_lane(3)
             plans = self.runner.build_plans()
-            self.assertEqual(tuple(plans), ("r3_to_f3",))
+            self.assertEqual(tuple(plans), ("f3_to_r3", "r3_to_f3"))
             self.assertEqual(self.runner.validate_plans(), [])
-            items = plans["r3_to_f3"]
-            self.assertEqual([item.command for item in items], [11, 2, 2])
-            self.assertEqual([item.rawtarget for item in items[1:]], [64, 1024])
-            self.assertTrue(all(item.lane == 8 for item in items[1:]))
-            self.assertTrue(all(item.direction == 1 for item in items[1:]))
+            for name, direction in (("f3_to_r3", 0), ("r3_to_f3", 1)):
+                items = plans[name]
+                self.assertEqual([item.command for item in items], [11, 2, 2])
+                self.assertEqual([item.rawtarget for item in items[1:]], [64, 1024])
+                self.assertTrue(all(item.lane == 8 for item in items[1:]))
+                self.assertTrue(all(item.direction == direction for item in items[1:]))
             self.assertEqual(self.runner.TCL_STAGE, "P10_3-LANE3_RAW_RETEST")
+            self.assertEqual(self.runner.FIXED_ID, "B0020")
+            self.assertEqual(
+                self.runner.AUTHORIZATION_ID,
+                "P10_3-LANE3-B0020-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
+            )
             self.assertEqual(
                 self.runner.AUTH.name,
-                "p10_3_lane3_raw_diagnostic_current_run_authorization.json",
+                "p10_3_lane3_b0020_raw_retest_current_run_authorization.json",
+            )
+            self.assertTrue(
+                (ROOT / "config/p10_3_lane3_raw_diagnostic_current_run_authorization.json").is_file()
             )
         finally:
             self.runner.configure_lane(2)

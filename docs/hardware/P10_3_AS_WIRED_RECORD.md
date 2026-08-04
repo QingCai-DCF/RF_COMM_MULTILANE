@@ -7,7 +7,7 @@ This record binds the user's current P10.3 installation to the frozen P10.2 inde
 | F0 | AX7020-F / J10-A | A0019 | J10-30 / T12 | J10-32 / T11 | J10-34 / B19 | J10-36 / C20 |
 | F1 | AX7020-F / J10-B | B0012 | J10-22 / V17 | J10-24 / T14 | J10-26 / U13 | J10-28 / V12 |
 | F2 | AX7020-F / J11-A | B0001 | J11-30 / G17 | J11-32 / H16 | J11-34 / H15 | J11-36 / K14 |
-| F3 | AX7020-F / J11-B | B0004 | J11-22 / L16 | J11-24 / M17 | J11-26 / D19 | J11-28 / E18 |
+| F3 | AX7020-F / J11-B | B0020 | J11-22 / L16 | J11-24 / M17 | J11-26 / D19 | J11-28 / E18 |
 | R0 | AX7020-R / J10-A | A0010 | J10-30 / T12 | J10-32 / T11 | J10-34 / B19 | J10-36 / C20 |
 | R1 | AX7020-R / J10-B | A0017 | J10-22 / V17 | J10-24 / T14 | J10-26 / U13 | J10-28 / V12 |
 | R2 | AX7020-R / J11-A | B0023 | J11-30 / G17 | J11-32 / H16 | J11-34 / H15 | J11-36 / K14 |
@@ -22,3 +22,5 @@ The user-supplied small-board identifiers are unique across all eight active mod
 On 2026-08-04 the user reported that the former R2 small board `B0015` had been replaced by a new small board `B0023` at AX7020-R/J11-A. This record captures only that user-provided identity and position. Codex did not perform the replacement and does not claim the replacement power state, component marking, PCB revision, or electronic acceptance. Historical evidence involving R2=`B0015` remains immutable and is not relabeled as evidence for `B0023`.
 
 The bounded run `p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef` subsequently passed lane2 raw connectivity in both directions: F2→R2 produced/received 64/64 and 1024/1024 raw events, and R2→F2 produced/received 64/64 and 1024/1024 raw events. Both boards reached verified shutdown. This is `RAW_PHYSICAL_ONLY` evidence; it does not complete framed module intake or any downstream P10.3 acceptance stage.
+
+Later on 2026-08-04 the user reported replacing the former F3 small board `B0004` with `B0020` at AX7020-F/J11-B and requested a quick lane3 retest. Codex did not perform the replacement and does not claim the replacement power state. The prior two-direction lane3 failures remain immutable evidence for the old F3=`B0004` / R3=`B0017` pairing; they are not evidence for the new F3=`B0020` installation. Electronic status for the new pair remains pending until a fresh, shutdown-bounded bidirectional test completes.

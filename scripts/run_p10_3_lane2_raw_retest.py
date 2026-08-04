@@ -2,9 +2,9 @@
 """Bounded, fail-closed P10.3 single-lane raw-connectivity diagnostic.
 
 The default remains the historical lane2 replacement retest.  ``--lane 3``
-selects the independent lane3 diagnostic needed after the all-lane intake
-observed F3 physical TX but no R3 raw RX.  Lane2 preserves its two independent
-directions; lane3 authorizes only the previously unobserved R3-to-F3 direction.
+selects a fresh bidirectional lane3 retest after the user replaced F3 B0004
+with B0020.  Both modes use independent shutdown-bound directions and raw-only
+64/1024-pulse observations.
 
 require-user-hw-authorization
 """
@@ -40,6 +40,7 @@ RUN_RE = re.compile(
 LANE_CONFIGS: dict[int, dict[str, Any]] = {
     2: {
         "fixed_id": "B0001", "rotating_id": "B0023",
+        "authorization_id": "P10_3-LANE2-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
         "authorization": "config/p10_3_lane2_raw_retest_current_run_authorization.json",
         "blocker": "evidence/generated/p10_3_lane2_directional_connectivity_blocker.json",
         "output_stem": "p10_3_lane2_raw_connectivity_retest",
@@ -50,19 +51,20 @@ LANE_CONFIGS: dict[int, dict[str, Any]] = {
         "directions": ("f2_to_r2", "r2_to_f2"),
     },
     3: {
-        "fixed_id": "B0004", "rotating_id": "B0017",
-        "authorization": "config/p10_3_lane3_raw_diagnostic_current_run_authorization.json",
-        "blocker": "evidence/generated/p10_3_final_summary.json",
-        "output_stem": "p10_3_lane3_raw_connectivity_diagnostic",
-        "scope_suffix": "LANE3_RAW_CONNECTIVITY_DIAGNOSTIC",
-        "title": "lane3 bidirectional raw-connectivity diagnostic",
+        "fixed_id": "B0020", "rotating_id": "B0017",
+        "authorization_id": "P10_3-LANE3-B0020-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
+        "authorization": "config/p10_3_lane3_b0020_raw_retest_current_run_authorization.json",
+        "blocker": "evidence/generated/p10_3_lane3_raw_connectivity_diagnostic.json",
+        "output_stem": "p10_3_lane3_b0020_raw_connectivity_retest",
+        "scope_suffix": "LANE3_B0020_RAW_CONNECTIVITY_RETEST",
+        "title": "lane3 bidirectional raw-connectivity retest after F3 replacement",
         "trigger": (
-            "The resumed all-lane intake observed F3 physical TX 64/64 but R3 "
-            "raw RX 0/64; the standing P10.3 authorization permits the bounded "
-            "reciprocal diagnostic needed before physical handling."
+            "The user reported replacing F3 B0004 with B0020 and explicitly "
+            "requested a quick lane3 retest. The fresh run must test both "
+            "physical directions without relabeling the immutable B0004 failures."
         ),
-        "user_statement": "请补测 lane3 的反向物理 RAW 连通性 R3→F3",
-        "directions": ("r3_to_f3",),
+        "user_statement": "我已将B0004更换为B0020，请你快速重测一遍lane3",
+        "directions": ("f3_to_r3", "r3_to_f3"),
     },
 }
 
@@ -71,6 +73,7 @@ def configure_lane(lane: int) -> None:
     global ACTIVE_LANE, LANE_MASK, FIXED_MODULE, ROTATING_MODULE
     global FIXED_ID, ROTATING_ID, AUTH, PREVIOUS_BLOCKER, OUTPUT_STEM
     global SCOPE, TCL_STAGE, DIRECTIONS, TITLE, TRIGGER, USER_STATEMENT
+    global AUTHORIZATION_ID
     if lane not in LANE_CONFIGS:
         raise ValueError("only bounded lane2 or lane3 raw diagnostics are supported")
     cfg = LANE_CONFIGS[lane]
@@ -89,6 +92,7 @@ def configure_lane(lane: int) -> None:
     TITLE = str(cfg["title"])
     TRIGGER = str(cfg["trigger"])
     USER_STATEMENT = str(cfg["user_statement"])
+    AUTHORIZATION_ID = str(cfg["authorization_id"])
 
 
 configure_lane(2)
@@ -212,6 +216,13 @@ def validate_static_inputs() -> tuple[dict[str, Any], dict[str, Path], list[str]
                 replacement.get("electronic_status") != \
                 "BIDIRECTIONAL_RAW_PASS_PENDING_FRAME_INTAKE":
             errors.append("R2 replacement provenance/status mismatch")
+    elif ACTIVE_LANE == 3:
+        replacement = inventory.get("f3_replacement_2026_08_04", {})
+        if replacement.get("removed_small_board_id") != "B0004" or \
+                replacement.get("installed_small_board_id") != "B0020" or \
+                replacement.get("electronic_status") != \
+                "PENDING_BIDIRECTIONAL_RAW_RETEST":
+            errors.append("F3 replacement provenance/status mismatch")
     try:
         tcl = p103.STAGE_TCL.read_text(encoding="utf-8")
         if f"LANE{ACTIVE_LANE}_RAW_RETEST" not in tcl:
@@ -254,9 +265,7 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
     plans = build_plans()
     record = {
         "schema_version": 1,
-        "authorization_id": (
-            f"P10_3-LANE{ACTIVE_LANE}-RAW-RETEST-CURRENT-RUN-IMMUTABLE"
-        ),
+        "authorization_id": AUTHORIZATION_ID,
         "status": "AUTHORIZED",
         "scope": SCOPE,
         "branch": p103.BRANCH,
@@ -325,7 +334,8 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
         "user_authorization_statement": USER_STATEMENT,
         "campaign_standing_authorization": (
             "P10.3 allows necessary bounded diagnostics/recovery/retest after exact "
-            "artifact freeze, with shutdown-before/after and no physical changes."
+            "artifact freeze and a user-reported pre-run module replacement, with "
+            "shutdown-before/after and no physical changes during the run."
         ),
         "authorization_interpretation": (
             f"One fresh immutable lane{ACTIVE_LANE} raw-only run ID covering "
@@ -366,6 +376,15 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
             "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
             "codex_physical_action": False,
         }
+    elif ACTIVE_LANE == 3:
+        record["replacement"] = {
+            "logical_module": "F3", "position": "AX7020-F/J11-B",
+            "removed_small_board_id": "B0004", "installed_small_board_id": "B0020",
+            "source": "Direct user statement on 2026-08-04",
+            "identity_independently_verified": False,
+            "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
+            "codex_physical_action": False,
+        }
     p103.write_json(AUTH, record)
     return record
 
@@ -380,9 +399,7 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
     plans = build_plans()
     expected = {
         "schema_version": 1,
-        "authorization_id": (
-            f"P10_3-LANE{ACTIVE_LANE}-RAW-RETEST-CURRENT-RUN-IMMUTABLE"
-        ),
+        "authorization_id": AUTHORIZATION_ID,
         "status": "AUTHORIZED",
         "scope": SCOPE,
         "branch": p103.BRANCH,
@@ -467,6 +484,12 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
         replacement = record.get("replacement", {})
         if replacement.get("removed_small_board_id") != "B0015" or \
                 replacement.get("installed_small_board_id") != "B0023" or \
+                replacement.get("identity_independently_verified") is not False:
+            errors.append("authorization replacement binding mismatch")
+    elif ACTIVE_LANE == 3:
+        replacement = record.get("replacement", {})
+        if replacement.get("removed_small_board_id") != "B0004" or \
+                replacement.get("installed_small_board_id") != "B0020" or \
                 replacement.get("identity_independently_verified") is not False:
             errors.append("authorization replacement binding mismatch")
     retry = record.get("retry_override", {})
