@@ -1,5 +1,5 @@
 {
-  "acceptance_eligible": true,
+  "acceptance_eligible": false,
   "allowed_hardware_stages": [
     "preflight",
     "module_intake",
@@ -122,7 +122,9 @@
   },
   "current_run_hardware_authorization": false,
   "eligibility_scope": "NEW_EXACT_CURRENT_RUN_AUTHORIZATION_ONLY",
-  "errors": [],
+  "errors": [
+    "worktree must be completely clean before full-campaign readiness: evidence/generated/p10_3f_full_campaign_freeze.json,evidence/generated/p10_3f_full_campaign_freeze.md,evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log"
+  ],
   "forbidden": {
     "ethernet": true,
     "lane_mask_above_0xF": true,
@@ -133,7 +135,7 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-04T22:23:57+00:00",
+  "generated_at_utc": "2026-08-04T23:08:14+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": false,
   "hardware_first_fault_kill_active_during_each_command": true,
@@ -209,9 +211,9 @@
       "sha256": "7f8efdfc03662fa668a042ace129e2592747d8fc92784d5566ba11f91b98bfc8"
     },
     {
-      "bytes": 16366,
+      "bytes": 18951,
       "path": "docs/design/P10_3_FIRST_FAULT_FORENSICS.md",
-      "sha256": "786d601287159beb6c913bbee69f3217e4213c0eed1bcaa815313566cdd07511"
+      "sha256": "b4d17331075dee0652375e3e69eb566e99c71d271466d5809eaa026fd1e9c04d"
     },
     {
       "bytes": 23677,
@@ -264,9 +266,9 @@
       "sha256": "c8177f98ec62b98eef4e25ac96fe654d04b465ac961a43a426452ddfc5eebb86"
     },
     {
-      "bytes": 137733,
+      "bytes": 141991,
       "path": "scripts/run_p10_3_ax7020_4lane_hardware.py",
-      "sha256": "af6c89945cac4e07a9cd5cf60540a54c3a42a17a4b8ef993d41b35c1221e8f53"
+      "sha256": "e6e233701a984e810ac468cf9517dc3d6c08a88b2f78dbb1037d35091971a8b9"
     },
     {
       "bytes": 23750,
@@ -339,7 +341,7 @@
       "sha256": "445d9027ea9d08385f8169512511fbe8890c2608ec06201972c585ba1791926b"
     }
   ],
-  "host_source_commit": "5bf79e39ae12c21605545dc792881b31efb50194",
+  "host_source_commit": "e68b155817f7a45fe5fded8bfc2cd75227b6274a",
   "internal_stream_object_bytes": 262144,
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_board_autonomous_aggregate_command_bytes": 67108864,
@@ -370,9 +372,9 @@
         "tests.test_p10_3_hardware_acceptance"
       ],
       "log": {
-        "bytes": 134,
+        "bytes": 136,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
-        "sha256": "ce954efedaa42976e5560156f652185b9be04112b4b0443de0971f8bbfe779b5"
+        "sha256": "a0a6e871b235ef78fa0dc4c4f98696d93477581b0caaeaf702f669f9d280ffe9"
       },
       "returncode": 0,
       "status": "PASS"
@@ -515,8 +517,8 @@
     "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
     "verify_both_shutdown_markers": true
   },
-  "source_tree_clean": true,
-  "source_tree_clean_before_generation": true,
+  "source_tree_clean": false,
+  "source_tree_clean_before_generation": false,
   "stage_plan_sha256": {
     "arq_sack": "95f85ad6a0e507fd378265a016f4e686d3b4ea6eeeefb5060362c4b1e36b812c",
     "degrade": "c167caf4807853df451a5955b8e3986ff73dfd172abf44de57adbf0cf481000d",
@@ -542,6 +544,6 @@
     "streaming_64m": "e425d898d1576f5b751c5c8219532d42268fe922d25dc2ee9aee3f794022f083",
     "two_lane_regression": "90cacb29425008bb52c3393414e3bd4cbdc2a5c34dfb83300886fa51cbc13dda"
   },
-  "status": "PASS",
+  "status": "FAIL",
   "test_id": "P10_3F-FULL-CAMPAIGN-FREEZE"
 }
