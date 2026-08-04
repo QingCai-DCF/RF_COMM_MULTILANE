@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_2-POSTFREEZE-MODULE-ID-UPDATE",
+  "status": "RECORDED_USER_PROVIDED_NOT_INDEPENDENTLY_VERIFIED",
+  "recorded_date_local": "2026-08-04",
+  "source": "Direct user statement in the Codex task",
+  "modules": {
+    "F0": {
+      "inventory_module_id": "F0",
+      "endpoint_position": "AX7020-F/J10-A",
+      "small_board_id": "A0019"
+    },
+    "F1": {
+      "inventory_module_id": "F1_REPLACEMENT",
+      "endpoint_position": "AX7020-F/J10-B",
+      "small_board_id": "B0012"
+    },
+    "R0": {
+      "inventory_module_id": "R0",
+      "endpoint_position": "AX7020-R/J10-A",
+      "small_board_id": "A0010"
+    },
+    "R1": {
+      "inventory_module_id": "R1",
+      "endpoint_position": "AX7020-R/J10-B",
+      "small_board_id": "A0017"
+    }
+  },
+  "interpretation": "User-provided physical TFDU small-board identifiers only",
+  "not_asserted": [
+    "PCB revision",
+    "TFDU component marking",
+    "manufacturer serial or lot",
+    "independent visual verification",
+    "new hardware acceptance"
+  ],
+  "canonical_inventory": {
+    "path": "config/hardware/tfdu_module_inventory.yaml",
+    "sha256": "5a2f423248a57005d7c650d53dd8414658d1c641c6947d0eb8d44f555e6887d4"
+  },
+  "p10_2_source_commit": "dd44b0a4163ce74a491bae49bb6079b82dd94b7d",
+  "p10_2_evidence_checkpoint": "08771d6bf9e852c9d34bcff61add1598e120b70a",
+  "p10_2_tag": "p10.2-4lane-offline-ready",
+  "p10_2_tag_object": "bf7c966fcda3e17665c7eae4c0179aec99f020ff",
+  "frozen_tag_or_checkpoint_moved": false,
+  "current_run_hardware_authorization": false,
+  "hardware_actions_executed": false
+}

@@ -10,6 +10,18 @@ identity_policy:
   accepted_identity_basis: "logical module, endpoint, connector position, immutable P10.1R run evidence, and replacement history"
   old_f1_reuse_forbidden: true
   old_f1_forbidden_future_aliases: [F2, F3, R2, R3]
+postfreeze_user_provided_small_board_identifiers:
+  record_id: "P10_2_POSTFREEZE_TFDU_SMALL_BOARD_IDS_2026_08_04"
+  recorded_date_local: "2026-08-04"
+  source: "Direct user statement in the Codex task"
+  verification: "USER_PROVIDED_NOT_INDEPENDENTLY_VERIFIED"
+  interpretation: "Physical TFDU small-board identifier only; not inferred to be a PCB revision, TFDU component marking, manufacturer serial, or lot"
+  frozen_p10_2_tag_unchanged: "p10.2-4lane-offline-ready"
+  modules:
+    F0: {inventory_module_id: "F0", small_board_id: "A0019"}
+    F1: {inventory_module_id: "F1_REPLACEMENT", small_board_id: "B0012"}
+    R0: {inventory_module_id: "R0", small_board_id: "A0010"}
+    R1: {inventory_module_id: "R1", small_board_id: "A0017"}
 accepted_baseline:
   - module_id: "F0"
     endpoint: "AX7020-F/JTAG:210249855178"
