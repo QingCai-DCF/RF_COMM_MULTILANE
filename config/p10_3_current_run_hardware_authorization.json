@@ -118,8 +118,9 @@
     "rotating": "AX7020-R/JTAG:210512180081"
   },
   "branch": "p10.3/ax7020-stationary-4lane-hardware",
-  "consumed": false,
-  "current_run_hardware_authorization": true,
+  "consumed": true,
+  "consumed_at_utc": "2026-08-04T10:08:29+00:00",
+  "current_run_hardware_authorization": false,
   "external_goal": {
     "bytes": 31921,
     "path": "C:\\Users\\user\\Downloads\\P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
@@ -349,6 +350,7 @@
     "two_lane_regression": "72b75b23f7e4e83278b78e1b6d9223c2f3de48cdd92b84fdcb622eabe57e7c0b"
   },
   "realignment": false,
+  "result": "evidence/hardware/p10_3/p10_3_20260804T100428Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json",
   "retry_limits": {
     "diagnostic_run_ids_per_stage": 2,
     "jtag_connect": 3,
@@ -369,7 +371,7 @@
     "verify_both": true
   },
   "source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
-  "status": "AUTHORIZED",
+  "status": "CONSUMED_AFTER_P10_3_FAIL",
   "two_hour_test": false,
   "user_authorization_received_on": "2026-08-04",
   "user_authorization_statement": "User explicitly authorized automated P10_3 AX7020 stationary four-lane hardware acceptance for the current two boards and eight modules, mask<=0xF, no Ethernet/movement/rotation/realignment/rewiring, no two-hour run, and no P11."
