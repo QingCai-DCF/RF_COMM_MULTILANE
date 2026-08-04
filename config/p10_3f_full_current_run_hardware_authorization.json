@@ -122,7 +122,7 @@
     "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
     "verify_both_shutdown_markers": true
   },
-  "authorization_created_at_utc": "2026-08-04T22:26:12+00:00",
+  "authorization_created_at_utc": "2026-08-04T23:10:38+00:00",
   "authorization_id": "P10_3F-FULL-CURRENT-RUN-IMMUTABLE",
   "authorized": true,
   "board_binding": {
@@ -130,10 +130,9 @@
     "rotating": "AX7020-R/JTAG:210512180081"
   },
   "campaign_freeze_path": "evidence/generated/p10_3f_full_campaign_freeze.json",
-  "campaign_freeze_sha256": "d7b9c04f42e8a1b68dd523e230c0fc787c5e0c46c0a4b55f139c7aefbe441ae4",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-04T22:56:57+00:00",
-  "current_run_hardware_authorization": false,
+  "campaign_freeze_sha256": "37d3f84e5089fb89a287fa4e6b2283a1f232117b6f2c49af15a98b039a987b5d",
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "ethernet_allowed": false,
   "fixed_jtag_serial": "210249855178",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
@@ -209,9 +208,9 @@
       "sha256": "7f8efdfc03662fa668a042ace129e2592747d8fc92784d5566ba11f91b98bfc8"
     },
     {
-      "bytes": 16366,
+      "bytes": 18951,
       "path": "docs/design/P10_3_FIRST_FAULT_FORENSICS.md",
-      "sha256": "786d601287159beb6c913bbee69f3217e4213c0eed1bcaa815313566cdd07511"
+      "sha256": "b4d17331075dee0652375e3e69eb566e99c71d271466d5809eaa026fd1e9c04d"
     },
     {
       "bytes": 23677,
@@ -264,9 +263,9 @@
       "sha256": "c8177f98ec62b98eef4e25ac96fe654d04b465ac961a43a426452ddfc5eebb86"
     },
     {
-      "bytes": 137733,
+      "bytes": 141991,
       "path": "scripts/run_p10_3_ax7020_4lane_hardware.py",
-      "sha256": "af6c89945cac4e07a9cd5cf60540a54c3a42a17a4b8ef993d41b35c1221e8f53"
+      "sha256": "e6e233701a984e810ac468cf9517dc3d6c08a88b2f78dbb1037d35091971a8b9"
     },
     {
       "bytes": 23750,
@@ -339,7 +338,7 @@
       "sha256": "445d9027ea9d08385f8169512511fbe8890c2608ec06201972c585ba1791926b"
     }
   ],
-  "host_source_commit": "5bf79e39ae12c21605545dc792881b31efb50194",
+  "host_source_commit": "81e05d275ea841abf353dac2f429e3273100ce3e",
   "internal_stream_object_bytes": 262144,
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_board_autonomous_aggregate_command_bytes": 67108864,
@@ -361,10 +360,9 @@
   "movement_rotation_realignment_or_rewiring_allowed": false,
   "no_hardware": false,
   "p11_allowed": false,
-  "result": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T222611Z_5bf79e39_9ae79d14_e7389fda/final/orchestrator_result.json",
   "retry_policy": "No retry-count upper bound inside the exact authorized Goal; each immutable run_id still requires shutdown-before and verified dual-board shutdown.",
   "rotating_jtag_serial": "210512180081",
-  "run_id": "p10_3f_full_20260804T222611Z_5bf79e39_9ae79d14_e7389fda",
+  "run_id": "p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda",
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_WITH_FIRST_FAULT_FORENSICS",
   "shutdown_policy": {
@@ -374,16 +372,16 @@
     "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
     "verify_both_shutdown_markers": true
   },
-  "status": "CONSUMED_AFTER_P10_3F_FULL_FAIL",
+  "status": "AUTHORIZED",
   "supersedes_consumed_authorization": {
     "consumed": true,
     "path": "config/p10_3f_full_current_run_hardware_authorization.json",
-    "run_id": "p10_3f_full_20260804T204115Z_b77883df_a6ecd8e6_a5491982",
-    "sha256": "318a6780e531cb99c607d83bdcee87d26d1645b1ec19e84bc9aac00643467b8f",
+    "run_id": "p10_3f_full_20260804T222611Z_5bf79e39_9ae79d14_e7389fda",
+    "sha256": "2124f2780505f75e5cf717fde964368f87097f09114bf04177380c3b8e97da03",
     "status": "CONSUMED_AFTER_P10_3F_FULL_FAIL"
   },
   "two_hour_test_allowed": false,
   "user_authorization_context": "The user's current statement authorizes every operation needed to continue the exact P10.3/P10.3F Goal with this newly frozen atomic-migration artifact bundle. Existing Goal prohibitions and shutdown boundaries remain in force.",
-  "user_authorization_received_at_utc": "2026-08-04T22:26:11.9196411Z",
+  "user_authorization_received_at_utc": "2026-08-04T23:10:38+00:00",
   "user_authorization_statement": "我授权所有需要的操作，继续"
 }
