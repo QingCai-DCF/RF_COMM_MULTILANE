@@ -1,11 +1,11 @@
 schema_version: 2
 inventory_id: "P10_3_TFDU_EIGHT_ACTIVE_MODULE_INVENTORY"
-status: "LANES0_2_RAW_PASS_LANE3_B0020_BIDIRECTIONAL_RAW_FAIL"
+status: "LANES0_2_RAW_PASS_LANE3_B0020_B0025_PENDING_BIDIRECTIONAL_RAW_RETEST"
 scope: "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE"
 generated_at_utc: "2026-08-03T15:56:34Z"
 current_run_hardware_authorization: false
 hardware_actions_executed: true
-last_updated_at_utc: "2026-08-04T12:32:22Z"
+last_updated_at_utc: "2026-08-04T12:40:57Z"
 identity_policy:
   do_not_guess_unsupplied_marking_or_revision: true
   accepted_identity_basis: "logical module, user-supplied small-board identifier, endpoint, connector position, and immutable acceptance evidence"
@@ -14,7 +14,7 @@ identity_policy:
 p10_3_current_installation:
   record_id: "P10_3_USER_DECLARED_EIGHT_MODULE_INSTALLATION_2026_08_04"
   source: "Direct user statement in the current Codex task"
-  verification: "USER_PROVIDED IDENTITIES; LANES0/1/2 BIDIRECTIONAL RAW CONNECTIVITY PASS; AFTER F3 B0004 WAS REPLACED WITH B0020, CURRENT LANE3 PAIR AGAIN FAILED BOTH RAW DIRECTIONS 0/64 WITH EACH SENDER PHYSICAL TX 64"
+  verification: "USER_PROVIDED IDENTITIES; LANES0/1/2 BIDIRECTIONAL RAW CONNECTIVITY PASS; USER REPLACED R3 B0017 WITH B0025; CURRENT F3 B0020/R3 B0025 PAIR PENDING FRESH BIDIRECTIONAL RAW RETEST"
   active_modules: [F0, F1, F2, F3, R0, R1, R2, R3]
   lane_pairs: {lane0: "F0-R0", lane1: "F1-R1", lane2: "F2-R2", lane3: "F3-R3"}
   old_f1_active: false
@@ -23,11 +23,11 @@ p10_3_current_installation:
     F0: {small_board_id: "A0019", endpoint: "AX7020-F/JTAG:210249855178", position: "J10-A", inventory_status: "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS"}
     F1: {small_board_id: "B0012", endpoint: "AX7020-F/JTAG:210249855178", position: "J10-B", inventory_status: "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS"}
     F2: {small_board_id: "B0001", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-A", inventory_status: "RAW_ACCEPTED_WITH_R2_B0023_PENDING_FRAME_INTAKE"}
-    F3: {small_board_id: "B0020", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-B", inventory_status: "RAW_BLOCKED_BOTH_DIRECTIONS_0_OF_64"}
+    F3: {small_board_id: "B0020", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-B", inventory_status: "PENDING_RAW_RETEST_WITH_R3_B0025"}
     R0: {small_board_id: "A0010", endpoint: "AX7020-R/JTAG:210512180081", position: "J10-A", inventory_status: "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS"}
     R1: {small_board_id: "A0017", endpoint: "AX7020-R/JTAG:210512180081", position: "J10-B", inventory_status: "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS"}
     R2: {small_board_id: "B0023", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-A", inventory_status: "RAW_ACCEPTED_WITH_F2_B0001_PENDING_FRAME_INTAKE"}
-    R3: {small_board_id: "B0017", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-B", inventory_status: "RAW_BLOCKED_BOTH_DIRECTIONS_0_OF_64_WITH_F3_B0020"}
+    R3: {small_board_id: "B0025", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-B", inventory_status: "PENDING_BIDIRECTIONAL_RAW_RETEST"}
 postfreeze_user_provided_small_board_identifiers:
   record_id: "P10_3_USER_PROVIDED_TFDU_SMALL_BOARD_IDS_2026_08_04"
   recorded_date_local: "2026-08-04"
@@ -75,6 +75,21 @@ f3_replacement_2026_08_04:
   electronic_status: "BIDIRECTIONAL_RAW_FAIL_0_OF_64_EACH_DIRECTION"
   raw_retest_run_id: "p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef"
   historical_failure_pair: "F3=B0004 / R3=B0017"
+r3_replacement_2026_08_04:
+  record_id: "P10_3_USER_REPORTED_R3_REPLACEMENT_B0017_TO_B0025"
+  recorded_date_local: "2026-08-04"
+  source: "Direct user statement in the current Codex task"
+  user_statement: "I replaced B0017 with B0025; quickly retest raw connectivity only"
+  endpoint: "AX7020-R/JTAG:210512180081"
+  position: "J11-B"
+  logical_module: "R3"
+  removed_small_board_id: "B0017"
+  installed_small_board_id: "B0025"
+  identity_verification: "USER_PROVIDED_NOT_INDEPENDENTLY_VERIFIED"
+  replacement_power_state: "NOT_STATED_BY_USER; NOT_CLAIMED"
+  codex_physical_action: false
+  electronic_status: "PENDING_BIDIRECTIONAL_RAW_RETEST"
+  historical_failure_pair: "F3=B0020 / R3=B0017"
 accepted_baseline:
   - module_id: "F0"
     endpoint: "AX7020-F/JTAG:210249855178"
@@ -163,11 +178,24 @@ quarantine:
     history: "User reported replacing this F3 small board with B0020 on 2026-08-04. Historical B0004 evidence remains unchanged."
     inventory_status: "QUARANTINED_NOT_ACCEPTED"
     eligible_for_future_four_lane_use: false
+  - historical_record_id: "REMOVED_R3_B0017_AFTER_P10_3_BIDIRECTIONAL_RAW_FAILURE"
+    small_board_id: "B0017"
+    historical_endpoint: "AX7020-R/JTAG:210512180081"
+    historical_position: "J11-B"
+    accepted_stage: null
+    accepted_run_ids: []
+    known_failures:
+      - "With F3 B0020, F3-to-R3 requested 64 raw events; F3 physical TX count was 64 and R3 raw RX count was 0."
+      - "With F3 B0020, R3-to-F3 requested 64 raw events; R3 physical TX count was 64 and F3 raw RX count was 0."
+      - "The end-to-end failures did not uniquely attribute the fault to B0017."
+    history: "User reported replacing this R3 small board with B0025 on 2026-08-04. Historical B0017 evidence remains unchanged."
+    inventory_status: "QUARANTINED_NOT_ACCEPTED"
+    eligible_for_future_four_lane_use: false
 pending_electronic_intake:
   - {module_id: "F2", small_board_id: "B0001", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-A", accepted_stage: "P10_3_LANE2_RAW_CONNECTIVITY_RETEST_ONLY", accepted_run_ids: ["p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef"], raw_recheck_run_ids: ["p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef"], known_failures: [], inventory_status: "RAW_ACCEPTED_PENDING_FRAME_INTAKE", intake_status: ["SAFE_IDLE_PASS", "RAW_BIDIRECTIONAL_PASS", "PENDING_FRAME_ACCEPTANCE", "SHUTDOWN_RECHECK_PASS"]}
-  - {module_id: "F3", small_board_id: "B0020", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-B", accepted_stage: null, accepted_run_ids: [], raw_recheck_run_ids: ["p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef"], known_failures: ["F3 B0020-to-R3 B0017 requested 64 raw events; F3 physical TX count was 64 and R3 raw RX count was 0.", "R3 B0017-to-F3 B0020 requested 64 raw events; R3 physical TX count was 64 and F3 raw RX count was 0."], inventory_status: "RAW_CONNECTIVITY_BLOCKED_PENDING_PHYSICAL_REVIEW", intake_status: ["SAFE_IDLE_PASS", "F3_TO_R3_RAW_FAIL", "R3_TO_F3_RAW_FAIL", "PENDING_FRAME_ACCEPTANCE", "SHUTDOWN_RECHECK_PASS"]}
+  - {module_id: "F3", small_board_id: "B0020", endpoint: "AX7020-F/JTAG:210249855178", position: "J11-B", accepted_stage: null, accepted_run_ids: [], raw_recheck_run_ids: [], historical_pair_failure_run_ids: ["p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef"], known_failures: [], inventory_status: "PENDING_RAW_RETEST_WITH_R3_B0025", intake_status: ["PENDING_SAFE_IDLE_RECHECK", "PENDING_F3_TO_R3_RAW", "PENDING_R3_TO_F3_RAW"]}
   - {module_id: "R2", small_board_id: "B0023", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-A", accepted_stage: "P10_3_LANE2_RAW_CONNECTIVITY_RETEST_ONLY", accepted_run_ids: ["p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef"], raw_recheck_run_ids: ["p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef"], known_failures: [], inventory_status: "RAW_ACCEPTED_PENDING_FRAME_INTAKE", intake_status: ["SAFE_IDLE_PASS", "RAW_BIDIRECTIONAL_PASS", "PENDING_FRAME_ACCEPTANCE", "SHUTDOWN_RECHECK_PASS"]}
-  - {module_id: "R3", small_board_id: "B0017", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-B", accepted_stage: null, accepted_run_ids: [], raw_recheck_run_ids: ["p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef"], historical_pair_failure_run_ids: ["p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef", "p10_3_raw_20260804T121239Z_d4eef729_3d8cd207_a8459eef"], known_failures: ["F3 B0020-to-R3 B0017 requested 64 raw events; F3 physical TX count was 64 and R3 raw RX count was 0.", "R3 B0017-to-F3 B0020 requested 64 raw events; R3 physical TX count was 64 and F3 raw RX count was 0."], inventory_status: "RAW_CONNECTIVITY_BLOCKED_PENDING_PHYSICAL_REVIEW", intake_status: ["SAFE_IDLE_PASS", "F3_TO_R3_RAW_FAIL", "R3_TO_F3_RAW_FAIL", "PENDING_FRAME_ACCEPTANCE", "SHUTDOWN_RECHECK_PASS"]}
+  - {module_id: "R3", small_board_id: "B0025", endpoint: "AX7020-R/JTAG:210512180081", position: "J11-B", accepted_stage: null, accepted_run_ids: [], raw_recheck_run_ids: [], known_failures: [], inventory_status: "PENDING_BIDIRECTIONAL_RAW_RETEST", intake_status: ["PENDING_SAFE_IDLE_RECHECK", "PENDING_F3_TO_R3_RAW", "PENDING_R3_TO_F3_RAW"]}
 evidence:
   p10_1r_final: "evidence/generated/p10_1r_final_summary.json"
   p10_1r_checkpoint: "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4"

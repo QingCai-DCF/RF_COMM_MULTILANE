@@ -11,7 +11,7 @@ This record binds the user's current P10.3 installation to the frozen P10.2 inde
 | R0 | AX7020-R / J10-A | A0010 | J10-30 / T12 | J10-32 / T11 | J10-34 / B19 | J10-36 / C20 |
 | R1 | AX7020-R / J10-B | A0017 | J10-22 / V17 | J10-24 / T14 | J10-26 / U13 | J10-28 / V12 |
 | R2 | AX7020-R / J11-A | B0023 | J11-30 / G17 | J11-32 / H16 | J11-34 / H15 | J11-36 / K14 |
-| R3 | AX7020-R / J11-B | B0017 | J11-22 / L16 | J11-24 / M17 | J11-26 / D19 | J11-28 / E18 |
+| R3 | AX7020-R / J11-B | B0025 | J11-22 / L16 | J11-24 / M17 | J11-26 / D19 | J11-28 / E18 |
 
 All signal I/O uses `LVCMOS33` against 3.3 V VCCO. Mode is static high, SD is active-high shutdown, Txd is active high and must be low in configured reset/fault/shutdown, and Rxd is active low. Per-signal bank, series-resistor, pull, source-page and connector-orientation details remain authoritative in `config/hardware/p10_2_ax7020_4lane_wiring.yaml` and the frozen proposal whose SHA256 is `5f4a89b818b007af4863534759068dda529fe3c34501569ea4da89a42d8026fc`.
 
@@ -26,3 +26,5 @@ The bounded run `p10_3_raw_20260804T114152Z_d4eef729_3d8cd207_a8459eef` subseque
 Later on 2026-08-04 the user reported replacing the former F3 small board `B0004` with `B0020` at AX7020-F/J11-B and requested a quick lane3 retest. Codex did not perform the replacement and does not claim the replacement power state. The prior two-direction lane3 failures remain immutable evidence for the old F3=`B0004` / R3=`B0017` pairing; they are not evidence for the new F3=`B0020` installation. Electronic status for the new pair remains pending until a fresh, shutdown-bounded bidirectional test completes.
 
 The fresh bounded run `p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef` tested the current F3=`B0020` / R3=`B0017` pair in both raw directions. F3→R3 produced 64 final-path physical TX events and R3 observed 0 raw RX events; R3→F3 produced 64 final-path physical TX events and F3 observed 0 raw RX events. Both directions therefore failed and their 1024-event cases were not run fail-closed. Both boards reached verified shutdown at all seven checkpoints. This remains `RAW_PHYSICAL_ONLY` evidence and does not identify a unique component or wiring cause.
+
+The user then reported replacing R3=`B0017` with R3=`B0025` at AX7020-R/J11-B and requested a quick raw-only lane3 retest. Codex did not perform the replacement and does not claim its power state. Prior evidence involving B0017 remains immutable and is not relabeled for B0025.

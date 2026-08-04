@@ -95,16 +95,24 @@ class P103Lane2RawRetestTests(unittest.TestCase):
                 self.assertTrue(all(item.direction == direction for item in items[1:]))
             self.assertEqual(self.runner.TCL_STAGE, "P10_3-LANE3_RAW_RETEST")
             self.assertEqual(self.runner.FIXED_ID, "B0020")
+            self.assertEqual(self.runner.ROTATING_ID, "B0025")
             self.assertEqual(
                 self.runner.AUTHORIZATION_ID,
-                "P10_3-LANE3-B0020-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
+                "P10_3-LANE3-B0020-B0025-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
             )
             self.assertEqual(
                 self.runner.AUTH.name,
-                "p10_3_lane3_b0020_raw_retest_current_run_authorization.json",
+                "p10_3_lane3_b0020_b0025_raw_retest_current_run_authorization.json",
             )
             self.assertTrue(
                 (ROOT / "config/p10_3_lane3_raw_diagnostic_current_run_authorization.json").is_file()
+            )
+            self.assertTrue(
+                (ROOT / "config/p10_3_lane3_b0020_raw_retest_current_run_authorization.json").is_file()
+            )
+            self.assertIn(
+                '"mode": "BYTE_EXACT_ZIP_PLUS_COMPACT_JSON"',
+                RUNNER.read_text(encoding="utf-8"),
             )
         finally:
             self.runner.configure_lane(2)
