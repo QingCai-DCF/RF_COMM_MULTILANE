@@ -1,8 +1,8 @@
 # P10.3F full-campaign offline freeze
 
 - Status: `PASS`
-- Artifact source commit: `5b2e9e8a22038b15308faf435163f1787054f41d`
-- Host source commit: `b77883dfd9e3f35deb4277d0ae7b642058232ff3`
+- Artifact source commit: `21f159e3fdb250d1a25e9f521e104d6240d9caae`
+- Host source commit: `5bf79e39ae12c21605545dc792881b31efb50194`
 - Hardware actions executed: `false`
 - Current-run hardware authorization: `false`
 - Manual instrumentation: `OMITTED_BY_USER`
