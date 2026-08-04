@@ -264,7 +264,14 @@ proc p10ff_digest_word {digest index} {
   set text [string range $digest $first [expr {$first + 7}]]
   set reversed "[string range $text 6 7][string range $text 4 5][string range $text 2 3][string range $text 0 1]"
   scan $reversed %x value
-  return $value
+  # Tcl 8.5 returns an eight-hex-digit %x value as a signed 32-bit integer
+  # when bit 31 is set, while forced AXI readback is normalized to an
+  # unsigned bignum.  Normalize both sides of the archive-digest contract.
+  return [expr {$value & 0xFFFFFFFF}]
+}
+
+proc p10ff_sanitize_error {text} {
+  return [string map [list "\n" " " "\r" " " "=" "_"] $text]
 }
 
 proc p10ff_commit_role {role expected_build digest} {
@@ -311,6 +318,25 @@ proc p10ff_clear_role {role expected_build digest} {
         $role $status]
   }
   p10ff_say "P10_FF_EXPLICIT_CLEAR_[string toupper $role]=1"
+}
+
+if {[llength $argv] == 1 && [lindex $argv 0] eq "selftest"} {
+  set digest 0761622f98b9f890cae1b34637215986cfac0a7a85568a2c171cdabe3d33ab5c
+  set expected {
+    0x2F626107 0x90F8B998 0x46B3E1CA 0x86592137
+    0x7A0AACCF 0x2C8A5685 0xBEDA1C17 0x5CAB333D
+  }
+  for {set index 0} {$index < 8} {incr index} {
+    set actual [p10ff_digest_word $digest $index]
+    if {$actual != [lindex $expected $index] || $actual < 0} {
+      error [format "digest self-test failed at word %d: 0x%08X" $index $actual]
+    }
+  }
+  if {[p10ff_sanitize_error "line1\nline=2"] ne "line1 line_2"} {
+    error "error sanitizer self-test failed"
+  }
+  puts "P10_FF_TCL_SELFTEST=PASS"
+  exit 0
 }
 
 if {[llength $argv] < 10 || [llength $argv] > 12} {
@@ -377,7 +403,8 @@ if {$rc != 0} {
     catch {p10ff_write32 $role 0x0718 0x0000001A}
   }
   p10ff_say "P10_FF_FORENSIC_RESULT=FAIL"
-  p10ff_say "P10_FF_FORENSIC_ERROR=[string map [list \"\n\" \" \" \"=\" \"_\"] $error_text]"
+  set p10ff_error_sanitized [p10ff_sanitize_error $error_text]
+  p10ff_say "P10_FF_FORENSIC_ERROR=$p10ff_error_sanitized"
 }
 catch {close $p10ff_result_handle}
 if {$p10ff_connected} { catch {disconnect} }

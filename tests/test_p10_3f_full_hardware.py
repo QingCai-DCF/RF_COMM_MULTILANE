@@ -239,6 +239,19 @@ class P103FFullHardwareTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout)
         self.assertIn("TCL_COMPLETENESS_GATE=PASS", result.stdout)
 
+    def test_forensic_tcl_normalizes_digest_words_and_error_text(self) -> None:
+        result = subprocess.run(
+            [str(runner.TCLSH), str(runner.FORENSIC_TCL), "selftest"],
+            cwd=ROOT,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            timeout=30,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertIn("P10_FF_TCL_SELFTEST=PASS", result.stdout)
+
     def test_exact_board_module_and_forbidden_scope(self) -> None:
         self.assertEqual(
             runner.MODULE_BINDING,
