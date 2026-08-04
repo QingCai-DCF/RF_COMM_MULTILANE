@@ -16,12 +16,16 @@ The first-fault forensic RTL and its fixed/rotating-role bitstream, XSA, BSP, an
 
 - Goal SHA256: `6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281`
 - Artifact source commit: `5b2e9e8a22038b15308faf435163f1787054f41d`
-- Host campaign source commit: `5d63c69ca92377cec90f0f9694b7e8b15c8cac62`
-- Campaign-freeze checkpoint: `6f5787eae9cb0d0758196c41173d6e1514dbf94a`
+- Host campaign source commit: `60d46a4c363f03428a2523073f2808fbcc9ae668`
+- Static-intake generator commit: `e3e6784cbfeb5b70bdb41ea45b3f1cd757f776d5`
+- Static-intake evidence checkpoint: `60d46a4c363f03428a2523073f2808fbcc9ae668`
+- Campaign-freeze checkpoint: `a7268cb503837e9614917a155b5559d399e81f28`
 - First-fault artifact freeze: `evidence/generated/p10_3_fault_forensics_artifact_freeze.json` (`5346c774f9ec65cb02d6a08fb8e989ccfa3f84f6ab8e77ae70de4052d1d3dc82`)
-- Full-campaign freeze: `evidence/generated/p10_3f_full_campaign_freeze.json` (`9b1aa8e29f8001e37c4978e50b115bf7a428fa468009b4de1df1583c36de4331`)
+- Full-campaign freeze: `evidence/generated/p10_3f_full_campaign_freeze.json` (`65c257374bb8fdd7101695839a6d135f6fb72d26d7adfad58b2b21bc4980206c`)
 
 The ten artifact SHA256 values are recorded verbatim in the machine-readable audit. Board identities remain fixed/JTAG `210249855178` and rotating/JTAG `210512180081`; module identities are F0=A0019, F1=B0012, F2=B0001, F3=B0020, R0=A0010, R1=A0017, R2=B0023, and R3=B0025.
+
+The Goal-named repository-intake, actual-wiring, and module-inventory generated views were regenerated from their current canonical inputs. Their prior stale F3=B0004/R3=B0017 records were removed from the current views while the historical evidence remains preserved in Git and the immutable hardware-run archives. The new full-campaign freeze binds all six refreshed JSON/Markdown views and the generator itself.
 
 ## Safety and evidence order
 
@@ -41,6 +45,6 @@ Per the user's latest instruction, oscilloscope, current/temperature, supply-rai
 
 ## Blocking condition
 
-No new current-run authorization exists for full-campaign freeze SHA256 `9b1aa8e29f8001e37c4978e50b115bf7a428fa468009b4de1df1583c36de4331` and its exact artifact/host-input bundle. Under `AGENTS.md`, prior authorization cannot authorize this new run. Hardware therefore remains untouched until a new explicit authorization binds the freeze hash, host source commit `5d63c69ca92377cec90f0f9694b7e8b15c8cac62`, artifact source commit `5b2e9e8a22038b15308faf435163f1787054f41d`, all artifact hashes, both JTAG serials, all eight module identities, the 1800-second bound, maximum mask `0xF`, and the archive-before-independent-shutdown policy.
+No new current-run authorization exists for full-campaign freeze SHA256 `65c257374bb8fdd7101695839a6d135f6fb72d26d7adfad58b2b21bc4980206c` and its exact artifact/host-input/static-intake bundle. Under `AGENTS.md`, prior authorization cannot authorize this new run. Hardware therefore remains untouched until a new explicit authorization binds the freeze hash, host source commit `60d46a4c363f03428a2523073f2808fbcc9ae668`, artifact source commit `5b2e9e8a22038b15308faf435163f1787054f41d`, all artifact hashes, both JTAG serials, all eight module identities, the 1800-second bound, maximum mask `0xF`, and the archive-before-independent-shutdown policy.
 
 The authoritative structured record is `evidence/generated/p10_3_current_artifact_completion_audit.json`.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-08-04T16:48:51Z",
+  "generated_at_utc": "2026-08-04T16:58:06Z",
   "test_id": "P10_3-CURRENT-ARTIFACT-COMPLETION-AUDIT",
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_WITH_FIRST_FAULT_FORENSICS",
   "status": "OFFLINE_READY_AWAITING_CURRENT_RUN_AUTHORIZATION",
@@ -9,8 +9,10 @@
   "branch": "codex/p10.3-fault-forensics",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "artifact_source_commit": "5b2e9e8a22038b15308faf435163f1787054f41d",
-  "host_source_commit": "5d63c69ca92377cec90f0f9694b7e8b15c8cac62",
-  "campaign_freeze_checkpoint": "6f5787eae9cb0d0758196c41173d6e1514dbf94a",
+  "host_source_commit": "60d46a4c363f03428a2523073f2808fbcc9ae668",
+  "static_intake_generator_commit": "e3e6784cbfeb5b70bdb41ea45b3f1cd757f776d5",
+  "static_intake_evidence_checkpoint": "60d46a4c363f03428a2523073f2808fbcc9ae668",
+  "campaign_freeze_checkpoint": "a7268cb503837e9614917a155b5559d399e81f28",
   "prior_evidence_checkpoint": "91759332857bc471b254e7a2bc835da7fd3bee01",
   "prior_readiness_audit_checkpoint": "590f35d29af1b9fd2d34006380e517aed814012c",
   "hardware_actions_executed_this_followup": false,
@@ -95,6 +97,23 @@
     }
   ],
   "offline_evidence": {
+    "current_static_intake": {
+      "status": "PASS",
+      "repository_intake": {
+        "path": "evidence/generated/p10_3_repo_intake.json",
+        "sha256": "2bfb9e2c0dd8050849f2dd5516ba22b6c0344bb37d9b9a21f5dffee55b4a6cc0"
+      },
+      "actual_wiring": {
+        "path": "evidence/generated/p10_3_wiring.json",
+        "sha256": "5d35128d4aab07d19d32183b1f5a28e516657478f80a08f54fb6865c0e382332"
+      },
+      "module_inventory": {
+        "path": "evidence/generated/p10_3_module_inventory.json",
+        "sha256": "9496d90e63384a77f0218d8c01ca3650e89fe5ccd1da733a7e2e1201cdd8dbce"
+      },
+      "current_active_module_binding_verified": true,
+      "historical_stale_generated_views_replaced": true
+    },
     "first_fault_offline": {
       "path": "evidence/generated/p10_3_fault_forensics_offline.json",
       "sha256": "803fe567c4d8e3bb9a30dcd04174b9f22a70772fa0506981efe5c939821a9d8d",
@@ -107,7 +126,7 @@
     },
     "full_campaign_freeze": {
       "path": "evidence/generated/p10_3f_full_campaign_freeze.json",
-      "sha256": "9b1aa8e29f8001e37c4978e50b115bf7a428fa468009b4de1df1583c36de4331",
+      "sha256": "65c257374bb8fdd7101695839a6d135f6fb72d26d7adfad58b2b21bc4980206c",
       "status": "PASS",
       "raw_gate_log_count": 10
     }
@@ -161,6 +180,7 @@
     "independent_shutdown_occurs_after_archive_attempt": true,
     "final_safety_shutdown_occurs_even_if_archive_fails": true,
     "goal_named_evidence_views_published": true,
+    "goal_named_static_intake_views_match_current_installation": true,
     "final_evidence_manifest_exact_file_set_and_sha256_verified": true
   },
   "first_fault_evidence_boundary": {
@@ -236,6 +256,6 @@
     "two_hour_test": true,
     "p11_or_product_acceptance": true
   },
-  "blocking_condition": "No new explicit current-run authorization exists for full-campaign freeze SHA256 9b1aa8e29f8001e37c4978e50b115bf7a428fa468009b4de1df1583c36de4331 and its immutable artifact and host-input bundle.",
-  "next_required_user_action": "Provide a new explicit current-run authorization binding full-campaign freeze SHA256 9b1aa8e29f8001e37c4978e50b115bf7a428fa468009b4de1df1583c36de4331, host source commit 5d63c69ca92377cec90f0f9694b7e8b15c8cac62, artifact source commit 5b2e9e8a22038b15308faf435163f1787054f41d, ten artifact hashes, both JTAG serials, eight module IDs, 1800-second bound, lane mask 0xF maximum, and archive-before-independent-shutdown policy."
+  "blocking_condition": "No new explicit current-run authorization exists for full-campaign freeze SHA256 65c257374bb8fdd7101695839a6d135f6fb72d26d7adfad58b2b21bc4980206c and its immutable artifact, host-input, and current static-intake bundle.",
+  "next_required_user_action": "Provide a new explicit current-run authorization binding full-campaign freeze SHA256 65c257374bb8fdd7101695839a6d135f6fb72d26d7adfad58b2b21bc4980206c, host source commit 60d46a4c363f03428a2523073f2808fbcc9ae668, artifact source commit 5b2e9e8a22038b15308faf435163f1787054f41d, ten artifact hashes, both JTAG serials, eight module IDs, 1800-second bound, lane mask 0xF maximum, and archive-before-independent-shutdown policy."
 }
