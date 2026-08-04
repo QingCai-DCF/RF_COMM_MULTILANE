@@ -51,6 +51,9 @@ CAMPAIGN_FREEZE = ROOT / "evidence/generated/p10_3f_full_campaign_freeze.json"
 CAMPAIGN_FREEZE_MD = ROOT / "evidence/generated/p10_3f_full_campaign_freeze.md"
 CAMPAIGN_FREEZE_RAW = ROOT / "evidence/generated/p10_3f_full_campaign_freeze_raw"
 AUTH = ROOT / "config/p10_3f_full_current_run_hardware_authorization.json"
+AGGREGATE_RUNTIME_CONFIG = (
+    ROOT / "config/performance/p10_3f_full_aggregate_runtime.yaml"
+)
 WIRING = ROOT / "config/hardware/p10_3_actual_wiring.yaml"
 INVENTORY = ROOT / "config/hardware/tfdu_module_inventory.yaml"
 STAGE_TCL = ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl"
@@ -276,6 +279,7 @@ HOST_INPUTS = (
     ROOT / "config/register_map/ir_axi_regs.yaml",
     ROOT / "config/safety/p10_3_fault_forensics.yaml",
     ROOT / "config/performance/p10_3f_staircase.yaml",
+    AGGREGATE_RUNTIME_CONFIG,
     WIRING,
     INVENTORY,
     ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
@@ -819,6 +823,65 @@ def validate_static_intake_evidence() -> list[str]:
     return errors
 
 
+def validate_aggregate_runtime_contract() -> list[str]:
+    """Bind the host remediation to a separate canonical runtime contract.
+
+    The original P10.3F staircase file remains the immutable contract for the
+    already-frozen RTL artifact.  This supplemental host contract controls only
+    post-staircase aggregation and must never weaken the underlying safety path.
+    """
+    try:
+        config = base.load_yaml(AGGREGATE_RUNTIME_CONFIG)
+    except (OSError, ValueError) as exc:
+        return [f"aggregate runtime contract read failed: {exc}"]
+    admission = config.get("admission_precondition", {})
+    runtime = config.get("aggregate_runtime", {})
+    safety = config.get("safety", {})
+    formal = config.get("formal", {})
+    expected_levels = [1024, 4096, 16384, 65536, 262144]
+    errors: list[str] = []
+    if config.get("schema_version") != 1 or config.get("status") != \
+            "OFFLINE_DEFINED_PENDING_CURRENT_RUN_AUTHORIZATION":
+        errors.append("aggregate runtime contract identity/status mismatch")
+    if admission.get("staircase_config") != rel(
+        ROOT / "config/performance/p10_3f_staircase.yaml"
+    ) or admission.get("exact_bidirectional_levels_bytes") != expected_levels or \
+            admission.get("require_each_staircase_direction_snapshot_gate") is not True:
+        errors.append("aggregate runtime staircase admission mismatch")
+    expected_runtime = {
+        "internal_object_bytes": INTERNAL_OBJECT_BYTES,
+        "segment_bytes": 65_536,
+        "maximum_board_autonomous_aggregate_command_bytes": (
+            MAX_AGGREGATE_COMMAND_BYTES
+        ),
+        "exact_64m_host_commands_per_direction": 1,
+        "adaptive_window_command_bytes": sorted(WINDOW_COMMAND_BYTES),
+        "host_in_per_object_fast_path": False,
+        "require_snapshot_after_each_aggregate_command": True,
+        "continuous_pl_first_fault_kill_during_command": True,
+        "old_hardware_result_inherited": False,
+    }
+    if runtime != expected_runtime:
+        errors.append("aggregate runtime command/object contract mismatch")
+    for key in (
+        "single_global_permit_preserved",
+        "exact_rolling_duty_guard_preserved",
+        "continuous_high_guard_preserved",
+        "sd_mode_txd_kill_preserved",
+        "immediate_fault_tx_kill_and_full_shutdown",
+        "frozen_forensics_preserved_until_archive_commit",
+    ):
+        if safety.get(key) is not True:
+            errors.append(f"aggregate runtime safety contract mismatch: {key}")
+    if formal != {"maximum_single_run_seconds": 1800, "lane_mask": "0xF"}:
+        errors.append("aggregate runtime formal bound mismatch")
+    authorization = config.get("authorization", {})
+    if authorization.get("no_hardware") is not True or \
+            authorization.get("current_run_hardware_authorization") is not False:
+        errors.append("aggregate runtime offline authorization state mismatch")
+    return errors
+
+
 def prepare_campaign_freeze() -> dict[str, Any]:
     errors: list[str] = []
     initial_dirty = dirty_paths()
@@ -843,6 +906,7 @@ def prepare_campaign_freeze() -> dict[str, Any]:
     except Exception as exc:  # readiness must fail closed on parser regressions.
         errors.append(f"wiring/inventory validation exception: {exc}")
     errors.extend(validate_static_intake_evidence())
+    errors.extend(validate_aggregate_runtime_contract())
     plans = build_plans()
     errors.extend(validate_plans(plans))
     missing = [rel(path) for path in HOST_INPUTS if not path.is_file()]
@@ -1844,6 +1908,8 @@ def initialize_run_root(run_root: Path, auth: Path) -> list[dict[str, Any]]:
          run_root / "artifacts/p10_3_fault_forensics.yaml"),
         (ROOT / "config/performance/p10_3f_staircase.yaml",
          run_root / "artifacts/p10_3f_staircase.yaml"),
+        (AGGREGATE_RUNTIME_CONFIG,
+         run_root / "artifacts/p10_3f_full_aggregate_runtime.yaml"),
         (ROOT / "board_profiles/ax7020_fixed_4lane/profile.yaml",
          run_root / "artifacts/fixed/profile.yaml"),
         (ROOT / "board_profiles/ax7020_rotating_4lane/profile.yaml",

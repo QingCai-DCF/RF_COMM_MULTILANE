@@ -1,5 +1,5 @@
 {
-  "acceptance_eligible": true,
+  "acceptance_eligible": false,
   "allowed_hardware_stages": [
     "preflight",
     "module_intake",
@@ -122,7 +122,10 @@
   },
   "current_run_hardware_authorization": false,
   "eligibility_scope": "NEW_EXACT_CURRENT_RUN_AUTHORIZATION_ONLY",
-  "errors": [],
+  "errors": [
+    "offline readiness gate failed: state_requirements_consistency",
+    "offline readiness gate failed: requirement_traceability"
+  ],
   "forbidden": {
     "ethernet": true,
     "lane_mask_above_0xF": true,
@@ -133,9 +136,10 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-04T17:29:09+00:00",
+  "generated_at_utc": "2026-08-04T18:08:03+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": false,
+  "hardware_first_fault_kill_active_during_each_command": true,
   "host_inputs": [
     {
       "bytes": 31921,
@@ -173,9 +177,9 @@
       "sha256": "ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256"
     },
     {
-      "bytes": 1774,
+      "bytes": 2100,
       "path": "config/performance/p10_3f_staircase.yaml",
-      "sha256": "069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8"
+      "sha256": "c7cf23fa47bd0a6494c8d074cc19d86c4820790d6926e47133d37321a95c95f8"
     },
     {
       "bytes": 5247,
@@ -201,6 +205,11 @@
       "bytes": 2940,
       "path": "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
       "sha256": "7f8efdfc03662fa668a042ace129e2592747d8fc92784d5566ba11f91b98bfc8"
+    },
+    {
+      "bytes": 8030,
+      "path": "docs/design/P10_3_FIRST_FAULT_FORENSICS.md",
+      "sha256": "14f8c781c7abd7fda98bcc1f2642f8ae155328dacace1a2bb6b1cabb2f1ad5b3"
     },
     {
       "bytes": 23677,
@@ -263,14 +272,14 @@
       "sha256": "55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40"
     },
     {
-      "bytes": 112740,
+      "bytes": 115560,
       "path": "scripts/run_p10_3f_full_hardware.py",
-      "sha256": "8500d1ff0a5eb35b343ed17100395dc9df0c40f66912b216ed8415b2b323a0c9"
+      "sha256": "8b3208595bdd660b60a4d3e35bdc138ef204f19033ec2d56cb3983ee1cc161d0"
     },
     {
-      "bytes": 93222,
+      "bytes": 94067,
       "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
-      "sha256": "702a611606d69b8183a23b6d196055cbd2de63a8f04b00c5e4a2639ac141a61f"
+      "sha256": "9cce2627ae72604d909faf2d37830585492481da39da580ce7edc29af69e1fc6"
     },
     {
       "bytes": 16185,
@@ -293,9 +302,9 @@
       "sha256": "7ac6113661b1097aa5684a6083f1cac168e40efae42530d5f2d7c59231780d09"
     },
     {
-      "bytes": 14114,
+      "bytes": 16588,
       "path": "tests/test_p10_3f_full_hardware.py",
-      "sha256": "7e81f3ff93913804729412e5fa873791c7243966202b97af628e8e90b12df549"
+      "sha256": "a9e387a762987b4333ace0b512cc39bdc05dcb9f70c63ff0dae38b6e282bbb98"
     },
     {
       "bytes": 5036,
@@ -328,12 +337,15 @@
       "sha256": "56a9f5c1c0fa8740b7bec3b0e84579ece57a77144bab40362d0717b1085d3641"
     }
   ],
-  "host_source_commit": "6e8d939a267fe492c970d316ab84d135c1c10c6a",
+  "host_source_commit": "1e33397153408367e4d6aa1e88f64bfdccc564a2",
+  "internal_stream_object_bytes": 262144,
   "manual_instrumentation": "OMITTED_BY_USER",
+  "maximum_board_autonomous_aggregate_command_bytes": 67108864,
   "maximum_functional_diagnostic_object_bytes": 16777216,
   "maximum_lane_mask": 15,
-  "maximum_long_test_command_bytes": 262144,
+  "maximum_long_test_command_bytes": 67108864,
   "maximum_single_formal_run_seconds": 1800,
+  "maximum_staircase_level_bytes": 262144,
   "module_binding": {
     "F0": "A0019",
     "F1": "B0012",
@@ -356,9 +368,9 @@
         "tests.test_p10_3_hardware_acceptance"
       ],
       "log": {
-        "bytes": 132,
+        "bytes": 133,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
-        "sha256": "0623c209d49c5672d5aba4f0b907acd94e4a99387a0bdd24b64cb1cad90acb9a"
+        "sha256": "36108e224f1dacaa0d14c92e98f4eff6d325b532794d21d2b85529d9cc816ab8"
       },
       "returncode": 0,
       "status": "PASS"
@@ -449,12 +461,12 @@
         "--check"
       ],
       "log": {
-        "bytes": 111,
+        "bytes": 523,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/requirement_traceability.log",
-        "sha256": "44dff0fbdfbc50814da41d4e4c416cca8282cafcfa95c15c7f76abf48d6f4110"
+        "sha256": "60cb45c709b5fe9b6a4160ab4dd83972b023512d7b9c32e4fc9c26f3151b5a56"
       },
-      "returncode": 0,
-      "status": "PASS"
+      "returncode": 1,
+      "status": "FAIL"
     },
     "state_requirements_consistency": {
       "command": [
@@ -463,12 +475,12 @@
         "--check"
       ],
       "log": {
-        "bytes": 183,
+        "bytes": 735,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/state_requirements_consistency.log",
-        "sha256": "30d94a2fdbbc42c42202d87c3fc5ca3cb4f550daa10c5d8c7a6e65d623cbf933"
+        "sha256": "fab690c9d27a194edd473f52787d4a782be34ebd292482b199affc86fb3a0dc0"
       },
-      "returncode": 0,
-      "status": "PASS"
+      "returncode": 1,
+      "status": "FAIL"
     },
     "tcl_syntax_complete": {
       "command": [
@@ -488,7 +500,9 @@
     }
   },
   "old_hardware_pass_inherited": false,
+  "safety_snapshot_after_each_aggregate_command": true,
   "safety_snapshot_after_each_functional_case": true,
+  "safety_snapshot_after_each_staircase_direction": true,
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_WITH_FIRST_FAULT_FORENSICS",
   "scope_expansion_policy": "SUPPLEMENTAL_HOST_AND_EVIDENCE_FREEZE; NO_OLD_HARDWARE_RESULT_INHERITANCE",
@@ -511,7 +525,7 @@
     "mask_matrix": "693fe70c08e2fee3916adf6c5951c4b025daab8302f8f82ec38bfba2b7ab0b22",
     "module_intake": "509af1e0ca1d42b0bf31662925ac0d3c73720aa3499478b62ccd51aa436487a9",
     "per_lane_phy": "8353ac7f7500bd73938ba8af2a0719485184ff8c0bae345b8b8993e01ce330de",
-    "performance": "74fdfdb895ace63d770d89a5da57e492cadd97e9f86a909b43bfdaa4d4202360",
+    "performance": "8367492057a7c543896e30471999a865802b33fcc999f089dc64376effbaf204",
     "preflight": "56cf7e734882d844edfefdd424fef42373d3b6b6b2c4887b5c19ed42c14955ed",
     "raw_8x8": "fcf3849374bdb9d6119f916a4ffd0043c0adb672a04c12cdc6f943d7747e4ff1",
     "staircase_16k": "1822cf8e4f9cf454178f70cfc7dfa07744904f74c4079f1b2591405665e6964d",
@@ -523,9 +537,9 @@
     "stream_dma_reset_recovery_64m": "d7947052223299834be9f2deecc35351c2582469c1467c44edce0020b29ceeae",
     "stream_service_reset_fault": "80f6b88923daac8470de6f30377f0c22398070b9d93a8c758711f5ca38311f4c",
     "stream_service_reset_recovery_64m": "2ee9b00df3484e63d1c4cf68052e2118ce11cc085f68ece4633138a20b33554b",
-    "streaming_64m": "139968c8d26c1d7627847c59e437c1827e35534150ab5ab8ce8ca0036d6a00b9",
-    "two_lane_regression": "3bd22dd9c6aece4694f18ee1152c4bc2e25588c97ed833e60b2eecc659e5b29b"
+    "streaming_64m": "e425d898d1576f5b751c5c8219532d42268fe922d25dc2ee9aee3f794022f083",
+    "two_lane_regression": "90cacb29425008bb52c3393414e3bd4cbdc2a5c34dfb83300886fa51cbc13dda"
   },
-  "status": "PASS",
+  "status": "FAIL",
   "test_id": "P10_3F-FULL-CAMPAIGN-FREEZE"
 }

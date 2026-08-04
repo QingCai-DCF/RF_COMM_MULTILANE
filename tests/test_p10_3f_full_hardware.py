@@ -101,6 +101,7 @@ class P103FFullHardwareTests(unittest.TestCase):
             self.assertLess(prior[1], current[0], f"{prior[2]} / {current[2]}")
 
     def test_total_is_one_board_autonomous_command_with_internal_objects(self) -> None:
+        self.assertEqual(runner.validate_aggregate_runtime_contract(), [])
         plan = runner.build_plans()["two_lane_regression"]
         rows = []
         sequence = 1
