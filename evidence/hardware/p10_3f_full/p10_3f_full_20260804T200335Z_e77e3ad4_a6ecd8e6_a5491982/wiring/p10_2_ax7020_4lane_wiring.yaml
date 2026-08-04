@@ -1,0 +1,541 @@
+schema_version: 2
+proposal_id: "P10_2_AX7020_STATIONARY_4LANE"
+status: "PASS_OFFLINE_PROPOSAL_PENDING_PHYSICAL_WIRING"
+goal_sha256: "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5"
+wiring_proposal_sha256: "5f4a89b818b007af4863534759068dda529fe3c34501569ea4da89a42d8026fc"
+pinmap_set_sha256: "d191b9fdbbdd616c55aee99266a41f4d6cb8e765d05cb1b88c02bf433118aedf"
+board_document_set_sha256: "6001e132db2cf549a2161f8d0dd61f638340c9ce6e44800960d14e5389337dc6"
+no_hardware: true
+current_run_hardware_authorization: false
+no_2h_qualification: true
+fixed_board: {board_id: "AX7020-F", jtag_cable_serial: "210249855178"}
+rotating_role_board: {board_id: "AX7020-R", jtag_cable_serial: "210512180081"}
+topology:
+  lane0: "F0-R0"
+  lane1: "F1-R1"
+  lane2: "F2-R2"
+  lane3: "F3-R3"
+connector_pin1_orientation: "silkscreen-readable left near/lower row; pin2 directly above/far row; verify marked 1/2 and 39/40 before wiring"
+power:
+  accepted_modules: "preserve existing user wiring; no Codex reroute"
+  new_modules: "dedicated qualified 3.3-V rail to TFDU header pin1; star return to header pins2/4/6"
+  connector_power_assumption: "J10/J11 VCC3V3 pins are not assumed capable of aggregate module peak current"
+signals:
+  - board_role: "fixed"
+    module_id: "F0"
+    lane: 0
+    logical_signal: "Mode"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 30
+    fpga_package_pin: "T12"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 8
+    reset_default: "HIGH; static MIR/FIR mode"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "fixed"
+    module_id: "F0"
+    lane: 0
+    logical_signal: "SD"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 32
+    fpga_package_pin: "T11"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 7
+    reset_default: "HIGH; active-high full shutdown"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "fixed"
+    module_id: "F0"
+    lane: 0
+    logical_signal: "Rxd"
+    fpga_direction: "input_from_tfdu"
+    connector: "J10"
+    connector_pin: 34
+    fpga_package_pin: "B19"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 5
+    reset_default: "Input; active-low; TFDU has approximately 500-kohm weak pull-up only in shutdown"
+    pull: "No selected-net discrete pull except J10-26/U13 R29=1 kohm to GND; 33-ohm connector series resistor"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "XADC auxiliary-capable pin used as ordinary digital I/O; XADC auxiliary channel is not enabled"
+  - board_role: "fixed"
+    module_id: "F0"
+    lane: 0
+    logical_signal: "Txd"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 36
+    fpga_package_pin: "C20"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 3
+    reset_default: "LOW in configured reset/fault/shutdown; active-high pulse; continuous HIGH <=1 us"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "XADC auxiliary-capable pin used as ordinary digital I/O; XADC auxiliary channel is not enabled"
+  - board_role: "fixed"
+    module_id: "F1"
+    lane: 1
+    logical_signal: "Mode"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 22
+    fpga_package_pin: "V17"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 8
+    reset_default: "HIGH; static MIR/FIR mode"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "fixed"
+    module_id: "F1"
+    lane: 1
+    logical_signal: "SD"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 24
+    fpga_package_pin: "T14"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 7
+    reset_default: "HIGH; active-high full shutdown"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "fixed"
+    module_id: "F1"
+    lane: 1
+    logical_signal: "Rxd"
+    fpga_direction: "input_from_tfdu"
+    connector: "J10"
+    connector_pin: 26
+    fpga_package_pin: "U13"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 5
+    reset_default: "Input; active-low; TFDU has approximately 500-kohm weak pull-up only in shutdown"
+    pull: "No selected-net discrete pull except J10-26/U13 R29=1 kohm to GND; 33-ohm connector series resistor"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "R29=1 kohm to GND is the preserved P10.1R electrical-guarantee gap"
+  - board_role: "fixed"
+    module_id: "F1"
+    lane: 1
+    logical_signal: "Txd"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 28
+    fpga_package_pin: "V12"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 3
+    reset_default: "LOW in configured reset/fault/shutdown; active-high pulse; continuous HIGH <=1 us"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "fixed"
+    module_id: "F2"
+    lane: 2
+    logical_signal: "Mode"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 30
+    fpga_package_pin: "G17"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 8
+    reset_default: "HIGH; static MIR/FIR mode"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "fixed"
+    module_id: "F2"
+    lane: 2
+    logical_signal: "SD"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 32
+    fpga_package_pin: "H16"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 7
+    reset_default: "HIGH; active-high full shutdown"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "clock-capable pin intentionally used as ordinary GPIO; no clock constraint or clock consumer exists"
+  - board_role: "fixed"
+    module_id: "F2"
+    lane: 2
+    logical_signal: "Rxd"
+    fpga_direction: "input_from_tfdu"
+    connector: "J11"
+    connector_pin: 34
+    fpga_package_pin: "H15"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 5
+    reset_default: "Input; active-low; TFDU has approximately 500-kohm weak pull-up only in shutdown"
+    pull: "No selected-net discrete pull except J10-26/U13 R29=1 kohm to GND; 33-ohm connector series resistor"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "fixed"
+    module_id: "F2"
+    lane: 2
+    logical_signal: "Txd"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 36
+    fpga_package_pin: "K14"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 3
+    reset_default: "LOW in configured reset/fault/shutdown; active-high pulse; continuous HIGH <=1 us"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "XADC auxiliary-capable pin used as ordinary digital I/O; XADC auxiliary channel is not enabled"
+  - board_role: "fixed"
+    module_id: "F3"
+    lane: 3
+    logical_signal: "Mode"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 22
+    fpga_package_pin: "L16"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 8
+    reset_default: "HIGH; static MIR/FIR mode"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "clock-capable pin intentionally used as ordinary GPIO; no clock constraint or clock consumer exists"
+  - board_role: "fixed"
+    module_id: "F3"
+    lane: 3
+    logical_signal: "SD"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 24
+    fpga_package_pin: "M17"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 7
+    reset_default: "HIGH; active-high full shutdown"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "XADC auxiliary-capable pin used as ordinary digital I/O; XADC auxiliary channel is not enabled"
+  - board_role: "fixed"
+    module_id: "F3"
+    lane: 3
+    logical_signal: "Rxd"
+    fpga_direction: "input_from_tfdu"
+    connector: "J11"
+    connector_pin: 26
+    fpga_package_pin: "D19"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 5
+    reset_default: "Input; active-low; TFDU has approximately 500-kohm weak pull-up only in shutdown"
+    pull: "No selected-net discrete pull except J10-26/U13 R29=1 kohm to GND; 33-ohm connector series resistor"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "fixed"
+    module_id: "F3"
+    lane: 3
+    logical_signal: "Txd"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 28
+    fpga_package_pin: "E18"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 3
+    reset_default: "LOW in configured reset/fault/shutdown; active-high pulse; continuous HIGH <=1 us"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "XADC auxiliary-capable pin used as ordinary digital I/O; XADC auxiliary channel is not enabled"
+  - board_role: "rotating"
+    module_id: "R0"
+    lane: 0
+    logical_signal: "Mode"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 30
+    fpga_package_pin: "T12"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 8
+    reset_default: "HIGH; static MIR/FIR mode"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "rotating"
+    module_id: "R0"
+    lane: 0
+    logical_signal: "SD"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 32
+    fpga_package_pin: "T11"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 7
+    reset_default: "HIGH; active-high full shutdown"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "rotating"
+    module_id: "R0"
+    lane: 0
+    logical_signal: "Rxd"
+    fpga_direction: "input_from_tfdu"
+    connector: "J10"
+    connector_pin: 34
+    fpga_package_pin: "B19"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 5
+    reset_default: "Input; active-low; TFDU has approximately 500-kohm weak pull-up only in shutdown"
+    pull: "No selected-net discrete pull except J10-26/U13 R29=1 kohm to GND; 33-ohm connector series resistor"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "XADC auxiliary-capable pin used as ordinary digital I/O; XADC auxiliary channel is not enabled"
+  - board_role: "rotating"
+    module_id: "R0"
+    lane: 0
+    logical_signal: "Txd"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 36
+    fpga_package_pin: "C20"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 3
+    reset_default: "LOW in configured reset/fault/shutdown; active-high pulse; continuous HIGH <=1 us"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "XADC auxiliary-capable pin used as ordinary digital I/O; XADC auxiliary channel is not enabled"
+  - board_role: "rotating"
+    module_id: "R1"
+    lane: 1
+    logical_signal: "Mode"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 22
+    fpga_package_pin: "V17"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 8
+    reset_default: "HIGH; static MIR/FIR mode"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "rotating"
+    module_id: "R1"
+    lane: 1
+    logical_signal: "SD"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 24
+    fpga_package_pin: "T14"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 7
+    reset_default: "HIGH; active-high full shutdown"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "rotating"
+    module_id: "R1"
+    lane: 1
+    logical_signal: "Rxd"
+    fpga_direction: "input_from_tfdu"
+    connector: "J10"
+    connector_pin: 26
+    fpga_package_pin: "U13"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 5
+    reset_default: "Input; active-low; TFDU has approximately 500-kohm weak pull-up only in shutdown"
+    pull: "No selected-net discrete pull except J10-26/U13 R29=1 kohm to GND; 33-ohm connector series resistor"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "R29=1 kohm to GND is the preserved P10.1R electrical-guarantee gap"
+  - board_role: "rotating"
+    module_id: "R1"
+    lane: 1
+    logical_signal: "Txd"
+    fpga_direction: "output_to_tfdu"
+    connector: "J10"
+    connector_pin: 28
+    fpga_package_pin: "V12"
+    io_bank: 34
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 3
+    reset_default: "LOW in configured reset/fault/shutdown; active-high pulse; continuous HIGH <=1 us"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.4; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "rotating"
+    module_id: "R2"
+    lane: 2
+    logical_signal: "Mode"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 30
+    fpga_package_pin: "G17"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 8
+    reset_default: "HIGH; static MIR/FIR mode"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "rotating"
+    module_id: "R2"
+    lane: 2
+    logical_signal: "SD"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 32
+    fpga_package_pin: "H16"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 7
+    reset_default: "HIGH; active-high full shutdown"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "clock-capable pin intentionally used as ordinary GPIO; no clock constraint or clock consumer exists"
+  - board_role: "rotating"
+    module_id: "R2"
+    lane: 2
+    logical_signal: "Rxd"
+    fpga_direction: "input_from_tfdu"
+    connector: "J11"
+    connector_pin: 34
+    fpga_package_pin: "H15"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 5
+    reset_default: "Input; active-low; TFDU has approximately 500-kohm weak pull-up only in shutdown"
+    pull: "No selected-net discrete pull except J10-26/U13 R29=1 kohm to GND; 33-ohm connector series resistor"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "rotating"
+    module_id: "R2"
+    lane: 2
+    logical_signal: "Txd"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 36
+    fpga_package_pin: "K14"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 3
+    reset_default: "LOW in configured reset/fault/shutdown; active-high pulse; continuous HIGH <=1 us"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "XADC auxiliary-capable pin used as ordinary digital I/O; XADC auxiliary channel is not enabled"
+  - board_role: "rotating"
+    module_id: "R3"
+    lane: 3
+    logical_signal: "Mode"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 22
+    fpga_package_pin: "L16"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 8
+    reset_default: "HIGH; static MIR/FIR mode"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "clock-capable pin intentionally used as ordinary GPIO; no clock constraint or clock consumer exists"
+  - board_role: "rotating"
+    module_id: "R3"
+    lane: 3
+    logical_signal: "SD"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 24
+    fpga_package_pin: "M17"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 7
+    reset_default: "HIGH; active-high full shutdown"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "XADC auxiliary-capable pin used as ordinary digital I/O; XADC auxiliary channel is not enabled"
+  - board_role: "rotating"
+    module_id: "R3"
+    lane: 3
+    logical_signal: "Rxd"
+    fpga_direction: "input_from_tfdu"
+    connector: "J11"
+    connector_pin: 26
+    fpga_package_pin: "D19"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 5
+    reset_default: "Input; active-low; TFDU has approximately 500-kohm weak pull-up only in shutdown"
+    pull: "No selected-net discrete pull except J10-26/U13 R29=1 kohm to GND; 33-ohm connector series resistor"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "No selected-net onboard peripheral conflict shown"
+  - board_role: "rotating"
+    module_id: "R3"
+    lane: 3
+    logical_signal: "Txd"
+    fpga_direction: "output_to_tfdu"
+    connector: "J11"
+    connector_pin: 28
+    fpga_package_pin: "E18"
+    io_bank: 35
+    vcco_volts: 3.3
+    iostandard: "LVCMOS33"
+    tfdu_header_pin: 3
+    reset_default: "LOW in configured reset/fault/shutdown; active-high pulse; continuous HIGH <=1 us"
+    pull: "No discrete board pull shown; 33-ohm connector series resistor; configuration pull-up is power-sequence dependent"
+    source: "schematic sheets 5/15/16; manual section 7.5; workbook Sheet1; TFDU datasheet pages 4/8/10; TFDU small-board schematic"
+    notes: "XADC auxiliary-capable pin used as ordinary digital I/O; XADC auxiliary channel is not enabled"
+physical_prerequisites:
+  - "actual AX7020 PCB revision check"
+  - "F2/F3/R2/R3 inventory and pinout check"
+  - "qualified power distribution and measured droop"
+  - "safe-idle then per-module raw acceptance"
+  - "new P10.3 current-run authorization"
