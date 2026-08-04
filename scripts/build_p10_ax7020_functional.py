@@ -305,10 +305,16 @@ def audit_xsa(path: Path, role_value: str, lane_count: str) -> dict[str, Any]:
         "activity_led_port": "pl_activity_led_n_o" in hwh.lower(),
     }
     if CAMPAIGN == "p10_3":
-        expected_build = "1345532998" if role_value == "1" else "1345533010"
+        # Vivado serializes this 32-bit std_logic_vector generic in HWH as an
+        # XML-escaped, quoted binary literal (not as the decimal Tcl value).
+        # Keep this exact so the XSA audit proves the implemented role-specific
+        # build ID rather than accepting a loose substring or marker alone.
+        expected_build_value = 0x50333446 if role_value == "1" else 0x50333452
+        expected_build_bits = f"{expected_build_value:032b}"
         checks.update({
             "p10_3_build_id_override": (
-                f'<PARAMETER NAME="BUILD_ID_OVERRIDE" VALUE="{expected_build}"/>'
+                '<PARAMETER NAME="BUILD_ID_OVERRIDE" '
+                f'VALUE="&quot;{expected_build_bits}&quot;"/>'
                 in hwh
             ),
             "ps_gpio_enabled": (
