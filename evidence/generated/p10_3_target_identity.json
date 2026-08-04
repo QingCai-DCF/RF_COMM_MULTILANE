@@ -1,0 +1,51 @@
+{
+  "actual_wiring_sha256": "51e65e9f993068a25ed113b9be0648319875eb8b02b8e7b524bba76249346603",
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "errors": [
+    "XSDB stage/safe-boot PASS marker missing",
+    "exactly one final endpoint-shutdown observation required",
+    "missing immutable case p10_3_identity",
+    "missing immutable case p10_3_receive_only_5000ms",
+    "missing immutable case p10_3_ring32",
+    "missing immutable case p10_3_dma_reset_idle",
+    "missing immutable case p10_3_pl_soft_reset",
+    "missing immutable case p10_3_identity_after_reset",
+    "PS LED safe-boot off state not directly read back",
+    "PS LED endpoint-shutdown off state not directly read back",
+    "preflight identity/reset identity pair missing"
+  ],
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "hardware_actions_executed": true,
+  "maximum_lane_mask": 15,
+  "module_inventory_sha256": "1293702c8d80e1365ee022ecadd72761cda81d6c190f8f7babf7f8b0396e92a9",
+  "movement": false,
+  "network_used": false,
+  "p11": false,
+  "raw_summary": "evidence/hardware/p10_3/p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef/safe_boot/stage_summary.json",
+  "realignment": false,
+  "rewiring": false,
+  "rotation": false,
+  "run_id": "p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef",
+  "schema_version": 1,
+  "semantics": {
+    "ps_led_gpio": {
+      "physical_visible_state": "PENDING_DIRECT_USER_OBSERVATION",
+      "register_evidence": true,
+      "samples": 0
+    },
+    "receive_only_ms": 5000,
+    "safe_boot_both": false,
+    "target_role_binding": {
+      "fixed": "210249855178",
+      "rotating": "210512180081"
+    }
+  },
+  "source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
+  "status": "FAIL",
+  "summary_name": "target_identity",
+  "test_id": "P10_3-HW-PREFLIGHT",
+  "two_hour_test": false
+}

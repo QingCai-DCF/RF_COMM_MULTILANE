@@ -1,0 +1,85 @@
+{
+  "details": [],
+  "errors": [
+    "XSDB stage/safe-boot PASS marker missing",
+    "exactly one final endpoint-shutdown observation required",
+    "missing immutable case p10_3_identity",
+    "missing immutable case p10_3_receive_only_5000ms",
+    "missing immutable case p10_3_ring32",
+    "missing immutable case p10_3_dma_reset_idle",
+    "missing immutable case p10_3_pl_soft_reset",
+    "missing immutable case p10_3_identity_after_reset",
+    "PS LED safe-boot off state not directly read back",
+    "PS LED endpoint-shutdown off state not directly read back",
+    "preflight identity/reset identity pair missing"
+  ],
+  "generated_at_utc": "2026-08-04T09:31:41+00:00",
+  "markers": {
+    "P10_CANDIDATE_PROGRAMMED_FIXED": "1",
+    "P10_CANDIDATE_PROGRAMMED_ROTATING": "1",
+    "P10_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR": "1",
+    "P10_PS7_INITIALIZED_FIXED": "1",
+    "P10_PS7_INITIALIZED_ROTATING": "1",
+    "P10_XSDB_DEBUG_DISCOVERY_ATTEMPTS": "1",
+    "P10_XSDB_DEBUG_DISCOVERY_ELAPSED_MS": "2",
+    "P10_XSDB_EXPECTED_BUILD_FIXED": "0x50333446",
+    "P10_XSDB_EXPECTED_BUILD_ROTATING": "0x50333452",
+    "P10_XSDB_FIXED_SERIAL": "210249855178",
+    "P10_XSDB_FIXED_TARGETS": "APU:5,CPU0:6,FPGA:8",
+    "P10_XSDB_IDENTITY": "PASS",
+    "P10_XSDB_ROTATING_SERIAL": "210512180081",
+    "P10_XSDB_ROTATING_TARGETS": "APU:1,CPU0:2,FPGA:4",
+    "P10_XSDB_RUN_ID": "p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef",
+    "P10_XSDB_STAGE": "P10_3-PREFLIGHT",
+    "P10_XSDB_STAGE_ERROR": "P10 fixed identity mismatch id_0x5031305A build_0x50333446 profile_0x702004F0 version_0x0A000002 hash_0x185A4159 caps_0xF7204441",
+    "P10_XSDB_STAGE_RESULT": "FAIL"
+  },
+  "observation_count": 0,
+  "process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\scripts\\hw\\p10_dual_xsdb_stage.tcl",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\artifacts\\p10_3\\d4eef729e91c60fc7a72fa68c95fcd4a569fcffc\\3d8cd20747f311c9467f4269bc7b10d7d16ffaeca4e5d888a15a8e883dbf5bcd\\p10_ax7020_fixed_functional.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\artifacts\\p10_3\\d4eef729e91c60fc7a72fa68c95fcd4a569fcffc\\a8459eeff9df4373f80112e5cc5892864900eeb95afd6a5bb949008d52262846\\p10_ax7020_rotating_functional.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\artifacts\\p10_3\\d4eef729e91c60fc7a72fa68c95fcd4a569fcffc\\f4c9bd6fa8ae8bbbad3a927f19759c8605c253258613d72271c8aa202e27fa3a\\p10_fixed_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\artifacts\\p10_3\\d4eef729e91c60fc7a72fa68c95fcd4a569fcffc\\fd2edb95306323e4c8796368d3425487994e7471b115b8543d20053f10d6f01a\\p10_rotating_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3\\p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef\\artifacts\\fixed\\ps7_init.tcl",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3\\p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef\\artifacts\\rotating\\ps7_init.tcl",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3\\p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef\\safe_boot\\preflight.plan",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3\\p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef\\safe_boot\\dumps",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3\\p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef\\authorization\\ABORT_NOW.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3\\p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef\\safe_boot\\xsdb.result.txt",
+      "P10_3-PREFLIGHT",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\config\\p10_3_current_run_hardware_authorization.json",
+      "p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef",
+      "0x50333446",
+      "0x50333452"
+    ],
+    "elapsed_seconds": 27.0721594998613,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_3/p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef/safe_boot/xsdb.stderr.log",
+    "stdout": "evidence/hardware/p10_3/p10_3_20260804T092954Z_d4eef729_3d8cd207_a8459eef/safe_boot/xsdb.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 900
+  },
+  "schema_version": 1,
+  "semantics": {
+    "ps_led_gpio": {
+      "physical_visible_state": "PENDING_DIRECT_USER_OBSERVATION",
+      "register_evidence": true,
+      "samples": 0
+    },
+    "receive_only_ms": 5000,
+    "safe_boot_both": false,
+    "target_role_binding": {
+      "fixed": "210249855178",
+      "rotating": "210512180081"
+    }
+  },
+  "stage": "preflight",
+  "status": "FAIL",
+  "test_id": "P10_3-HW-PREFLIGHT"
+}
