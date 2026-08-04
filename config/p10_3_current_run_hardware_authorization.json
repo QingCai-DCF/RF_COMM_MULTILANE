@@ -9,7 +9,7 @@
     "R2",
     "R3"
   ],
-  "actual_wiring_sha256": "51e65e9f993068a25ed113b9be0648319875eb8b02b8e7b524bba76249346603",
+  "actual_wiring_sha256": "fee58fc4852547bc3d8d10e140a218b918fd12c8d41cf9ee64dca05c03262179",
   "allowed_stages": [
     "preflight",
     "module_intake",
@@ -27,7 +27,7 @@
   ],
   "artifact_bundle_sha256": "883c044cce75e9d802bd268403e85684d558b3f480c5f67ecaa16a51d4c99ecd",
   "artifact_freeze": "evidence/generated/p10_3_artifact_freeze.json",
-  "artifact_freeze_commit": "593fddf2bfd958fdfbfb56f781778717eba6a76a",
+  "artifact_freeze_commit": "44424e3a08fc1c50ab1b3ffb58d0c9083ca9cecc",
   "artifact_freeze_sha256": "80f713cc13de26494fa702069bb96a41dfe489f1c6ac5899687fedcb8c2473d7",
   "artifacts": [
     {
@@ -111,16 +111,20 @@
       "sha256": "fd2edb95306323e4c8796368d3425487994e7471b115b8543d20053f10d6f01a"
     }
   ],
+  "authorization_basis": {
+    "campaign_standing_authorization": "User explicitly authorized automated P10_3 AX7020 stationary four-lane hardware acceptance for the current two boards and eight modules, mask<=0xF, no Ethernet/movement/rotation/realignment/rewiring, no two-hour run, and no P11.",
+    "fresh_current_run_ids_authorized": 1,
+    "fresh_current_run_instruction": "Continue the P10.3 goal and include bidirectional raw tests for lane0 and lane1 in the new immutable run."
+  },
   "authorization_id": "P10_3-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "593fddf2bfd958fdfbfb56f781778717eba6a76a",
+  "authorization_parent_commit": "44424e3a08fc1c50ab1b3ffb58d0c9083ca9cecc",
   "board_binding": {
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
   "branch": "p10.3/ax7020-stationary-4lane-hardware",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-04T10:20:37+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "external_goal": {
     "bytes": 31921,
     "path": "C:\\Users\\user\\Downloads\\P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
@@ -136,7 +140,7 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-04T10:17:27+00:00",
+  "generated_at_utc": "2026-08-04T11:58:40+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_movement": false,
   "inputs": {
@@ -177,16 +181,16 @@
       "sha256": "5b53408fe10c6cf1a04f4e5c88cc18eb5a400a91f987b27ec42c77c2bbec7dad"
     },
     "config/hardware/p10_3_actual_wiring.yaml": {
-      "bytes": 4765,
-      "sha256": "51e65e9f993068a25ed113b9be0648319875eb8b02b8e7b524bba76249346603"
+      "bytes": 5072,
+      "sha256": "fee58fc4852547bc3d8d10e140a218b918fd12c8d41cf9ee64dca05c03262179"
     },
     "config/hardware/p10_3_ax7020_activity_leds.yaml": {
       "bytes": 3998,
       "sha256": "a525f5c2accda201e33a5f36a31a8e435a2b77c5a7c77afba9b8da851c6efbb1"
     },
     "config/hardware/tfdu_module_inventory.yaml": {
-      "bytes": 7774,
-      "sha256": "1293702c8d80e1365ee022ecadd72761cda81d6c190f8f7babf7f8b0396e92a9"
+      "bytes": 10960,
+      "sha256": "8076acd48bc6841a2b677fa37f540e81a83d527b85f1f3a6213b896920997c54"
     },
     "config/project_requirements.yaml": {
       "bytes": 281788,
@@ -201,8 +205,8 @@
       "sha256": "96cf5c2923cdbbea7f5c0b0d00e49fd815d0756848dadb6f2954cd5f185a4159"
     },
     "docs/hardware/P10_3_AS_WIRED_RECORD.md": {
-      "bytes": 3012,
-      "sha256": "c88ab81bd584515cfd1fd18e77df5130b632ccebbcde931e463c5f8ecbdfd574"
+      "bytes": 3885,
+      "sha256": "972977a8792eb59fafe902a0d9e45ef0aa84daa1fc0b66124f45ea5137aa8085"
     },
     "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md": {
       "bytes": 2940,
@@ -217,16 +221,16 @@
       "sha256": "10c0393793309242818fe538723fc3e11b59824544d7f79439dbb0ba041716c0"
     },
     "scripts/hw/p10_dual_xsdb_stage.tcl": {
-      "bytes": 74135,
-      "sha256": "fdb6512a1fcc2e1e53c44f701bb2cbc9e65dc5e39d10bedd2a474610a83d1988"
+      "bytes": 74152,
+      "sha256": "209a3a784d1a1afc5726adc970801f35ccd553bd607fd0f4b61a2f135ceffaa4"
     },
     "scripts/hw/p10_program_dual_shutdown.tcl": {
       "bytes": 8112,
       "sha256": "f9c156783e13494e41f215f72b5608ff42e46a2114c4288c2de4acd3e63c4995"
     },
     "scripts/p10_hardware_runtime.py": {
-      "bytes": 70006,
-      "sha256": "644631bdb5f5c33669abbe80eefe4468dbab5c25de7b67cad14114d354229b32"
+      "bytes": 70823,
+      "sha256": "7ac6113661b1097aa5684a6083f1cac168e40efae42530d5f2d7c59231780d09"
     },
     "scripts/prepare_p10_3_offline.py": {
       "bytes": 10316,
@@ -237,8 +241,8 @@
       "sha256": "70b657777bdb652a1305c6b321b360ca122badb2b675274cd5608efb6c304a10"
     },
     "scripts/run_p10_3_ax7020_4lane_hardware.py": {
-      "bytes": 123398,
-      "sha256": "99cbef600d1a595d812976bd70c4e14caecc5fcc3902b66e4b0ce63d7403ece1"
+      "bytes": 124625,
+      "sha256": "4221c7366dd050006afca1aad0f283abf26a0edf8fd576e09b0fd7bdc5f0caf2"
     },
     "scripts/verify_p10_1r_existing.py": {
       "bytes": 7509,
@@ -319,7 +323,7 @@
       "endpoint": "rotating",
       "lane": 2,
       "position": "J11-A",
-      "small_board_id": "B0015"
+      "small_board_id": "B0023"
     },
     "R3": {
       "endpoint": "rotating",
@@ -328,7 +332,7 @@
       "small_board_id": "B0017"
     }
   },
-  "module_inventory_sha256": "1293702c8d80e1365ee022ecadd72761cda81d6c190f8f7babf7f8b0396e92a9",
+  "module_inventory_sha256": "8076acd48bc6841a2b677fa37f540e81a83d527b85f1f3a6213b896920997c54",
   "network_used": false,
   "old_f1_selected": false,
   "old_f1_status": "QUARANTINED_NOT_ACCEPTED",
@@ -341,7 +345,7 @@
     "formal_30min": "c3db70f74887c63791529852ed0600be810c27cb0683f90e6dd17f145717cabc",
     "four_lane_raw": "7737cfe68be0ac673a831a00e0bafa44780f8d114e46f71de573b9f84eed793e",
     "mask_matrix": "693fe70c08e2fee3916adf6c5951c4b025daab8302f8f82ec38bfba2b7ab0b22",
-    "module_intake": "10ea95eafbe567edc2dd680a725b8d098bb563f0c13565771c2f56b76000aa8d",
+    "module_intake": "509af1e0ca1d42b0bf31662925ac0d3c73720aa3499478b62ccd51aa436487a9",
     "per_lane_phy": "8353ac7f7500bd73938ba8af2a0719485184ff8c0bae345b8b8993e01ce330de",
     "performance": "8c9c4bf3be3a00da148a8b95835691e461f8ecbb664e0f06cc83551d1991f469",
     "preflight": "56cf7e734882d844edfefdd424fef42373d3b6b6b2c4887b5c19ed42c14955ed",
@@ -350,7 +354,6 @@
     "two_lane_regression": "72b75b23f7e4e83278b78e1b6d9223c2f3de48cdd92b84fdcb622eabe57e7c0b"
   },
   "realignment": false,
-  "result": "evidence/hardware/p10_3/p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json",
   "retry_limits": {
     "diagnostic_run_ids_per_stage": 2,
     "jtag_connect": 3,
@@ -358,7 +361,7 @@
   },
   "rewiring": false,
   "rotation": false,
-  "run_id": "p10_3_20260804T101727Z_d4eef729_3d8cd207_a8459eef",
+  "run_id": "p10_3_20260804T115840Z_d4eef729_3d8cd207_a8459eef",
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
   "shutdown_policy": {
@@ -371,8 +374,8 @@
     "verify_both": true
   },
   "source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
-  "status": "CONSUMED_AFTER_P10_3_FAIL",
+  "status": "AUTHORIZED",
   "two_hour_test": false,
   "user_authorization_received_on": "2026-08-04",
-  "user_authorization_statement": "User explicitly authorized automated P10_3 AX7020 stationary four-lane hardware acceptance for the current two boards and eight modules, mask<=0xF, no Ethernet/movement/rotation/realignment/rewiring, no two-hour run, and no P11."
+  "user_authorization_statement": "继续目标，raw测试还需要包括lane0 lane1"
 }
