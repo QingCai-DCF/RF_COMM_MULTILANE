@@ -99,7 +99,7 @@ class P101RModelTests(unittest.TestCase):
         runtime = (ROOT / "software/ps_driver/p10_1_runtime_extension.inc").read_text(
             encoding="utf-8"
         )
-        active = runtime.split("#endif", 1)[1]
+        active = runtime.rsplit("#endif", 1)[1]
         # The only active send/wait calls are the single stream-level remote
         # commit confirmation, not object-loop readiness handshakes.
         self.assertEqual(active.count("p10_1_send_signal("), 1)
@@ -111,7 +111,7 @@ class P101RModelTests(unittest.TestCase):
         runtime = (ROOT / "software/ps_driver/p10_1_runtime_extension.inc").read_text(
             encoding="utf-8"
         )
-        active = runtime.split("#endif", 1)[1]
+        active = runtime.rsplit("#endif", 1)[1]
         self.assertIn("p9_crc32_update_compare(output_crc_state", active)
         self.assertEqual(active.count("p9_sha256_update(\n          &output_sha_context"), 1)
         self.assertIn("object_mismatch != SIZE_MAX", active)
@@ -167,7 +167,7 @@ class P101RModelTests(unittest.TestCase):
         self.assertIn("dp_attempt_descriptor[0] || dp_attempt_retry", core)
         self.assertIn("frame_schedule_valid_q", core)
         self.assertIn("data_duty_history_empty", core)
-        self.assertIn("!serializer_done[0]", core)
+        self.assertIn("!serializer_done[eligibility_lane]", core)
         self.assertIn("endpoint_turnaround_cumulative_ready", core)
         self.assertIn("seq_before(endpoint_turnaround_boundary_sequence_q", core)
         self.assertIn("endpoint_turnaround_fallback_ready", core)

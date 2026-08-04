@@ -250,7 +250,7 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             "recovery_ordinal = result->object_count / 2U", extension
         )
 
-    def test_formal_stream_is_one_large_autonomous_host_command(self) -> None:
+    def test_formal_stream_uses_bounded_autonomous_host_commands(self) -> None:
         protocol = PROTOCOL.read_text(encoding="utf-8")
         extension = EXTENSION.read_text(encoding="utf-8")
         tcl = TCL_PATH.read_text(encoding="utf-8")
@@ -259,12 +259,16 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("total > P10_1_RUNTIME_MAX_STREAM_BYTES", extension)
         self.assertIn("proc p10_run_p101_formal_window", tcl)
-        self.assertIn("set stream_bytes 436207616", tcl)
+        self.assertIn("set stream_bytes 67108864", tcl)
         self.assertIn(
-            'p10_run_p101_formal_window "${label}_formal_f2r" 840 0 3', tcl
+            'p10_run_p101_formal_window "${label}_formal_f2r" 840 0 '
+            '$p10_max_lane_mask',
+            tcl,
         )
         self.assertIn(
-            'p10_run_p101_formal_window "${label}_formal_r2f" 840 1 3', tcl
+            'p10_run_p101_formal_window "${label}_formal_r2f" 840 1 '
+            '$p10_max_lane_mask',
+            tcl,
         )
 
         detail = {

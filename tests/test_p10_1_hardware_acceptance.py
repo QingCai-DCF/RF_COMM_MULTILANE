@@ -622,7 +622,16 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
             configure,
         )
         self.assertNotIn("P10_1_DUPLICATE_ACK_DROP_COUNT", extension)
-        self.assertNotIn("physical_fault_injection |=", configure)
+        self.assertIn(
+            "physical_fault_injection |=\n"
+            "      (mailbox->lane_unavailable_mask & P10_LANE_MASK) << 16;",
+            configure,
+        )
+        self.assertNotRegex(
+            configure,
+            r"physical_fault_injection\s*\|=.*"
+            r"P10_1_DUPLICATE_PAST_SEQUENCE_FLAG",
+        )
         self.assertIn(call, extension)
         self.assertIn("object_initial_sequence_q - 1'b1", transport)
         self.assertIn("fault_attempt_budget_q <=", transport)
@@ -734,15 +743,27 @@ class P101HardwareAcceptanceTests(unittest.TestCase):
         self.assertIn("p10_reboot_role fixed", helper)
         self.assertIn("p10_reboot_role rotating", helper)
         self.assertIn(
-            "p10_verify_pl_safe fixed $p10_expected_build(fixed) 0x702000F0",
+            "p10_verify_pl_safe fixed $p10_expected_build(fixed) "
+            "$p10_expected_profile(fixed)",
             helper,
         )
         self.assertIn(
-            "p10_verify_pl_safe rotating $p10_expected_build(rotating) 0x702000A0",
+            "p10_verify_pl_safe rotating $p10_expected_build(rotating) "
+            "$p10_expected_profile(rotating)",
             helper,
         )
         self.assertIn("set p10_expected_build(fixed) 0x50313046", tcl)
         self.assertIn("set p10_expected_build(rotating) 0x50313052", tcl)
+        self.assertIn(
+            "set p10_expected_profile(fixed) "
+            "[expr {$p10_campaign_p103 ? 0x702004F0 : 0x702000F0}]",
+            tcl,
+        )
+        self.assertIn(
+            "set p10_expected_profile(rotating) "
+            "[expr {$p10_campaign_p103 ? 0x702004A0 : 0x702000A0}]",
+            tcl,
+        )
         self.assertIn("P10_1_RESET_RECOVERY_REBOOT_PASS", helper)
 
         # Abort-only recovery flags are bits 16/17 and must not be part of the

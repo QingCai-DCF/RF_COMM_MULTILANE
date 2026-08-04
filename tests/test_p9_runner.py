@@ -304,12 +304,10 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
         self.assertIn(
             "DEPLOYMENT_ROLE == ROLE_P9_DUAL ? 20_480 :", core
         )
-        self.assertIn("frame_duty_guard_q[0] == 0", core)
-        self.assertIn("frame_duty_guard_q[1] == 0", core)
+        self.assertIn("frame_duty_guard_q[eligibility_lane] == 0", core)
         self.assertIn("data_frame_schedule_ready", core)
         self.assertIn("data_duty_history_empty", core)
-        self.assertIn("!serializer_done[0]", core)
-        self.assertIn("!serializer_done[1]", core)
+        self.assertIn("!serializer_done[eligibility_lane]", core)
         self.assertRegex(
             core,
             r"frame_duty_guard_q\[copy_lane\]\s*<=\s*"
@@ -507,7 +505,7 @@ class P9HardwareDutyEvaluatorTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".align_i(!serializer_busy[tx_lane])", core)
-        self.assertIn("reg serializer_busy_d [0:1]", core)
+        self.assertIn("reg [LANE_COUNT-1:0] serializer_busy_d", core)
         self.assertIn("wire serializer_busy_rise", core)
         self.assertIn("!receive_window || serializer_busy_rise ||", core)
         self.assertIn("rx_frame_valid[tx_lane]", core)
