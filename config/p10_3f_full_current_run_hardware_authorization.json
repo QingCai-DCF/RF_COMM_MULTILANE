@@ -123,7 +123,7 @@
     "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
     "verify_both_shutdown_markers": true
   },
-  "authorization_created_at_utc": "2026-08-04T17:02:45Z",
+  "authorization_created_at_utc": "2026-08-04T17:14:47Z",
   "authorization_id": "P10_3F-FULL-CURRENT-RUN-IMMUTABLE",
   "authorized": true,
   "board_binding": {
@@ -131,10 +131,9 @@
     "rotating": "AX7020-R/JTAG:210512180081"
   },
   "campaign_freeze_path": "evidence/generated/p10_3f_full_campaign_freeze.json",
-  "campaign_freeze_sha256": "65c257374bb8fdd7101695839a6d135f6fb72d26d7adfad58b2b21bc4980206c",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-04T17:05:33+00:00",
-  "current_run_hardware_authorization": false,
+  "campaign_freeze_sha256": "89f8a4c6cd2a42d383c0552bc4bc03d67b76c06143d56792bfe8dacd8108b51d",
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "ethernet_allowed": false,
   "fixed_jtag_serial": "210249855178",
   "fixed_profile_sha256": "6c05c738333f80836d141a833e45592342b3d83b62369d6eb91d5ba3f907c571",
@@ -267,9 +266,9 @@
       "sha256": "55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40"
     },
     {
-      "bytes": 111740,
+      "bytes": 112740,
       "path": "scripts/run_p10_3f_full_hardware.py",
-      "sha256": "f6169d326613c00b2eaa6c66e94285b58aeac443ad731504ddf1a632d25305b2"
+      "sha256": "8500d1ff0a5eb35b343ed17100395dc9df0c40f66912b216ed8415b2b323a0c9"
     },
     {
       "bytes": 93222,
@@ -297,9 +296,9 @@
       "sha256": "7ac6113661b1097aa5684a6083f1cac168e40efae42530d5f2d7c59231780d09"
     },
     {
-      "bytes": 12623,
+      "bytes": 13624,
       "path": "tests/test_p10_3f_full_hardware.py",
-      "sha256": "4021b51bf3be0026a5f4e5e6bb78fee2984363428deca2f57ed51cc6c2690fad"
+      "sha256": "46740cc41e77b2390b46a381aeb9c54813d2cd32c4d6e495a21982a1d8c77f83"
     },
     {
       "bytes": 5036,
@@ -332,7 +331,7 @@
       "sha256": "56a9f5c1c0fa8740b7bec3b0e84579ece57a77144bab40362d0717b1085d3641"
     }
   ],
-  "host_source_commit": "60d46a4c363f03428a2523073f2808fbcc9ae668",
+  "host_source_commit": "2c098a8ee7625cb13d81ae21a56ff3b118cdfb79",
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_functional_diagnostic_object_bytes": 16777216,
   "maximum_lane_mask": 15,
@@ -353,12 +352,11 @@
   "no_hardware": false,
   "p11_allowed": false,
   "register_map_sha256": "36ce57e7409865fe0dddda1e8a863647a4bd652e0ee612156ec27bc75072e5ae",
-  "result": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T170245Z_60d46a4c_a6ecd8e6_a5491982/final/orchestrator_result.json",
   "retry_policy": "Goal-bounded stage execution; every new run_id requires its own immutable authorization record and shutdown-before.",
   "rotating_jtag_serial": "210512180081",
   "rotating_profile_sha256": "b79b87c90b56d442e3b3db228a49523aea72bd730a200a13d82a0e31d44560e8",
   "rotating_xdc_sha256": "95a049709b4ffe84156be3bce6653f0f7b8757750b9a30f543415eb290631b9b",
-  "run_id": "p10_3f_full_20260804T170245Z_60d46a4c_a6ecd8e6_a5491982",
+  "run_id": "p10_3f_full_20260804T171447Z_2c098a8e_a6ecd8e6_a5491982",
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_WITH_FIRST_FAULT_FORENSICS",
   "shutdown_policy": {
@@ -368,9 +366,9 @@
     "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
     "verify_both_shutdown_markers": true
   },
-  "status": "CONSUMED_AFTER_P10_3F_FULL_FAIL",
+  "status": "AUTHORIZED_CURRENT_RUN",
   "two_hour_test_allowed": false,
-  "user_authorization_context": "Direct response to the immediately preceding exact current-run authorization request for campaign freeze SHA256 65c257374bb8fdd7101695839a6d135f6fb72d26d7adfad58b2b21bc4980206c; interpreted only within frozen P10.3/P10.3F scope and its prohibitions.",
-  "user_authorization_received_at_utc": "2026-08-04T17:02:45Z",
+  "user_authorization_context": "Current campaign-level standing authorization for all operations needed to continue the frozen P10.3/P10.3F goal. This retry changes only the host evaluator/test binding after preserving the prior false-negative run; all FPGA/XSA/BSP/ELF hashes, board/module bindings, runtime limits, shutdown policy, and prohibitions remain exact.",
+  "user_authorization_received_at_utc": "2026-08-04T17:14:47Z",
   "user_authorization_statement": "我授权所有需要的操作，继续"
 }
