@@ -1,36 +1,22 @@
 # P10.3 repository intake
 
-- Status: `FAIL`
+- Status: `PASS`
 - Test ID: `P10_3-REPOSITORY-INTAKE`
 - Hardware actions executed: `false`
 
-- Source commit: `b02d919b90b7cc3229e55fec69588b2e4f07c19e`
-
-## Errors
-
-- NO_HARDWARE must be 1
-- offline intake requires a clean worktree before generating evidence
+- Source commit: `f081a82c6557d9df1a61dc6f85082f13e8eb1d3f`
 
 ```json
 {
   "branch": "codex/p10.3-fault-forensics",
   "current_run_hardware_authorization": false,
-  "errors": [
-    "NO_HARDWARE must be 1",
-    "offline intake requires a clean worktree before generating evidence"
-  ],
+  "errors": [],
   "external_goal": {
     "bytes": 31921,
     "path": "C:\\Users\\user\\Downloads\\P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
     "sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
   },
-  "git_status_before_generation": [
-    "M evidence/generated/p10_3f_full_campaign_freeze.json",
-    " M evidence/generated/p10_3f_full_campaign_freeze.md",
-    " M evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
-    " M evidence/generated/p10_3f_full_campaign_freeze_raw/requirement_traceability.log",
-    " M evidence/generated/p10_3f_full_campaign_freeze_raw/state_requirements_consistency.log"
-  ],
+  "git_status_before_generation": [],
   "goal": {
     "bytes": 31921,
     "path": "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
@@ -121,10 +107,10 @@
   "no_hardware": true,
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
-  "source_commit": "b02d919b90b7cc3229e55fec69588b2e4f07c19e",
-  "source_tree_clean_before_generation": false,
-  "started_at_utc": "2026-08-04T19:07:41+00:00",
-  "status": "FAIL",
+  "source_commit": "f081a82c6557d9df1a61dc6f85082f13e8eb1d3f",
+  "source_tree_clean_before_generation": true,
+  "started_at_utc": "2026-08-04T19:08:09+00:00",
+  "status": "PASS",
   "test_id": "P10_3-REPOSITORY-INTAKE",
   "tools": {
     "git": {
