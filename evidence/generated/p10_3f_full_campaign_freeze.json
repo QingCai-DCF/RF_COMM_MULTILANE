@@ -133,7 +133,7 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-04T16:46:47+00:00",
+  "generated_at_utc": "2026-08-04T16:57:31+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": false,
   "host_inputs": [
@@ -248,6 +248,11 @@
       "sha256": "45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c"
     },
     {
+      "bytes": 10366,
+      "path": "scripts/prepare_p10_3_offline.py",
+      "sha256": "c8177f98ec62b98eef4e25ac96fe654d04b465ac961a43a426452ddfc5eebb86"
+    },
+    {
       "bytes": 124625,
       "path": "scripts/run_p10_3_ax7020_4lane_hardware.py",
       "sha256": "ae84647f449007816169df368074445e8d42b6d6335240e4e73936b82c28e458"
@@ -258,9 +263,9 @@
       "sha256": "55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40"
     },
     {
-      "bytes": 106904,
+      "bytes": 111740,
       "path": "scripts/run_p10_3f_full_hardware.py",
-      "sha256": "9b41bfb12063abc81bb93ec098a641eecb590af2a0e0be18ed665cb1409f29d3"
+      "sha256": "f6169d326613c00b2eaa6c66e94285b58aeac443ad731504ddf1a632d25305b2"
     },
     {
       "bytes": 93222,
@@ -288,12 +293,42 @@
       "sha256": "7ac6113661b1097aa5684a6083f1cac168e40efae42530d5f2d7c59231780d09"
     },
     {
-      "bytes": 12272,
+      "bytes": 12623,
       "path": "tests/test_p10_3f_full_hardware.py",
-      "sha256": "29561e10af22e7974ea3acaa762d297e1d75d8af906d5ce15c4000e5b0d75710"
+      "sha256": "4021b51bf3be0026a5f4e5e6bb78fee2984363428deca2f57ed51cc6c2690fad"
+    },
+    {
+      "bytes": 5036,
+      "path": "evidence/generated/p10_3_repo_intake.json",
+      "sha256": "2bfb9e2c0dd8050849f2dd5516ba22b6c0344bb37d9b9a21f5dffee55b4a6cc0"
+    },
+    {
+      "bytes": 5228,
+      "path": "evidence/generated/p10_3_repo_intake.md",
+      "sha256": "ea46bbf135118d2add275884bd1282c23bcb96acb933661dd376456d4ab8f71d"
+    },
+    {
+      "bytes": 3741,
+      "path": "evidence/generated/p10_3_wiring.json",
+      "sha256": "5d35128d4aab07d19d32183b1f5a28e516657478f80a08f54fb6865c0e382332"
+    },
+    {
+      "bytes": 4014,
+      "path": "evidence/generated/p10_3_wiring.md",
+      "sha256": "c1fd7d7818d988c318318eb9a9c5f6c459140c1bbb1d053aee8c00c65c27d5ac"
+    },
+    {
+      "bytes": 5647,
+      "path": "evidence/generated/p10_3_module_inventory.json",
+      "sha256": "9496d90e63384a77f0218d8c01ca3650e89fe5ccd1da733a7e2e1201cdd8dbce"
+    },
+    {
+      "bytes": 5921,
+      "path": "evidence/generated/p10_3_module_inventory.md",
+      "sha256": "56a9f5c1c0fa8740b7bec3b0e84579ece57a77144bab40362d0717b1085d3641"
     }
   ],
-  "host_source_commit": "5d63c69ca92377cec90f0f9694b7e8b15c8cac62",
+  "host_source_commit": "60d46a4c363f03428a2523073f2808fbcc9ae668",
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_functional_diagnostic_object_bytes": 16777216,
   "maximum_lane_mask": 15,
@@ -321,9 +356,9 @@
         "tests.test_p10_3_hardware_acceptance"
       ],
       "log": {
-        "bytes": 129,
+        "bytes": 130,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
-        "sha256": "7fcedb146876ecc84e98595344a3b9ab85d7e18f2d5650e5c9babbb50cd22533"
+        "sha256": "6d6178aaeda10624a8f76680ee944883106872183267ccb7901d8799795dcd91"
       },
       "returncode": 0,
       "status": "PASS"
