@@ -126,7 +126,8 @@ class P10HardwareRuntimeTests(unittest.TestCase):
             "P10_ENDPOINT_SHUTDOWN_ROTATING=PASS",
             "P10_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR=1",
             "p10_prime_base_ms", "p10_prime_per_mib_ms",
-            "0x0000001A", "0x00000F00", "0x0003FFFF",
+            "0x0000001A", "p10_phy_safety_mask",
+            "injection_readback_mask",
         ):
             self.assertIn(marker, text)
         self.assertNotIn("socket", text.lower())

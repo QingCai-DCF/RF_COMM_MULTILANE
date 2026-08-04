@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_3-OFFLINE-PHY-STATUS-MASK-REMEDIATION",
+  "status": "PASS",
+  "scope": "runner_and_evaluator_only",
+  "trigger_run_id": "p10_3_20260804T100428Z_d4eef729_3d8cd207_a8459eef",
+  "trigger_evidence_commit": "b1ccbbe095aebf63ac70a27b3089e077e6e56359",
+  "trigger_stage_summary": {
+    "path": "evidence/hardware/p10_3/p10_3_20260804T100428Z_d4eef729_3d8cd207_a8459eef/module_intake/stage_summary.json",
+    "sha256": "bf1524fa02c2c0e13003b851e679235dbdfa2a88cb96b84180f1798080b332c7"
+  },
+  "trigger_final_result": {
+    "path": "evidence/hardware/p10_3/p10_3_20260804T100428Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json",
+    "sha256": "ce802323e729e443fb3f4675299c26fd9b7716fee69cfec194bff5c387308ef7",
+    "status": "FAIL",
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS"
+  },
+  "direct_observations": [
+    "intake_F2_raw_64 PASS with exactly 64 physical TX and 64 R2 raw RX events",
+    "intake_F2_raw_1024 PASS with exactly 1024 physical TX and 1024 R2 raw RX events",
+    "the next R2-to-F2 case was never launched because the runner rejected fixed receiver startup"
+  ],
+  "root_cause": {
+    "register": "P9_PHY_STATUS",
+    "packing": "{safety[2*LANE_COUNT], startup[2*LANE_COUNT], ready[2*LANE_COUNT]}",
+    "old_two_lane_literal": "0x00000F00",
+    "four_lane_startup_field": "0x0000FF00",
+    "four_lane_safety_field": "0x00FF0000",
+    "failure_mechanism": "The two-lane literal overlapped four-lane startup bits 8..11, so normal fixed-endpoint startup was falsely reported as a sticky safety fault."
+  },
+  "changes": {
+    "scripts/hw/p10_dual_xsdb_stage.tcl": {
+      "sha256": "fdb6512a1fcc2e1e53c44f701bb2cbc9e65dc5e39d10bedd2a474610a83d1988",
+      "action": "derive and use the safety mask from the immutable campaign lane count"
+    },
+    "scripts/p10_hardware_runtime.py": {
+      "sha256": "644631bdb5f5c33669abbe80eefe4468dbab5c25de7b67cad14114d354229b32",
+      "action": "derive the mailbox evaluator safety mask from the role lane count"
+    }
+  },
+  "verification": {
+    "command": "python -m unittest tests.test_p10_3_hardware_acceptance tests.test_p10_hardware_runtime -q",
+    "tests_run": 20,
+    "result": "PASS",
+    "python_compile": "PASS",
+    "no_hardware_check": "PASS"
+  },
+  "artifact_bundle": {
+    "source_commit": "d4eef729e91c60fc7a72fa68c95fcd4a569fcffc",
+    "artifact_freeze_sha256": "80f713cc13de26494fa702069bb96a41dfe489f1c6ac5899687fedcb8c2473d7",
+    "artifact_bundle_sha256": "883c044cce75e9d802bd268403e85684d558b3f480c5f67ecaa16a51d4c99ecd",
+    "changed": false,
+    "reason": "No RTL, XDC, BSP, ELF, XSA, or bitstream input changed."
+  },
+  "hardware_actions_executed": false,
+  "current_run_hardware_authorization": false,
+  "generated_at_utc": "2026-08-04T10:14:55Z"
+}

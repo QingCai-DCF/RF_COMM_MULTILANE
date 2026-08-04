@@ -158,7 +158,7 @@ proc p10_check_abort {} {
 
 proc p10_verify_pl_safe {role expected_build expected_profile label} {
   global p10_expected_register_map_version p10_expected_register_map_hash_low
-  global p10_expected_capabilities
+  global p10_expected_capabilities p10_phy_safety_mask
   set identity [p10_read32 $role 0x43C00700]
   set build [p10_read32 $role 0x43C00704]
   set profile [p10_read32 $role 0x43C00708]
@@ -184,8 +184,9 @@ proc p10_verify_pl_safe {role expected_build expected_profile label} {
   if {($status & 0x00000285) != 0 || ($status & 0x2) == 0} {
     error [format "P10 %s unsafe %s status=0x%08X" $role $label $status]
   }
-  if {($phy & 0x00000F00) != 0} {
-    error [format "P10 %s sticky PHY safety fault during %s phy=0x%08X" $role $label $phy]
+  if {($phy & $p10_phy_safety_mask) != 0} {
+    error [format "P10 %s sticky PHY safety fault during %s phy=0x%08X mask=0x%08X" \
+        $role $label $phy $p10_phy_safety_mask]
   }
   foreach count $physical_tx {
     if {$count != 0} {
@@ -489,6 +490,7 @@ proc p10_receiver_role {direction} {
 }
 
 proc p10_wait_receiver_primed {role d} {
+  global p10_phy_safety_mask
   set command [dict get $d command]
   set timeout [dict get $d timeout]
   # Payload generation, zeroing, CRC32, and SHA256 all happen before the
@@ -523,7 +525,10 @@ proc p10_wait_receiver_primed {role d} {
     if {$state == 5 && $command != 13} {
       error "P10 $role receiver faulted before source launch"
     }
-    if {($phy & 0x00000F00) != 0} { error "P10 $role receiver safety fault before source launch" }
+    if {($phy & $p10_phy_safety_mask) != 0} {
+      error [format "P10 %s receiver safety fault before source launch: phy=0x%08X mask=0x%08X" \
+          $role $phy $p10_phy_safety_mask]
+    }
     if {$command == 3 && $state == 3 && ($pl_status & 0x4) != 0} { return }
     if {$command == 13} {
       set p10_1_magic [p10_read32 $role 0x00020400]
@@ -1366,6 +1371,14 @@ set p10_run_id [lindex $argv 15]
 set p10_campaign_p103 [expr {[string match "P10_3-*" $p10_stage]}]
 set p10_lane_count [expr {$p10_campaign_p103 ? 4 : 2}]
 set p10_max_lane_mask [expr {$p10_campaign_p103 ? 15 : 3}]
+# P9_PHY_STATUS concatenates three fields of width 2*LANE_COUNT in the
+# order {safety, startup, ready}.  The historical 0x00000F00 safety mask is
+# correct only for LANE_COUNT=2; for P10.3 LANE_COUNT=4 it aliases the low
+# startup nibble and rejects a healthy fixed receiver as soon as startup
+# completes.  Derive the mask from the immutable campaign lane count.
+set p10_phy_field_width [expr {2 * $p10_lane_count}]
+set p10_phy_safety_mask [expr {((1 << $p10_phy_field_width) - 1) <<
+    (2 * $p10_phy_field_width)}]
 set p10_default_weights [expr {$p10_campaign_p103 ? 0x01010101 : 0x0101}]
 set p10_expected_capabilities [expr {$p10_campaign_p103 ? 0xF7204441 : 0xF7204221}]
 set p10_expected_profile(fixed) [expr {$p10_campaign_p103 ? 0x702004F0 : 0x702000F0}]

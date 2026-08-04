@@ -82,6 +82,29 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
                        if item.command == 2)
         self.assertGreater(first_frame, last_raw)
 
+    def test_four_lane_phy_safety_mask_does_not_alias_startup(self) -> None:
+        tcl = STAGE_TCL.read_text(encoding="utf-8")
+        self.assertIn(
+            "set p10_phy_field_width [expr {2 * $p10_lane_count}]", tcl
+        )
+        self.assertIn("($phy & $p10_phy_safety_mask)", tcl)
+        self.assertNotIn("($phy & 0x00000F00)", tcl)
+
+        for lane_count, expected in ((2, 0x00000F00), (4, 0x00FF0000)):
+            field_width = 2 * lane_count
+            mask = ((1 << field_width) - 1) << (2 * field_width)
+            self.assertEqual(mask, expected)
+            startup_mask = ((1 << field_width) - 1) << field_width
+            self.assertEqual(mask & startup_mask, 0)
+
+        self.assertEqual(self.runner.mailbox_detail.__module__,
+                         "p10_hardware_runtime")
+        import p10_hardware_runtime as runtime
+        self.assertEqual(runtime.phy_safety_mask(2), 0x00000F00)
+        self.assertEqual(runtime.phy_safety_mask(4), 0x00FF0000)
+        with self.assertRaises(ValueError):
+            runtime.phy_safety_mask(8)
+
     def test_command13_fields_and_object_ids_are_unambiguous(self) -> None:
         plans = self.runner.build_plans()
         intervals = []

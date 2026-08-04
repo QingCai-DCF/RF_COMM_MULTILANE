@@ -754,6 +754,14 @@ def digest(words: list[int], start: int) -> str:
     return "".join(f"{word:08x}" for word in words[start:start + 8])
 
 
+def phy_safety_mask(lane_count: int) -> int:
+    """Return the packed P9_PHY_STATUS safety field for this lane count."""
+    if lane_count not in (2, 4):
+        raise ValueError(f"unsupported P10 lane count: {lane_count}")
+    physical_status_width = 2 * lane_count
+    return ((1 << physical_status_width) - 1) << (2 * physical_status_width)
+
+
 def mailbox_detail(
     words: list[int],
     role: str,
@@ -783,11 +791,13 @@ def mailbox_detail(
                   if not passed)
     status = pl(words, 7)
     phy = pl(words, 8)
+    lane_count = len(expected["local_indices"])
+    safety_mask = phy_safety_mask(lane_count)
     if status & 0x285:
         errors.append(f"{role}: endpoint/object/raw/receiver active after command")
     if not status & 0x2:
         errors.append(f"{role}: final TX kill inactive after command")
-    if phy & 0xF00:
+    if phy & safety_mask:
         errors.append(f"{role}: sticky physical safety fault")
     high_max = [pl(words, index) for index in range(61, 65)]
     duty_max = [pl(words, index) for index in range(65, 69)]
@@ -812,6 +822,7 @@ def mailbox_detail(
         "pl_build_id": f"0x{words[33]:08X}",
         "pl_profile_id": f"0x{words[34]:08X}",
         "pl_status": f"0x{status:08X}", "phy_status": f"0x{phy:08X}",
+        "phy_safety_mask": f"0x{safety_mask:08X}",
         "elapsed_ticks": (words[58] << 32) | words[57],
         "counts_per_second": words[59], "actual_rx_length": words[60],
         "input_crc32": words[61], "output_crc32": words[62],
