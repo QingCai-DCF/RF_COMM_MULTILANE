@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-04T15:53:21Z",
+  "test_id": "P10_3-CURRENT-ARTIFACT-COMPLETION-AUDIT",
+  "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_WITH_FIRST_FAULT_FORENSICS",
+  "status": "OFFLINE_READY_AWAITING_CURRENT_RUN_AUTHORIZATION",
+  "p10_3_acceptance_status": "PENDING_CURRENT_ARTIFACT_HARDWARE",
+  "canonical_program_status": "IN_PROGRESS",
+  "branch": "codex/p10.3-fault-forensics",
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "artifact_source_commit": "5b2e9e8a22038b15308faf435163f1787054f41d",
+  "host_source_commit": "2b92e074030c6b4d7e01808e9750f6d071feea49",
+  "prior_evidence_checkpoint": "91759332857bc471b254e7a2bc835da7fd3bee01",
+  "hardware_actions_executed_this_followup": false,
+  "no_hardware": true,
+  "current_run_hardware_authorization": false,
+  "authorization_record_present": false,
+  "manual_instrumentation": "OMITTED_BY_USER",
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "module_binding": {
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0001",
+    "F3": "B0020",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0023",
+    "R3": "B0025"
+  },
+  "artifact_bundle": [
+    {
+      "role": "fixed",
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/227e41e23ae9081b8e879dc6aca6b50120332ca002029ccf44e2059dee179561/p10_ax7020_fixed_shutdown.bit",
+      "sha256": "227e41e23ae9081b8e879dc6aca6b50120332ca002029ccf44e2059dee179561"
+    },
+    {
+      "role": "fixed",
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03/p10_ax7020_fixed_functional.bit",
+      "sha256": "a6ecd8e6666aebb917916aeb3702eb47c782f6017798e18ffdf91389c0c4ce03"
+    },
+    {
+      "role": "fixed",
+      "kind": "xsa",
+      "path": "artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/64f04eab3491b905f3d32db4ddae1f9537e713b3a0f0554a89357d4dccca5b56/p10_ax7020_fixed_functional.xsa",
+      "sha256": "64f04eab3491b905f3d32db4ddae1f9537e713b3a0f0554a89357d4dccca5b56"
+    },
+    {
+      "role": "fixed",
+      "kind": "bsp",
+      "path": "artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/330ebffd7de59df6fa6e6c20e39187885b521a73fba7d85697ed13e81a388600/p10_ax7020_fixed_bsp.zip",
+      "sha256": "330ebffd7de59df6fa6e6c20e39187885b521a73fba7d85697ed13e81a388600"
+    },
+    {
+      "role": "fixed",
+      "kind": "elf",
+      "path": "artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/328d6bccb2071485ebcd04c8e32052efe8057fe1d0007bcfe1868d9d827ff775/p10_fixed_runtime.elf",
+      "sha256": "328d6bccb2071485ebcd04c8e32052efe8057fe1d0007bcfe1868d9d827ff775"
+    },
+    {
+      "role": "rotating",
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/ec749d8058384ff52a2a04fe36a0fa1ce99346a87eeefe967e0f320cddb23ed2/p10_ax7020_rotating_shutdown.bit",
+      "sha256": "ec749d8058384ff52a2a04fe36a0fa1ce99346a87eeefe967e0f320cddb23ed2"
+    },
+    {
+      "role": "rotating",
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00/p10_ax7020_rotating_functional.bit",
+      "sha256": "a5491982aa2f33cbedd80c3ad099b2123b588185b740dfa254650f6a90760a00"
+    },
+    {
+      "role": "rotating",
+      "kind": "xsa",
+      "path": "artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/480162c4eda88f758b5098eb493685bc0469d0b28f28d89244bdcee86efc001c/p10_ax7020_rotating_functional.xsa",
+      "sha256": "480162c4eda88f758b5098eb493685bc0469d0b28f28d89244bdcee86efc001c"
+    },
+    {
+      "role": "rotating",
+      "kind": "bsp",
+      "path": "artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/83e74bd963c23a639fd5dfb28d554e83264b79272ab1c4da4883a98216d586e0/p10_ax7020_rotating_bsp.zip",
+      "sha256": "83e74bd963c23a639fd5dfb28d554e83264b79272ab1c4da4883a98216d586e0"
+    },
+    {
+      "role": "rotating",
+      "kind": "elf",
+      "path": "artifacts/p10_3_fault_forensics/5b2e9e8a22038b15308faf435163f1787054f41d/6a5cce6f21fa2800292c1869a009ff50c9adeaec5571a1f2a649fc8e1c1a3e7b/p10_rotating_runtime.elf",
+      "sha256": "6a5cce6f21fa2800292c1869a009ff50c9adeaec5571a1f2a649fc8e1c1a3e7b"
+    }
+  ],
+  "offline_evidence": {
+    "first_fault_offline": {
+      "path": "evidence/generated/p10_3_fault_forensics_offline.json",
+      "sha256": "803fe567c4d8e3bb9a30dcd04174b9f22a70772fa0506981efe5c939821a9d8d",
+      "status": "PASS"
+    },
+    "base_artifact_freeze": {
+      "path": "evidence/generated/p10_3_fault_forensics_artifact_freeze.json",
+      "sha256": "5346c774f9ec65cb02d6a08fb8e989ccfa3f84f6ab8e77ae70de4052d1d3dc82",
+      "status": "PASS"
+    },
+    "full_campaign_freeze": {
+      "path": "evidence/generated/p10_3f_full_campaign_freeze.json",
+      "sha256": "54be681069d99bee8e14a89015f4b0bf8d273f90668980c3fd957210f01a4c8d",
+      "status": "PASS",
+      "raw_gate_log_count": 10
+    }
+  },
+  "campaign_contract": {
+    "stage_count": 23,
+    "allowed_stages": [
+      "preflight",
+      "module_intake",
+      "fault_capture",
+      "raw_8x8",
+      "per_lane_phy",
+      "two_lane_regression",
+      "four_lane_raw",
+      "mask_matrix",
+      "degrade",
+      "arq_sack",
+      "dma",
+      "staircase_1k",
+      "staircase_4k",
+      "staircase_16k",
+      "staircase_64k",
+      "staircase_256k",
+      "streaming_64m",
+      "stream_dma_reset_fault",
+      "stream_dma_reset_recovery_64m",
+      "stream_service_reset_fault",
+      "stream_service_reset_recovery_64m",
+      "performance",
+      "formal_30min"
+    ],
+    "maximum_lane_mask": "0xF",
+    "maximum_single_formal_run_seconds": 1800,
+    "maximum_long_test_command_bytes": 262144,
+    "maximum_functional_diagnostic_object_bytes": 16777216,
+    "safety_snapshot_after_each_functional_case": true,
+    "shutdown_before_every_stage": true,
+    "archive_before_independent_shutdown": true,
+    "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
+    "verify_both_shutdown_markers": true,
+    "clear_frozen_capture_before_shutdown_program": false
+  },
+  "first_fault_evidence_boundary": {
+    "immediate_hardware_tx_kill_and_full_shutdown": "PASS_OFFLINE_ONLY",
+    "functional_reset_preserves_capture": true,
+    "functional_shutdown_preserves_capture": true,
+    "fpga_reconfiguration_preserves_capture": false,
+    "power_loss_preserves_capture": false,
+    "operational_policy": "complete ordered readout, write raw binary and parsed JSON, verify SHA256, commit archive in PL, then load the independent shutdown bitstream without issuing capture clear",
+    "hardware_proof": "PENDING"
+  },
+  "requirements": {
+    "p10_3": {
+      "total": 28,
+      "pass": 0,
+      "pending": 28,
+      "pending_ids": [
+        "P10_3-WIRE-001",
+        "P10_3-INV-001",
+        "P10_3-INV-002",
+        "P10_3-HW-001",
+        "P10_3-HW-002",
+        "P10_3-LED-001",
+        "P10_3-LED-002",
+        "P10_3-SAFE-001",
+        "P10_3-SAFE-002",
+        "P10_3-MOD-001",
+        "P10_3-MOD-002",
+        "P10_3-MOD-003",
+        "P10_3-MOD-004",
+        "P10_3-XTALK-001",
+        "P10_3-PHY-001",
+        "P10_3-PHY-002",
+        "P10_3-PHY-003",
+        "P10_3-PHY-004",
+        "P10_3-PHY-005",
+        "P10_3-MASK-001",
+        "P10_3-DEG-001",
+        "P10_3-ARQ-001",
+        "P10_3-STREAM-001",
+        "P10_3-STREAM-002",
+        "P10_3-PERF-001",
+        "P10_3-PERF-002",
+        "P10_3-SOAK-001",
+        "P10_3-EVID-001"
+      ]
+    },
+    "p10_3f": {
+      "offline_pass": [
+        "P10_3F-OFF-001",
+        "P10_3F-OFF-002",
+        "P10_3F-OFF-003",
+        "P10_3F-OFF-004"
+      ],
+      "hardware_pending": [
+        "P10_3F-HW-001",
+        "P10_3F-HW-002",
+        "P10_3F-HW-003"
+      ]
+    }
+  },
+  "evidence_non_inheritance": {
+    "old_hardware_pass_inherited": false,
+    "historical_raw_connectivity_promoted": false,
+    "reason": "The first-fault RTL, bitstreams, XSAs, BSPs, ELFs, and host campaign tooling form a new immutable bundle. Historical P10.3 results do not prove this bundle."
+  },
+  "excluded_or_forbidden": {
+    "manual_oscilloscope_current_temperature_photodiode_work": "OMITTED_BY_USER",
+    "external_electrical_or_optical_measurement_claim": false,
+    "ethernet": true,
+    "movement_rotation_realignment_rewiring": true,
+    "lane_mask_above_0xF": true,
+    "two_hour_test": true,
+    "p11_or_product_acceptance": true
+  },
+  "blocking_condition": "No new explicit current-run authorization exists for the exact P10.3F full-campaign freeze and immutable artifact bundle.",
+  "next_required_user_action": "Provide a new explicit current-run authorization binding the full-campaign freeze SHA256, host and artifact source commits, ten artifact hashes, both JTAG serials, eight module IDs, 1800-second bound, lane mask 0xF maximum, and archive-before-independent-shutdown policy."
+}
