@@ -1,5 +1,5 @@
 {
-  "branch": "p10.3/ax7020-stationary-4lane-hardware",
+  "branch": "codex/p10.3-fault-forensics",
   "current_run_hardware_authorization": false,
   "errors": [],
   "external_goal": {
@@ -54,24 +54,24 @@
       "sha256": "dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4"
     },
     {
-      "bytes": 281788,
+      "bytes": 293988,
       "path": "config/project_requirements.yaml",
-      "sha256": "51c4c11122384fcfaba76239d6ab7a047566d6c9febf0691bc4d701f1be0ae77"
+      "sha256": "bc10f6915b22ee3f95fc128b8c91fe2589eea0c2075143c54522f072bede193c"
     },
     {
-      "bytes": 60830,
+      "bytes": 65218,
       "path": "config/register_map/ir_axi_regs.yaml",
-      "sha256": "96cf5c2923cdbbea7f5c0b0d00e49fd815d0756848dadb6f2954cd5f185a4159"
+      "sha256": "36ce57e7409865fe0dddda1e8a863647a4bd652e0ee612156ec27bc75072e5ae"
     },
     {
-      "bytes": 5072,
+      "bytes": 5247,
       "path": "config/hardware/p10_3_actual_wiring.yaml",
-      "sha256": "fee58fc4852547bc3d8d10e140a218b918fd12c8d41cf9ee64dca05c03262179"
+      "sha256": "551f518f476deaa9219b826f2985d08baab5e953d92a4f734bb28ba6613bf2a1"
     },
     {
-      "bytes": 9105,
+      "bytes": 21172,
       "path": "config/hardware/tfdu_module_inventory.yaml",
-      "sha256": "dc743b660bb4a9e5f9cd98e1192147d95f9efb596e99fdfc3d61e2a7cacc414e"
+      "sha256": "85d915625b2f43fc5640f15a91b7ec1587615261bccb68568b22173d6ed21f6b"
     },
     {
       "bytes": 1769,
@@ -98,9 +98,9 @@
   "no_hardware": true,
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
-  "source_commit": "b1b2a268c182dff370fef02b25ed1675d7935043",
+  "source_commit": "e3e6784cbfeb5b70bdb41ea45b3f1cd757f776d5",
   "source_tree_clean_before_generation": true,
-  "started_at_utc": "2026-08-04T11:41:36+00:00",
+  "started_at_utc": "2026-08-04T16:55:48+00:00",
   "status": "PASS",
   "test_id": "P10_3-REPOSITORY-INTAKE",
   "tools": {

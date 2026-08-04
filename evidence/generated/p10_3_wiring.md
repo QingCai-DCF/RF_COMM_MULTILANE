@@ -4,8 +4,8 @@
 - Test ID: `P10_3-WIRE-001`
 - Hardware actions executed: `false`
 
-- Source commit: `b1b2a268c182dff370fef02b25ed1675d7935043`
-- Canonical SHA256: `fee58fc4852547bc3d8d10e140a218b918fd12c8d41cf9ee64dca05c03262179`
+- Source commit: `e3e6784cbfeb5b70bdb41ea45b3f1cd757f776d5`
+- Canonical SHA256: `551f518f476deaa9219b826f2985d08baab5e953d92a4f734bb28ba6613bf2a1`
 
 ```json
 {
@@ -31,7 +31,7 @@
       "jtag_cable_serial": "210512180081"
     }
   },
-  "bytes": 5072,
+  "bytes": 5247,
   "canonical_path": "config/hardware/p10_3_actual_wiring.yaml",
   "electrical_contract": {
     "Mode": "FPGA output to TFDU; static HIGH for MIR/FIR",
@@ -78,7 +78,7 @@
       "endpoint": "fixed",
       "lane": 3,
       "position": "B",
-      "small_board_id": "B0004"
+      "small_board_id": "B0020"
     },
     "R0": {
       "connector": "J10",
@@ -106,7 +106,7 @@
       "endpoint": "rotating",
       "lane": 3,
       "position": "B",
-      "small_board_id": "B0017"
+      "small_board_id": "B0025"
     }
   },
   "no_hardware": true,
@@ -148,7 +148,7 @@
   },
   "schema_version": 1,
   "scope": "P10_3_ACTUAL_WIRING_FREEZE",
-  "sha256": "fee58fc4852547bc3d8d10e140a218b918fd12c8d41cf9ee64dca05c03262179",
+  "sha256": "551f518f476deaa9219b826f2985d08baab5e953d92a4f734bb28ba6613bf2a1",
   "signal_positions": {
     "A": {
       "Mode": 30,
@@ -163,7 +163,7 @@
       "Txd": 28
     }
   },
-  "source_commit": "b1b2a268c182dff370fef02b25ed1675d7935043",
+  "source_commit": "e3e6784cbfeb5b70bdb41ea45b3f1cd757f776d5",
   "status": "PASS",
   "test_id": "P10_3-WIRE-001"
 }

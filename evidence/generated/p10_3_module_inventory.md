@@ -4,8 +4,8 @@
 - Test ID: `P10_3-INV-001`
 - Hardware actions executed: `false`
 
-- Source commit: `b1b2a268c182dff370fef02b25ed1675d7935043`
-- Canonical SHA256: `dc743b660bb4a9e5f9cd98e1192147d95f9efb596e99fdfc3d61e2a7cacc414e`
+- Source commit: `e3e6784cbfeb5b70bdb41ea45b3f1cd757f776d5`
+- Canonical SHA256: `85d915625b2f43fc5640f15a91b7ec1587615261bccb68568b22173d6ed21f6b`
 
 ```json
 {
@@ -13,54 +13,54 @@
   "active_modules": {
     "F0": {
       "endpoint": "AX7020-F/JTAG:210249855178",
-      "inventory_status": "ACCEPTED_P10_1R_PENDING_P10_3_RECHECK",
+      "inventory_status": "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS",
       "position": "J10-A",
       "small_board_id": "A0019"
     },
     "F1": {
       "endpoint": "AX7020-F/JTAG:210249855178",
-      "inventory_status": "ACCEPTED_P10_1R_PENDING_P10_3_RECHECK",
+      "inventory_status": "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS",
       "position": "J10-B",
       "small_board_id": "B0012"
     },
     "F2": {
       "endpoint": "AX7020-F/JTAG:210249855178",
-      "inventory_status": "INSTALLED_PENDING_P10_3_INTAKE",
+      "inventory_status": "RAW_ACCEPTED_WITH_R2_B0023_PENDING_FRAME_INTAKE",
       "position": "J11-A",
       "small_board_id": "B0001"
     },
     "F3": {
       "endpoint": "AX7020-F/JTAG:210249855178",
-      "inventory_status": "INSTALLED_PENDING_P10_3_INTAKE",
+      "inventory_status": "RAW_ACCEPTED_WITH_R3_B0025_PENDING_FRAME_INTAKE",
       "position": "J11-B",
-      "small_board_id": "B0004"
+      "small_board_id": "B0020"
     },
     "R0": {
       "endpoint": "AX7020-R/JTAG:210512180081",
-      "inventory_status": "ACCEPTED_P10_1R_PENDING_P10_3_RECHECK",
+      "inventory_status": "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS",
       "position": "J10-A",
       "small_board_id": "A0010"
     },
     "R1": {
       "endpoint": "AX7020-R/JTAG:210512180081",
-      "inventory_status": "ACCEPTED_P10_1R_PENDING_P10_3_RECHECK",
+      "inventory_status": "ACCEPTED_P10_1R_P10_3_RAW_RECHECK_PASS",
       "position": "J10-B",
       "small_board_id": "A0017"
     },
     "R2": {
       "endpoint": "AX7020-R/JTAG:210512180081",
-      "inventory_status": "INSTALLED_PENDING_P10_3_INTAKE",
+      "inventory_status": "RAW_ACCEPTED_WITH_F2_B0001_PENDING_FRAME_INTAKE",
       "position": "J11-A",
       "small_board_id": "B0023"
     },
     "R3": {
       "endpoint": "AX7020-R/JTAG:210512180081",
-      "inventory_status": "INSTALLED_PENDING_P10_3_INTAKE",
+      "inventory_status": "RAW_ACCEPTED_WITH_F3_B0020_PENDING_FRAME_INTAKE",
       "position": "J11-B",
-      "small_board_id": "B0017"
+      "small_board_id": "B0025"
     }
   },
-  "bytes": 9105,
+  "bytes": 21172,
   "canonical_path": "config/hardware/tfdu_module_inventory.yaml",
   "electronic_intake_status": "PENDING_HARDWARE_STAGE",
   "errors": [],
@@ -105,12 +105,44 @@
         "The end-to-end failure did not uniquely attribute the fault to B0015."
       ],
       "small_board_id": "B0015"
+    },
+    {
+      "accepted_run_ids": [],
+      "accepted_stage": null,
+      "eligible_for_future_four_lane_use": false,
+      "historical_endpoint": "AX7020-F/JTAG:210249855178",
+      "historical_position": "J11-B",
+      "historical_record_id": "REMOVED_F3_B0004_AFTER_P10_3_BIDIRECTIONAL_RAW_FAILURE",
+      "history": "User reported replacing this F3 small board with B0020 on 2026-08-04. Historical B0004 evidence remains unchanged.",
+      "inventory_status": "QUARANTINED_NOT_ACCEPTED",
+      "known_failures": [
+        "F3-to-R3 requested 64 raw events; F3 physical TX count was 64 and R3 raw RX count was 0.",
+        "R3-to-F3 requested 64 raw events; R3 physical TX count was 64 and F3 raw RX count was 0.",
+        "The end-to-end failures did not uniquely attribute the fault to B0004."
+      ],
+      "small_board_id": "B0004"
+    },
+    {
+      "accepted_run_ids": [],
+      "accepted_stage": null,
+      "eligible_for_future_four_lane_use": false,
+      "historical_endpoint": "AX7020-R/JTAG:210512180081",
+      "historical_position": "J11-B",
+      "historical_record_id": "REMOVED_R3_B0017_AFTER_P10_3_BIDIRECTIONAL_RAW_FAILURE",
+      "history": "User reported replacing this R3 small board with B0025 on 2026-08-04. Historical B0017 evidence remains unchanged.",
+      "inventory_status": "QUARANTINED_NOT_ACCEPTED",
+      "known_failures": [
+        "With F3 B0020, F3-to-R3 requested 64 raw events; F3 physical TX count was 64 and R3 raw RX count was 0.",
+        "With F3 B0020, R3-to-F3 requested 64 raw events; R3 physical TX count was 64 and F3 raw RX count was 0.",
+        "The end-to-end failures did not uniquely attribute the fault to B0017."
+      ],
+      "small_board_id": "B0017"
     }
   ],
   "schema_version": 1,
   "scope": "P10_3_MODULE_INVENTORY",
-  "sha256": "dc743b660bb4a9e5f9cd98e1192147d95f9efb596e99fdfc3d61e2a7cacc414e",
-  "source_commit": "b1b2a268c182dff370fef02b25ed1675d7935043",
+  "sha256": "85d915625b2f43fc5640f15a91b7ec1587615261bccb68568b22173d6ed21f6b",
+  "source_commit": "e3e6784cbfeb5b70bdb41ea45b3f1cd757f776d5",
   "status": "PASS",
   "test_id": "P10_3-INV-001",
   "unique_small_board_id_count": 8
