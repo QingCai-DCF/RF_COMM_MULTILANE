@@ -10,6 +10,10 @@ capture:
   snapshot_words: 64
   event_depth: 256
   event_words: 8
+  event_storage:
+    implementation: eight_independent_256x32_simple_dual_port_banks
+    synthesis_requirement: physical_RAMB_primitives_under_forensic_hierarchy
+    distributed_ram_substitution_allowed: false
   pre_fault_entries: 248
   post_fault_cycles: 8
   periodic_sample_interval_cycles: 1024

@@ -197,6 +197,8 @@ module tb_p10_fault_forensics;
   integer event_index;
   integer event_word_index;
   reg [31:0] total_at_fault;
+  reg [7:0] observed_event_code;
+  reg found_checkpoint_event;
   initial begin
     repeat (4) @(posedge clk);
     receiver_enable = 1;
@@ -290,6 +292,24 @@ module tb_p10_fault_forensics;
     repeat (2) @(posedge clk);
     if (!frozen || !first_fault_hold || total_event_count != total_at_fault)
       $fatal(1, "functional reset erased or changed frozen evidence");
+
+    // Read actual banked event data before exercising the ordered archival
+    // interlock.  This catches a disconnected/inferred-memory-only shell and
+    // proves that both the event header and checkpoint payload survive.
+    found_checkpoint_event = 1'b0;
+    for (event_index = 0; event_index < total_at_fault;
+         event_index = event_index + 1) begin
+      read_event_word(event_index, 0);
+      if (event_read_data[31:16] != 16'h4646)
+        $fatal(1, "event BRAM record magic mismatch");
+      observed_event_code = event_read_data[15:8];
+      read_event_word(event_index, 7);
+      if (observed_event_code == 8'h07 &&
+          event_read_data == 32'h0000_0400)
+        found_checkpoint_event = 1'b1;
+    end
+    if (!found_checkpoint_event)
+      $fatal(1, "checkpoint event payload missing from event BRAM");
 
     for (index = 0; index < SNAPSHOT_WORDS; index = index + 1)
       read_snapshot_word(index);

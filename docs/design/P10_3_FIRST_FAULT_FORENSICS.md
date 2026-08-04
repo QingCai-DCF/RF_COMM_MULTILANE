@@ -46,6 +46,11 @@ Each module record contains physical TX count, current and maximum continuous-hi
 
 ## Circular event BRAM
 
+The store is implemented as eight independent 256 x 32-bit simple-dual-port
+banks. Functional Vivado signoff requires physical RAMB primitives below the
+forensic hierarchy; distributed-LUT RAM is not accepted as evidence that the
+requested BRAM recorder was built.
+
 The event store is 256 entries by eight words (256 bits). Entries 0–247 are a circular pre-fault history. Entries 248–255 are a fixed eight-cycle post-fault tail. The first-fault event is part of the pre-fault region and the tail records the actual transition into kill/full-shutdown.
 
 Event records contain a timestamp, packed physical/control state, object ID, TX next/ACK-base sequence, retry count, and an event-specific tag. Tags preserve fault cause, checkpoint ID, object error, lane state, retry exhaustion, TX-burst transition, or the selected module’s physical TX count.

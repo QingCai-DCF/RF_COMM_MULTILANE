@@ -1,6 +1,32 @@
 `timescale 1ns/1ps
 `default_nettype none
 
+// Keep the event history in true block RAM.  A wide 256-bit inferred memory
+// was decomposed into RAMD64E primitives by Vivado even with ram_style set to
+// block.  Eight independent 256x32 simple-dual-port banks map deterministically
+// to RAMB primitives while preserving the same externally visible record.
+// There is intentionally no reset or initialization port: only entries covered
+// by the frozen pre/post counts are readable evidence.
+module p10_fault_event_bram #(
+  parameter integer DEPTH = 256,
+  parameter integer ADDR_W = $clog2(DEPTH)
+) (
+  input  wire                 clk,
+  input  wire                 write_enable_i,
+  input  wire [ADDR_W-1:0]    write_address_i,
+  input  wire [31:0]          write_data_i,
+  input  wire [ADDR_W-1:0]    read_address_i,
+  output reg  [31:0]          read_data_o
+);
+  (* ram_style = "block" *) reg [31:0] memory [0:DEPTH-1];
+
+  always @(posedge clk) begin
+    if (write_enable_i)
+      memory[write_address_i] <= write_data_i;
+    read_data_o <= memory[read_address_i];
+  end
+endmodule
+
 // P10 first-fault forensic recorder.
 //
 // This block deliberately has no functional reset input.  Configuration
@@ -126,9 +152,11 @@ module p10_fault_forensics #(
   localparam [7:0] EVENT_FIRST_FAULT = 8'hF0;
   localparam [7:0] EVENT_POST_FAULT = 8'hF1;
 
-  (* ram_style = "block" *) reg [EVENT_BITS-1:0] event_mem [0:EVENT_DEPTH-1];
   reg [31:0] snapshot_q [0:SNAPSHOT_WORDS-1];
-  reg [EVENT_BITS-1:0] event_read_record_q;
+  wire [EVENT_BITS-1:0] event_read_record_w;
+  reg event_mem_write_enable;
+  reg [EVENT_PTR_W-1:0] event_mem_write_address;
+  reg [EVENT_BITS-1:0] event_mem_write_record;
   reg [63:0] timestamp_q;
   reg frozen_q;
   reg post_complete_q;
@@ -184,6 +212,7 @@ module p10_fault_forensics #(
   reg [EVENT_PTR_W-1:0] event_read_physical_index;
   integer init_index;
   integer module_index;
+  genvar event_word_index;
 
   function automatic [31:0] pack_status;
     reg [31:0] value;
@@ -311,12 +340,26 @@ module p10_fault_forensics #(
     tx_retry_exhausted_count_d_q = 0;
     tx_next_sequence_d_q = 0;
     tx_ack_base_d_q = 0;
-    event_read_record_q = 0;
     for (init_index = 0; init_index < SNAPSHOT_WORDS; init_index = init_index + 1)
       snapshot_q[init_index] = 32'd0;
-    for (init_index = 0; init_index < EVENT_DEPTH; init_index = init_index + 1)
-      event_mem[init_index] = {EVENT_BITS{1'b0}};
   end
+
+  generate
+    for (event_word_index = 0; event_word_index < EVENT_WORDS;
+         event_word_index = event_word_index + 1) begin : g_event_bram
+      p10_fault_event_bram #(
+        .DEPTH(EVENT_DEPTH),
+        .ADDR_W(EVENT_PTR_W)
+      ) u_event_bram (
+        .clk(clk),
+        .write_enable_i(event_mem_write_enable),
+        .write_address_i(event_mem_write_address),
+        .write_data_i(event_mem_write_record[32*event_word_index +: 32]),
+        .read_address_i(event_read_physical_index),
+        .read_data_o(event_read_record_w[32*event_word_index +: 32])
+      );
+    end
+  endgenerate
 
   assign first_fault_hold_o = frozen_q;
   assign frozen_o = frozen_q;
@@ -336,7 +379,7 @@ module p10_fault_forensics #(
   assign archive_digest_o = archive_digest_q;
   assign snapshot_read_data_o = snapshot_q[snapshot_read_index_i];
   assign event_read_data_o =
-      event_read_record_q[32*event_read_word_i +: 32];
+      event_read_record_w[32*event_read_word_i +: 32];
 
   always @* begin
     if (event_read_index_i < pre_count_q) begin
@@ -421,11 +464,24 @@ module p10_fault_forensics #(
     end
   end
 
-  // Synchronous BRAM read port.  XSDB writes the logical entry index, waits
-  // for the AXI transaction to complete, then reads one or more selected
-  // words; continuous prefetch makes the data stable before that read.
-  always @(posedge clk) begin
-    event_read_record_q <= event_mem[event_read_physical_index];
+  // A single record write is fanned out across the eight 32-bit BRAM banks.
+  // The first-fault record is the final circular pre-fault entry; subsequent
+  // cycles fill the reserved post-fault tail.
+  always @* begin
+    event_mem_write_enable = 1'b0;
+    event_mem_write_address = {EVENT_PTR_W{1'b0}};
+    event_mem_write_record = {EVENT_BITS{1'b0}};
+    if (!frozen_q && event_valid) begin
+      event_mem_write_enable = 1'b1;
+      event_mem_write_address = pre_write_ptr_q;
+      event_mem_write_record =
+          make_event(event_code, event_module, event_tag);
+    end else if (frozen_q && !post_complete_q) begin
+      event_mem_write_enable = 1'b1;
+      event_mem_write_address = PRE_EVENT_DEPTH + post_count_q;
+      event_mem_write_record =
+          make_event(EVENT_POST_FAULT, post_count_q, frozen_fault_cause_q);
+    end
   end
 
   always @(posedge clk) begin
@@ -488,8 +544,6 @@ module p10_fault_forensics #(
 
     if (!frozen_q) begin
       if (event_valid) begin
-        event_mem[pre_write_ptr_q] <=
-            make_event(event_code, event_module, event_tag);
         if (pre_count_q < PRE_EVENT_DEPTH)
           pre_count_q <= pre_count_q + 1'b1;
         if (pre_write_ptr_q == PRE_EVENT_DEPTH-1)
@@ -572,8 +626,6 @@ module p10_fault_forensics #(
         end
       end
     end else if (!post_complete_q) begin
-      event_mem[PRE_EVENT_DEPTH + post_count_q] <=
-          make_event(EVENT_POST_FAULT, post_count_q, frozen_fault_cause_q);
       if (post_count_q == POST_EVENT_COUNT-1) begin
         post_count_q <= POST_EVENT_COUNT;
         post_complete_q <= 1'b1;
