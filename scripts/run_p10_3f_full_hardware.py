@@ -99,6 +99,30 @@ RUN_RE = re.compile(
     r"(?P<rotating>[0-9a-f]{8})$"
 )
 
+
+def with_current_build_expectations(callback: Any, *args: Any, **kwargs: Any) -> Any:
+    """Run a legacy P10.3 evaluator against this immutable bundle's IDs.
+
+    The shared P10.3 evaluator intentionally retains the older P10.3 artifact
+    identity.  P10.3F reuses its parsing and safety checks, but must compare the
+    mailbox identity against the P10.3F functional images.  Replace the shared
+    expectation only for the duration of one synchronous evaluation and always
+    restore it so historical runners keep their original artifact binding.
+    """
+    previous = base.EXPECTED_ROLE
+    base.EXPECTED_ROLE = {
+        role: {
+            **values,
+            "firmware": EXPECTED_BUILD[role],
+            "build": EXPECTED_BUILD[role],
+        }
+        for role, values in previous.items()
+    }
+    try:
+        return callback(*args, **kwargs)
+    finally:
+        base.EXPECTED_ROLE = previous
+
 BASE_STAGES = (
     "preflight",
     "module_intake",
@@ -1292,8 +1316,8 @@ def load_custom_details(
                 mailbox_errors: list[str] = []
                 mailbox_pair: dict[str, Any] = {"fixed": {}, "rotating": {}}
             else:
-                mailbox_errors, mailbox_pair = base.generic_pair(
-                    row, fixed_words, rotating_words
+                mailbox_errors, mailbox_pair = with_current_build_expectations(
+                    base.generic_pair, row, fixed_words, rotating_words
                 )
             errors.extend(mailbox_errors)
             fixed_snap = base.parse_p103(
@@ -1623,7 +1647,9 @@ def evaluate_stage(
     forensic_summary: dict[str, Any],
 ) -> dict[str, Any]:
     if stage in BASE_STAGES:
-        summary = base.evaluate_stage(stage, stage_dir, process)
+        summary = with_current_build_expectations(
+            base.evaluate_stage, stage, stage_dir, process
+        )
         if forensic_summary.get("status") != "PASS" or forensic_summary.get(
             "frozen_roles"
         ):

@@ -16,6 +16,31 @@ import run_p10_3f_full_hardware as runner  # noqa: E402
 
 
 class P103FFullHardwareTests(unittest.TestCase):
+    def test_current_build_expectation_adapter_is_scoped(self) -> None:
+        original = runner.base.EXPECTED_ROLE
+
+        def inspect_current() -> str:
+            for role, build_id in runner.EXPECTED_BUILD.items():
+                self.assertEqual(
+                    runner.base.EXPECTED_ROLE[role]["firmware"], build_id
+                )
+                self.assertEqual(
+                    runner.base.EXPECTED_ROLE[role]["build"], build_id
+                )
+            return "CURRENT"
+
+        self.assertEqual(
+            runner.with_current_build_expectations(inspect_current), "CURRENT"
+        )
+        self.assertIs(runner.base.EXPECTED_ROLE, original)
+
+        def fail_during_evaluation() -> None:
+            raise RuntimeError("synthetic evaluator failure")
+
+        with self.assertRaisesRegex(RuntimeError, "synthetic evaluator failure"):
+            runner.with_current_build_expectations(fail_during_evaluation)
+        self.assertIs(runner.base.EXPECTED_ROLE, original)
+
     def test_full_stage_order_and_plans_are_deterministic(self) -> None:
         first = runner.build_plans()
         second = runner.build_plans()
