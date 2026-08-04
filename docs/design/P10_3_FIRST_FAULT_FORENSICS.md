@@ -90,26 +90,48 @@ lane had already been acknowledged. Consequently that run could not directly
 observe an unacknowledged retry migrating away from lane 1. The successful
 fault-mask readback is not reclassified as migration evidence.
 
-The remediated host procedure keeps the functional bitstream and safety path
-unchanged. A command-3 migration case drops exactly the first cumulative ACK
-for the full 32-frame window. Before applying the single-lane unavailable bit,
-XSDB requires a coherent PL snapshot that directly shows all of the following:
+The next immutable run,
+`p10_3f_full_20260804T191055Z_dae5fdd1_a6ecd8e6_a5491982`, also remains FAIL
+evidence. Its first-ACK suppression procedure did observe a full 32-frame
+window on every injected lane. However, the receiver's direction-boundary ACK
+request remains asserted while turnaround is pending, so consuming the first
+drop token allowed another cumulative ACK immediately. Lane 1 was acknowledged
+before the lane-unavailable write took effect and therefore finished with zero
+retry migrations. That run's successful stages, failed degradation result,
+raw observations, and verified dual-board shutdown are preserved without
+reclassification.
 
-- 32 outstanding frames;
-- at least one frame scheduled on the target lane;
-- at least one physical TX event on the target module;
-- exactly one deliberately dropped ACK; and
+The second remediation keeps the functional bitstream and all safety paths
+unchanged and deliberately suppresses no ACK. Each diagnostic command starts
+with the target lane as its only sender lane, applies the existing bounded
+CRC-corruption diagnostic to its first physical DATA attempts, and uses a
+case-local high scheduler weight for that target. The receiver is returned to
+all-lanes-available before traffic. After receiver priming but before
+publishing the sender command, XSDB captures coherent sender and receiver
+baselines for target scheduling, target physical TX, target CRC rejection,
+physical good-ACK count, drop count, and migration count. Immediately after
+launch it requires direct evidence of all of the following:
+
+- between one and 32 outstanding frames;
+- positive target-lane scheduling and physical-TX deltas from the pre-launch
+  baseline;
+- a positive target-lane receiver CRC-bad delta, directly proving rejection of
+  a physical target-lane DATA frame;
+- unchanged TX ACK base equal to the command's initial sequence;
+- zero dropped ACKs; and
 - zero migrations before fault injection.
 
-The lane fault is then applied before the 62.5 ms retransmission timeout. The
-first timed-out retry can use a remaining healthy lane, and its cumulative ACK
-is not suppressed. Acceptance requires the terminal snapshot to show a
-non-zero migration count in addition to successful object completion and all
-existing integrity and safety checks. The pre-injection values, injection
-readback, and terminal migration counters are retained in machine-readable
-evidence. This establishes that the migrated attempt belonged to the
-unacknowledged window; it does not treat already acknowledged frames as
-migration candidates.
+XSDB then atomically replaces the sender's target-only availability state with
+the single target-lane unavailable bit, reads it back, and immediately re-reads
+TX ACK base. The post-write ACK base must still equal the initial sequence.
+The CRC-rejection delta and the two ACK-base observations directly prove that
+a current-object target-lane physical transmission was unacknowledged when the
+fault took effect, rather than relying on cumulative historical counters or
+wall-clock timing. The first timed-out retry can use one of the three remaining
+healthy lanes. Acceptance still requires successful object completion, all
+integrity and safety gates, and a non-zero terminal migration count. The
+target-only start, controlled CRC fault, and target weighting are confined to
+these migration diagnostics and do not alter normal scheduler fairness vectors.
 
 ## Evidence limits
 

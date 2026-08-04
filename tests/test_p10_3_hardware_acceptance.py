@@ -59,10 +59,23 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
                  if isinstance(item, self.runner.Case)]
         injected = [item for item in cases if item.injectmask]
         self.assertEqual({item.injectmask for item in injected}, {1, 2, 4, 8})
-        self.assertTrue(all(item.command == 3 and item.injectdelay == 10
+        self.assertTrue(all(item.command == 3 and item.injectdelay == 0
                             for item in injected))
         self.assertTrue(all(
-            item.dropack == self.runner.MIGRATION_ACK_SUPPRESSION == 1
+            item.dropack == self.runner.MIGRATION_ACK_SUPPRESSION == 0
+            for item in injected
+        ))
+        self.assertEqual(
+            {item.injectmask: item.weights for item in injected},
+            self.runner.MIGRATION_TARGET_WEIGHTS,
+        )
+        self.assertTrue(all(
+            item.unavailable == (0xF ^ item.injectmask)
+            for item in injected
+        ))
+        self.assertTrue(all(
+            item.faultflags == self.runner.MIGRATION_PROTOCOL_FAULT_FLAGS ==
+            (1 << 4)
             for item in injected
         ))
         tcl = STAGE_TCL.read_text(encoding="utf-8")
@@ -70,7 +83,18 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
         self.assertIn("set prior_fault [p10_read32 $sender 0x43C0073C]", tcl)
         self.assertIn("P10_ASYNC_LANE_INJECTION=", tcl)
         self.assertIn("P10_MIGRATION_PRECONDITION_", tcl)
-        self.assertIn("$injection_pre_outstanding == 32", tcl)
+        self.assertIn("$injection_pre_outstanding >= 1", tcl)
+        self.assertIn("$injection_pre_outstanding <= 32", tcl)
+        self.assertIn("$injection_pre_target_crc_bad > 0", tcl)
+        self.assertIn("$injection_pre_ack_base == $injection_initial_sequence", tcl)
+        self.assertIn(
+            "set receiver_all_lanes [expr {$receiver_prior_fault & 0x0000FFFF}]",
+            tcl,
+        )
+        self.assertIn(
+            "$injection_post_write_ack_base != $injection_initial_sequence",
+            tcl,
+        )
 
     def test_module_intake_proves_both_raw_directions_before_frames(self) -> None:
         cases = [item for item in self.runner.build_plans()["module_intake"]

@@ -1433,9 +1433,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `config/performance/p10_3f_staircase.yaml` — `069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8`
 - `config/performance/p10_3f_full_aggregate_runtime.yaml` — `a1fd595f97e0f8701ba103867db25b276ece60e47d17e0028af948d925acc572`
-- `docs/design/P10_3_FIRST_FAULT_FORENSICS.md` — `86d10f2bf65facc5bd1b51141ed2243688b40a4ba5cec8cf8d986bf8d433c10f`
-- `scripts/run_p10_3_ax7020_4lane_hardware.py` — `20b17fd9c8038bff4c473007e9469c5d29e0c31820b8428d6649eb328cced6aa`
+- `docs/design/P10_3_FIRST_FAULT_FORENSICS.md` — `884deb9ab0fa3c40651b9a4ac4745f807edeae3c027560a15941cb313c91eea3`
+- `scripts/run_p10_3_ax7020_4lane_hardware.py` — `09c9dedec873c7a54999369ea6fa4240be6caba39aed00352fc8f84d43506bd3`
 - `scripts/run_p10_3f_full_hardware.py` — `aae168cbb4839c2790298021e8c16c76e9d7495e25cff5f1397d7151fbbb7d2f`
-- `scripts/hw/p10_dual_xsdb_stage.tcl` — `b0bb230fa9ef33547c82d8f631d941d4dd4d907dd87841c52da1b95b40c6c23c`
-- `tests/test_p10_3_hardware_acceptance.py` — `31d59e3e0d2442d8a6341685325ca55ad7b48614435518fbfd728247d8caa712`
+- `scripts/hw/p10_dual_xsdb_stage.tcl` — `1e8f513d4e38e1d7337a2adb14babfaadeb4fd1c3d817dcb1e5a916ac559b9e7`
+- `tests/test_p10_3_hardware_acceptance.py` — `259556be36ea4732b42d80078f3590eab27b61c4c8894e97d89dd4dc4aac50bd`
 - `tests/test_p10_3f_full_hardware.py` — `0b496dd80ba9a52de76d5025e3cb9a4632bb11d1d175a95977c551f228be33ea`

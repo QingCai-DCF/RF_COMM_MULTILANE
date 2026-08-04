@@ -610,7 +610,7 @@ proc p10_wait_receiver_primed {role d} {
       $last_p10_1_sequence]
 }
 
-proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_p10_1_dump rotating_p10_1_dump fixed_p10_1r_dump rotating_p10_1r_dump fixed_status rotating_status fixed_state rotating_state window {injection_applied 0} {injection_readback 0} {injection_timestamp_ms 0} {injection_sender NA} {injection_preconditions_verified 0} {injection_pre_outstanding 0} {injection_pre_target_scheduled 0} {injection_pre_target_physical_tx 0} {injection_pre_dropped_ack 0} {injection_pre_migration_count 0}} {
+proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_p10_1_dump rotating_p10_1_dump fixed_p10_1r_dump rotating_p10_1r_dump fixed_status rotating_status fixed_state rotating_state window {injection_applied 0} {injection_readback 0} {injection_timestamp_ms 0} {injection_sender NA} {injection_preconditions_verified 0} {injection_pre_outstanding 0} {injection_pre_target_scheduled 0} {injection_pre_target_physical_tx 0} {injection_pre_dropped_ack 0} {injection_pre_migration_count 0} {injection_initial_sequence 0} {injection_pre_ack_base 0} {injection_baseline_physical_ack_good 0} {injection_pre_physical_ack_good 0} {injection_post_write_ack_base 0} {injection_baseline_target_crc_bad 0} {injection_pre_target_crc_bad 0}} {
   global p10_observation_handle
   set values [list [dict get $d label] [dict get $d command] [dict get $d expected_status] \
       [dict get $d flags] [dict get $d lane] [dict get $d direction] [dict get $d rate] \
@@ -626,7 +626,11 @@ proc p10_record_observation {d sequence started finished fixed_dump rotating_dum
       $injection_timestamp_ms $injection_sender \
       $injection_preconditions_verified $injection_pre_outstanding \
       $injection_pre_target_scheduled $injection_pre_target_physical_tx \
-      $injection_pre_dropped_ack $injection_pre_migration_count
+      $injection_pre_dropped_ack $injection_pre_migration_count \
+      $injection_initial_sequence $injection_pre_ack_base \
+      $injection_baseline_physical_ack_good \
+      $injection_pre_physical_ack_good $injection_post_write_ack_base \
+      $injection_baseline_target_crc_bad $injection_pre_target_crc_bad
   puts $p10_observation_handle [join $values "|"]
   flush $p10_observation_handle
 }
@@ -688,6 +692,21 @@ proc p10_execute_case {d {window "NA"}} {
   set injection_pre_target_physical_tx 0
   set injection_pre_dropped_ack 0
   set injection_pre_migration_count 0
+  set injection_initial_sequence 0
+  set injection_pre_ack_base 0
+  set injection_baseline_physical_ack_good 0
+  set injection_pre_physical_ack_good 0
+  set injection_post_write_ack_base 0
+  set injection_baseline_target_crc_bad 0
+  set injection_pre_target_crc_bad 0
+  set migration_lane_index -1
+  set migration_module_index -1
+  set migration_lane_word -1
+  set migration_module_word -1
+  set migration_baseline_target_scheduled 0
+  set migration_baseline_target_physical_tx 0
+  set migration_baseline_dropped_ack 0
+  set migration_baseline_count 0
 
   foreach role {fixed rotating} {
     p10_write32 $role 0x43C00718 0x00000020
@@ -699,6 +718,53 @@ proc p10_execute_case {d {window "NA"}} {
     set sender [p10_sender_role [dict get $d direction]]
     p10_publish_case $receiver $d $sequence
     p10_wait_receiver_primed $receiver $d
+    if {$command == 3 && [dict get $d injectmask] != 0} {
+      if {[dict get $d dropack] != 0 || [dict get $d injectdelay] != 0} {
+        error "P10 command-3 early migration injection forbids ACK suppression/delay"
+      }
+      switch -- [dict get $d injectmask] {
+        1 { set migration_lane_index 0 }
+        2 { set migration_lane_index 1 }
+        4 { set migration_lane_index 2 }
+        8 { set migration_lane_index 3 }
+        default { error "P10 migration injection mask must select one lane" }
+      }
+      set migration_module_index [expr {$sender eq "fixed" ?
+          $migration_lane_index : 4 + $migration_lane_index}]
+      set migration_lane_word [expr {8 + 12*$migration_lane_index}]
+      set migration_module_word [expr {56 + 8*$migration_module_index + 1}]
+      # Capture a coherent zero-time baseline after counter clear and receiver
+      # priming but before the sender command is published.  The post-launch
+      # values below are reported as deltas from this exact baseline, so older
+      # traffic can never masquerade as target-object evidence.
+      set migration_baseline_snapshot [p10_read_p10_2_snapshot $sender]
+      set migration_baseline_target_scheduled [lindex \
+          $migration_baseline_snapshot [expr {2 + $migration_lane_word}]]
+      set migration_baseline_target_physical_tx [lindex \
+          $migration_baseline_snapshot [expr {2 + $migration_module_word}]]
+      # The receiver was safely primed with the target lane as its sole
+      # schedulable ACK lane.  Before traffic, make all receiver ACK lanes
+      # available; only the sender performs the target-to-healthy fault swap.
+      set receiver_prior_fault [p10_read32 $receiver 0x43C0073C]
+      set receiver_all_lanes [expr {$receiver_prior_fault & 0x0000FFFF}]
+      p10_write32 $receiver 0x43C0073C $receiver_all_lanes
+      set receiver_all_lanes_readback [p10_read32 $receiver 0x43C0073C]
+      if {($receiver_all_lanes_readback & 0x000FFFFF) != $receiver_all_lanes} {
+        error "P10 migration receiver lane-enable readback mismatch"
+      }
+      set migration_baseline_receiver_snapshot [p10_read_p10_2_snapshot $receiver]
+      set injection_baseline_target_crc_bad [lindex \
+          $migration_baseline_receiver_snapshot \
+          [expr {2 + $migration_lane_word + 6}]]
+      set injection_baseline_physical_ack_good [p10_read32 $sender 0x43C007A0]
+      set migration_baseline_dropped_ack [p10_read32 $receiver 0x43C007AC]
+      set migration_baseline_count [p10_read32 $sender 0x43C00774]
+      set injection_initial_sequence [expr {[dict get $d initialseq] & 0xFFFF}]
+      if {$migration_baseline_dropped_ack != 0 ||
+          $migration_baseline_count != 0} {
+        error "P10 migration baseline counters were not cleared"
+      }
+    }
     p10_publish_case $sender $d $sequence
     p10_say "P10_PAIRED_LAUNCH=[dict get $d label]:receiver=$receiver,sender=$sender"
     # Command 13 is the autonomous P10.1 streaming service.  Its immutable
@@ -722,7 +788,9 @@ proc p10_execute_case {d {window "NA"}} {
         after 1
       }
       if {!$active_seen} { error "P10 source never became active for lane-fault injection" }
-      after [dict get $d injectdelay]
+      if {[dict get $d injectdelay] > 0} {
+        after [dict get $d injectdelay]
+      }
       p10_check_abort
       set pre_state [p10_read32 $sender 0x0002000C]
       set pre_status [p10_read32 $sender 0x43C0071C]
@@ -731,30 +799,13 @@ proc p10_execute_case {d {window "NA"}} {
       }
       if {$command == 3} {
         # A blind wall-clock injection can land after every target-lane frame
-        # has already been acknowledged.  Suppress the first cumulative ACK,
-        # then prove from coherent PL telemetry that the 32-entry window is
-        # outstanding and the target lane has physically transmitted before
-        # applying lane-unavailable.  This creates deterministic evidence of
-        # unacknowledged retry migration without weakening the TX safety path.
-        set expected_drop_ack [dict get $d dropack]
-        if {$expected_drop_ack != 1} {
-          error "P10 command-3 migration injection requires dropack=1"
-        }
-        set lane_index -1
-        switch -- [dict get $d injectmask] {
-          1 { set lane_index 0 }
-          2 { set lane_index 1 }
-          4 { set lane_index 2 }
-          8 { set lane_index 3 }
-          default { error "P10 migration injection mask must select one lane" }
-        }
-        set module_index [expr {$sender eq "fixed" ? $lane_index : 4 + $lane_index}]
-        set lane_word [expr {8 + 12*$lane_index}]
-        set module_word [expr {56 + 8*$module_index + 1}]
-        # The 4,000,000-cycle RTO is 62.5 ms at 64 MHz.  Start checking after
-        # the immutable 10 ms delay and require a full window with zero prior
-        # migrations within the next 40 ms, so the lane fault is applied
-        # before the first RTO can create an unrelated migration.
+        # has already been acknowledged.  This vector begins with only the
+        # target lane schedulable and deliberately corrupts the first physical
+        # DATA attempts at the CRC field.  Prove target scheduling, physical TX,
+        # and receiver-side CRC rejection from coherent pre-launch baselines;
+        # ACK base must remain at the initial sequence.  The lane-fault write
+        # then atomically swaps from target-only to the three healthy lanes.
+        # No ACK is suppressed.
         set precondition_deadline [expr {[clock milliseconds] + 40}]
         while {[clock milliseconds] < $precondition_deadline} {
           p10_check_abort
@@ -772,19 +823,52 @@ proc p10_execute_case {d {window "NA"}} {
               ($snapshot_generation & 1) != 0 || $snapshot_schema != 0x50310201} {
             error "P10 migration precondition snapshot is not coherent"
           }
-          set injection_pre_target_scheduled [p10_read32 $sender \
-              [expr {0x43C00B0C + 4*$lane_word}]]
-          set injection_pre_target_physical_tx [p10_read32 $sender \
-              [expr {0x43C00B0C + 4*$module_word}]]
+          set current_target_scheduled [p10_read32 $sender \
+              [expr {0x43C00B0C + 4*$migration_lane_word}]]
+          set current_target_physical_tx [p10_read32 $sender \
+              [expr {0x43C00B0C + 4*$migration_module_word}]]
+          if {$current_target_scheduled < $migration_baseline_target_scheduled ||
+              $current_target_physical_tx < $migration_baseline_target_physical_tx} {
+            error "P10 migration target counter regressed across baseline"
+          }
+          set injection_pre_target_scheduled [expr {
+              $current_target_scheduled - $migration_baseline_target_scheduled}]
+          set injection_pre_target_physical_tx [expr {
+              $current_target_physical_tx - $migration_baseline_target_physical_tx}]
           set window_state [p10_read32 $sender 0x43C0075C]
           set injection_pre_outstanding [expr {($window_state >> 16) & 0x3F}]
           set injection_pre_migration_count [p10_read32 $sender 0x43C00774]
-          set injection_pre_dropped_ack [p10_read32 $receiver 0x43C007AC]
-          if {$injection_pre_outstanding == 32 &&
+          set current_dropped_ack [p10_read32 $receiver 0x43C007AC]
+          set injection_pre_dropped_ack [expr {
+              $current_dropped_ack - $migration_baseline_dropped_ack}]
+          set tx_sequence_state [p10_read32 $sender 0x43C00758]
+          set injection_pre_ack_base [expr {($tx_sequence_state >> 16) & 0xFFFF}]
+          set injection_pre_physical_ack_good [p10_read32 $sender 0x43C007A0]
+          set receiver_snapshot_before [p10_read32 $receiver 0x43C00B04]
+          p10_write32 $receiver 0x43C00B00 1
+          after 1
+          set receiver_snapshot_generation [p10_read32 $receiver 0x43C00B04]
+          set receiver_snapshot_schema [p10_read32 $receiver 0x43C00B08]
+          if {$receiver_snapshot_generation <= $receiver_snapshot_before ||
+              ($receiver_snapshot_generation & 1) != 0 ||
+              $receiver_snapshot_schema != 0x50310201} {
+            error "P10 migration receiver snapshot is not coherent"
+          }
+          set current_target_crc_bad [p10_read32 $receiver \
+              [expr {0x43C00B0C + 4*($migration_lane_word + 6)}]]
+          if {$current_target_crc_bad < $injection_baseline_target_crc_bad} {
+            error "P10 migration receiver CRC counter regressed across baseline"
+          }
+          set injection_pre_target_crc_bad [expr {
+              $current_target_crc_bad - $injection_baseline_target_crc_bad}]
+          if {$injection_pre_outstanding >= 1 &&
+              $injection_pre_outstanding <= 32 &&
               $injection_pre_target_scheduled > 0 &&
               $injection_pre_target_physical_tx > 0 &&
-              $injection_pre_dropped_ack == $expected_drop_ack &&
-              $injection_pre_migration_count == 0} {
+              $injection_pre_target_crc_bad > 0 &&
+              $injection_pre_dropped_ack == 0 &&
+              $injection_pre_migration_count == 0 &&
+              $injection_pre_ack_base == $injection_initial_sequence} {
             set injection_preconditions_verified 1
             break
           }
@@ -794,14 +878,20 @@ proc p10_execute_case {d {window "NA"}} {
           after 1
         }
         if {!$injection_preconditions_verified} {
-          error [format "P10 migration precondition absent outstanding=%d scheduled=%d physical_tx=%d dropped_ack=%d" \
+          error [format "P10 migration precondition absent outstanding=%d scheduled_delta=%d physical_tx_delta=%d target_crc_bad_delta=%d dropped_ack=%d ack_base=%d physical_ack_good=%d" \
               $injection_pre_outstanding $injection_pre_target_scheduled \
-              $injection_pre_target_physical_tx $injection_pre_dropped_ack]
+              $injection_pre_target_physical_tx \
+              $injection_pre_target_crc_bad $injection_pre_dropped_ack \
+              $injection_pre_ack_base $injection_pre_physical_ack_good]
         }
-        p10_say [format "P10_MIGRATION_PRECONDITION_%s=outstanding:%d,target_scheduled:%d,target_physical_tx:%d,dropped_ack:%d,prior_migrations:%d" \
+        p10_say [format "P10_MIGRATION_PRECONDITION_%s=outstanding:%d,target_scheduled_delta:%d,target_physical_tx_delta:%d,target_crc_bad_delta:%d,dropped_ack:%d,prior_migrations:%d,initial_sequence:%d,ack_base:%d,baseline_physical_ack_good:%d,pre_physical_ack_good:%d" \
             [string toupper [dict get $d label]] $injection_pre_outstanding \
             $injection_pre_target_scheduled $injection_pre_target_physical_tx \
-            $injection_pre_dropped_ack $injection_pre_migration_count]
+            $injection_pre_target_crc_bad $injection_pre_dropped_ack \
+            $injection_pre_migration_count \
+            $injection_initial_sequence $injection_pre_ack_base \
+            $injection_baseline_physical_ack_good \
+            $injection_pre_physical_ack_good]
       }
       global p10_max_lane_mask
       # Command 13 reuses the legacy dropdata/dropack mailbox words for ACK
@@ -816,6 +906,14 @@ proc p10_execute_case {d {window "NA"}} {
       set injection_readback_mask [expr {0x0000FFFF | ($p10_max_lane_mask << 16)}]
       if {($readback & $injection_readback_mask) != $injected} {
         error "P10 asynchronous lane-fault injection readback mismatch"
+      }
+      if {$command == 3} {
+        set post_write_sequence_state [p10_read32 $sender 0x43C00758]
+        set injection_post_write_ack_base [expr {
+            ($post_write_sequence_state >> 16) & 0xFFFF}]
+        if {$injection_post_write_ack_base != $injection_initial_sequence} {
+          error "P10 ACK base advanced before lane-fault write was verified"
+        }
       }
       set injection_applied 1
       set injection_readback $readback
@@ -855,7 +953,10 @@ proc p10_execute_case {d {window "NA"}} {
       $injection_sender $injection_preconditions_verified \
       $injection_pre_outstanding $injection_pre_target_scheduled \
       $injection_pre_target_physical_tx $injection_pre_dropped_ack \
-      $injection_pre_migration_count
+      $injection_pre_migration_count $injection_initial_sequence \
+      $injection_pre_ack_base $injection_baseline_physical_ack_good \
+      $injection_pre_physical_ack_good $injection_post_write_ack_base \
+      $injection_baseline_target_crc_bad $injection_pre_target_crc_bad
   p10_record_ps_gpio $sequence "[dict get $d label]_terminal"
 
   set expected [dict get $d expected_status]
@@ -1839,7 +1940,7 @@ file mkdir [file dirname $p10_result_file]
 set p10_result_handle [open $p10_result_file w]
 set p10_observation_file [file join $p10_dump_dir observations.psv]
 set p10_observation_handle [open $p10_observation_file w]
-puts $p10_observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|sequence|fixed_status|rotating_status|fixed_state|rotating_state|fixed_dump_path|rotating_dump_path|fixed_p10_1_dump_path|rotating_p10_1_dump_path|fixed_p10_1r_dump_path|rotating_p10_1r_dump_path|injection_applied|injection_readback|injection_timestamp_ms|injection_sender|injection_preconditions_verified|injection_pre_outstanding|injection_pre_target_scheduled|injection_pre_target_physical_tx|injection_pre_dropped_ack|injection_pre_migration_count"
+puts $p10_observation_handle "label|command|expected_status|flags|lane|direction|rate|weights|size|ring|cache|txoff|rxoff|timeout|session|path|object|dropdata|dropack|unavailable|rawtarget|spacing|stale|initialseq|faultflags|idle|injectmask|injectdelay|window|started_ms|finished_ms|sequence|fixed_status|rotating_status|fixed_state|rotating_state|fixed_dump_path|rotating_dump_path|fixed_p10_1_dump_path|rotating_p10_1_dump_path|fixed_p10_1r_dump_path|rotating_p10_1r_dump_path|injection_applied|injection_readback|injection_timestamp_ms|injection_sender|injection_preconditions_verified|injection_pre_outstanding|injection_pre_target_scheduled|injection_pre_target_physical_tx|injection_pre_dropped_ack|injection_pre_migration_count|injection_initial_sequence|injection_pre_ack_base|injection_baseline_physical_ack_good|injection_pre_physical_ack_good|injection_post_write_ack_base|injection_baseline_target_crc_bad|injection_pre_target_crc_bad"
 flush $p10_observation_handle
 set p10_telemetry_file [file join $p10_dump_dir p10_1r_telemetry.psv]
 set p10_telemetry_handle [open $p10_telemetry_file w]
