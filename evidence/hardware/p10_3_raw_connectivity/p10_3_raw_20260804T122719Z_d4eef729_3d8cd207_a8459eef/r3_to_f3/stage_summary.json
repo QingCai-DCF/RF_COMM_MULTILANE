@@ -1,0 +1,190 @@
+{
+  "case_results": {
+    "lane3_R3_to_F3_raw_1024": {
+      "command": 2,
+      "requested_raw_pulses": 1024,
+      "status": "NOT_RUN"
+    },
+    "lane3_R3_to_F3_raw_64": {
+      "command": 2,
+      "errors": [
+        "lane3_R3_to_F3_raw_64:fixed:mailbox terminal mismatch",
+        "lane3_R3_to_F3_raw_64: remote raw count 0 outside 64..72",
+        "lane3_R3_to_F3_raw_64: endpoint command did not finish cleanly"
+      ],
+      "fixed_command_status": 14,
+      "fixed_mailbox": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/dumps/lane3_R3_to_F3_raw_64.fixed.bin",
+      "fixed_service_state": 5,
+      "fixed_snapshot": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/dumps/lane3_R3_to_F3_raw_64.fixed.p10_2.psv",
+      "receiver_allowed_raw_count_max": 72,
+      "receiver_allowed_raw_count_min": 64,
+      "receiver_module": "F3",
+      "receiver_raw_rx_count": 0,
+      "receiver_role": "fixed",
+      "requested_raw_pulses": 64,
+      "rolling_duty_high_max_cycles": 504,
+      "rotating_command_status": 0,
+      "rotating_mailbox": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/dumps/lane3_R3_to_F3_raw_64.rotating.bin",
+      "rotating_service_state": 4,
+      "rotating_snapshot": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/dumps/lane3_R3_to_F3_raw_64.rotating.p10_2.psv",
+      "sender_module": "R3",
+      "sender_physical_tx_count": 64,
+      "sender_role": "rotating",
+      "status": "FAIL",
+      "tx_high_max_cycles": 8
+    },
+    "lane3_r3_to_f3_receive_only_5000ms": {
+      "command": 11,
+      "errors": [],
+      "fixed_command_status": 0,
+      "fixed_mailbox": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/dumps/lane3_r3_to_f3_receive_only_5000ms.fixed.bin",
+      "fixed_service_state": 4,
+      "fixed_snapshot": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/dumps/lane3_r3_to_f3_receive_only_5000ms.fixed.p10_2.psv",
+      "requested_raw_pulses": 0,
+      "rotating_command_status": 0,
+      "rotating_mailbox": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/dumps/lane3_r3_to_f3_receive_only_5000ms.rotating.bin",
+      "rotating_service_state": 4,
+      "rotating_snapshot": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/dumps/lane3_r3_to_f3_receive_only_5000ms.rotating.p10_2.psv",
+      "status": "PASS"
+    }
+  },
+  "direction": "R3_TO_F3",
+  "endpoint_shutdown_command": "NOT_CONFIRMED",
+  "errors": [
+    "successful XSDB process did not execute the exact plan",
+    "successful XSDB process lacks one final endpoint shutdown",
+    "successful XSDB process lacks stage PASS marker",
+    "lane3_R3_to_F3_raw_64:fixed:mailbox terminal mismatch",
+    "lane3_R3_to_F3_raw_64: remote raw count 0 outside 64..72",
+    "lane3_R3_to_F3_raw_64: endpoint command did not finish cleanly",
+    "endpoint shutdown command not evidenced"
+  ],
+  "evidence_class": "RAW_PHYSICAL_ONLY",
+  "generated_at_utc": "2026-08-04T12:30:57+00:00",
+  "lane": 3,
+  "lane_mask": "0x8",
+  "markers": {
+    "P10_CANDIDATE_PROGRAMMED_FIXED": "1",
+    "P10_CANDIDATE_PROGRAMMED_ROTATING": "1",
+    "P10_CASE_PASS": "lane3_r3_to_f3_receive_only_5000ms",
+    "P10_ENDPOINT_SHUTDOWN_REQUESTED_ON_ERROR": "1",
+    "P10_INITIAL_READY_DUMP_FIXED": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/dumps/P10_3-LANE3_RAW_RETEST_ready.fixed.bin",
+    "P10_INITIAL_READY_DUMP_ROTATING": "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_3/evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/dumps/P10_3-LANE3_RAW_RETEST_ready.rotating.bin",
+    "P10_PAIRED_LAUNCH": "lane3_R3_to_F3_raw_64:receiver=fixed,sender=rotating",
+    "P10_PS7_INITIALIZED_FIXED": "1",
+    "P10_PS7_INITIALIZED_ROTATING": "1",
+    "P10_PS_ELF_DOWNLOADED_FIXED": "1",
+    "P10_PS_ELF_DOWNLOADED_ROTATING": "1",
+    "P10_SAFE_BOOT": "PASS",
+    "P10_SAFE_STATE_FIXED_PREBOOT": "id:0x5031305A,build:0x50333446,profile:0x702004F0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SAFE_STATE_FIXED_SAFE_BOOT": "id:0x5031305A,build:0x50333446,profile:0x702004F0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SAFE_STATE_ROTATING_PREBOOT": "id:0x5031305A,build:0x50333452,profile:0x702004A0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SAFE_STATE_ROTATING_SAFE_BOOT": "id:0x5031305A,build:0x50333452,profile:0x702004A0,status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0",
+    "P10_SERVICE_READY_FIXED": "initial_boot",
+    "P10_SERVICE_READY_ROTATING": "initial_boot",
+    "P10_XSDB_DEBUG_DISCOVERY_ATTEMPTS": "1",
+    "P10_XSDB_DEBUG_DISCOVERY_ELAPSED_MS": "2",
+    "P10_XSDB_EXPECTED_BUILD_FIXED": "0x50333446",
+    "P10_XSDB_EXPECTED_BUILD_ROTATING": "0x50333452",
+    "P10_XSDB_FIXED_SERIAL": "210249855178",
+    "P10_XSDB_FIXED_TARGETS": "APU:5,CPU0:6,FPGA:8",
+    "P10_XSDB_IDENTITY": "PASS",
+    "P10_XSDB_ROTATING_SERIAL": "210512180081",
+    "P10_XSDB_ROTATING_TARGETS": "APU:1,CPU0:2,FPGA:4",
+    "P10_XSDB_RUN_ID": "p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef",
+    "P10_XSDB_STAGE": "P10_3-LANE3_RAW_RETEST",
+    "P10_XSDB_STAGE_ERROR": "P10 paired result mismatch label_lane3_R3_to_F3_raw_64 expected_status_0 fixed_14/5 rotating_0/4",
+    "P10_XSDB_STAGE_RESULT": "FAIL"
+  },
+  "module_binding": {
+    "F3": "B0020",
+    "R3": "B0017"
+  },
+  "observation_count": 2,
+  "process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\scripts\\hw\\p10_dual_xsdb_stage.tcl",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\artifacts\\p10_3\\d4eef729e91c60fc7a72fa68c95fcd4a569fcffc\\3d8cd20747f311c9467f4269bc7b10d7d16ffaeca4e5d888a15a8e883dbf5bcd\\p10_ax7020_fixed_functional.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\artifacts\\p10_3\\d4eef729e91c60fc7a72fa68c95fcd4a569fcffc\\a8459eeff9df4373f80112e5cc5892864900eeb95afd6a5bb949008d52262846\\p10_ax7020_rotating_functional.bit",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\artifacts\\p10_3\\d4eef729e91c60fc7a72fa68c95fcd4a569fcffc\\f4c9bd6fa8ae8bbbad3a927f19759c8605c253258613d72271c8aa202e27fa3a\\p10_fixed_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\artifacts\\p10_3\\d4eef729e91c60fc7a72fa68c95fcd4a569fcffc\\fd2edb95306323e4c8796368d3425487994e7471b115b8543d20053f10d6f01a\\p10_rotating_runtime.elf",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3_raw_connectivity\\p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef\\artifacts\\fixed\\ps7_init.tcl",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3_raw_connectivity\\p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef\\artifacts\\rotating\\ps7_init.tcl",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3_raw_connectivity\\p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef\\r3_to_f3\\r3_to_f3.plan",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3_raw_connectivity\\p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef\\r3_to_f3\\dumps",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3_raw_connectivity\\p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef\\authorization\\ABORT_NOW.txt",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\evidence\\hardware\\p10_3_raw_connectivity\\p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef\\r3_to_f3\\xsdb.result.txt",
+      "P10_3-LANE3_RAW_RETEST",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_3\\config\\p10_3_lane3_b0020_raw_retest_current_run_authorization.json",
+      "p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef",
+      "0x50333446",
+      "0x50333452"
+    ],
+    "elapsed_seconds": 62.978967000031844,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/xsdb.stderr.log",
+    "stdout": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/r3_to_f3/xsdb.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 600
+  },
+  "receive_only_status": "PASS",
+  "safety_observations": [
+    {
+      "fixed_lane3": {
+        "duty_current": 0,
+        "duty_headroom": 11520,
+        "duty_high_max": 0,
+        "hard_fault": 0,
+        "physical_tx": 0,
+        "raw_rx": 0,
+        "target_throttle": 0,
+        "tx_high_max": 0
+      },
+      "fixed_safety_fault_mask": 0,
+      "label": "lane3_r3_to_f3_receive_only_5000ms",
+      "rotating_lane3": {
+        "duty_current": 0,
+        "duty_headroom": 11520,
+        "duty_high_max": 0,
+        "hard_fault": 0,
+        "physical_tx": 0,
+        "raw_rx": 0,
+        "target_throttle": 0,
+        "tx_high_max": 0
+      },
+      "rotating_safety_fault_mask": 0
+    },
+    {
+      "fixed_lane3": {
+        "duty_current": 0,
+        "duty_headroom": 11520,
+        "duty_high_max": 0,
+        "hard_fault": 0,
+        "physical_tx": 0,
+        "raw_rx": 0,
+        "target_throttle": 0,
+        "tx_high_max": 0
+      },
+      "fixed_safety_fault_mask": 0,
+      "label": "lane3_R3_to_F3_raw_64",
+      "rotating_lane3": {
+        "duty_current": 0,
+        "duty_headroom": 11520,
+        "duty_high_max": 504,
+        "hard_fault": 0,
+        "physical_tx": 64,
+        "raw_rx": 0,
+        "target_throttle": 0,
+        "tx_high_max": 8
+      },
+      "rotating_safety_fault_mask": 0
+    }
+  ],
+  "schema_version": 1,
+  "status": "FAIL",
+  "test_id": "P10_3-HW-LANE3-RAW-R3_TO_F3"
+}

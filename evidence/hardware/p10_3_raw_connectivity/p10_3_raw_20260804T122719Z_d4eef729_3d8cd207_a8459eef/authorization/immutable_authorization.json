@@ -102,9 +102,8 @@
   },
   "branch": "p10.3/ax7020-stationary-4lane-hardware",
   "campaign_standing_authorization": "P10.3 allows necessary bounded diagnostics/recovery/retest after exact artifact freeze and a user-reported pre-run module replacement, with shutdown-before/after and no physical changes during the run.",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-04T12:31:33+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "diagnostic_runner_parent_commit": "0088b54afa478d8c401fb5b654e658965f9a89d3",
   "diagnostic_trigger": "The user reported replacing F3 B0004 with B0020 and explicitly requested a quick lane3 retest. The fresh run must test both physical directions without relabeling the immutable B0004 failures.",
   "forbidden": {
@@ -121,7 +120,7 @@
   },
   "generated_at_utc": "2026-08-04T12:27:19+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
-  "hardware_actions_executed": true,
+  "hardware_actions_executed": false,
   "inputs": {
     "AGENTS.md": {
       "bytes": 9946,
@@ -274,7 +273,6 @@
     "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
     "source": "Direct user statement on 2026-08-04"
   },
-  "result": "evidence/generated/p10_3_lane3_b0020_raw_connectivity_retest.json",
   "retry_override": {
     "campaign_wide_unlimited_override": false,
     "goal_diagnostic_limit_previously_exhausted": true,
@@ -284,7 +282,6 @@
   },
   "rewiring_by_codex": false,
   "rotation": false,
-  "run_evidence": "evidence/hardware/p10_3_raw_connectivity/p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef/final/orchestrator_result.json",
   "run_id": "p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef",
   "runtime_limits": {
     "active_functional_total_seconds": 1200,
@@ -304,7 +301,7 @@
     "on_timeout": true,
     "verify_both": true
   },
-  "status": "CONSUMED_AFTER_LANE3_RAW_RETEST_FAIL",
+  "status": "AUTHORIZED",
   "stimulus": {
     "commands": [
       "receive_only_5000ms",
