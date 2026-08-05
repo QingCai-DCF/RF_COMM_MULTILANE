@@ -1,0 +1,101 @@
+{
+  "artifact_source_commit": "7fc3a7cb03f9ee19793403f9f1deaef139b11d7d",
+  "artifacts": {
+    "fixed": {
+      "bsp_sha256": "330ebffd7de59df6fa6e6c20e39187885b521a73fba7d85697ed13e81a388600",
+      "elf_sha256": "7ea3542ac346eb567371cd7635ebcb597f10df7b51b756e76ab57e9e03077b40",
+      "functional_bitstream_sha256": "1ff0885f89674557144e6c41bf40ef05bb56c8ef85f1b8bd16ef0fc8e8c3b724",
+      "shutdown_bitstream_sha256": "df394f8a5d4eb68613749df78af43dab7705e87b3cbf091db8f69dd33cce251c",
+      "xsa_sha256": "86945089f69cbb2b25dd6d71f08a7f6b6b699f9e7619dba70686f1e612379460"
+    },
+    "rotating": {
+      "bsp_sha256": "83e74bd963c23a639fd5dfb28d554e83264b79272ab1c4da4883a98216d586e0",
+      "elf_sha256": "c21f8c9c0d88783b1163d3c20c17ac49ff7b2463511abf9ddf3889f3152d1f7d",
+      "functional_bitstream_sha256": "82ef5093e7f1de7676ad2fff26dae55a60a869c39e16f327b9db826f87cf0830",
+      "shutdown_bitstream_sha256": "1fc058e1b83f5ef9d0a4a37090515301559c9e81f218b4de218577542d8fefa0",
+      "xsa_sha256": "328015e208f43db1faeb7a9272619a970c4ca895b73a6b817ead253f98af434d"
+    }
+  },
+  "authorization": {
+    "consumed": true,
+    "current_run_hardware_authorization": false,
+    "path": "config/p10_3f_full_current_run_hardware_authorization.json",
+    "sha256": "01645957a1d1a734af67075ee11197a94d8d4541156ba232c676e45620be6acf",
+    "status": "CONSUMED_AFTER_P10_3F_FULL_PASS"
+  },
+  "boards": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "branch": "p10.3/ax7020-stationary-4lane-hardware",
+  "closeout": {
+    "hardware_actions_executed": false,
+    "planned_annotated_tag": "p10.3-ax7020-stationary-4lane-closed",
+    "source_head": "e647f066bbba8b36660e5f0bc43c79adc872c4c0",
+    "source_tree": "9c1d0b72ea7f3964d1464a59d900f39f9a4af38b"
+  },
+  "evidence": {
+    "consistency_path": "evidence/generated/p10_3_evidence_consistency.json",
+    "consistency_sha256": "da7808f8d2682bc1b7e957d52fa88b90422127acfa66d52a29cd6c0f9c04f23c",
+    "direct_observation_count": 457,
+    "manifest_file_count": 3900,
+    "manifest_path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json",
+    "manifest_sha256": "ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1"
+  },
+  "evidence_commit": "e64c04843d5d996f8d66d650fafaf3a43a2dd7dc",
+  "external_four_lane_power_acceptance": "PENDING_NOT_IN_SCOPE",
+  "external_tfdu_duty_acceptance": "PENDING_NOT_IN_SCOPE",
+  "formal": {
+    "committed_bytes_f_to_r": 921698304,
+    "committed_bytes_r_to_f": 926941184,
+    "runtime_seconds": 1800.011
+  },
+  "generated_at_utc": "2026-08-05T09:29:27.775Z",
+  "hardware_campaign_status": "PASS",
+  "host_source_commit": "e356dd9216da528af0a21d39a0eced9b4e96ee1e",
+  "module_inventory": {
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0001",
+    "F3": "B0020",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0023",
+    "R3": "B0025",
+    "path": "config/hardware/tfdu_module_inventory.yaml",
+    "sha256": "85d915625b2f43fc5640f15a91b7ec1587615261bccb68568b22173d6ed21f6b"
+  },
+  "p10_3_final_checkpoint_commit": "e647f066bbba8b36660e5f0bc43c79adc872c4c0",
+  "pass_tag": {
+    "annotated_tag_object": "a5173ce33c3f2770f0d8b1b20505665e83390f50",
+    "immutable_verified": true,
+    "name": "p10.3-ax7020-stationary-4lane-pass",
+    "peeled_target": "e647f066bbba8b36660e5f0bc43c79adc872c4c0",
+    "type": "tag"
+  },
+  "run_id": "p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093",
+  "schema_version": 1,
+  "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_CLOSEOUT",
+  "scope_non_promotions": [
+    "EXTERNAL_POWER",
+    "EXTERNAL_TFDU_DUTY",
+    "P11",
+    "8X32",
+    "600_RPM",
+    "PRODUCT_FINAL"
+  ],
+  "shutdown": {
+    "fixed": "PASS",
+    "path": "evidence/generated/p10_3_shutdown.json",
+    "rotating": "PASS",
+    "sha256": "228ac3d3e034e6b64431ef9d10298edc4a52b8ddb5f86fe92fb7fcafe2e9a01f"
+  },
+  "stage_count": 23,
+  "stage_pass_count": 23,
+  "status": "PASS",
+  "test_id": "P10_4-P10_3-CLOSEOUT",
+  "wiring": {
+    "path": "config/hardware/p10_3_actual_wiring.yaml",
+    "sha256": "551f518f476deaa9219b826f2985d08baab5e953d92a4f734bb28ba6613bf2a1"
+  }
+}
