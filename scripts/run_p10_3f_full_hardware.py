@@ -1740,6 +1740,25 @@ def controlled_service_reset_shutdown_errors(path: Path) -> list[str]:
     return errors
 
 
+def controlled_service_reset_recovered_safe_errors(
+    markers: dict[str, str],
+) -> list[str]:
+    """Require both recovered-safe markers in the canonical marker grammar."""
+    errors: list[str] = []
+    for role in ("FIXED", "ROTATING"):
+        marker = markers.get(
+            f"P10_SAFE_STATE_{role}_STREAM_SERVICE_RESET_RECEIVER_RECOVERED", ""
+        )
+        for token in (
+            "status:0x00000002", "phy:0x00000000", "physical_tx:0,0,0,0"
+        ):
+            if token not in marker:
+                errors.append(
+                    f"controlled service-reset recovered-safe marker mismatch: {role}:{token}"
+                )
+    return errors
+
+
 def controlled_service_reset_errors(
     markers: dict[str, str],
     forensic_summary: dict[str, Any],
@@ -1767,17 +1786,7 @@ def controlled_service_reset_errors(
     for name, prefix in expected_prefixes.items():
         if not markers.get(name, "").startswith(prefix):
             errors.append(f"controlled service-reset reboot marker mismatch: {name}")
-    for role in ("FIXED", "ROTATING"):
-        marker = markers.get(
-            f"P10_SAFE_STATE_{role}_stream_service_reset_receiver_RECOVERED", ""
-        )
-        for token in (
-            "status:0x00000002", "phy:0x00000000", "physical_tx:0,0,0,0"
-        ):
-            if token not in marker:
-                errors.append(
-                    f"controlled service-reset recovered-safe marker mismatch: {role}:{token}"
-                )
+    errors.extend(controlled_service_reset_recovered_safe_errors(markers))
     if len(details) != 1:
         errors.append("controlled service-reset observation count mismatch")
         return errors

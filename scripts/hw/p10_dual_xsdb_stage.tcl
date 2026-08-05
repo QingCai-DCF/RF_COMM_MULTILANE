@@ -1348,8 +1348,11 @@ proc p10_execute_ps_service_reset {label reset_role direction lane size object_i
   p10_reboot_role $peer "${label}_peer_recovery_reboot"
   global p10_expected_build
   global p10_expected_profile
-  p10_verify_pl_safe fixed $p10_expected_build(fixed) $p10_expected_profile(fixed) "${label}_RECOVERED"
-  p10_verify_pl_safe rotating $p10_expected_build(rotating) $p10_expected_profile(rotating) "${label}_RECOVERED"
+  # Marker keys are a machine-readable interface and must remain inside the
+  # canonical [A-Z0-9_]+ grammar accepted by the host evidence parser.
+  set recovered_marker_label [string toupper "${label}_RECOVERED"]
+  p10_verify_pl_safe fixed $p10_expected_build(fixed) $p10_expected_profile(fixed) $recovered_marker_label
+  p10_verify_pl_safe rotating $p10_expected_build(rotating) $p10_expected_profile(rotating) $recovered_marker_label
   set finished [clock milliseconds]
   p10_record_observation $d $sequence $started $finished $fixed_dump \
       $rotating_dump $fixed_p101 $rotating_p101 $fixed_p10_1r \

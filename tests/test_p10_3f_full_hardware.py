@@ -391,6 +391,10 @@ class P103FFullHardwareTests(unittest.TestCase):
             body.index("global p10_max_lane_mask p10_dump_dir"),
             body.index("$p10_dump_dir"),
         )
+        self.assertIn(
+            'set recovered_marker_label [string toupper "${label}_RECOVERED"]',
+            body,
+        )
         self.assertIn("P10_3F_SERVICE_RESET_SHUTDOWN_BEFORE_PS_RESET=PASS", body)
         self.assertIn("service_reset_shutdown.psv", body)
         self.assertLess(
@@ -471,6 +475,40 @@ class P103FFullHardwareTests(unittest.TestCase):
                 "physical TX advanced" in error
                 for error in runner.controlled_service_reset_shutdown_errors(direct)
             ))
+
+    def test_service_reset_recovered_markers_survive_canonical_parser(self) -> None:
+        safe = (
+            "id:0x5031305A,build:0x50334646,profile:0x702004F0,"
+            "status:0x00000002,phy:0x00000000,physical_tx:0,0,0,0"
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            result = Path(directory) / "xsdb.result.txt"
+            result.write_text(
+                "P10_SAFE_STATE_FIXED_STREAM_SERVICE_RESET_RECEIVER_RECOVERED="
+                f"{safe}\n"
+                "P10_SAFE_STATE_ROTATING_STREAM_SERVICE_RESET_RECEIVER_RECOVERED="
+                f"{safe}\n",
+                encoding="ascii",
+                newline="\n",
+            )
+            markers = runner.parse_markers(result)
+            self.assertEqual(
+                runner.controlled_service_reset_recovered_safe_errors(markers), []
+            )
+            result.write_text(
+                "P10_SAFE_STATE_FIXED_stream_service_reset_receiver_RECOVERED="
+                f"{safe}\n"
+                "P10_SAFE_STATE_ROTATING_stream_service_reset_receiver_RECOVERED="
+                f"{safe}\n",
+                encoding="ascii",
+                newline="\n",
+            )
+            rejected = runner.parse_markers(result)
+            self.assertEqual(rejected, {})
+            self.assertEqual(
+                len(runner.controlled_service_reset_recovered_safe_errors(rejected)),
+                6,
+            )
 
     def test_custom_observation_shape_is_exact_and_bounded(self) -> None:
         plan = runner.build_plans()["staircase_1k"]
