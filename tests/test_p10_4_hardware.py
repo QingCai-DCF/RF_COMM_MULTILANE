@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 import sys
 import unittest
 import re
@@ -106,6 +108,59 @@ class P104PlanTests(unittest.TestCase):
             elif row[0] == "P104_CONFIG":
                 self.assertEqual(int(row[6]), 32)
                 self.assertEqual(int(row[7]), 32)
+
+    def test_window_timing_separates_terminal_activity_from_evidence_latency(self) -> None:
+        tcl = p10.STAGE_TCL.read_text(encoding="utf-8")
+        execute = tcl[
+            tcl.index("proc p10_execute_case"):
+            tcl.index("proc p10_p101_case")
+        ]
+        window = tcl[
+            tcl.index("proc p10ff_run_bounded_window"):
+            tcl.index("proc p10ff_run_formal")
+        ]
+        self.assertIn(
+            "set p10_last_case_active_elapsed_ms [expr {", execute
+        )
+        self.assertLess(
+            execute.index("set p10_last_case_active_elapsed_ms [expr {"),
+            execute.index("set fixed_dump [p10_dump_mailbox"),
+        )
+        self.assertIn(
+            "incr active_ms $p10_last_case_active_elapsed_ms", window
+        )
+        self.assertIn("p10ff_assert_safety $case_label", window)
+        self.assertLess(
+            window.index("p10ff_assert_safety $case_label"),
+            window.index("set observed_finished [clock milliseconds]"),
+        )
+        self.assertIn(
+            "$observation_overrun_ms > $p10ff_observation_overrun_limit_ms",
+            window,
+        )
+        self.assertIn("observation_overrun_ms:$observation_overrun_ms", window)
+        self.assertIn("set p10ff_observation_overrun_limit_ms 15000", tcl)
+        self.assertIn(
+            'error "P10.3F post-terminal observation overrun exceeded bound"',
+            window,
+        )
+
+    def test_frozen_model_check_retains_ancestor_provenance(self) -> None:
+        environment = {
+            **os.environ,
+            "NO_HARDWARE": "1",
+            "CURRENT_RUN_HARDWARE_AUTHORIZATION": "false",
+        }
+        result = subprocess.run(
+            [sys.executable, "scripts/model_p10_4.py", "--check"],
+            cwd=ROOT,
+            env=environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
 
     def test_runtime_flag_bits_are_unique_and_local_pl_reset_is_bit_26(self) -> None:
         protocol = (

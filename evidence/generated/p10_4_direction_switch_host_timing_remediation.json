@@ -1,0 +1,45 @@
+{
+  "artifact_bundle_changed": false,
+  "classification": "HOST_JTAG_POST_TERMINAL_EVIDENCE_CAPTURE_LATENCY",
+  "current_run_hardware_authorization": false,
+  "evidence": {
+    "archive_checkpoint": "267a625f31c2f75a0245683411b9c5919d0b46ed",
+    "direction_switch_stage_summary_sha256": "c09595089dead46c7060456da339576f923d869e6a56eb302c6eb1ea1384fdd5",
+    "final_orchestrator_result_sha256": "91afa5ce922e5d83bfe7c701486b01e5b1772765aaeb1b283416f4b725801ec9",
+    "run_evidence_manifest_sha256": "3142c3da8a76ba8306402172be6ace7f00a928981f45b02f7c943979cbbb8ed5",
+    "xsdb_result_sha256": "c9066f9cec744550a134067ea2c272667620937f118b47323761fd492be119e8"
+  },
+  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "hardware_actions_executed": false,
+  "host_observation_overrun_limit_ms": 15000,
+  "offline_gates": {
+    "forensic_tcl_selftest": "PASS",
+    "model_reconciliation_check": "PASS",
+    "no_hardware_static": "PASS",
+    "p10_1r_baseline": "PASS",
+    "p10_2_baseline": "PASS",
+    "p10_3_baseline": "PASS",
+    "p10_3f_runner_unit_23": "PASS",
+    "p10_4_runner_unit_11": "PASS",
+    "p10_frozen_baseline": "PASS",
+    "p8a_state_requirements": "PASS",
+    "p8c_safety": "PASS",
+    "register_map_verify": "PASS",
+    "requirement_traceability": "PASS",
+    "tcl_completeness": "PASS"
+  },
+  "prior_run_id": "p10_4_20260805T125932Z_a32afe5b_6f915067_ace48b07",
+  "prior_run_status_preserved": "PARTIAL",
+  "remediation": {
+    "active_interval_ends_at_endpoint_terminal": true,
+    "complete_post_terminal_evidence_capture_preserved": true,
+    "no_new_case_after_scheduled_deadline": true,
+    "overrun_beyond_limit_fails_closed": true,
+    "safety_gate_precedes_overrun_acceptance": true
+  },
+  "schema_version": 1,
+  "shutdown_fixed": "PASS",
+  "shutdown_rotating": "PASS",
+  "status": "PASS",
+  "test_id": "P10_4-DIR-HOST-TIMING-REMEDIATION"
+}

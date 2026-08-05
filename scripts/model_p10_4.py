@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
@@ -26,6 +27,30 @@ def main() -> int:
         "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false"
     ).lower() != "false":
         raise SystemExit("P10_4_MODEL_REFUSED=OFFLINE_ENVIRONMENT_REQUIRED")
+
+    frozen_existing = None
+    source_commit = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+    ).strip()
+    if args.check:
+        if not JSON_OUT.is_file():
+            return 1
+        frozen_existing = json.loads(JSON_OUT.read_text(encoding="utf-8"))
+        frozen_source = frozen_existing.get("source_commit")
+        if not isinstance(frozen_source, str) or re.fullmatch(
+            r"[0-9a-f]{40}", frozen_source
+        ) is None:
+            return 1
+        if subprocess.run(
+            ["git", "merge-base", "--is-ancestor", frozen_source, "HEAD"],
+            cwd=ROOT,
+            check=False,
+        ).returncode != 0:
+            return 1
+        # A frozen model remains bound to the commit that produced it.  A
+        # descendant host-runner/evidence change must not rewrite that
+        # provenance merely to perform a semantic --check.
+        source_commit = frozen_source
 
     inputs = PerformanceInputs(lane_count=4)
     physical = performance_model(inputs)
@@ -91,9 +116,7 @@ def main() -> int:
         "test_id": "P10_4-MODEL-001-OFFLINE",
         "status": status,
         "scope": "P10_4_OFFLINE_MODEL_NOT_HARDWARE_EVIDENCE",
-        "source_commit": subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-        ).strip(),
+        "source_commit": source_commit,
         "hardware_actions_executed": False,
         "current_run_hardware_authorization": False,
         "ceilings": ceilings,
@@ -111,9 +134,8 @@ def main() -> int:
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
     }
     if args.check:
-        if not JSON_OUT.is_file():
-            return 1
-        existing = json.loads(JSON_OUT.read_text(encoding="utf-8"))
+        assert frozen_existing is not None
+        existing = frozen_existing
         existing.pop("generated_at_utc", None)
         payload.pop("generated_at_utc", None)
         return 0 if existing == payload else 1

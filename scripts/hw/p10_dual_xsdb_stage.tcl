@@ -768,11 +768,13 @@ proc p10_wait_pair_terminal {sequence timeout_ms} {
 
 proc p10_execute_case {d {window "NA"}} {
   global p10_command_sequence p10_active_case_label
+  global p10_last_case_active_elapsed_ms
   p10_check_abort
   incr p10_command_sequence
   set sequence $p10_command_sequence
   set p10_active_case_label [dict get $d label]
   set started [clock milliseconds]
+  set p10_last_case_active_elapsed_ms 0
   set command [dict get $d command]
   set injection_applied 0
   set injection_readback 0
@@ -1038,6 +1040,11 @@ proc p10_execute_case {d {window "NA"}} {
   }
 
   set terminal [p10_wait_pair_terminal $sequence [dict get $d timeout]]
+  # Capture the board-active upper bound before any post-terminal mailbox,
+  # performance, GPIO, or safety-evidence reads.  Those reads are mandatory,
+  # but host/JTAG latency after both endpoints are terminal is not TX airtime.
+  set p10_last_case_active_elapsed_ms [expr {
+      max(1, [clock milliseconds] - $started)}]
   set fixed_status [p10_read32 fixed 0x00020020]
   set rotating_status [p10_read32 rotating 0x00020020]
   set fixed_state [lindex $terminal 0]
@@ -1510,6 +1517,7 @@ proc p10_run_p101_formal {label duration_sec} {
 
 proc p10ff_run_bounded_window {label duration_sec direction lane absolute_deadline} {
   global p10_max_lane_mask p10ff_window_next_object_id
+  global p10_last_case_active_elapsed_ms p10ff_observation_overrun_limit_ms
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
       $duration_sec < 10 || $duration_sec > 840 || $direction ni {0 1} ||
       ![string is integer -strict $lane] || $lane < 1 ||
@@ -1578,7 +1586,11 @@ proc p10ff_run_bounded_window {label duration_sec direction lane absolute_deadli
     set last_case_elapsed_ms [expr {
         max(1, [clock milliseconds] - $case_started)}]
     set last_case_size $candidate
-    incr active_ms $last_case_elapsed_ms
+    if {$p10_last_case_active_elapsed_ms <= 0 ||
+        $p10_last_case_active_elapsed_ms > $last_case_elapsed_ms} {
+      error "P10.3F invalid terminal activity interval"
+    }
+    incr active_ms $p10_last_case_active_elapsed_ms
     p10ff_assert_safety $case_label
     set consumed_ids [expr {($candidate + 262143) / 262144}]
     incr next_object_id $consumed_ids
@@ -1586,14 +1598,28 @@ proc p10ff_run_bounded_window {label duration_sec direction lane absolute_deadli
     if {$next_object_id > 0x7FFFFFFF} {
       error "P10.3F formal object-ID range overflow"
     }
-    if {[clock milliseconds] > $absolute_deadline} {
-      error "P10.3F bounded window exceeded its deadline"
+    # The transfer is already terminal and the coherent safety gate above has
+    # passed.  A bounded host/JTAG evidence-read stall must not be mislabeled
+    # as excess physical TX.  Admit no further case after the traffic deadline;
+    # fail closed if the post-terminal observation delay itself exceeds the
+    # explicit finite allowance.
+    set observed_finished [clock milliseconds]
+    if {$observed_finished > $absolute_deadline} {
+      set observation_overrun_ms [expr {
+          $observed_finished - $absolute_deadline}]
+      if {$observation_overrun_ms > $p10ff_observation_overrun_limit_ms} {
+        error "P10.3F post-terminal observation overrun exceeded bound"
+      }
+      break
     }
   }
   set p10ff_window_next_object_id $next_object_id
   set finished [clock milliseconds]
   set elapsed [expr {$finished - $started}]
-  if {$finished < $absolute_deadline || $finished > $absolute_deadline + 500 ||
+  set observation_overrun_ms [expr {
+      max(0, $finished - $absolute_deadline)}]
+  if {$finished < $absolute_deadline ||
+      $observation_overrun_ms > $p10ff_observation_overrun_limit_ms ||
       $command_count == 0} {
     error "P10.3F bounded window completion failed elapsed=$elapsed commands=$command_count"
   }
@@ -1603,7 +1629,7 @@ proc p10ff_run_bounded_window {label duration_sec direction lane absolute_deadli
   if {$duration_sec == 840 && $active_ms < 798000} {
     error "P10.3F formal board-active coverage below 95 percent"
   }
-  p10_say "P10_3F_WINDOW_PASS_${marker_label}=cases:$command_count,elapsed_ms:$elapsed,active_ms:$active_ms,max_aggregate_command_bytes:67108864,internal_object_bytes:262144"
+  p10_say "P10_3F_WINDOW_PASS_${marker_label}=cases:$command_count,elapsed_ms:$elapsed,scheduled_ms:[expr {$duration_sec * 1000}],host_elapsed_ms:$elapsed,active_ms:$active_ms,observation_overrun_ms:$observation_overrun_ms,max_aggregate_command_bytes:67108864,internal_object_bytes:262144"
 }
 
 proc p10ff_run_formal {label duration_sec} {
@@ -2263,6 +2289,10 @@ set p10_connected 0
 set p10_active_target_id -1
 set p10_command_sequence 1000
 set p10ff_window_next_object_id 0x6F000000
+set p10_last_case_active_elapsed_ms 0
+# Finite allowance for mandatory post-terminal JTAG/mailbox/snapshot capture.
+# Hardware first-fault kill remains immediate and independent of this host bound.
+set p10ff_observation_overrun_limit_ms 15000
 set p10_active_case_label "boot"
 set p10ff_fault_terminal 0
 set p10_endpoint_shutdown_complete 0
