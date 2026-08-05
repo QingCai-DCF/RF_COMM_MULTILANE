@@ -178,6 +178,60 @@ class P103FFullHardwareTests(unittest.TestCase):
         self.assertIn("$lane < 1", tcl)
         self.assertIn("set next_object_id $p10ff_window_next_object_id", tcl)
 
+    def test_sustained_ps_led_gate_accepts_periodic_activity_after_edge_race(self) -> None:
+        off = (1 << 0) | (1 << 13)
+        rows = [
+            {
+                "label": "stream64_f2r_1_active", "role": "fixed",
+                "data_ro": off,
+            },
+            {
+                "label": "stream64_f2r_1_active", "role": "rotating",
+                "data_ro": off,
+            },
+            {
+                "label": "stream64_f2r_1", "role": "fixed",
+                "data_ro": off & ~(1 << 0),
+            },
+            {
+                "label": "stream64_f2r_1", "role": "rotating",
+                "data_ro": off & ~(1 << 13),
+            },
+            {
+                "label": "stream64_f2r_1_terminal", "role": "fixed",
+                "data_ro": off,
+            },
+        ]
+        evidence = runner.summarize_ps_gpio_activity(
+            rows, {"stream64_f2r_1"}, "fixed", "rotating"
+        )
+        self.assertEqual(evidence["sample_count"], 4)
+        self.assertEqual(evidence["sender_tx_active_samples"], 1)
+        self.assertEqual(evidence["receiver_rx_active_samples"], 1)
+
+    def test_sustained_ps_led_gate_does_not_accept_terminal_or_other_case(self) -> None:
+        off = (1 << 0) | (1 << 13)
+        rows = [
+            {
+                "label": "stream64_f2r_1_active", "role": "fixed",
+                "data_ro": off,
+            },
+            {
+                "label": "stream64_f2r_1_terminal", "role": "fixed",
+                "data_ro": off & ~(1 << 0),
+            },
+            {
+                "label": "stream64_f2r_2", "role": "rotating",
+                "data_ro": off & ~(1 << 13),
+            },
+        ]
+        evidence = runner.summarize_ps_gpio_activity(
+            rows, {"stream64_f2r_1"}, "fixed", "rotating"
+        )
+        self.assertEqual(evidence["sample_count"], 1)
+        self.assertEqual(evidence["sender_tx_active_samples"], 0)
+        self.assertEqual(evidence["receiver_rx_active_samples"], 0)
+
     def test_controlled_fault_kills_before_forensic_archive_and_shutdown_reprogram(self) -> None:
         plans = runner.build_plans()
         self.assertIn(

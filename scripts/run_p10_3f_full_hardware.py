@@ -1720,28 +1720,38 @@ def evaluate_custom_stage(
         gpio_rows, gpio_errors = base.load_ps_gpio(stage_dir)
         errors.extend(gpio_errors)
         # Short 1/4/16-KiB commands can legitimately finish between the mailbox
-        # ACTIVE read and the following JTAG GPIO read.  Require direct active
-        # LED readback only in the sustained stages, where missing the state is
-        # not explainable by that sampling race.  Every stage still proves the
-        # GPIO direction/OE plus safe-boot and endpoint-shutdown OFF states.
+        # ACTIVE read and the following JTAG GPIO read.  Require direct LED
+        # readback only in sustained stages.  The first ``*_active`` sample is
+        # taken when either endpoint enters RUNNING; descriptor activity on the
+        # actual sender/receiver can begin just after that read.  Therefore the
+        # sustained-stage verdict must include the periodic in-window samples
+        # carrying the exact case label, rather than treating the first sample
+        # as the whole observation window.  Safe-boot and endpoint-shutdown OFF
+        # states remain independently mandatory in ``base.load_ps_gpio``.
         if stage in {
             "streaming_64m", *STREAM_RECOVERY_STAGES,
             "performance", "formal_30min",
         }:
-            active_gpio = [
-                row for row in gpio_rows if row["label"].endswith("_active")
-            ]
+            led_evidence = []
             for direction in {item["direction"] for item in non_shutdown
                               if item["command"] in (3, 13)}:
                 sender = "fixed" if direction == 0 else "rotating"
                 receiver = "rotating" if direction == 0 else "fixed"
-                if not any(row["role"] == sender and not (row["data_ro"] & 1)
-                           for row in active_gpio):
+                labels = {
+                    item["label"] for item in non_shutdown
+                    if item["command"] in (3, 13) and
+                    item["direction"] == direction
+                }
+                activity = summarize_ps_gpio_activity(
+                    gpio_rows, labels, sender, receiver
+                )
+                activity["direction"] = direction
+                led_evidence.append(activity)
+                if activity["sender_tx_active_samples"] == 0:
                     errors.append(f"direction{direction}: PS TX LED activity not sampled")
-                if not any(row["role"] == receiver and
-                           not (row["data_ro"] & (1 << 13))
-                           for row in active_gpio):
+                if activity["receiver_rx_active_samples"] == 0:
                     errors.append(f"direction{direction}: PS RX LED activity not sampled")
+            semantics["ps_gpio_activity_evidence"] = led_evidence
 
     summary = {
         "schema_version": 1,
@@ -1759,6 +1769,38 @@ def evaluate_custom_stage(
     }
     write_json(stage_dir / "stage_summary.json", summary)
     return summary
+
+
+def summarize_ps_gpio_activity(
+    gpio_rows: list[dict[str, Any]],
+    labels: set[str],
+    sender: str,
+    receiver: str,
+) -> dict[str, Any]:
+    """Summarize direct active-low PS LED samples for sustained commands.
+
+    ``*_active`` is an edge-adjacent sample and an exact-label row is a
+    periodic sample taken while the same command remains active.  Terminal,
+    safe-boot, and unrelated-command rows are deliberately excluded.
+    """
+    accepted_labels = labels | {f"{label}_active" for label in labels}
+    samples = [row for row in gpio_rows if row["label"] in accepted_labels]
+    sender_tx = sum(
+        row["role"] == sender and not (row["data_ro"] & 1)
+        for row in samples
+    )
+    receiver_rx = sum(
+        row["role"] == receiver and not (row["data_ro"] & (1 << 13))
+        for row in samples
+    )
+    return {
+        "labels": sorted(labels),
+        "sample_count": len(samples),
+        "sender": sender,
+        "receiver": receiver,
+        "sender_tx_active_samples": sender_tx,
+        "receiver_rx_active_samples": receiver_rx,
+    }
 
 
 def evaluate_stage(

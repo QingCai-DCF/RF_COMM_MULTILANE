@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_3F-STREAMING-LED-SAMPLING-DIAGNOSIS",
+  "status": "PASS",
+  "classification": "HOST_EVALUATOR_FALSE_NEGATIVE",
+  "diagnosed_from_commit": "175a6e58414b0a16a86d7a88bf316c789ccb1a9c",
+  "run_id": "p10_3f_full_20260805T010748Z_f07b6932_1ff0885f_82ef5093",
+  "failed_stage": "streaming_64m",
+  "original_stage_status": "FAIL",
+  "original_errors": [
+    "direction0: PS TX LED activity not sampled",
+    "direction1: PS TX LED activity not sampled"
+  ],
+  "root_cause": "The host evaluator inspected only the first edge-adjacent *_active GPIO sample. That sample is taken when either endpoint first enters RUNNING and can precede sender MM2S descriptor activity. The same immutable ledger contains repeated exact-label samples throughout each sustained command and directly reads back active-low PS TX/RX activity in both directions.",
+  "direct_gpio_reconciliation": {
+    "direction0": {
+      "sender": "fixed",
+      "receiver": "rotating",
+      "sample_count": 128,
+      "sender_tx_active_samples": 59,
+      "receiver_rx_active_samples": 64
+    },
+    "direction1": {
+      "sender": "rotating",
+      "receiver": "fixed",
+      "sample_count": 128,
+      "sender_tx_active_samples": 59,
+      "receiver_rx_active_samples": 64
+    }
+  },
+  "streaming_command_evidence": {
+    "xsdb_stage_result": "PASS",
+    "aggregate_commands_passed": 10,
+    "bytes_per_command": 67108864,
+    "safety_gate_passed_after_each_command": true
+  },
+  "remediation": {
+    "host_only": true,
+    "artifact_hashes_changed": false,
+    "rule": "For sustained stages, evaluate both the edge-adjacent *_active row and periodic rows whose label exactly matches the authorized command; exclude terminal, safe-boot, and unrelated-command rows.",
+    "files": [
+      "scripts/run_p10_3f_full_hardware.py",
+      "tests/test_p10_3f_full_hardware.py"
+    ]
+  },
+  "source_evidence": [
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T010748Z_f07b6932_1ff0885f_82ef5093/stages/streaming_64m/dumps/ps_gpio_activity.psv",
+      "bytes": 19402,
+      "sha256": "89c03e5a613ddf8ffde84c0a7708f89bdca8e2af42a13ba484e6f134a1492acc"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T010748Z_f07b6932_1ff0885f_82ef5093/stages/streaming_64m/stage_summary.json",
+      "bytes": 348153,
+      "sha256": "f640f2b8e4cbe89415d8a9b1daa60a8b29d29b891aedd856ad1e2a7bc9d87c99"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T010748Z_f07b6932_1ff0885f_82ef5093/stages/streaming_64m/xsdb.result.txt",
+      "bytes": 6121,
+      "sha256": "814dc4b4984330603b887b1ba6da7d75b71f70d7ab08bc1eb7844e8ff570e1ce"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T010748Z_f07b6932_1ff0885f_82ef5093/final/orchestrator_result.json",
+      "bytes": 7128327,
+      "sha256": "35c53da1c1ff3e7afcc50e0997da0b3ccacace2abea5238ff033b642c7dea996"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T010748Z_f07b6932_1ff0885f_82ef5093/shutdown/finally/attempt_1.result.txt",
+      "bytes": 1699,
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    }
+  ],
+  "old_run_reclassified": false,
+  "new_full_campaign_required": true,
+  "hardware_actions_executed_by_diagnosis": false,
+  "current_run_hardware_authorization": false,
+  "shutdown_fixed": "PASS",
+  "shutdown_rotating": "PASS",
+  "generated_at_utc": "2026-08-05T01:56:11Z"
+}
