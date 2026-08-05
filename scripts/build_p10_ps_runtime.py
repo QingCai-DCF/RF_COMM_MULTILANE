@@ -351,6 +351,7 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
     workspace = Path(f"C:/p10_vitis/{CAMPAIGN}_{role}")
     platform = workspace / f"p10_{role}_platform"
     app = workspace / f"p10_{role}_runtime"
+    workspace_header = app / "src/p10_runtime_role.h"
     elf = app / "Debug" / f"p10_{role}_runtime.elf"
     map_file = app / "Debug" / f"p10_{role}_runtime.map"
     bsp = platform / "ps7_cortexa9_0/standalone_domain/bsp"
@@ -368,12 +369,18 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
         f"STDERR_BEGIN\n{result.stderr}\nSTDERR_END\n",
         encoding="utf-8", errors="replace", newline="\n",
     )
-    required = [xsa, elf, map_file, system_mss, xparameters, ps7_parameters,
-                platform_xsa, ps7_init_tcl]
+    required = [xsa, elf, map_file, workspace_header, system_mss, xparameters,
+                ps7_parameters, platform_xsa, ps7_init_tcl]
     errors = [f"missing {path}" for path in required if not path.is_file()]
     if result.returncode != 0 or "P10_PS_RUNTIME_BUILD=PASS" not in result.stdout or \
             f"P10_PS_RUNTIME_ROLE={role}" not in result.stdout:
         errors.append(f"XSCT runtime build failed rc={result.returncode}")
+    if workspace_header.is_file() and sha256(workspace_header) != sha256(
+        cfg["header"]
+    ):
+        errors.append(
+            "Vitis workspace role header differs from the campaign-bound input"
+        )
     inspection: dict[str, Any] = {}
     if elf.is_file():
         inspection, inspect_errors = inspect_elf(role, elf, role_out)
@@ -437,6 +444,13 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
         "role": role, "role_value": cfg["role_value"],
         "status": "PASS" if not errors else "FAIL",
         "source_bundle_sha256": bundle, "source_sha256": input_hashes,
+        "workspace_role_header": (
+            {
+                "path": workspace_header.as_posix(),
+                "sha256": sha256(workspace_header),
+            }
+            if workspace_header.is_file() else None
+        ),
         "xsa": {"path": rel(xsa), "sha256": sha256(xsa)} if xsa.is_file() else None,
         "xparameters_checks": xparam_checks, "system_mss_checks": mss_checks,
         "ps7_parameter_checks": ps_checks,

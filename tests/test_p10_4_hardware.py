@@ -124,6 +124,28 @@ class P104PlanTests(unittest.TestCase):
             tcl,
         )
 
+    def test_vitis_build_selects_and_verifies_p10_4_role_headers(self) -> None:
+        tcl = (
+            ROOT / "scripts/vitis/build_p10_ax7020_runtime.tcl"
+        ).read_text(encoding="utf-8")
+        self.assertIn('if {$campaign eq "p10_4"}', tcl)
+        self.assertIn(
+            "board_profiles/ax7020_fixed_4lane/p10_4_runtime_role.h", tcl
+        )
+        self.assertIn(
+            "board_profiles/ax7020_rotating_4lane/p10_4_runtime_role.h", tcl
+        )
+        builder = (
+            ROOT / "scripts/build_p10_ps_runtime.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn(
+            "workspace_header = app / \"src/p10_runtime_role.h\"", builder
+        )
+        self.assertIn(
+            "Vitis workspace role header differs from the campaign-bound input",
+            builder,
+        )
+
     def test_run_manifest_verifier_rejects_tamper_and_extra_files(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
             run_root = Path(temporary)
