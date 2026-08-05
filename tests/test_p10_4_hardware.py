@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 import unittest
 import re
@@ -149,6 +150,30 @@ class P104PlanTests(unittest.TestCase):
             "Vitis workspace role header differs from the campaign-bound input",
             builder,
         )
+
+    def test_local_source_shutdown_evidence_replays_pass(self) -> None:
+        run_root = ROOT / (
+            "evidence/hardware/p10_4/"
+            "p10_4_20260805T124645Z_a32afe5b_6f915067_ace48b07"
+        )
+        stage_dir = run_root / "stages/counter_local_source"
+        archived = json.loads(
+            (stage_dir / "stage_summary.json").read_text(encoding="utf-8")
+        )
+        forensic_summary = json.loads(
+            (run_root / "forensics/counter_local_source/summary.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        replay = p10.evaluate_stage(
+            "counter_local_source",
+            stage_dir,
+            archived["process"],
+            forensic_summary,
+            (stage_dir / "immutable.plan").read_text(encoding="ascii"),
+        )
+        self.assertEqual([], replay["errors"])
+        self.assertEqual("PASS", replay["status"])
 
     def test_run_manifest_verifier_rejects_tamper_and_extra_files(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:

@@ -887,7 +887,10 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
         fields[1] for fields in (line.split() for line in plan.splitlines())
         if fields and fields[0] in {"CASE", "P10FF_TOTAL", "P101_PSRESET"}
     }
-    observed_labels = {str(item.get("label")) for item in non_shutdown}
+    # Every fixed plan row, including the terminal endpoint-shutdown row, is
+    # still an observation.  ``non_shutdown`` is only the data-path subset;
+    # using it here falsely reports a correctly captured shutdown as missing.
+    observed_labels = {str(item.get("label")) for item in details}
     missing = fixed_labels - observed_labels
     if stage in EXPECTED_FAULT_STAGES:
         missing -= {line.split()[1] for line in plan.splitlines()
