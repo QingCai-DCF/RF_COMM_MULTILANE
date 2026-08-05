@@ -9,5 +9,5 @@
 
 | Role | Result | Source bundle SHA256 | Bitstream SHA256 | Artifact |
 |---|---|---|---|---|
-| fixed | PASS | `0b30535de8c115ed6887a945a4c3d5e434b6756e3f82bb44fab8970079c8d65e` | `f19329cff2fc2ef01f657ffeab8d84f865ea5a3a20978c522d9d58b0c32a745d` | `artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/f19329cff2fc2ef01f657ffeab8d84f865ea5a3a20978c522d9d58b0c32a745d/p10_ax7020_fixed_shutdown.bit` |
-| rotating | PASS | `b8a36552c8dbe14b4482672b2f253e40e8092b11a84649341414da46ed3f6aea` | `91c047f498095e17adf429f60aaa2d4a34459f2e70e902873a2c1b6a188492c9` | `artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/91c047f498095e17adf429f60aaa2d4a34459f2e70e902873a2c1b6a188492c9/p10_ax7020_rotating_shutdown.bit` |
+| fixed | PASS | `0b30535de8c115ed6887a945a4c3d5e434b6756e3f82bb44fab8970079c8d65e` | `df394f8a5d4eb68613749df78af43dab7705e87b3cbf091db8f69dd33cce251c` | `artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/df394f8a5d4eb68613749df78af43dab7705e87b3cbf091db8f69dd33cce251c/p10_ax7020_fixed_shutdown.bit` |
+| rotating | PASS | `b8a36552c8dbe14b4482672b2f253e40e8092b11a84649341414da46ed3f6aea` | `1fc058e1b83f5ef9d0a4a37090515301559c9e81f218b4de218577542d8fefa0` | `artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/1fc058e1b83f5ef9d0a4a37090515301559c9e81f218b4de218577542d8fefa0/p10_ax7020_rotating_shutdown.bit` |
