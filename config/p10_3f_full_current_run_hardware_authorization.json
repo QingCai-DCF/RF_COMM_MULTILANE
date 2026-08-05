@@ -131,8 +131,9 @@
   },
   "campaign_freeze_path": "evidence/generated/p10_3f_full_campaign_freeze.json",
   "campaign_freeze_sha256": "37d5bbda9fbd6636994b28f1fd1e4e59ff3f2da55e4ab3323064621d626e9ebf",
-  "consumed": false,
-  "current_run_hardware_authorization": true,
+  "consumed": true,
+  "consumed_at_utc": "2026-08-05T06:43:42+00:00",
+  "current_run_hardware_authorization": false,
   "ethernet_allowed": false,
   "fixed_jtag_serial": "210249855178",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
@@ -360,6 +361,7 @@
   "movement_rotation_realignment_or_rewiring_allowed": false,
   "no_hardware": false,
   "p11_allowed": false,
+  "result": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T055527Z_4ae863a8_1ff0885f_82ef5093/final/orchestrator_result.json",
   "retry_policy": "No retry-count upper bound inside the exact authorized Goal; each immutable run_id still requires shutdown-before and verified dual-board shutdown.",
   "rotating_jtag_serial": "210512180081",
   "run_id": "p10_3f_full_20260805T055527Z_4ae863a8_1ff0885f_82ef5093",
@@ -372,7 +374,7 @@
     "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
     "verify_both_shutdown_markers": true
   },
-  "status": "AUTHORIZED",
+  "status": "CONSUMED_AFTER_P10_3F_FULL_FAIL",
   "supersedes_consumed_authorization": {
     "consumed": true,
     "path": "config/p10_3f_full_current_run_hardware_authorization.json",

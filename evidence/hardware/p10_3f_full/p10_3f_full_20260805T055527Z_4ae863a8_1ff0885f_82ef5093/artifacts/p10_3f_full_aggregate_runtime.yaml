@@ -1,0 +1,50 @@
+schema_version: 1
+scope: P10_3F_FULL_BOARD_AUTONOMOUS_AGGREGATE_RUNTIME
+status: OFFLINE_DEFINED_PENDING_CURRENT_RUN_AUTHORIZATION
+admission_precondition:
+  staircase_config: config/performance/p10_3f_staircase.yaml
+  exact_bidirectional_levels_bytes:
+    - 1024
+    - 4096
+    - 16384
+    - 65536
+    - 262144
+  require_each_staircase_direction_snapshot_gate: true
+aggregate_runtime:
+  internal_object_bytes: 262144
+  segment_bytes: 65536
+  dma_reset_fault_aggregate_bytes: 524288
+  dma_reset_fault_internal_objects: 2
+  dma_reset_fault_injection_object_ordinal: 1
+  dma_reset_fault_requires_receiver_first_paired_object: true
+  maximum_board_autonomous_aggregate_command_bytes: 67108864
+  exact_64m_host_commands_per_direction: 1
+  adaptive_window_command_bytes:
+    - 1048576
+    - 4194304
+    - 16777216
+    - 67108864
+  host_in_per_object_fast_path: false
+  require_snapshot_after_each_aggregate_command: true
+  continuous_pl_first_fault_kill_during_command: true
+  old_hardware_result_inherited: false
+safety:
+  single_global_permit_preserved: true
+  exact_rolling_duty_guard_preserved: true
+  continuous_high_guard_preserved: true
+  sd_mode_txd_kill_preserved: true
+  immediate_fault_tx_kill_and_full_shutdown: true
+  frozen_forensics_preserved_until_archive_commit: true
+formal:
+  maximum_single_run_seconds: 1800
+  lane_mask: '0xF'
+prior_immutable_failure:
+  run_id: p10_3f_full_20260804T172941Z_6e8d939a_a6ecd8e6_a5491982
+  status: FAIL
+  fixed_to_rotating_application_goodput_bps: 1828971.8570401687
+  rotating_to_fixed_application_goodput_bps: 1857871.246595679
+  reclassified: false
+authorization:
+  no_hardware: true
+  current_run_hardware_authorization: false
+  note: A hardware run requires a new immutable campaign freeze and exact current-run authorization.

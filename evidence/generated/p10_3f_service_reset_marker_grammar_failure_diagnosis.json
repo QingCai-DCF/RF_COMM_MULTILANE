@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_3F-SERVICE-RESET-MARKER-GRAMMAR-FAILURE-DIAGNOSIS",
+  "status": "PASS",
+  "diagnosis_only": true,
+  "hardware_actions_executed": false,
+  "failed_run_id": "p10_3f_full_20260805T055527Z_4ae863a8_1ff0885f_82ef5093",
+  "artifact_source_commit": "7fc3a7cb03f9ee19793403f9f1deaef139b11d7d",
+  "host_source_commit": "4ae863a86cb07b3a3b176aa7656a1575c5b59cd6",
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "campaign_freeze_sha256": "37d5bbda9fbd6636994b28f1fd1e4e59ff3f2da55e4ab3323064621d626e9ebf",
+  "evidence": [
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T055527Z_4ae863a8_1ff0885f_82ef5093/stages/stream_service_reset_fault/stage_summary.json",
+      "bytes": 49870,
+      "sha256": "ee7d4e037fcc35e2dfa16ed4d53b07a5527d7dd1a2441c27ce50ab8ea81af4aa"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T055527Z_4ae863a8_1ff0885f_82ef5093/stages/stream_service_reset_fault/xsdb.result.txt",
+      "bytes": 3821,
+      "sha256": "54d3898a860f8dc037353cf4214fc69c4bbb95752e9c263fe0aa7917f90cb060"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T055527Z_4ae863a8_1ff0885f_82ef5093/stages/stream_service_reset_fault/dumps/stream_service_reset_receiver.service_reset_shutdown.psv",
+      "bytes": 177,
+      "sha256": "f8b234fb840c23dad42b39981ba517ed87361b217b172966f33ff417ea6d36f9"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T055527Z_4ae863a8_1ff0885f_82ef5093/forensics/stream_service_reset_fault/summary.json",
+      "bytes": 3723,
+      "sha256": "bf86646f257d8f44ab17f1a88a23c2e7f432bf8e33a8f629f0c351723f2be4e4"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T055527Z_4ae863a8_1ff0885f_82ef5093/final/orchestrator_result.json",
+      "bytes": 7344616,
+      "sha256": "316503f0028fca71e7786c884e632d6f13ac4af9e93b0e5b7167e9b24d8200bb"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T055527Z_4ae863a8_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json",
+      "bytes": 457398,
+      "sha256": "1ec0e22392c8e2a25eaae44c61a67d6e360f1b86ca0f5c674f828decb7bbaf46"
+    }
+  ],
+  "observations": {
+    "tcl_stage_result": "PASS",
+    "shutdown_before_ps_reset": "PASS",
+    "physical_tx_counts_stable_after_shutdown": true,
+    "selected_role_reboot": "PASS",
+    "peer_role_reboot": "PASS",
+    "fixed_recovered_safe_raw_marker_present": true,
+    "rotating_recovered_safe_raw_marker_present": true,
+    "forensic_archive_fixed": "NO_FAULT",
+    "forensic_archive_rotating": "NO_FAULT",
+    "host_stage_result": "FAIL",
+    "final_independent_shutdown_fixed": "PASS",
+    "final_independent_shutdown_rotating": "PASS",
+    "hardware_safety_fault_observed": false,
+    "terminal_object_failure_observed": false
+  },
+  "root_cause": "The Tcl safe-state helper emitted recovered marker keys containing the lowercase dynamic label stream_service_reset_receiver. The canonical marker parser deliberately accepts only keys matching [A-Z0-9_]+, so it discarded both recovered-safe markers. The host evaluator then reported all six safe-state tokens missing even though the raw XSDB log contains the exact safe values.",
+  "correction_required": {
+    "uppercase_recovered_marker_label": true,
+    "host_expectation_uses_same_canonical_key": true,
+    "regression_must_parse_raw_marker_and_run_evaluator": true,
+    "artifact_change": false,
+    "rtl_change": false,
+    "functional_bitstream_hashes_unchanged": true,
+    "new_offline_freeze_required": true,
+    "new_current_run_authorization_required": true,
+    "new_full_campaign_required": true,
+    "old_run_reclassified": false
+  },
+  "generated_at_utc": "2026-08-05T06:46:24Z"
+}
