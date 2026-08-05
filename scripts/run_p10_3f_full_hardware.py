@@ -775,11 +775,14 @@ def validate_artifact_freeze() -> tuple[dict[str, Any], dict[str, Path], list[st
 
 
 def validate_static_intake_evidence() -> list[str]:
-    """Verify that the Goal-named offline intake views match current inputs.
+    """Verify the Goal-named intake against current or frozen closeout inputs.
 
     These files are mutable generated views, not historical raw evidence.  A
     current-artifact campaign must not silently carry forward module identities,
     wiring hashes, branches, or canonical-input hashes from an earlier bundle.
+    After the campaign is closed, project state and requirements necessarily
+    advance; those two records are then checked against the intake source commit
+    while physical wiring/inventory and every other input remain current.
     """
     errors: list[str] = []
     try:
@@ -788,11 +791,15 @@ def validate_static_intake_evidence() -> list[str]:
         inventory_view = load_json(STATIC_MODULE_INTAKE)
         wiring = base.load_yaml(WIRING)
         inventory = base.load_yaml(INVENTORY)
+        state = load_json(ROOT / "config/project_state.json")
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         return [f"static intake evidence read failed: {exc}"]
 
     branch = git("branch", "--show-current")
-    if branch not in ALLOWED_EXECUTION_BRANCHES or repo.get("branch") != branch:
+    closed = state.get("p10_3_status") == "PASS"
+    if branch not in ALLOWED_EXECUTION_BRANCHES or \
+            repo.get("branch") not in ALLOWED_EXECUTION_BRANCHES or \
+            (not closed and repo.get("branch") != branch):
         errors.append("static repository-intake branch is not the current allowed branch")
     for name, payload in (
         ("repository", repo),
@@ -813,7 +820,28 @@ def validate_static_intake_evidence() -> list[str]:
         item.get("path"): item for item in repo.get("inputs", [])
         if isinstance(item, dict)
     }
-    expected_inputs = {rel(path): metadata(path) for path in STATIC_REPO_INPUTS}
+    expected_inputs: dict[str, dict[str, Any]] = {}
+    frozen_after_closeout = {
+        "config/project_state.json", "config/project_requirements.yaml"
+    }
+    intake_source = str(repo.get("source_commit", ""))
+    for path in STATIC_REPO_INPUTS:
+        name = rel(path)
+        if closed and name in frozen_after_closeout:
+            result = subprocess.run(
+                ["git", "show", f"{intake_source}:{name}"], cwd=ROOT,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+            )
+            if result.returncode != 0:
+                errors.append(f"static repository intake source file missing: {name}")
+                continue
+            expected_inputs[name] = {
+                "path": name,
+                "sha256": hashlib.sha256(result.stdout).hexdigest(),
+                "bytes": len(result.stdout),
+            }
+        else:
+            expected_inputs[name] = metadata(path)
     if observed_inputs != expected_inputs:
         errors.append("static repository intake canonical-input set/hash is stale")
 

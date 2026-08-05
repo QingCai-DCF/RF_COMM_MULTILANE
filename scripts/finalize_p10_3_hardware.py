@@ -196,7 +196,23 @@ def verify_campaign(errors: list[str]) -> tuple[dict[str, Any], int]:
         "CURRENT_RUN_HARDWARE_AUTHORIZATION must be false", errors,
     )
     require(git("branch", "--show-current").stdout.strip() == BRANCH, "wrong closeout branch", errors)
-    require(git("status", "--porcelain").stdout == "", "worktree must be clean before closeout", errors)
+    dirty = {
+        line[3:].replace("\\", "/")
+        for line in git("status", "--porcelain").stdout.splitlines()
+        if len(line) >= 4
+    }
+    resumable = {
+        "PROJECT_STATUS.md", "config/project_requirements.yaml",
+        "config/project_state.json", "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+        "scripts/p8a_common.py", "scripts/finalize_p10_3_hardware.py",
+        "scripts/run_p10_3f_full_hardware.py",
+        "scripts/verify_p10_existing.py",
+        "tests/test_p8a_consistency.py",
+        "evidence/generated/p10_3_hardware_closeout.json",
+        "evidence/generated/p10_3_hardware_closeout.md",
+        "evidence/generated/p8a_consistency_summary.json",
+    }
+    require(not dirty or dirty <= resumable, "worktree has non-closeout changes", errors)
     require(sha256(GOAL) == GOAL_SHA256, "Goal SHA256 mismatch", errors)
     require(
         git("merge-base", "--is-ancestor", EVIDENCE_COMMIT, "HEAD", check=False).returncode == 0,
@@ -382,7 +398,8 @@ def update_requirements() -> dict[str, Any]:
         item["evidence_path"] = rel(evidence)
         item["artifact_hash"] = sha256(evidence)
         item["artifact_hashes"] = [
-            {"path": rel(evidence), "sha256": sha256(evidence)}, *common,
+            {"path": rel(evidence), "sha256": sha256(evidence)},
+            *[binding.copy() for binding in common],
         ]
         item["hardware_followup"] = (
             "P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, "

@@ -1,0 +1,150 @@
+{
+  "acceptance_integrity_and_safety_counters": {
+    "continuous_high_violation": 0,
+    "descriptor_leak": 0,
+    "double_completion": 0,
+    "duplicate_commit": 0,
+    "duty_violation": 0,
+    "partial_commit": 0,
+    "retry_exhausted": 0,
+    "sha_mismatch": 0,
+    "stale_commit": 0
+  },
+  "application_goodput_bps": {
+    "F_TO_R": 8416570.026666667,
+    "R_TO_F": 8444532.053333333
+  },
+  "artifact_source_commit": "7fc3a7cb03f9ee19793403f9f1deaef139b11d7d",
+  "branch": "p10.3/ax7020-stationary-4lane-hardware",
+  "canonical_state": {
+    "current_program_stage": "USER_DECISION_AFTER_P10_3",
+    "p10_3_status": "PASS",
+    "p11_status": "NOT_STARTED"
+  },
+  "current_run_hardware_authorization": false,
+  "diagnostic_injection_counters": {
+    "classification": "EXPECTED_CONTROLLED_INJECTION_STAGES_NOT_FORMAL_ERRORS",
+    "crc_bad": 6,
+    "deadlock": 37,
+    "transport_timeout": 37
+  },
+  "direct_observation_count": 457,
+  "errors": [],
+  "evidence_commit": "e64c04843d5d996f8d66d650fafaf3a43a2dd7dc",
+  "external_four_lane_power_acceptance": "PENDING_EXTERNAL_MEASUREMENT",
+  "external_tfdu_duty": "PENDING_EXTERNAL_MEASUREMENT",
+  "formal": {
+    "committed_bytes_f_to_r": 921698304,
+    "committed_bytes_r_to_f": 926941184,
+    "runtime_seconds": 1800.011
+  },
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "hardware_actions_executed_during_closeout": false,
+  "hardware_actions_executed_in_campaign": true,
+  "host_source_commit": "e356dd9216da528af0a21d39a0eced9b4e96ee1e",
+  "manifest_file_count": 3900,
+  "manual_instrumentation": "OMITTED_BY_USER",
+  "maximum_continuous_high_cycles": {
+    "F0": 16,
+    "F1": 16,
+    "F2": 16,
+    "F3": 16,
+    "R0": 16,
+    "R1": 16,
+    "R2": 16,
+    "R3": 16
+  },
+  "maximum_duty_cycles": {
+    "F0": 11504,
+    "F1": 11504,
+    "F2": 11504,
+    "F3": 11504,
+    "R0": 11504,
+    "R1": 11504,
+    "R2": 11504,
+    "R3": 11504
+  },
+  "maximum_lane_mask": 15,
+  "module_hard_fault": {
+    "F0": 0,
+    "F1": 0,
+    "F2": 0,
+    "F3": 0,
+    "R0": 0,
+    "R1": 0,
+    "R2": 0,
+    "R3": 0
+  },
+  "movement_rotation_realignment_or_rewiring": false,
+  "network_used": false,
+  "next_recommended_stage": "USER_DECISION_AFTER_P10_3",
+  "planned_pass_tag": "p10.3-ax7020-stationary-4lane-pass",
+  "records": [
+    {
+      "bytes": 13732066,
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json",
+      "sha256": "3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2"
+    },
+    {
+      "bytes": 773477,
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json",
+      "sha256": "ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1"
+    },
+    {
+      "bytes": 13732066,
+      "path": "evidence/generated/p10_3_final_summary.json",
+      "sha256": "3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2"
+    },
+    {
+      "bytes": 5732,
+      "path": "evidence/generated/p10_3_evidence_consistency.json",
+      "sha256": "da7808f8d2682bc1b7e957d52fa88b90422127acfa66d52a29cd6c0f9c04f23c"
+    },
+    {
+      "bytes": 236660,
+      "path": "evidence/generated/p10_3_shutdown.json",
+      "sha256": "228ac3d3e034e6b64431ef9d10298edc4a52b8ddb5f86fe92fb7fcafe2e9a01f"
+    },
+    {
+      "bytes": 15118,
+      "path": "config/p10_3f_full_current_run_hardware_authorization.json",
+      "sha256": "01645957a1d1a734af67075ee11197a94d8d4541156ba232c676e45620be6acf"
+    },
+    {
+      "bytes": 51807,
+      "path": "config/project_state.json",
+      "sha256": "0c3aa09eef4705769d5851594fd5449184068964873c11cc717ed40527a30951"
+    },
+    {
+      "bytes": 10042,
+      "path": "PROJECT_STATUS.md",
+      "sha256": "da14d85b05339b026054977d7e2273d8058002eeb60acda2f3521dd19c777ef6"
+    },
+    {
+      "bytes": 328872,
+      "path": "config/project_requirements.yaml",
+      "sha256": "29cf35577bcd318a27426bd482f4cff2b8a93adf7bce03ea2aa9224dabf9bb36"
+    },
+    {
+      "bytes": 181305,
+      "path": "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+      "sha256": "7c19931b8d81929411da5d31e4ba000c481522238ba36ad27274ff66c7726ba1"
+    }
+  ],
+  "run_id": "p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093",
+  "schema_version": 1,
+  "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE",
+  "scope_non_promotions": [
+    "P11",
+    "8X32",
+    "600_RPM",
+    "PRODUCT_FINAL"
+  ],
+  "shutdown_fixed": "PASS",
+  "shutdown_rotating": "PASS",
+  "stage_count": 23,
+  "stage_pass_count": 23,
+  "status": "PASS",
+  "test_id": "P10_3-HARDWARE-CLOSEOUT",
+  "two_hour_test_executed": false
+}

@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4
+    sha256: 0c3aa09eef4705769d5851594fd5449184068964873c11cc717ed40527a30951
   - path: PROJECT_STATUS.md
-    sha256: 9f683fab06bc23153e578c4a77c675b0e36b5c61dc03a96aa5d51a1d35645b30
-  artifact_hash: dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4
+    sha256: da14d85b05339b026054977d7e2273d8058002eeb60acda2f3521dd19c777ef6
+  artifact_hash: da14d85b05339b026054977d7e2273d8058002eeb60acda2f3521dd19c777ef6
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4
+    sha256: 0c3aa09eef4705769d5851594fd5449184068964873c11cc717ed40527a30951
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4
+    sha256: 0c3aa09eef4705769d5851594fd5449184068964873c11cc717ed40527a30951
   - path: PROJECT_STATUS.md
-    sha256: 9f683fab06bc23153e578c4a77c675b0e36b5c61dc03a96aa5d51a1d35645b30
+    sha256: da14d85b05339b026054977d7e2273d8058002eeb60acda2f3521dd19c777ef6
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4
+  artifact_hash: da14d85b05339b026054977d7e2273d8058002eeb60acda2f3521dd19c777ef6
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -4345,9 +4345,18 @@ requirements:
   verification_scope: P10_3_ACTUAL_WIRING_FREEZE
   test_id: P10_3-WIRE-001
   evidence_path: evidence/generated/p10_3_wiring.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_wiring.json
+    sha256: ca89d42ac92a77f104f0b82e5de237738435d69b862e0e1260f6e8e7d3d49782
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: ca89d42ac92a77f104f0b82e5de237738435d69b862e0e1260f6e8e7d3d49782
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-INV-001
   requirement_text: All eight active TFDU modules shall have unique IDs, endpoints, positions, and lane assignments.
   profile: P10_3_EIGHT_MODULE_INVENTORY
@@ -4356,9 +4365,18 @@ requirements:
   verification_scope: P10_3_MODULE_INVENTORY
   test_id: P10_3-INV-001
   evidence_path: evidence/generated/p10_3_module_inventory.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_module_inventory.json
+    sha256: 6c3001b5fb580701302c275f329ce73ce2ef151779c0adecc4ca05418afaa6fa
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 6c3001b5fb580701302c275f329ce73ce2ef151779c0adecc4ca05418afaa6fa
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-INV-002
   requirement_text: The historical failed F1 module shall remain quarantined and shall never be selected as an active P10.3
     module.
@@ -4368,9 +4386,18 @@ requirements:
   verification_scope: P10_3_MODULE_INVENTORY
   test_id: P10_3-INV-002
   evidence_path: evidence/generated/p10_3_module_inventory.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_module_inventory.json
+    sha256: 6c3001b5fb580701302c275f329ce73ce2ef151779c0adecc4ca05418afaa6fa
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 6c3001b5fb580701302c275f329ce73ce2ef151779c0adecc4ca05418afaa6fa
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-HW-001
   requirement_text: A current-run authorization shall bind the exact P10.3 run, boards, modules, wiring, artifacts, limits,
     and shutdown policy.
@@ -4380,9 +4407,18 @@ requirements:
   verification_scope: P10_3_AUTHORIZED_HARDWARE_RUN
   test_id: P10_3-HW-001
   evidence_path: evidence/generated/p10_3_authorization.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_authorization.json
+    sha256: 2453ce287c519f5f650acb052f3c5c8557423d0bc9414e10a6881586e9839728
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 2453ce287c519f5f650acb052f3c5c8557423d0bc9414e10a6881586e9839728
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-HW-002
   requirement_text: Fixed and rotating-role shutdown bitstreams, functional bitstreams, XSAs, BSPs, and ELFs shall be immutable
     and content-addressed.
@@ -4392,9 +4428,18 @@ requirements:
   verification_scope: P10_3_OFFLINE_ARTIFACT_FREEZE
   test_id: P10_3-HW-002
   evidence_path: evidence/generated/p10_3_artifact_freeze.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_artifact_freeze.json
+    sha256: 80f713cc13de26494fa702069bb96a41dfe489f1c6ac5899687fedcb8c2473d7
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 80f713cc13de26494fa702069bb96a41dfe489f1c6ac5899687fedcb8c2473d7
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-LED-001
   requirement_text: Each AX7020 PL LED shall indicate the corresponding lane module TX-or-valid-RX activity and shall be off
     during reset, fault, or full shutdown.
@@ -4405,9 +4450,18 @@ requirements:
   verification_scope: P10_3_LED_OBSERVABILITY
   test_id: P10_3-LED-001
   evidence_path: evidence/generated/p10_3_safe_boot.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_safe_boot.json
+    sha256: bc32e76d6a27398a7d8f1dd4440e750eb2dd59079a4ebff7fe70bbb0a380d10a
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: bc32e76d6a27398a7d8f1dd4440e750eb2dd59079a4ebff7fe70bbb0a380d10a
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-LED-002
   requirement_text: AX7020 PS LED1 and PS LED2 shall indicate actual MM2S and S2MM descriptor activity and remain diagnostic-only
     and fail-off on cleanup.
@@ -4418,9 +4472,18 @@ requirements:
   verification_scope: P10_3_LED_OBSERVABILITY
   test_id: P10_3-LED-002
   evidence_path: evidence/generated/p10_3_safe_boot.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_safe_boot.json
+    sha256: bc32e76d6a27398a7d8f1dd4440e750eb2dd59079a4ebff7fe70bbb0a380d10a
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: bc32e76d6a27398a7d8f1dd4440e750eb2dd59079a4ebff7fe70bbb0a380d10a
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-SAFE-001
   requirement_text: Both endpoints shall complete shutdown-before and safe boot with exact role and build identity.
   profile: P10_3_DUAL_ENDPOINT_SAFE_BOOT
@@ -4429,9 +4492,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-SAFE-001
   evidence_path: evidence/generated/p10_3_safe_boot.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_safe_boot.json
+    sha256: bc32e76d6a27398a7d8f1dd4440e750eb2dd59079a4ebff7fe70bbb0a380d10a
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: bc32e76d6a27398a7d8f1dd4440e750eb2dd59079a4ebff7fe70bbb0a380d10a
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-SAFE-002
   requirement_text: Each endpoint shall enforce four-module rolling duty, pulse, TX kill, and full-shutdown constraints.
   profile: P10_3_EIGHT_TFDU_SAFETY
@@ -4440,9 +4512,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-SAFE-002
   evidence_path: evidence/generated/p10_3_shutdown.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_shutdown.json
+    sha256: 228ac3d3e034e6b64431ef9d10298edc4a52b8ddb5f86fe92fb7fcafe2e9a01f
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 228ac3d3e034e6b64431ef9d10298edc4a52b8ddb5f86fe92fb7fcafe2e9a01f
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-MOD-001
   requirement_text: F2 shall pass isolated P10.3 module intake in its frozen position.
   profile: P10_3_MODULE_INTAKE
@@ -4451,9 +4532,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-MOD-001
   evidence_path: evidence/generated/p10_3_module_intake.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_module_intake.json
+    sha256: f1602fec2d815358edda4dee41dbf2b320ea80e84cf74af63cb98359608fe237
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: f1602fec2d815358edda4dee41dbf2b320ea80e84cf74af63cb98359608fe237
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-MOD-002
   requirement_text: F3 shall pass isolated P10.3 module intake in its frozen position.
   profile: P10_3_MODULE_INTAKE
@@ -4462,9 +4552,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-MOD-002
   evidence_path: evidence/generated/p10_3_module_intake.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_module_intake.json
+    sha256: f1602fec2d815358edda4dee41dbf2b320ea80e84cf74af63cb98359608fe237
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: f1602fec2d815358edda4dee41dbf2b320ea80e84cf74af63cb98359608fe237
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-MOD-003
   requirement_text: R2 shall pass isolated P10.3 module intake in its frozen position.
   profile: P10_3_MODULE_INTAKE
@@ -4473,9 +4572,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-MOD-003
   evidence_path: evidence/generated/p10_3_module_intake.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_module_intake.json
+    sha256: f1602fec2d815358edda4dee41dbf2b320ea80e84cf74af63cb98359608fe237
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: f1602fec2d815358edda4dee41dbf2b320ea80e84cf74af63cb98359608fe237
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-MOD-004
   requirement_text: R3 shall pass isolated P10.3 module intake in its frozen position.
   profile: P10_3_MODULE_INTAKE
@@ -4484,9 +4592,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-MOD-004
   evidence_path: evidence/generated/p10_3_module_intake.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_module_intake.json
+    sha256: f1602fec2d815358edda4dee41dbf2b320ea80e84cf74af63cb98359608fe237
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: f1602fec2d815358edda4dee41dbf2b320ea80e84cf74af63cb98359608fe237
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-XTALK-001
   requirement_text: The complete eight-transmitter by eight-receiver raw matrix shall show target raw echo without accepted
     non-target DATA.
@@ -4497,9 +4614,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-XTALK-001
   evidence_path: evidence/generated/p10_3_raw_8x8.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_raw_8x8.json
+    sha256: e8116f837585e59826e63efb0e67a63f01662a60dc249b47658a72afa69dc61a
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: e8116f837585e59826e63efb0e67a63f01662a60dc249b47658a72afa69dc61a
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-PHY-001
   requirement_text: Lane0 shall pass bidirectional 4 Mbit/s physical communication.
   profile: P10_3_PER_LANE_PHY
@@ -4508,9 +4634,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-PHY-001
   evidence_path: evidence/generated/p10_3_per_lane_phy.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_per_lane_phy.json
+    sha256: 907b17c3a3fa1a9586f17082ce30b3a1da7e960506979a813bbcf18b5098fc6c
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 907b17c3a3fa1a9586f17082ce30b3a1da7e960506979a813bbcf18b5098fc6c
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-PHY-002
   requirement_text: Lane1 shall pass bidirectional 4 Mbit/s physical communication.
   profile: P10_3_PER_LANE_PHY
@@ -4519,9 +4654,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-PHY-002
   evidence_path: evidence/generated/p10_3_per_lane_phy.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_per_lane_phy.json
+    sha256: 907b17c3a3fa1a9586f17082ce30b3a1da7e960506979a813bbcf18b5098fc6c
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 907b17c3a3fa1a9586f17082ce30b3a1da7e960506979a813bbcf18b5098fc6c
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-PHY-003
   requirement_text: Lane2 shall pass bidirectional 4 Mbit/s physical communication.
   profile: P10_3_PER_LANE_PHY
@@ -4530,9 +4674,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-PHY-003
   evidence_path: evidence/generated/p10_3_per_lane_phy.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_per_lane_phy.json
+    sha256: 907b17c3a3fa1a9586f17082ce30b3a1da7e960506979a813bbcf18b5098fc6c
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 907b17c3a3fa1a9586f17082ce30b3a1da7e960506979a813bbcf18b5098fc6c
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-PHY-004
   requirement_text: Lane3 shall pass bidirectional 4 Mbit/s physical communication.
   profile: P10_3_PER_LANE_PHY
@@ -4541,9 +4694,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-PHY-004
   evidence_path: evidence/generated/p10_3_per_lane_phy.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_per_lane_phy.json
+    sha256: 907b17c3a3fa1a9586f17082ce30b3a1da7e960506979a813bbcf18b5098fc6c
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 907b17c3a3fa1a9586f17082ce30b3a1da7e960506979a813bbcf18b5098fc6c
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-PHY-005
   requirement_text: Four active lanes shall demonstrate 16 Mbit/s aggregate raw capability without safety violations.
   profile: P10_3_FOUR_LANE_RAW
@@ -4552,9 +4714,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-PHY-005
   evidence_path: evidence/generated/p10_3_four_lane_raw.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_four_lane_raw.json
+    sha256: 16f629db16d737064dcb78e184031bc97bcaa8e2147b6a4bb196a67dc0108973
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 16f629db16d737064dcb78e184031bc97bcaa8e2147b6a4bb196a67dc0108973
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-MASK-001
   requirement_text: Every nonzero four-lane mask from 0x1 through 0xF shall operate with no out-of-mask transmission.
   profile: P10_3_LANE_MASK_MATRIX
@@ -4563,9 +4734,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-MASK-001
   evidence_path: evidence/generated/p10_3_mask_matrix.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_mask_matrix.json
+    sha256: 634d68eac123111a63b5e39f2874023344fbd3b8ac6fee60ec5a177532216855
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 634d68eac123111a63b5e39f2874023344fbd3b8ac6fee60ec5a177532216855
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-DEG-001
   requirement_text: The endpoint shall degrade and recover across four, three, two, and one available lane without false commit.
   profile: P10_3_DEGRADED_MODES
@@ -4581,9 +4761,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-DEG-001
   evidence_path: evidence/generated/p10_3_degraded_modes.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_degraded_modes.json
+    sha256: ca8dbd1993ef468e474159dd3832a39fb32f3045079a1331dedad68cf0cdc01b
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: ca8dbd1993ef468e474159dd3832a39fb32f3045079a1331dedad68cf0cdc01b
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-ARQ-001
   requirement_text: Four-lane selective-repeat, 32-frame SACK, scheduler fairness, and cross-lane retry migration shall pass.
   profile: P10_3_FOUR_LANE_ARQ
@@ -4597,9 +4786,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-ARQ-001
   evidence_path: evidence/generated/p10_3_arq_scheduler.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_arq_scheduler.json
+    sha256: 1afa8615d0fd44864e863e41aff324acd82053b250a3493814e627add8a66bb4
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 1afa8615d0fd44864e863e41aff324acd82053b250a3493814e627add8a66bb4
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-STREAM-001
   requirement_text: A 64 MiB fixed-to-rotating application stream shall commit exactly with no protocol or descriptor errors.
   profile: P10_3_64M_STREAMING
@@ -4608,9 +4806,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-STREAM-001
   evidence_path: evidence/generated/p10_3_streaming_64m.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_streaming_64m.json
+    sha256: 7c2c4b29a87d9e079b269d8a6857c4e37cd23702a660feb8285ef18efe322ec3
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 7c2c4b29a87d9e079b269d8a6857c4e37cd23702a660feb8285ef18efe322ec3
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-STREAM-002
   requirement_text: A 64 MiB rotating-to-fixed application stream shall commit exactly with no protocol or descriptor errors.
   profile: P10_3_64M_STREAMING
@@ -4619,9 +4826,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-STREAM-002
   evidence_path: evidence/generated/p10_3_streaming_64m.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_streaming_64m.json
+    sha256: 7c2c4b29a87d9e079b269d8a6857c4e37cd23702a660feb8285ef18efe322ec3
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 7c2c4b29a87d9e079b269d8a6857c4e37cd23702a660feb8285ef18efe322ec3
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-PERF-001
   requirement_text: Fixed-to-rotating application goodput shall be at least 8 Mbit/s under the frozen four-lane test contract.
   profile: P10_3_FOUR_LANE_PERFORMANCE
@@ -4630,9 +4846,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-PERF-001
   evidence_path: evidence/generated/p10_3_performance.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_performance.json
+    sha256: d76fe845ad2c0347cba5e066d55f57ff87ac3e8073b0706acd1bb2bbdfb12372
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: d76fe845ad2c0347cba5e066d55f57ff87ac3e8073b0706acd1bb2bbdfb12372
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-PERF-002
   requirement_text: Rotating-to-fixed application goodput shall be at least 8 Mbit/s under the frozen four-lane test contract.
   profile: P10_3_FOUR_LANE_PERFORMANCE
@@ -4641,9 +4866,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-PERF-002
   evidence_path: evidence/generated/p10_3_performance.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_performance.json
+    sha256: d76fe845ad2c0347cba5e066d55f57ff87ac3e8073b0706acd1bb2bbdfb12372
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: d76fe845ad2c0347cba5e066d55f57ff87ac3e8073b0706acd1bb2bbdfb12372
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-SOAK-001
   requirement_text: A single stationary four-lane formal run shall last 1800 seconds with bounded telemetry gaps and zero
     integrity, protocol, descriptor, deadlock, or safety errors.
@@ -4653,9 +4887,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-SOAK-001
   evidence_path: evidence/generated/p10_3_formal_30min.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_formal_30min.json
+    sha256: 91fbc96e6c3cee169653395a1a5fcd8ebdde2d43f958d5a04b021a8fdc9ca225
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 91fbc96e6c3cee169653395a1a5fcd8ebdde2d43f958d5a04b021a8fdc9ca225
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3-EVID-001
   requirement_text: Every P10.3 PASS claim shall bind exact boards, modules, wiring, artifacts, run ID, raw logs, and a consistent
     SHA256 manifest.
@@ -4665,9 +4908,18 @@ requirements:
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-EVID-001
   evidence_path: evidence/generated/p10_3_evidence_consistency.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3_evidence_consistency.json
+    sha256: da7808f8d2682bc1b7e957d52fa88b90422127acfa66d52a29cd6c0f9c04f23c
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: da7808f8d2682bc1b7e957d52fa88b90422127acfa66d52a29cd6c0f9c04f23c
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3F-OFF-001
   requirement_text: A detected local TFDU safety fault or terminal object failure shall freeze the first-fault recorder and
     force endpoint-wide physical TX kill and full shutdown without waiting for software evidence handling.
@@ -4823,9 +5075,18 @@ requirements:
   verification_scope: P10_3F_CURRENT_HARDWARE
   test_id: P10_3F-HW-001
   evidence_path: evidence/generated/p10_3f_hardware/final/summary.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3f_hardware/final/summary.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3F-HW-002
   requirement_text: On current hardware, any frozen evidence shall be read completely, archived as raw binary and parsed JSON
     with verified SHA256, committed in PL, and followed by programming and verification of both role-bound independent shutdown
@@ -4837,9 +5098,18 @@ requirements:
   verification_scope: P10_3F_CURRENT_HARDWARE
   test_id: P10_3F-HW-002
   evidence_path: evidence/generated/p10_3f_hardware/final/summary.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3f_hardware/final/summary.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.
 - requirement_id: P10_3F-HW-003
   requirement_text: Current hardware shall pass both directions at each 1, 4, 16, 64, and 256 KiB level, passing the safety
     gate before advancement, then pass the separately bounded 1800-second stationary formal stage.
@@ -4850,6 +5120,15 @@ requirements:
   verification_scope: P10_3F_CURRENT_HARDWARE
   test_id: P10_3F-HW-003
   evidence_path: evidence/generated/p10_3f_hardware/final/summary.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
+  artifact_hashes:
+  - path: evidence/generated/p10_3f_hardware/final/summary.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json
+    sha256: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  - path: evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json
+    sha256: ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1
+  artifact_hash: 3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2
+  hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
+    external electrical/duty measurement and product-final acceptance remain pending.

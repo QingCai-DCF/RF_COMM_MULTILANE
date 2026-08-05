@@ -154,6 +154,7 @@ P10_3_REQUIREMENT_IDS = {
     "P10_3-STREAM-001", "P10_3-STREAM-002",
     "P10_3-PERF-001", "P10_3-PERF-002",
     "P10_3-SOAK-001", "P10_3-EVID-001",
+    "P10_3F-HW-001", "P10_3F-HW-002", "P10_3F-HW-003",
 }
 P11_READINESS_REQUIREMENT_IDS = {
     "P11-READY-001", "P11-READY-002", "P11-READY-003",
@@ -876,6 +877,68 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 if not isinstance(pending, dict) or pending.get(key) != value:
                     errors.append(f"p10_acceptance.unchanged_pending_scopes.{key} must be {value}")
 
+        p10_3_campaign = state.get("p10_3_acceptance", {})
+        p10_3_is_latest_hardware = (
+            p10_3_stage == "PASS"
+            and isinstance(p10_3_campaign, dict)
+            and p10_3_campaign.get("hardware_actions_executed") is True
+        )
+        if p10_3_stage == "PASS":
+            if not isinstance(p10_3_campaign, dict):
+                errors.append("p10_3_acceptance must be a mapping after P10.3 PASS")
+            else:
+                expected_p10_3 = {
+                    "status": "PASS",
+                    "scope": "STATIONARY_AX7020_FOUR_LANE_NO_ETHERNET_WITH_FIRST_FAULT_FORENSICS",
+                    "hardware_actions_executed": True,
+                    "network_used": False,
+                    "hardware_movement": False,
+                    "rotation_executed": False,
+                    "realignment_executed": False,
+                    "rewiring_executed": False,
+                    "maximum_lane_mask_used": "0xF",
+                    "two_hour_qualification_executed": False,
+                    "shutdown_fixed": "PASS",
+                    "shutdown_rotating": "PASS",
+                    "external_four_lane_power_acceptance": "PENDING_EXTERNAL_MEASUREMENT",
+                    "external_tfdu_duty": "PENDING_EXTERNAL_MEASUREMENT",
+                }
+                for key, value in expected_p10_3.items():
+                    if p10_3_campaign.get(key) != value:
+                        errors.append(f"p10_3_acceptance.{key} must be {value}")
+                for path_key, hash_key, label in (
+                    ("evidence_path", "evidence_sha256", "P10.3 final evidence"),
+                    ("evidence_manifest_path", "evidence_manifest_sha256", "P10.3 evidence manifest"),
+                ):
+                    try:
+                        artifact = resolve_repo_path(root, p10_3_campaign.get(path_key))
+                        digest = str(p10_3_campaign.get(hash_key, "")).lower()
+                        if (
+                            not artifact.is_file()
+                            or not SHA256_RE.fullmatch(digest)
+                            or sha256_artifact(artifact, root) != digest
+                        ):
+                            errors.append(f"{label} path/hash mismatch")
+                    except (TypeError, ValueError) as exc:
+                        errors.append(f"{label} path invalid: {exc}")
+                for key in (
+                    "goal_sha256", "actual_wiring_sha256", "module_inventory_sha256"
+                ):
+                    if not SHA256_RE.fullmatch(
+                        str(p10_3_campaign.get(key, "")).lower()
+                    ):
+                        errors.append(f"p10_3_acceptance.{key} must be a SHA256")
+                for key in (
+                    "artifact_source_commit", "host_source_commit",
+                    "evidence_checkpoint_commit",
+                ):
+                    if not re.fullmatch(
+                        r"[0-9a-f]{40}", str(p10_3_campaign.get(key, "")).lower()
+                    ):
+                        errors.append(f"p10_3_acceptance.{key} must be a full Git hash")
+                if state.get("current_run_hardware_authorization") is not False:
+                    errors.append("P10.3 PASS requires current authorization false")
+
         p10_1_campaign = state.get("p10_1_hardware_campaign", {})
         p10_1_is_latest_hardware = (
             isinstance(p10_1_campaign, dict)
@@ -890,7 +953,16 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             and state.get("p10_1r_status")
             in {"IN_PROGRESS", "AUTHORIZED", "PARTIAL", "FAIL", "PASS"}
         )
-        if p10_1r_is_latest_hardware:
+        if p10_3_is_latest_hardware:
+            expected_last_hardware = {
+                "last_hardware_stage": "P10_3",
+                "last_hardware_run_id": p10_3_campaign.get("run_id"),
+                "last_shutdown_fixed": p10_3_campaign.get("shutdown_fixed"),
+                "last_shutdown_rotating": p10_3_campaign.get(
+                    "shutdown_rotating"
+                ),
+            }
+        elif p10_1r_is_latest_hardware:
             expected_last_hardware = {
                 "last_hardware_stage": "P10_1R",
                 "last_hardware_run_id": p10_1r_campaign.get(
@@ -1259,6 +1331,10 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
     p8e_closed = any(by_id.get(req_id, {}).get("status") == "PASS" for req_id in P8E_REQUIREMENT_IDS)
     p9_closed = any(by_id.get(req_id, {}).get("status") == "PASS" for req_id in P9_REQUIREMENT_IDS)
     p10_closed = any(by_id.get(req_id, {}).get("status") == "PASS" for req_id in P10_REQUIREMENT_IDS)
+    p10_3_closed = any(
+        by_id.get(req_id, {}).get("status") == "PASS"
+        for req_id in P10_3_REQUIREMENT_IDS
+    )
     for req_id in INITIAL_REQUIREMENT_IDS - P8B_REQUIREMENT_IDS - P8C_REQUIREMENT_IDS:
         if req_id in by_id and by_id[req_id].get("status") != "PENDING":
             errors.append(f"{req_id} must remain PENDING until its scoped verification closes")
@@ -1347,6 +1423,15 @@ def validate_requirements(document: dict[str, Any], root: Path = ROOT) -> list[s
                 errors.append(f"{req_id} must be PASS after the offline P10 metric audit")
             if item.get("verification_scope") != P10_ANALYSIS_SCOPE:
                 errors.append(f"{req_id} must declare the no-hardware P10 analysis scope")
+    if p10_3_closed:
+        for req_id in P10_3_REQUIREMENT_IDS:
+            item = by_id.get(req_id, {})
+            if item.get("status") != "PASS":
+                errors.append(f"{req_id} must be PASS after P10.3 hardware closure")
+            if not item.get("hardware_followup"):
+                errors.append(f"{req_id} must retain broader-hardware follow-up")
+            if not SHA256_RE.fullmatch(str(item.get("artifact_hash", "")).lower()):
+                errors.append(f"{req_id} must declare a primary artifact_hash")
     if P10_1_OFFLINE_REQUIREMENT_IDS.issubset(by_id):
         for req_id in P10_1_OFFLINE_REQUIREMENT_IDS:
             item = by_id[req_id]
