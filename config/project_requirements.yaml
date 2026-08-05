@@ -4489,6 +4489,17 @@ requirements:
   status: PENDING
   waiver: null
   artifact_hashes: []
+- requirement_id: P10_4-XTALK-002
+  requirement_text: An actual physical ACK shall quarantine the adjacent RX parser on the same two-module AX7020 connector for the complete existing post-TX guard, while ordinary peer-lane DATA TX and the other connector remain independently receivable.
+  profile: P10_4_CONNECTOR_LOCAL_ACK_ECHO_REJECTION
+  verification_method: Prove the ACK-only pair mapping and noninterference in focused XSIM, rebuild both endpoint artifacts, then require zero physical CRC rejects for masks 0x3, 0xC, and the exact 1800-second mixed campaign while preserving accepted non-target and safety counters at zero.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE
+  test_id: P10_4-XTALK-002
+  evidence_path: evidence/generated/p10_4_crc_bad_remediation.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
 - requirement_id: P10_4-FD-001
   requirement_text: A direct 300-second 2+2 simultaneous opposite-direction experiment shall be executed or rejected with current-artifact capability evidence without claiming final full duplex.
   profile: P10_4_2PLUS2_EXPERIMENT

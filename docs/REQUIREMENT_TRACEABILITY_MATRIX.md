@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 257
+REQUIREMENT_COUNT: 258
 PASS: 221
-PENDING: 31
+PENDING: 32
 FAIL: 5
 WAIVED: 0
 ```
@@ -236,6 +236,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_4-DIR-001` | `PENDING` | P10_4_DIRECTION_SWITCH | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-DIR-001` | `evidence/generated/p10_4_direction_switch.json` | Ten 30-second fixed-to-rotating and 30-second rotating-to-fixed direction cycles shall complete without session reconstruction, leak, cross-lane acceptance, or deadlock. |
 | `P10_4-RESET-001` | `PENDING` | P10_4_ENDPOINT_DMA_PL_RECOVERY | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-RESET-001` | `evidence/generated/p10_4_reset_recovery.json` | The campaign shall complete the exact fixed/rotating PS, DMA, and role-selected PL reset counts and a fresh 64 MiB integrity object after every injected reset or protocol fault. |
 | `P10_4-XTALK-001` | `PENDING` | P10_4_DIGITAL_ECHO_CROSSTALK_8X8 | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-XTALK-001` | `evidence/generated/p10_4_echo_crosstalk.json` | All eight physical TX directions shall pass 64-pulse, 1024-pulse, and 30-second one-lane frame vectors with zero non-target CRC-valid acceptance. |
+| `P10_4-XTALK-002` | `PENDING` | P10_4_CONNECTOR_LOCAL_ACK_ECHO_REJECTION | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-XTALK-002` | `evidence/generated/p10_4_crc_bad_remediation.json` | An actual physical ACK shall quarantine the adjacent RX parser on the same two-module AX7020 connector for the complete existing post-TX guard, while ordinary peer-lane DATA TX and the other connector remain independently receivable. |
 | `P10_4-FD-001` | `PENDING` | P10_4_2PLUS2_EXPERIMENT | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-FD-001` | `evidence/generated/p10_4_two_plus_two.json` | A direct 300-second 2+2 simultaneous opposite-direction experiment shall be executed or rejected with current-artifact capability evidence without claiming final full duplex. |
 | `P10_4-SOAK-001` | `PENDING` | P10_4_MIXED_30MIN | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-SOAK-001` | `evidence/generated/p10_4_mixed_30min.json` | The exact 1800-second mixed stationary campaign shall preserve integrity, descriptor, protocol, liveness, echo-admission, and TFDU safety invariants. |
 | `P10_4-SAFE-001` | `PENDING` | P10_4_FAIL_CLOSED_DUAL_SHUTDOWN | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-SAFE-001` | `evidence/generated/p10_4_shutdown.json` | Every stage and every exit path shall leave both serial-bound AX7020 endpoints in independently programmed and verified full shutdown. |

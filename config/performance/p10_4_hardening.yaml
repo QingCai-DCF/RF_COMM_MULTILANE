@@ -26,6 +26,13 @@ transport:
   direction_quiet_us: 68
   internal_object_bytes: 262144
   descriptor_bytes: 65536
+rx_admission_remediation:
+  requirement_id: P10_4-XTALK-002
+  config: config/p10_4_connector_ack_rx_quarantine.yaml
+  connector_pairs: [[0, 1], [2, 3]]
+  paired_ack_quarantine: true
+  ordinary_peer_lane_data_tx_remains_independent: true
+  old_hardware_results_inherited: false
 tuning:
   maximum_cases: 12
   maximum_seconds_per_direction_per_case: 30

@@ -103,6 +103,12 @@ P10_3F_PROVENANCE = [
     ROOT / "scripts/freeze_p10_3f_artifacts.py",
     ROOT / "scripts/finalize_p10_3f_offline.py",
 ]
+P10_4_PROVENANCE = [
+    ROOT / "config/p10_4_connector_ack_rx_quarantine.yaml",
+    ROOT / "docs/design/P10_4_CONNECTOR_ACK_RX_QUARANTINE.md",
+    ROOT / "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json",
+    ROOT / "scripts/verify_p10_4_crc_remediation.py",
+]
 
 
 def configure_campaign(campaign: str) -> None:
@@ -297,6 +303,8 @@ def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]
         ])
     if CAMPAIGN in {"p10_3f", "p10_4"}:
         paths.extend(P10_3F_PROVENANCE)
+    if CAMPAIGN == "p10_4":
+        paths.extend(P10_4_PROVENANCE)
     if CAMPAIGN == "p10_1":
         paths.extend(P10_1_PROVENANCE)
     elif CAMPAIGN == "p10_1r":
@@ -524,6 +532,7 @@ def main() -> int:
                 ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
                 ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
                 *(P10_3F_PROVENANCE if CAMPAIGN in {"p10_3f", "p10_4"} else []),
+                *(P10_4_PROVENANCE if CAMPAIGN == "p10_4" else []),
             ] if CAMPAIGN in {"p10_3", "p10_3f", "p10_4"}
             else []
         ),

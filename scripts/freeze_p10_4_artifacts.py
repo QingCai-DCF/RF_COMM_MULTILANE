@@ -34,6 +34,9 @@ OFFLINE_INPUTS = {
     "performance_config": ROOT / "config/performance/p10_4_hardening.yaml",
     "register_map": ROOT / "config/register_map/ir_axi_regs.yaml",
     "goal": ROOT / "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md",
+    "crc_bad_diagnosis": GENERATED / "p10_4_crc_bad_root_cause_diagnosis.json",
+    "crc_bad_remediation": GENERATED / "p10_4_crc_bad_remediation.json",
+    "connector_ack_quarantine": ROOT / "config/p10_4_connector_ack_rx_quarantine.yaml",
 }
 TCLSH = Path(r"D:\Xilinx\Vivado\2023.1\tps\win64\git-2.16.2\mingw64\bin\tclsh.exe")
 GATES = {
@@ -46,6 +49,7 @@ GATES = {
                               "selftest"],
     "register_map": [sys.executable, "scripts/generate_register_headers.py", "--verify"],
     "model": [sys.executable, "scripts/model_p10_4.py", "--check"],
+    "crc_remediation": [sys.executable, "scripts/verify_p10_4_crc_remediation.py"],
     "p10_3_baseline": [sys.executable, "scripts/verify_p10_3_existing.py"],
     "p10_2_baseline": [sys.executable, "scripts/verify_p10_2_existing.py"],
     "p10_1r_baseline": [sys.executable, "scripts/verify_p10_1r_existing.py"],

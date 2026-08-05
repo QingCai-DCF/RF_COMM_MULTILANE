@@ -907,4 +907,100 @@ module tb_2lane_4lane_regression;
   initial begin #100; $display("TB_2LANE_4LANE_REGRESSION=PASS"); $finish; end
 endmodule
 
+module tb_p10_4_connector_ack_quarantine;
+  localparam integer L = 4;
+  reg clk = 0;
+  always #5 clk = ~clk;
+  reg rst_n = 0;
+  reg [L-1:0] final_txd = 0;
+  reg [L-1:0] tx_is_ack = 0;
+  reg [L-1:0] raw_rx = 0;
+  wire [L-1:0] paired_ack_txd;
+  wire [L-1:0] quarantine_source;
+  wire [L-1:0] accept;
+  wire [31:0] blanked [0:L-1];
+
+  p10_4_connector_ack_rx_quarantine #(.LANE_COUNT(L)) dut_map (
+    .final_local_txd_i(final_txd), .local_tx_is_ack_i(tx_is_ack),
+    .paired_ack_txd_o(paired_ack_txd),
+    .rx_quarantine_source_o(quarantine_source)
+  );
+
+  genvar lane;
+  generate
+    for (lane = 0; lane < L; lane = lane + 1) begin : g_admission
+      p10_1r_rx_admission #(
+        .MIN_POST_TX_GUARD_CYCLES(16), .IDLE_QUALIFY_CYCLES(4),
+        .MAX_QUARANTINE_CYCLES(64)
+      ) admission (
+        .clk, .rst_n, .clear_counters_i(1'b0),
+        .receiver_enable_i(1'b1),
+        .final_physical_txd_i(quarantine_source[lane]),
+        .raw_rx_pulse_i(raw_rx[lane]),
+        .rx_frame_accept_enable_o(accept[lane]), .rx_decoder_clear_o(),
+        .echo_quarantine_o(), .post_tx_guard_active_o(),
+        .raw_pulse_count_o(), .raw_while_local_tx_count_o(),
+        .blanked_raw_pulse_count_o(blanked[lane]),
+        .guard_total_cycles_o(), .guard_current_cycles_o(),
+        .guard_max_cycles_o(), .echo_tail_max_cycles_o(),
+        .decoder_clear_count_o(), .overlap_violation_count_o(),
+        .admission_violation_count_o(), .last_physical_txd_rise_o(),
+        .last_physical_txd_fall_o(), .first_local_rxd_edge_after_tx_o(),
+        .last_local_rxd_edge_after_tx_o(), .last_raw_rx_timestamp_o()
+      );
+    end
+  endgenerate
+
+  task automatic recover_all;
+    begin
+      final_txd = 0;
+      tx_is_ack = 0;
+      raw_rx = 0;
+      repeat (24) @(posedge clk); #1;
+      if (accept != 4'hf)
+        $fatal(1, "connector ACK quarantine did not recover: %x", accept);
+    end
+  endtask
+
+  initial begin
+    repeat (4) @(posedge clk);
+    rst_n = 1;
+    @(negedge clk); final_txd = 4'b0001; tx_is_ack = 0;
+    #1;
+    if (quarantine_source != 4'b0001 || paired_ack_txd != 0 ||
+        accept != 4'b1110)
+      $fatal(1, "ordinary peer DATA TX lost lane independence");
+    @(posedge clk); #1;
+    recover_all();
+
+    @(negedge clk);
+    final_txd = 4'b0001; tx_is_ack = 4'b0001; raw_rx = 4'b0010;
+    #1;
+    if (paired_ack_txd != 4'b0010 || quarantine_source != 4'b0011 ||
+        accept != 4'b1100)
+      $fatal(1, "J10 ACK did not quarantine exactly lanes0/1");
+    @(posedge clk); #1;
+    raw_rx = 0;
+    if (blanked[1] == 0)
+      $fatal(1, "paired ACK raw edge was not retained as blanked evidence");
+    recover_all();
+
+    @(negedge clk);
+    final_txd = 4'b0100; tx_is_ack = 4'b0100;
+    #1;
+    if (paired_ack_txd != 4'b1000 || quarantine_source != 4'b1100 ||
+        accept != 4'b0011)
+      $fatal(1, "J11 ACK did not quarantine exactly lanes2/3");
+    @(posedge clk); #1;
+    recover_all();
+
+    @(negedge clk); final_txd = 4'b0100; tx_is_ack = 0;
+    #1;
+    if (quarantine_source != 4'b0100 || accept != 4'b1011)
+      $fatal(1, "ordinary J11 DATA TX incorrectly blanked lane3");
+    $display("TB_P10_4_CONNECTOR_ACK_QUARANTINE=PASS");
+    $finish;
+  end
+endmodule
+
 `default_nettype wire

@@ -856,6 +856,19 @@ module p9_optical_transport_core #(
   reg [STORE_ADDR_WIDTH-1:0] lane_payload_base [0:LANE_COUNT-1];
   reg [LANE_COUNT-1:0] lane_start_pending;
   reg [LANE_COUNT-1:0] lane_frame_ack;
+  // Actual final physical Txd is the only trigger.  P10.4 additionally
+  // quarantines the paired receiver while an adjacent connector module emits
+  // an ACK; ordinary DATA TX still does not blank the peer lane.
+  wire [LANE_COUNT-1:0] local_final_txd = local_is_a ? a_txd_o : b_txd_o;
+  wire [LANE_COUNT-1:0] paired_ack_physical_txd;
+  wire [LANE_COUNT-1:0] local_rx_quarantine_source;
+  p10_4_connector_ack_rx_quarantine #(.LANE_COUNT(LANE_COUNT))
+      u_connector_ack_rx_quarantine (
+        .final_local_txd_i(local_final_txd),
+        .local_tx_is_ack_i(lane_frame_ack),
+        .paired_ack_txd_o(paired_ack_physical_txd),
+        .rx_quarantine_source_o(local_rx_quarantine_source)
+      );
   reg [31:0] lane_session [0:LANE_COUNT-1];
   reg [15:0] lane_path [0:LANE_COUNT-1];
   reg [15:0] lane_sequence [0:LANE_COUNT-1];
@@ -1731,6 +1744,8 @@ module p9_optical_transport_core #(
            b_rx_pulse[tx_lane] : a_rx_pulse[tx_lane]);
       wire selected_final_txd = local_is_a ?
           a_txd_o[tx_lane] : b_txd_o[tx_lane];
+      wire selected_rx_quarantine_source = endpoint_mode ?
+          local_rx_quarantine_source[tx_lane] : selected_final_txd;
 
       p10_1r_rx_admission #(
         .MIN_POST_TX_GUARD_CYCLES(RX_MIN_POST_TX_GUARD_CYCLES),
@@ -1739,7 +1754,10 @@ module p9_optical_transport_core #(
       ) u_rx_admission (
         .clk(clk), .rst_n(rst_n), .clear_counters_i(clear_counters_i),
         .receiver_enable_i(endpoint_mode && selected_phy_ready),
-        .final_physical_txd_i(selected_final_txd),
+        // The signal remains derived exclusively from actual final Txd.  In
+        // endpoint mode it includes an adjacent physical ACK on the same
+        // two-module connector, but never an ordinary peer-lane DATA TX.
+        .final_physical_txd_i(selected_rx_quarantine_source),
         .raw_rx_pulse_i(selected_rx_pulse),
         .rx_frame_accept_enable_o(rx_admission_enable[tx_lane]),
         .rx_decoder_clear_o(rx_decoder_clear[tx_lane]),

@@ -1,0 +1,49 @@
+schema_version: 1
+scope: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+requirement_id: P10_4-XTALK-002
+status: REMEDIATION_CANDIDATE_OFFLINE_VALIDATION_REQUIRED
+cause_evidence:
+  run_id: p10_4_20260805T173745Z_6c7418e6_b20f137e_795f3f34
+  diagnosis: evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json
+  blocking_gate: CRC_BAD_ZERO
+  observed_crc_bad: 929
+physical_topology:
+  connector_pair_width: 2
+  pairs:
+    - {connector: J10, lanes: [0, 1], modules_fixed: [F0, F1], modules_rotating: [R0, R1]}
+    - {connector: J11, lanes: [2, 3], modules_fixed: [F2, F3], modules_rotating: [R2, R3]}
+quarantine_source:
+  same_module: actual_final_physical_txd
+  paired_module: actual_final_physical_txd_and_frame_is_ack
+  requested_or_scheduled_tx_is_not_a_trigger: true
+  ordinary_peer_lane_data_tx_is_not_a_trigger: true
+behavior:
+  paired_ack_immediately_disables_adjacent_rx_admission: true
+  paired_ack_holds_adjacent_decoder_and_parser_clear: true
+  existing_post_txd_guard_cycles: 4096
+  existing_idle_qualification_cycles: 256
+  existing_maximum_quarantine_cycles: 131072
+  cross_connector_receive_path_remains_open: true
+  receive_only_with_global_permit_low_preserved: true
+  raw_edges_remain_observable_in_blanked_counters: true
+noninterference:
+  global_permit_feedback_paths: 0
+  tx_request_feedback_paths: 0
+  tx_kill_feedback_paths: 0
+  sd_or_mode_feedback_paths: 0
+  duty_guard_feedback_paths: 0
+  scheduler_or_flow_control_feedback_paths: 0
+artifact_policy:
+  new_bitstream_xsa_bsp_elf_required: true
+  old_hardware_results_inherited: false
+  fixed_and_rotating_rebuild_required: true
+verification:
+  focused_xsim_test: tb_p10_4_connector_ack_quarantine
+  full_offline_gate_required: true
+  hardware_masks: ['0x3', '0xC', '0xF']
+  final_mixed_30min_crc_bad_required: 0
+  same_module_accepted_data_required: 0
+  cross_lane_accepted_data_required: 0
+hardware_actions_executed_by_this_config: false
+no_hardware: true
+current_run_hardware_authorization: false

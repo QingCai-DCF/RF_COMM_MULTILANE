@@ -31,7 +31,9 @@ CORE = [
     "rtl/ir_tfdu_physical_module_safety.sv", "rtl/tfdu_lane_phy.sv",
     "rtl/ir_4ppm_codec.sv", "rtl/p9_rate_4ppm_rx.sv",
     "rtl/p9_4ppm_frame_tx.sv", "rtl/p9_4ppm_frame_rx.sv",
-    "rtl/p10_1r_rx_admission.sv", "rtl/p9_optical_transport_core.sv",
+    "rtl/p10_1r_rx_admission.sv",
+    "rtl/p10_4_connector_ack_rx_quarantine.sv",
+    "rtl/p9_optical_transport_core.sv",
 ]
 TESTS = (
     ("tb_ax7020_4lane_profile", "TB_AX7020_4LANE_PROFILE=PASS",
@@ -63,6 +65,12 @@ P10_3_TESTS = (
      [*CORE, "sim/tb/tb_p10_forensic_safety_integration.sv"]),
 )
 P10_4_TESTS = (
+    ("tb_p10_4_connector_ack_quarantine",
+     "TB_P10_4_CONNECTOR_ACK_QUARANTINE=PASS", [
+        "rtl/p10_1r_rx_admission.sv",
+        "rtl/p10_4_connector_ack_rx_quarantine.sv",
+        SUITE,
+    ]),
     ("tb_p10_4_perf_command", "P10_4_PERF_COUNTER_SPLIT_XSIM=PASS", [
         "rtl/generated/ir_register_map_defs.svh",
         "rtl/p10_1_metric_counter.sv",
@@ -193,7 +201,12 @@ def main() -> int:
                 "scripts/finalize_p10_3f_offline.py",
             ])
         if args.campaign == "p10_4":
-            source_files.extend([P10_4_GOAL])
+            source_files.extend([
+                P10_4_GOAL,
+                "config/p10_4_connector_ack_rx_quarantine.yaml",
+                "docs/design/P10_4_CONNECTOR_ACK_RX_QUARANTINE.md",
+                "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json",
+            ])
         source_files = sorted(set(source_files))
     summary = {
         "schema_version": 1,

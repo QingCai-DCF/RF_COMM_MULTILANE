@@ -46,6 +46,12 @@ P10_3F_PROVENANCE = [
     "scripts/freeze_p10_3f_artifacts.py",
     "scripts/finalize_p10_3f_offline.py",
 ]
+P10_4_PROVENANCE = [
+    "config/p10_4_connector_ack_rx_quarantine.yaml",
+    "docs/design/P10_4_CONNECTOR_ACK_RX_QUARANTINE.md",
+    "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json",
+    "scripts/verify_p10_4_crc_remediation.py",
+]
 P10_1_HW_GOAL = Path(
     r"C:\Users\user\Downloads"
     r"\P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE_GOAL.md"
@@ -91,6 +97,7 @@ RTL = [
     "rtl/p9_4ppm_frame_tx.sv",
     "rtl/p9_4ppm_frame_rx.sv",
     "rtl/p10_1r_rx_admission.sv",
+    "rtl/p10_4_connector_ack_rx_quarantine.sv",
     "rtl/p9_optical_transport_core.sv",
     "rtl/p6_axi_lite_bridge.sv",
     "rtl/p10_1_metric_counter.sv",
@@ -321,6 +328,8 @@ def source_bundle(role: str, cfg: dict[str, str]) -> tuple[str, dict[str, str]]:
         ])
     if CAMPAIGN in {"p10_3f", "p10_4"}:
         sources.extend(P10_3F_PROVENANCE)
+    if CAMPAIGN == "p10_4":
+        sources.extend(P10_4_PROVENANCE)
     if CAMPAIGN == "p10_1":
         sources.extend(P10_1_PROVENANCE)
     elif CAMPAIGN == "p10_1r":
@@ -602,6 +611,8 @@ def main() -> int:
             ])
         if CAMPAIGN in {"p10_3f", "p10_4"}:
             source_paths.extend(P10_3F_PROVENANCE)
+        if CAMPAIGN == "p10_4":
+            source_paths.extend(P10_4_PROVENANCE)
     source_worktree_dirty = tracked_source_dirty(source_paths)
     results = [run_role(role, cfg, args.reuse_existing)
                for role, cfg in ROLES.items()]
