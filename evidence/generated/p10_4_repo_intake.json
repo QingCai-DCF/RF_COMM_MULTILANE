@@ -1,0 +1,111 @@
+{
+  "base_commit": "11a05992279717511527573012449b37787b9d6a",
+  "base_tag": "p10.3-ax7020-stationary-4lane-closed",
+  "branch": "p10.4/autonomous-4lane-hardening",
+  "checks": [
+    {
+      "log": "evidence/generated/p10_4_repo_intake_raw/p10_3_verify_existing.log",
+      "log_sha256": "229c6492c92e1262d37fa8f32e3b215a4b9d770e9f9510a4f7e5152743c18067",
+      "name": "p10_3_verify_existing",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    {
+      "log": "evidence/generated/p10_4_repo_intake_raw/p10_2_verify_existing.log",
+      "log_sha256": "6f1fabb70447e4e342c53405c5a0da61086f9ae88f035779fd2213a98b2ee79c",
+      "name": "p10_2_verify_existing",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    {
+      "log": "evidence/generated/p10_4_repo_intake_raw/p10_1r_verify_existing.log",
+      "log_sha256": "343787f10c17b4043c2bd6b97c7164de81b37633e44591ad07657528e8aba0c9",
+      "name": "p10_1r_verify_existing",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    {
+      "log": "evidence/generated/p10_4_repo_intake_raw/p8c_safety_verify_existing.log",
+      "log_sha256": "fde31f93302bb3282f2c24f27d25e516506a4aaa4f1a2e4aa26b28ba550fadd3",
+      "name": "p8c_safety_verify_existing",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    {
+      "log": "evidence/generated/p10_4_repo_intake_raw/state_requirements_consistency.log",
+      "log_sha256": "3f790fa2bd9b601f7c22df7c1945366820a95160f0a8a270edac5388d44db72f",
+      "name": "state_requirements_consistency",
+      "returncode": 0,
+      "status": "PASS"
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "git_status": [
+    "?? evidence/generated/p10_4_model_reconciliation_offline.json",
+    "?? evidence/generated/p10_4_model_reconciliation_offline.md",
+    "?? evidence/generated/p10_4_p10_3_closeout.json",
+    "?? evidence/generated/p10_4_p10_3_closeout.md",
+    "?? evidence/generated/p10_4_repo_intake.json",
+    "?? evidence/generated/p10_4_repo_intake.md",
+    "?? evidence/generated/p10_4_xsim/"
+  ],
+  "hardware_actions_executed": false,
+  "hardware_authorization": "GOAL_SUBMISSION_STANDING_AUTHORIZATION_NOT_YET_MATERIALIZED_AS_CURRENT_RUN",
+  "head": "9101095609adac0503201b064caaf2f5456fc183",
+  "inputs": {
+    "AGENTS": {
+      "path": "AGENTS.md",
+      "sha256": "6677e4589355aa96dd434f8eb5ab9567c97efcb87ca5b3aae137efbd6776aebb"
+    },
+    "PROJECT_CONSTRAINTS": {
+      "path": "PROJECT_CONSTRAINTS.txt",
+      "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
+    },
+    "fixed_profile": {
+      "path": "board_profiles/ax7020_fixed_4lane/profile.yaml",
+      "sha256": "6c05c738333f80836d141a833e45592342b3d83b62369d6eb91d5ba3f907c571"
+    },
+    "goal": {
+      "path": "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md",
+      "sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f"
+    },
+    "module_inventory": {
+      "path": "config/hardware/tfdu_module_inventory.yaml",
+      "sha256": "85d915625b2f43fc5640f15a91b7ec1587615261bccb68568b22173d6ed21f6b"
+    },
+    "project_state": {
+      "path": "config/project_state.json",
+      "sha256": "79b98a3ca6e59fbbad2fc8139d0e66aef039510a36a6d3ec5565f42c477a1dd1"
+    },
+    "register_map": {
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "06c2105e05cbad4dd780316cf44dd857b13a32dad584e2df2ab4a5b8bcfecb39"
+    },
+    "requirements": {
+      "path": "config/project_requirements.yaml",
+      "sha256": "15080cc3e1748c86fa84a3a026f7a82ae5e951f76e140fce91ad768ded2760a5"
+    },
+    "rotating_profile": {
+      "path": "board_profiles/ax7020_rotating_4lane/profile.yaml",
+      "sha256": "b79b87c90b56d442e3b3db228a49523aea72bd730a200a13d82a0e31d44560e8"
+    },
+    "wiring": {
+      "path": "config/hardware/p10_3_actual_wiring.yaml",
+      "sha256": "551f518f476deaa9219b826f2985d08baab5e953d92a4f734bb28ba6613bf2a1"
+    }
+  },
+  "no_hardware": true,
+  "p10_3_closeout_commit": "11a05992279717511527573012449b37787b9d6a",
+  "p10_3_evidence_commit": "e64c04843d5d996f8d66d650fafaf3a43a2dd7dc",
+  "schema_version": 1,
+  "start_timestamp_utc": "2026-08-05T11:13:12.520030+00:00",
+  "status": "PASS",
+  "test_id": "P10_4-REPO-INTAKE",
+  "tool_versions": {
+    "git": "git version 2.54.0.windows.1",
+    "python": "3.14.3",
+    "vivado": "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+    "xsdb": "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat"
+  }
+}
