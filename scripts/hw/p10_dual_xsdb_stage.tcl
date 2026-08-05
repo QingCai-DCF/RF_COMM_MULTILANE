@@ -1237,7 +1237,7 @@ proc p10_wait_p101_active {sequence timeout_ms} {
 }
 
 proc p10_execute_ps_service_reset {label reset_role direction lane size object_id} {
-  global p10_max_lane_mask
+  global p10_max_lane_mask p10_dump_dir
   global p10_command_sequence p10_active_case_label
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
       $reset_role ni {fixed rotating} || $direction ni {0 1} ||

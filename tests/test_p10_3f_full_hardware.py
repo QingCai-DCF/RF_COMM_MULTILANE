@@ -386,6 +386,11 @@ class P103FFullHardwareTests(unittest.TestCase):
             tcl.index("proc p10_execute_ps_service_reset"):
             tcl.index("proc p10_run_p101_formal {")
         ]
+        self.assertIn("global p10_max_lane_mask p10_dump_dir", body)
+        self.assertLess(
+            body.index("global p10_max_lane_mask p10_dump_dir"),
+            body.index("$p10_dump_dir"),
+        )
         self.assertIn("P10_3F_SERVICE_RESET_SHUTDOWN_BEFORE_PS_RESET=PASS", body)
         self.assertIn("service_reset_shutdown.psv", body)
         self.assertLess(
