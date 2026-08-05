@@ -144,12 +144,12 @@
     }
   ],
   "current_program_stage": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
-  "current_run_hardware_authorization": true,
+  "current_run_hardware_authorization": false,
   "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
   "final_product_status": "PENDING_HW",
   "four_lane_application_8mbps": "PASS",
   "four_lane_raw_16mbps": "PASS",
-  "last_hardware_authorization_consumed": false,
+  "last_hardware_authorization_consumed": true,
   "last_hardware_authorization_id": "P10_4-CURRENT-RUN-IMMUTABLE",
   "last_hardware_evidence_checkpoint": "e182dcb809a13d4718fad0c9e5616f4818a770c2",
   "last_hardware_run_id": "p10_4_20260805T125932Z_a32afe5b_6f915067_ace48b07",
@@ -747,20 +747,20 @@
     "artifact_freeze_sha256": "710f8a6e7ea14472fb650b1f5f7988d3598a2c8f5b972a57695363ddd0bd5352",
     "automation_only": true,
     "authorization_path": "config/p10_4_current_run_hardware_authorization.json",
-    "authorization_sha256": "8b73b4a2d8d7e2d9977788ca06f7dea6f0ca83c23b7aba0532b0eeb902a2456f",
-    "current_run_hardware_authorization": true,
-    "evidence_manifest_path": "evidence/hardware/p10_4/p10_4_20260805T124645Z_a32afe5b_6f915067_ace48b07/final/run_evidence_sha256_manifest.json",
-    "evidence_manifest_sha256": "b5f04d3384fd756dce4bb09ce01b645bafd0edd5a6eca158ad5d35f2836dbc91",
-    "evidence_path": "evidence/hardware/p10_4/p10_4_20260805T124645Z_a32afe5b_6f915067_ace48b07/final/orchestrator_result.json",
-    "evidence_sha256": "79e7604b057bd528c95765e8b18f592cbe60244a63affcc852086a5aed5a6932",
+    "authorization_sha256": "eae766db9e1c5cf4453dde2119dfc871569f22238eb8505eb6d8a8acab590b9d",
+    "current_run_hardware_authorization": false,
+    "evidence_manifest_path": "evidence/hardware/p10_4/p10_4_20260805T125932Z_a32afe5b_6f915067_ace48b07/final/run_evidence_sha256_manifest.json",
+    "evidence_manifest_sha256": "3142c3da8a76ba8306402172be6ace7f00a928981f45b02f7c943979cbbb8ed5",
+    "evidence_path": "evidence/hardware/p10_4/p10_4_20260805T125932Z_a32afe5b_6f915067_ace48b07/final/orchestrator_result.json",
+    "evidence_sha256": "91afa5ce922e5d83bfe7c701486b01e5b1772765aaeb1b283416f4b725801ec9",
     "external_instrumentation_allowed": false,
     "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
     "hardware_actions_executed": true,
     "last_attempt_errors": [
-      "counter_local_source: mandatory stage failed closed"
+      "direction_switch: mandatory stage failed closed"
     ],
     "last_attempt_evidence_checkpoint": "e182dcb809a13d4718fad0c9e5616f4818a770c2",
-    "last_attempt_status": "FAIL",
+    "last_attempt_status": "PARTIAL",
     "maximum_lane_mask": "0xF",
     "maximum_single_formal_run_seconds": 1800,
     "network_allowed": false,
@@ -774,12 +774,12 @@
     "user_hold_points": 0
   },
   "p10_4_current_run_authorization": {
-    "consumed": false,
-    "current_run_hardware_authorization": true,
+    "consumed": true,
+    "current_run_hardware_authorization": false,
     "path": "config/p10_4_current_run_hardware_authorization.json",
     "run_id": "p10_4_20260805T125932Z_a32afe5b_6f915067_ace48b07",
-    "sha256": "8b73b4a2d8d7e2d9977788ca06f7dea6f0ca83c23b7aba0532b0eeb902a2456f",
-    "status": "READY_FOR_EXACT_CURRENT_RUN"
+    "sha256": "eae766db9e1c5cf4453dde2119dfc871569f22238eb8505eb6d8a8acab590b9d",
+    "status": "CONSUMED_AFTER_P10_4_PARTIAL"
   },
   "p10_4_status": "IN_PROGRESS",
   "p10_acceptance": {
@@ -1175,7 +1175,7 @@
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
-  "state_revision": "P10-4-AUTONOMOUS-4LANE-IN-PROGRESS-6",
+  "state_revision": "P10-4-AUTONOMOUS-4LANE-IN-PROGRESS-7",
   "stationary_4lane_hardware": "PASS",
   "two_lane_baseline_status": "FROZEN_ACCEPTED",
   "two_lane_speed_stability": "PASS_STATIONARY_AX7020_2LANE_HALF_DUPLEX",

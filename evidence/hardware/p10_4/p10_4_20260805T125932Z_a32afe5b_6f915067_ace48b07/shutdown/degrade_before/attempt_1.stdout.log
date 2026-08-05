@@ -1,0 +1,67 @@
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+Sourcing tcl script 'D:/Xilinx/Vivado/2023.1/scripts/Vivado_init.tcl'
+vivado-mcp server ready on port 9999
+source {C:\Users\user\Documents\RF_COMM_MULTILANE_P10_4\scripts\hw\p10_program_dual_shutdown.tcl} -notrace
+INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121
+INFO: [Labtools 27-3415] Connecting to cs_server url TCP:localhost:0
+INFO: [Labtools 27-3417] Launching cs_server...
+INFO: [Labtools 27-2221] Launch Output:
+
+
+******** Xilinx cs_server v2023.1.0
+  ****** Build date   : Apr 10 2023-23:59:24
+    **** Build number : 2023.1.1681142364
+      ** Copyright 2017-2022 Xilinx, Inc. All Rights Reserved.
+      ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+
+
+INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210249855178
+INFO: [Labtools 27-1434] Device xc7z020 (JTAG device index = 1) is programmed with a design that has no supported debug core(s) in it.
+INFO: [Labtools 27-3164] End of startup status: HIGH
+INFO: [Labtoolstcl 44-464] Closing hw_target localhost:3121/xilinx_tcf/Digilent/210249855178
+INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210512180081
+INFO: [Labtools 27-1434] Device xc7z020 (JTAG device index = 1) is programmed with a design that has no supported debug core(s) in it.
+INFO: [Labtools 27-3164] End of startup status: HIGH
+INFO: [Labtoolstcl 44-464] Closing hw_target localhost:3121/xilinx_tcf/Digilent/210512180081
+P10_SHUTDOWN_FIXED_ENUM_DEVICE_0=arm_dap_0|PART=arm_dap|NAME=arm_dap_0|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477
+P10_SHUTDOWN_FIXED_ENUM_DEVICE_1=xc7z020_1|PART=xc7z020|NAME=xc7z020_1|IDCODE=00100011011100100111000010010011|NORMALIZED=23727093
+P10_SHUTDOWN_FIXED_TARGET=localhost:3121/xilinx_tcf/Digilent/210249855178
+P10_SHUTDOWN_FIXED_SERIAL=210249855178
+P10_SHUTDOWN_FIXED_HW_OBJECT_COUNT=2
+P10_SHUTDOWN_FIXED_EXACT_FPGA_MATCH_COUNT=1
+P10_SHUTDOWN_FIXED_AUXILIARY_DAP_COUNT=1
+P10_SHUTDOWN_FIXED_UNEXPECTED_HW_OBJECT_COUNT=0
+P10_SHUTDOWN_FIXED_TXD_OUTPUT_INTENT=0
+P10_SHUTDOWN_FIXED_SD_REQUEST_ACTIVE=1
+P10_SHUTDOWN_FIXED_MODE_HIGH=1
+P10_SHUTDOWN_FIXED_ENDPOINT_ARMED=0
+P10_SHUTDOWN_FIXED_ACTIVE_TX_MASK=0
+P10_SHUTDOWN_FIXED=PASS
+P10_SHUTDOWN_ROTATING_ENUM_DEVICE_0=arm_dap_0_1|PART=arm_dap|NAME=arm_dap_0_1|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477
+P10_SHUTDOWN_ROTATING_ENUM_DEVICE_1=xc7z020_1_1|PART=xc7z020|NAME=xc7z020_1_1|IDCODE=00100011011100100111000010010011|NORMALIZED=23727093
+P10_SHUTDOWN_ROTATING_TARGET=localhost:3121/xilinx_tcf/Digilent/210512180081
+P10_SHUTDOWN_ROTATING_SERIAL=210512180081
+P10_SHUTDOWN_ROTATING_HW_OBJECT_COUNT=2
+P10_SHUTDOWN_ROTATING_EXACT_FPGA_MATCH_COUNT=1
+P10_SHUTDOWN_ROTATING_AUXILIARY_DAP_COUNT=1
+P10_SHUTDOWN_ROTATING_UNEXPECTED_HW_OBJECT_COUNT=0
+P10_SHUTDOWN_ROTATING_TXD_OUTPUT_INTENT=0
+P10_SHUTDOWN_ROTATING_SD_REQUEST_ACTIVE=1
+P10_SHUTDOWN_ROTATING_MODE_HIGH=1
+P10_SHUTDOWN_ROTATING_ENDPOINT_ARMED=0
+P10_SHUTDOWN_ROTATING_ACTIVE_TX_MASK=0
+P10_SHUTDOWN_ROTATING=PASS
+SHUTDOWN_FIXED=PASS
+SHUTDOWN_ROTATING=PASS
+TFDU_SHUTDOWN_PROGRAMMED=1
+SHUTDOWN_EXIT=0
+P10_DUAL_SHUTDOWN_RESULT=PASS
+INFO: [Common 17-206] Exiting Vivado at Wed Aug  5 22:07:55 2026...
