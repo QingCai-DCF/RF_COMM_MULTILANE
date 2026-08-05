@@ -532,7 +532,7 @@
     }
   ],
   "authorization_id": "P10_4-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "83feda75f06918bfe3ea98ecfae4bacc6f918f04",
+  "authorization_parent_commit": "735b7af040d9f69e1fd5095c13d5fed30cf6174f",
   "authorization_source": "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md",
   "authorization_source_semantics": "Submitting the Goal explicitly authorizes all listed P10.4 hardware operations; there are zero user HOLD points.",
   "authorized": true,
@@ -599,13 +599,11 @@
     "new_run_id_per_diagnostic_stage": 2,
     "program": 2
   },
-  "consumed": true,
-  "consumed_at_utc": "2026-08-05T12:52:05+00:00",
-  "created_at_utc": "2026-08-05T12:46:45.838646+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "created_at_utc": "2026-08-05T12:59:32.917117+00:00",
+  "current_run_hardware_authorization": true,
   "errors": [],
   "ethernet_allowed": false,
-  "evidence_consistency": "PASS",
   "external_instrumentation_allowed": false,
   "external_instrumentation_used": false,
   "fixed_jtag_serial": "210249855178",
@@ -654,9 +652,8 @@
     "hash_low": "0xBCFECB39",
     "version": "0x0A000004"
   },
-  "result": "evidence/hardware/p10_4/p10_4_20260805T124645Z_a32afe5b_6f915067_ace48b07/final/orchestrator_result.json",
   "rotating_jtag_serial": "210512180081",
-  "run_id": "p10_4_20260805T124645Z_a32afe5b_6f915067_ace48b07",
+  "run_id": "p10_4_20260805T125932Z_a32afe5b_6f915067_ace48b07",
   "schema_version": 1,
   "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
   "shutdown_policy": {
@@ -667,6 +664,6 @@
     "verify_both_shutdown_markers": true
   },
   "source_commit": "a32afe5bf744892b39325ac640a1bfaa2b5c6cf2",
-  "status": "CONSUMED_AFTER_P10_4_FAIL",
+  "status": "READY_FOR_EXACT_CURRENT_RUN",
   "wiring_changed": false
 }
