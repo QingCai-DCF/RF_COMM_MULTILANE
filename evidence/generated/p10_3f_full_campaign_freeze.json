@@ -133,7 +133,7 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-05T05:54:39+00:00",
+  "generated_at_utc": "2026-08-05T06:51:06+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": false,
   "hardware_first_fault_kill_active_during_each_command": true,
@@ -274,14 +274,14 @@
       "sha256": "55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40"
     },
     {
-      "bytes": 135279,
+      "bytes": 135577,
       "path": "scripts/run_p10_3f_full_hardware.py",
-      "sha256": "24c83ea7ac790bdbbcb728a6f1ab0645365d2911e931578cc6897ec97aeaaca5"
+      "sha256": "18ab4f29c96fc4400f7391a8e2cd0e8107410398afe2a47dd4ba63cd36954b95"
     },
     {
-      "bytes": 109720,
+      "bytes": 109940,
       "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
-      "sha256": "2ed198d8c16c39bfb03c3a1cdc43efd7770cd17bf68f91ab04a549f505f72994"
+      "sha256": "07bd4d1bd0ff6204d1c00f2e8959228338c4796f0ca93f26b65bace16b2b8b80"
     },
     {
       "bytes": 16185,
@@ -304,9 +304,9 @@
       "sha256": "7ac6113661b1097aa5684a6083f1cac168e40efae42530d5f2d7c59231780d09"
     },
     {
-      "bytes": 28028,
+      "bytes": 29598,
       "path": "tests/test_p10_3f_full_hardware.py",
-      "sha256": "868fc3f181bbf519b9eaf44b43b3914a1453363bec62408d6279e5d1bd090f41"
+      "sha256": "0844aac00d098bfe942abc4e60b2fff180802317f52673eba4c809b1478a6c60"
     },
     {
       "bytes": 5036,
@@ -339,7 +339,7 @@
       "sha256": "26a0513ef4be3e73c2834afd37ed0b7cf91ae33a35e61665024303048682be61"
     }
   ],
-  "host_source_commit": "4ae863a86cb07b3a3b176aa7656a1575c5b59cd6",
+  "host_source_commit": "e356dd9216da528af0a21d39a0eced9b4e96ee1e",
   "internal_stream_object_bytes": 262144,
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_board_autonomous_aggregate_command_bytes": 67108864,
@@ -370,9 +370,9 @@
         "tests.test_p10_3_hardware_acceptance"
       ],
       "log": {
-        "bytes": 143,
+        "bytes": 144,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
-        "sha256": "5f19ad105f286491de2df5d5665970aea26f0ce53336e13bf9bbb60dec71a4fd"
+        "sha256": "af450d25bb142a1c14d30c73ee82db2871b6459796adfe642171e12c64b2d0bb"
       },
       "returncode": 0,
       "status": "PASS"
