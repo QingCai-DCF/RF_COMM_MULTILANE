@@ -133,7 +133,7 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-05T01:58:40+00:00",
+  "generated_at_utc": "2026-08-05T02:56:49+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": false,
   "hardware_first_fault_kill_active_during_each_command": true,
@@ -179,9 +179,9 @@
       "sha256": "069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8"
     },
     {
-      "bytes": 1587,
+      "bytes": 1775,
       "path": "config/performance/p10_3f_full_aggregate_runtime.yaml",
-      "sha256": "a1fd595f97e0f8701ba103867db25b276ece60e47d17e0028af948d925acc572"
+      "sha256": "7e15a1acec699f38fbcd6cd0747909598d2f89517ff00124a198d017956f5f4e"
     },
     {
       "bytes": 5247,
@@ -274,9 +274,9 @@
       "sha256": "55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40"
     },
     {
-      "bytes": 120408,
+      "bytes": 121653,
       "path": "scripts/run_p10_3f_full_hardware.py",
-      "sha256": "5fe7ea51559d330909d533cc0c86b99097cc44d9a637423eea0adbe2593ac726"
+      "sha256": "95020b460f3455b9f3bb4124975d24185e6090d6ab153ec57b0ce0ebe3368fd8"
     },
     {
       "bytes": 107184,
@@ -304,9 +304,9 @@
       "sha256": "7ac6113661b1097aa5684a6083f1cac168e40efae42530d5f2d7c59231780d09"
     },
     {
-      "bytes": 19204,
+      "bytes": 20349,
       "path": "tests/test_p10_3f_full_hardware.py",
-      "sha256": "6c9ca48c316618a503e26ccd035f105ce21130f325645f98eaa58b9ebf00c34b"
+      "sha256": "5a295dfcd28839268d6e2beb74edc4363cf2e4332cfcdb82dbcdef31004bd102"
     },
     {
       "bytes": 5036,
@@ -339,7 +339,7 @@
       "sha256": "26a0513ef4be3e73c2834afd37ed0b7cf91ae33a35e61665024303048682be61"
     }
   ],
-  "host_source_commit": "6f7063e953b5124426da580732d7f156a8836cea",
+  "host_source_commit": "650b94cf6e2bfc310a2a21017fed3da28e392ebd",
   "internal_stream_object_bytes": 262144,
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_board_autonomous_aggregate_command_bytes": 67108864,
@@ -372,7 +372,7 @@
       "log": {
         "bytes": 138,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
-        "sha256": "240efb3be4faae81256d563e371c08fc03f345a69e2f87bb64c9b58a06c04497"
+        "sha256": "134b34a4fc110ce17fdd92f368c89cd57a4131c4ea13dd18bf72c90883b539a9"
       },
       "returncode": 0,
       "status": "PASS"
@@ -535,10 +535,10 @@
     "staircase_256k": "8395a553e95f3cff50866a79089e754488ca7a329a5aee7e4f2326a81230ab3b",
     "staircase_4k": "31bb9929c09a3d2096e7a2e119f39fbb9923d1d6096b00f3b37608dbe0fc8daa",
     "staircase_64k": "f4fe6af200ac316c6ac0fecf41a738c03dc1406fd5c96490835f29b83aacf8ff",
-    "stream_dma_reset_fault": "083567f9d1ef443e5e66a690c96254a63a7c39b0610275d03a6443522417c8dd",
-    "stream_dma_reset_recovery_64m": "d7947052223299834be9f2deecc35351c2582469c1467c44edce0020b29ceeae",
-    "stream_service_reset_fault": "80f6b88923daac8470de6f30377f0c22398070b9d93a8c758711f5ca38311f4c",
-    "stream_service_reset_recovery_64m": "2ee9b00df3484e63d1c4cf68052e2118ce11cc085f68ece4633138a20b33554b",
+    "stream_dma_reset_fault": "888230bd62931cdd34b600854deffa394b80e62c74d89c6266ed9d5ec521a33d",
+    "stream_dma_reset_recovery_64m": "5e66d24bf23067ed6974d0eaf820e228deae6045fd22d6f4b757b990bbef6a0f",
+    "stream_service_reset_fault": "f9e3174e77d2ea381e3e73210e7addc2f5bb684d6dbc30f5af7a9fac033c4c73",
+    "stream_service_reset_recovery_64m": "b2c9fab8f237c0a3fe0f8fc85b676ef289b256a54dc12f7d311c0eef60cba055",
     "streaming_64m": "e425d898d1576f5b751c5c8219532d42268fe922d25dc2ee9aee3f794022f083",
     "two_lane_regression": "90cacb29425008bb52c3393414e3bd4cbdc2a5c34dfb83300886fa51cbc13dda"
   },
