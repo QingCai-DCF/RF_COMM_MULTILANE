@@ -142,8 +142,15 @@ BOUND_ARTIFACTS = {
     "PERF-MODEL-001": [
         "scripts/model_p8d_airtime.py",
         "config/p8d_data_plane.yaml",
+        "evidence/generated/p10_1_performance_model.json",
     ],
 }
+INVALIDATED_P10_3F_OFFLINE_REQUIREMENTS = (
+    "P10_3F-OFF-001",
+    "P10_3F-OFF-002",
+    "P10_3F-OFF-003",
+    "P10_3F-OFF-004",
+)
 
 
 def utc_now() -> str:
@@ -301,6 +308,15 @@ def update_requirements(summary: dict[str, Any]) -> None:
         requirement["evidence_path"] = summary_rel
         requirement["source_commit"] = summary["verified_source_commit"]
         requirement["reverification_stage"] = STAGE
+    # The scheduler RTL change invalidates the old P10.3F artifact bundle.
+    # Leave direct hardware requirements pending and return the artifact-bound
+    # offline requirements to PENDING until a new clean build/freeze promotes
+    # them through finalize_p10_3f_offline.py.
+    for requirement_id in INVALIDATED_P10_3F_OFFLINE_REQUIREMENTS:
+        requirement = by_id[requirement_id]
+        requirement["status"] = "PENDING"
+        requirement["artifact_hashes"] = []
+        requirement.pop("artifact_hash", None)
     REQ_PATH.write_text(
         yaml.safe_dump(document, sort_keys=False, allow_unicode=True, width=120),
         encoding="utf-8",
@@ -401,6 +417,9 @@ def main() -> int:
             "SCHED-003": ["tb_ir_scheduler_migration"],
             "PERF-MODEL-001": ["airtime_model", "canonical_config"],
         },
+        "invalidated_until_new_artifact_freeze": list(
+            INVALIDATED_P10_3F_OFFLINE_REQUIREMENTS
+        ),
         "bound_artifacts": [
             {"path": path, "sha256": sha256(ROOT / path)}
             for path in sorted({path for paths in BOUND_ARTIFACTS.values() for path in paths})
