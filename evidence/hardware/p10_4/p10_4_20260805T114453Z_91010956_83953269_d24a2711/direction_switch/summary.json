@@ -1,0 +1,102 @@
+{
+  "artifact_source_commit": "9101095609adac0503201b064caaf2f5456fc183",
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/9101095609adac0503201b064caaf2f5456fc183/9953eb47ae60f24c822223bf768860c7509dddbc3c622406764e484b4cb3108e/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "9953eb47ae60f24c822223bf768860c7509dddbc3c622406764e484b4cb3108e"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/9101095609adac0503201b064caaf2f5456fc183/83953269f0176a0f65fe0eb63d0ba79018136ecdcb293d632fdde993125af018/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "83953269f0176a0f65fe0eb63d0ba79018136ecdcb293d632fdde993125af018"
+    },
+    {
+      "bytes": 1303786,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/9101095609adac0503201b064caaf2f5456fc183/b66be0e6ec827f908d9f871a0e4ff6a01c318cc15bf1c6b762eedcd9f8c77cc4/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "b66be0e6ec827f908d9f871a0e4ff6a01c318cc15bf1c6b762eedcd9f8c77cc4"
+    },
+    {
+      "bytes": 1970234,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/9101095609adac0503201b064caaf2f5456fc183/684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc"
+    },
+    {
+      "bytes": 563920,
+      "kind": "elf",
+      "path": "artifacts/p10_4/9101095609adac0503201b064caaf2f5456fc183/1144c8d40ed1d19ccca0a02d711185a1980756f9a6523c03fd7ebc9f86ea4b8d/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "1144c8d40ed1d19ccca0a02d711185a1980756f9a6523c03fd7ebc9f86ea4b8d"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/9101095609adac0503201b064caaf2f5456fc183/74717152e1078f0efb9b68773233ecff82fcdc00993f5fdcd7908197701ed722/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "74717152e1078f0efb9b68773233ecff82fcdc00993f5fdcd7908197701ed722"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/9101095609adac0503201b064caaf2f5456fc183/d24a2711acbb7c3bc179c29dc57d08190d2b72c8bccd62e9abd71470f96ae523/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "d24a2711acbb7c3bc179c29dc57d08190d2b72c8bccd62e9abd71470f96ae523"
+    },
+    {
+      "bytes": 1318512,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/9101095609adac0503201b064caaf2f5456fc183/d7ce21d4a84cbdb24ec94b5241db1c0dac1bab71cb5893febc708162df2e9a58/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "d7ce21d4a84cbdb24ec94b5241db1c0dac1bab71cb5893febc708162df2e9a58"
+    },
+    {
+      "bytes": 1970389,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/9101095609adac0503201b064caaf2f5456fc183/56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec"
+    },
+    {
+      "bytes": 565152,
+      "kind": "elf",
+      "path": "artifacts/p10_4/9101095609adac0503201b064caaf2f5456fc183/b42a2c176cde62698838890d8976f842c4ad6c6d8674a0e6f1651a7d8037c2c5/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "b42a2c176cde62698838890d8976f842c4ad6c6d8674a0e6f1651a7d8037c2c5"
+    }
+  ],
+  "authorization_sha256": "8621927e55ecec9cf44a45e1f3edea5bed159bda6a5f0203d2e972acfe1c1962",
+  "current_run_hardware_authorization": false,
+  "errors": [
+    "stage set incomplete or failed"
+  ],
+  "expected_stages": [
+    "direction_switch"
+  ],
+  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "hardware_actions_executed": true,
+  "nonblocking": false,
+  "run_id": "p10_4_20260805T114453Z_91010956_83953269_d24a2711",
+  "schema_version": 1,
+  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+  "stage_results": [],
+  "status": "FAIL",
+  "test_id": "P10_4-DIRECTION_SWITCH"
+}

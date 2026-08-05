@@ -1,0 +1,85 @@
+schema_version: 1
+scope: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+status: OFFLINE_DEFINED_HARDWARE_PENDING
+profile:
+  fixed: P10_2_AX7020_FIXED_4LANE
+  rotating: P10_2_AX7020_ROTATING_4LANE
+  lane_count: 4
+  maximum_lane_mask: '0xF'
+immutable_safety:
+  lane_rate_bps: 4000000
+  exact_rolling_duty_target_fraction: 0.18
+  exact_rolling_duty_hard_limit: '<0.20'
+  maximum_continuous_txd_high_us: 1
+  single_global_permit_per_endpoint: true
+  sd_mode_final_txd_kill_unchanged: true
+  first_fault_forensics_retained: true
+transport:
+  l1_payload_bytes: 247
+  rfap_useful_bytes: 215
+  selective_repeat_window: 32
+  sack_bits: 32
+  burst_frames: 32
+  ack_threshold: 32
+  outstanding_frames: 32
+  ack_max_delay_cycles: 64000
+  direction_quiet_us: 68
+  internal_object_bytes: 262144
+  descriptor_bytes: 65536
+tuning:
+  maximum_cases: 12
+  maximum_seconds_per_direction_per_case: 30
+  candidates:
+    - {name: p10_3_baseline, ring_depth: 32, buffer_count: 4, descriptor_batch: 8, cache_batching: 1}
+    - {name: buffers8_batch8, ring_depth: 32, buffer_count: 8, descriptor_batch: 8, cache_batching: 1}
+    - {name: buffers8_batch16, ring_depth: 32, buffer_count: 8, descriptor_batch: 16, cache_batching: 1}
+    - {name: buffers4_batch16, ring_depth: 32, buffer_count: 4, descriptor_batch: 16, cache_batching: 1}
+    - {name: buffers4_batch32, ring_depth: 32, buffer_count: 4, descriptor_batch: 32, cache_batching: 1}
+    - {name: buffers2_batch16, ring_depth: 32, buffer_count: 2, descriptor_batch: 16, cache_batching: 1}
+  intentionally_not_attempted:
+    outstanding_64: current RTL window is 32; changing it would require a separate protocol redesign
+    sack_64: current wire/register contract is 32 bits; changing it would require a separate protocol redesign
+    ack_threshold_64: current runtime admits exactly 32
+    burst_64: current endpoint burst and selective-repeat window are 32
+  selection:
+    mandatory_zero_fields:
+      - crc_bad_count
+      - sha_mismatch_count
+      - retry_exhausted_count
+      - descriptor_leak_count
+      - double_completion_count
+      - same_module_accepted_data
+      - cross_lane_accepted_data
+      - duty_violation_count
+      - continuous_high_violation_count
+    order: highest minimum bidirectional application goodput, then lowest total direct stall cycles
+streaming:
+  mandatory_64m_runs_per_direction: 10
+  nonblocking_128m_runs_per_direction: 3
+  maximum_board_autonomous_command_bytes: 134217728
+  host_in_per_object_fast_path: false
+degraded_masks: ['0xE', '0xD', '0xB', '0x7', '0x3', '0x5', '0xA', '0x1']
+direction_switch:
+  f2r_seconds: 30
+  r2f_seconds: 30
+  cycles: 10
+reset_recovery:
+  fixed_ps_service_reset: 5
+  rotating_ps_service_reset: 5
+  fixed_dma_reset: 5
+  rotating_dma_reset: 5
+  fixed_pl_soft_reset: 3
+  rotating_pl_soft_reset: 3
+two_plus_two:
+  lane_0_1_direction: fixed_to_rotating
+  lane_2_3_direction: rotating_to_fixed
+  duration_seconds: 300
+  target_bps_per_direction: 4000000
+  blocking: false
+formal:
+  duration_seconds: 1800
+  external_instruments: false
+  ethernet: false
+authorization:
+  no_hardware_during_offline_preparation: true
+  current_run_hardware_authorization_during_offline_preparation: false

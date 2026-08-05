@@ -346,13 +346,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `e14e4dd536f8ada32bbd26a2a50c2373453b7b7f33ad2d03ba367b6ced97a79e`
-- `PROJECT_STATUS.md` — `1908cdf98328e3da9cadef231287d8a6d6fb4134d5e658ec3d66f9bf9e374f15`
+- `config/project_state.json` — `223767389a02bf45d6162277bc7dee2d2cd97c563a40f4565007b3d0bc63d052`
+- `PROJECT_STATUS.md` — `7cd60b58f9263e05979de93133dbd0f0777d346899f9882cf0853799db25a1ee`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `e14e4dd536f8ada32bbd26a2a50c2373453b7b7f33ad2d03ba367b6ced97a79e`
+- `config/project_state.json` — `223767389a02bf45d6162277bc7dee2d2cd97c563a40f4565007b3d0bc63d052`
 
 ### `P8A-EVID-001`
 
@@ -362,8 +362,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `e14e4dd536f8ada32bbd26a2a50c2373453b7b7f33ad2d03ba367b6ced97a79e`
-- `PROJECT_STATUS.md` — `1908cdf98328e3da9cadef231287d8a6d6fb4134d5e658ec3d66f9bf9e374f15`
+- `config/project_state.json` — `223767389a02bf45d6162277bc7dee2d2cd97c563a40f4565007b3d0bc63d052`
+- `PROJECT_STATUS.md` — `7cd60b58f9263e05979de93133dbd0f0777d346899f9882cf0853799db25a1ee`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`

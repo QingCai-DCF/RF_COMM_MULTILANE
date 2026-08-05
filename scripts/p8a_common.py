@@ -984,7 +984,26 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             and state.get("p10_1r_status")
             in {"IN_PROGRESS", "AUTHORIZED", "PARTIAL", "FAIL", "PASS"}
         )
-        if p10_3_is_latest_hardware:
+        p10_4_campaign = state.get("p10_4_acceptance", {})
+        p10_4_is_latest_hardware = (
+            isinstance(p10_4_campaign, dict)
+            and p10_4_campaign.get("hardware_actions_executed") is True
+            and state.get("p10_4_status")
+            in {
+                "IN_PROGRESS", "AUTHORIZED", "PASS",
+                "PASS_WITH_NONBLOCKING_LIMITS", "PARTIAL", "FAIL",
+            }
+        )
+        if p10_4_is_latest_hardware:
+            expected_last_hardware = {
+                "last_hardware_stage": "P10_4",
+                "last_hardware_run_id": p10_4_campaign.get("run_id"),
+                "last_shutdown_fixed": p10_4_campaign.get("shutdown_fixed"),
+                "last_shutdown_rotating": p10_4_campaign.get(
+                    "shutdown_rotating"
+                ),
+            }
+        elif p10_3_is_latest_hardware:
             expected_last_hardware = {
                 "last_hardware_stage": "P10_3",
                 "last_hardware_run_id": p10_3_campaign.get("run_id"),

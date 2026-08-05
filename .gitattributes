@@ -123,3 +123,13 @@ evidence/generated/vitis/p10_3_fault_forensics_runtime/** -text -eol -whitespace
 # Preserve byte-exact P10.3F full-campaign hardware evidence.  Each run's
 # manifest binds raw XSDB/PSV/TCL data, including vendor whitespace and CRLF.
 evidence/hardware/p10_3f_full/** -text -eol -whitespace
+
+# Preserve byte-exact P10.4 content-addressed artifacts, offline build output,
+# and hardware evidence.  Run manifests bind vendor CRLF/trailing whitespace,
+# so Git must not normalize those bytes during checkpoint creation.
+artifacts/p10_4/** -text -eol -whitespace
+evidence/hardware/p10_4/** -text -eol -whitespace
+evidence/generated/p10_4_* -text -eol -whitespace
+evidence/generated/p10_4_*/** -text -eol -whitespace
+evidence/generated/vivado/p10_4_*/** -text -eol -whitespace
+evidence/generated/vitis/p10_4_*/** -text -eol -whitespace
