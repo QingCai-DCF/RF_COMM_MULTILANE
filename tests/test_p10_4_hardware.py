@@ -6,6 +6,7 @@ import unittest
 import re
 import tempfile
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -165,13 +166,14 @@ class P104PlanTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        replay = p10.evaluate_stage(
-            "counter_local_source",
-            stage_dir,
-            archived["process"],
-            forensic_summary,
-            (stage_dir / "immutable.plan").read_text(encoding="ascii"),
-        )
+        with mock.patch.object(p10, "write_json"):
+            replay = p10.evaluate_stage(
+                "counter_local_source",
+                stage_dir,
+                archived["process"],
+                forensic_summary,
+                (stage_dir / "immutable.plan").read_text(encoding="ascii"),
+            )
         self.assertEqual([], replay["errors"])
         self.assertEqual("PASS", replay["status"])
 
