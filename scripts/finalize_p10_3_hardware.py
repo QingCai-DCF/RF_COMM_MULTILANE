@@ -353,7 +353,7 @@ def update_state(summary: dict[str, Any]) -> dict[str, Any]:
         "manual_instrumentation": "OMITTED_BY_USER",
         "not_promoted_to": ["P11", "8X32", "600_RPM", "ETHERNET", "SPI", "PHYSICAL_GLOBAL_PERMIT", "PRODUCT_FINAL"],
     }
-    state["state_revision"] = int(state.get("state_revision", 0)) + 1
+    state["state_revision"] = "P10-3-STATIONARY-4LANE-HARDWARE-PASS-1"
     write_json(STATE, state)
     STATUS.write_text(render_project_status(state), encoding="utf-8", newline="\n")
     return state
