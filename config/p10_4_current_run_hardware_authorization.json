@@ -532,10 +532,10 @@
     }
   ],
   "authorization_id": "P10_4-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "161bef2f181c41d50853ba590f19d81fa89c68b6",
+  "authorization_parent_commit": "1332f933674611d4b8e148df2dba51e0311c26c9",
   "authorization_source": "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md",
   "authorization_source_semantics": "Submitting the Goal explicitly authorizes all listed P10.4 hardware operations; there are zero user HOLD points.",
-  "authorized": false,
+  "authorized": true,
   "baseline_plan_sha256": {
     "baseline_smoke": "f3e44a2d35eda2c60b386625d9f1f805fb73032216c3db3427bc4c2bdd5b2309",
     "counter_local_source": "3229a7ec203d9be0854dfea7e518862c1f034d1cad2a109c4330b026b1b2a229",
@@ -600,12 +600,9 @@
     "program": 2
   },
   "consumed": false,
-  "created_at_utc": "2026-08-05T21:32:44.850527+00:00",
-  "current_run_hardware_authorization": false,
-  "errors": [
-    "worktree must be clean before authorization materialization",
-    "artifact freeze is not the exact committed HEAD version"
-  ],
+  "created_at_utc": "2026-08-05T21:34:36.788845+00:00",
+  "current_run_hardware_authorization": true,
+  "errors": [],
   "ethernet_allowed": false,
   "external_instrumentation_allowed": false,
   "external_instrumentation_used": false,
@@ -628,7 +625,7 @@
   "module_replaced": false,
   "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
   "network_used": false,
-  "no_hardware": true,
+  "no_hardware": false,
   "offline_inputs": {
     "connector_ack_quarantine": {
       "bytes": 1994,
@@ -671,7 +668,7 @@
     "version": "0x0A000004"
   },
   "rotating_jtag_serial": "210512180081",
-  "run_id": "p10_4_20260805T213244Z_161bef2f_b8810b6b_c11fb74e",
+  "run_id": "p10_4_20260805T213436Z_161bef2f_b8810b6b_c11fb74e",
   "schema_version": 1,
   "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
   "shutdown_policy": {
@@ -682,6 +679,6 @@
     "verify_both_shutdown_markers": true
   },
   "source_commit": "161bef2f181c41d50853ba590f19d81fa89c68b6",
-  "status": "FAIL",
+  "status": "READY_FOR_EXACT_CURRENT_RUN",
   "wiring_changed": false
 }
