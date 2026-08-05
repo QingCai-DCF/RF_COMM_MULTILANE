@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: fd5a6903a2bbed63bd9a936aa50e727ec2a63c5e1f162a397f33181c530de5e6
+    sha256: 6b81ee144454ae90ff0c686265cea71583f9f166fa037f8c099cfffb085e7e6d
   - path: PROJECT_STATUS.md
-    sha256: 95774e3b0dcf0186aa97112281ea52790987f50dfbee93ea01d925ecf8e4d935
-  artifact_hash: 95774e3b0dcf0186aa97112281ea52790987f50dfbee93ea01d925ecf8e4d935
+    sha256: fb0702aa3390a38441cab1eb4a31cffb472803b731d00da7e0610f872f256bf3
+  artifact_hash: fb0702aa3390a38441cab1eb4a31cffb472803b731d00da7e0610f872f256bf3
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: fd5a6903a2bbed63bd9a936aa50e727ec2a63c5e1f162a397f33181c530de5e6
+    sha256: 6b81ee144454ae90ff0c686265cea71583f9f166fa037f8c099cfffb085e7e6d
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: fd5a6903a2bbed63bd9a936aa50e727ec2a63c5e1f162a397f33181c530de5e6
+    sha256: 6b81ee144454ae90ff0c686265cea71583f9f166fa037f8c099cfffb085e7e6d
   - path: PROJECT_STATUS.md
-    sha256: 95774e3b0dcf0186aa97112281ea52790987f50dfbee93ea01d925ecf8e4d935
+    sha256: fb0702aa3390a38441cab1eb4a31cffb472803b731d00da7e0610f872f256bf3
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 95774e3b0dcf0186aa97112281ea52790987f50dfbee93ea01d925ecf8e4d935
+  artifact_hash: fb0702aa3390a38441cab1eb4a31cffb472803b731d00da7e0610f872f256bf3
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
