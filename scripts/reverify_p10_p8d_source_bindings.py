@@ -178,6 +178,11 @@ def write_json(path: Path, payload: Any) -> None:
     write_text(path, json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
 
 
+def normalize_captured_text(value: str) -> str:
+    """Keep raw tool content while making committed logs pass diff checks."""
+    return "\n".join(line.rstrip() for line in value.splitlines())
+
+
 def run_command(command: list[str], cwd: Path, log: Path, timeout: int = 600) -> dict[str, Any]:
     started = utc_now()
     try:
@@ -210,10 +215,10 @@ def run_command(command: list[str], cwd: Path, log: Path, timeout: int = 600) ->
         f"FINISHED_UTC={utc_now()}",
         f"TIMED_OUT={1 if timed_out else 0}",
         "STDOUT_BEGIN",
-        stdout.rstrip(),
+        normalize_captured_text(stdout),
         "STDOUT_END",
         "STDERR_BEGIN",
-        stderr.rstrip(),
+        normalize_captured_text(stderr),
         "STDERR_END",
         "",
     ])
@@ -231,7 +236,7 @@ def run_command(command: list[str], cwd: Path, log: Path, timeout: int = 600) ->
 
 def run_xsim(spec: dict[str, Any], raw: Path) -> dict[str, Any]:
     top = str(spec["top"])
-    work = raw / top / "work"
+    work = ROOT / "build/p10_3_retry_path_diversity_source_reverification" / raw.name / top / "work"
     work.mkdir(parents=True, exist_ok=False)
     snapshot = top + "_snapshot"
     phases = [
@@ -292,14 +297,15 @@ def update_requirements(summary: dict[str, Any]) -> None:
         if requirement.get("status") != "PASS":
             raise RuntimeError(f"{requirement_id} is not PASS and cannot be refreshed")
         history = requirement.setdefault("reverification_history", [])
-        previous = {
-            "stage": STAGE,
-            "previous_source_commit": requirement.get("source_commit"),
-            "previous_evidence_path": requirement.get("evidence_path"),
-            "previous_artifact_hash": requirement.get("artifact_hash"),
-        }
-        if not history or history[-1] != previous:
-            history.append(previous)
+        if requirement.get("evidence_path") != summary_rel:
+            previous = {
+                "stage": STAGE,
+                "previous_source_commit": requirement.get("source_commit"),
+                "previous_evidence_path": requirement.get("evidence_path"),
+                "previous_artifact_hash": requirement.get("artifact_hash"),
+            }
+            if not history or history[-1] != previous:
+                history.append(previous)
         records = [{"path": path, "sha256": sha256(ROOT / path)} for path in paths]
         records.append({"path": summary_rel, "sha256": summary_hash})
         requirement["artifact_hashes"] = records
