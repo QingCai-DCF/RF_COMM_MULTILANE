@@ -34,6 +34,9 @@ scheduler_weight_width: 8
 scheduler_default_weights: [1, 1, 1, 1, 1, 1, 1, 1]
 retry_priority_policy: retry_then_normal_with_bounded_burst
 retry_priority_burst_max: 8
+# A timed-out attempt must use a different safe lane when one exists.  The
+# previous lane remains available only in the exact one-eligible-lane fallback.
+retry_path_diversity_policy: alternate_last_lane_when_possible
 control_priority_policy: strict_with_bounded_burst
 control_priority_burst_max: 4
 starvation_bound: 4096

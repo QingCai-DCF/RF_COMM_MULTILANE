@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 /* Auto-generated from config/p8d_data_plane.yaml; do not edit. */
-#define P8D_CONFIG_SHA256 "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02"
+#define P8D_CONFIG_SHA256 "7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732"
 #define P8D_LEGACY_MODE_VERSION 1u
 #define P8D_VNEXT_MODE_VERSION 2u
 #define P8D_SEQUENCE_WIDTH 16u

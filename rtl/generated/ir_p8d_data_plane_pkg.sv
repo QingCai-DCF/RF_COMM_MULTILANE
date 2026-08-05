@@ -1,6 +1,6 @@
 // Auto-generated from config/p8d_data_plane.yaml; do not edit.
 package ir_p8d_data_plane_pkg;
-  localparam logic [255:0] P8D_CONFIG_SHA256 = 256'h2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02;
+  localparam logic [255:0] P8D_CONFIG_SHA256 = 256'h7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732;
   localparam int unsigned P8D_LEGACY_MODE_VERSION = 1;
   localparam int unsigned P8D_VNEXT_MODE_VERSION = 2;
   localparam int unsigned P8D_SEQUENCE_WIDTH = 16;

@@ -136,6 +136,7 @@
     "protocol_version": "RF_COMM_L2",
     "retransmission_storage_strategy": "shared_global_entry_indexed_store",
     "retry_backoff_policy": "bounded_exponential_saturating",
+    "retry_path_diversity_policy": "alternate_last_lane_when_possible",
     "retry_priority_burst_max": 8,
     "retry_priority_policy": "retry_then_normal_with_bounded_burst",
     "rfap_v1_useful_chunk_bytes": 215,
@@ -281,7 +282,7 @@
   },
   "schema_version": 1,
   "source_path": "config/p8d_data_plane.yaml",
-  "source_sha256": "2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02",
+  "source_sha256": "7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732",
   "validation": {
     "active_window_less_than_half_space": true,
     "descriptor_layout_bytes_covered": 64,

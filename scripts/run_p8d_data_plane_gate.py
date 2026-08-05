@@ -120,6 +120,7 @@ XSIM_SPECS = {
                                     "sim/tb/tb_ir_scheduler_migration.sv"],
                                    ["P8D_HEALTH_AWARE_WEIGHTED_SCHEDULER_PASS=1",
                                     "P8D_SCHEDULER_FAIRNESS_PASS=1",
+                                    "P8D_RETRY_ALTERNATE_LANE_PASS=1",
                                     "P8D_RETRY_MIGRATION_ACKED_BLOCK_PASS=1",
                                     "TB_IR_SCHEDULER_MIGRATION_PASS=1"]),
     "tb_ir_axis_backpressure": (["rtl/ir_axis_tx_frontend.sv", "rtl/ir_axis_rx_backend.sv",

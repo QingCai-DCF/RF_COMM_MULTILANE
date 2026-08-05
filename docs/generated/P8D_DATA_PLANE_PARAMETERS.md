@@ -3,7 +3,7 @@
 > Generated from `config/p8d_data_plane.yaml`; do not edit by hand.
 
 - Configuration: `P8D_DATA_PLANE_V1`
-- Source SHA256: `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
+- Source SHA256: `7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732`
 - Sequence width: `16` bits
 - Descriptor: `64` bytes, `64`-byte aligned
 - Scheduler: `weighted_deficit_round_robin_bytes`

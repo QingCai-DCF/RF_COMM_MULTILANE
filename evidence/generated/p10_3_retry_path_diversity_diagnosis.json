@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_3F-RETRY-PATH-DIVERSITY-DIAGNOSIS",
+  "status": "PASS",
+  "scope": "PRESERVED_FAILED_RUN_DIAGNOSIS_AND_OFFLINE_REMEDIATION_BASIS",
+  "generated_at_utc": "2026-08-05T00:13:16Z",
+  "hardware_actions_executed_for_this_diagnosis": false,
+  "failed_run": {
+    "run_id": "p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda",
+    "status": "FAIL",
+    "artifact_source_commit": "21f159e3fdb250d1a25e9f521e104d6240d9caae",
+    "host_source_commit": "81e05d275ea841abf353dac2f429e3273100ce3e",
+    "failed_stage": "degrade",
+    "failed_case": "degrade_static_unavailable_8",
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS"
+  },
+  "immutable_sources": [
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda/stages/degrade/stage_summary.json",
+      "sha256": "0a87590d1a7e411bd6ec9c6e1d1bb847326028c86f902338301dd55caf34c6b8"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda/final/orchestrator_result.json",
+      "sha256": "cbeb0a34c98b1910a8cf89beeba9f48f1e3b256b0d80a3c2f2542b1dce91d028"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda/forensics/degrade/fixed.p10ff.json",
+      "sha256": "d7ae59068957f1b1be41823487ff4bb93aa744a05266671baf0694806cf76a20",
+      "raw_binary_sha256": "7e837af979a05e1a98f5a154ba3c0366f684f80e77e8b8743024d3108ef0bc3c"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda/forensics/degrade/rotating.p10ff.json",
+      "sha256": "4e164fe5cd04a616300f98a026a366d9cbe8cc6dcdbcfefcba6a122d6fd51f0c",
+      "raw_binary_sha256": "85cd8ca24a1eebb3c9f8ff352b1b36a5b1078666960fa63cfdd75a68b3840abe"
+    }
+  ],
+  "observations": {
+    "fixed_terminal": {
+      "fault_cause": "0x00008070",
+      "object_error": "0x50090004",
+      "tx_ack_base": 11420,
+      "tx_next_sequence": 11451,
+      "tx_attempt_count": 11466,
+      "tx_retry_count": 29,
+      "tx_retry_exhausted_count": 1,
+      "tx_timeout_count": 30,
+      "tx_migration_count": 14,
+      "scheduled_frames_by_lane": [3822, 3822, 3822, 0],
+      "scheduler_retries_by_lane": [9, 11, 6, 0],
+      "scheduler_migrations_by_lane": [8, 0, 6, 0]
+    },
+    "rotating_terminal": {
+      "rx_base_sequence": 11419,
+      "rx_sack_bitmap": "0x000FFFFE",
+      "output_byte_count": 2820492,
+      "data_good_by_lane": [3822, 3797, 3821, 0],
+      "crc_bad_by_lane": [0, 1, 0, 0]
+    },
+    "digital_safety": {
+      "safety_fault_by_fixed_module": [false, false, false, false],
+      "hard_fault_count_by_fixed_module": [0, 0, 0, 0],
+      "maximum_continuous_high_cycles_by_fixed_module": [16, 16, 16, 0],
+      "maximum_rolling_duty_cycles_by_fixed_module": [11504, 11504, 11504, 0],
+      "rolling_window_cycles": 64000,
+      "maximum_observed_rolling_duty_fraction": 0.17975
+    }
+  },
+  "diagnosis": {
+    "physical_observation": "The receiver accepted 25 fewer lane-1 DATA frames than the sender scheduled and recorded one lane-1 CRC-bad frame during the failed case.",
+    "software_rtl_weakness": "The previous scheduler left the last failed lane eligible for a timed-out retry. All 11 retries selected onto lane 1 had zero corresponding migration count, so a concentrated lane-1 loss episode could consume bounded retries on the same path even while lanes 0 and 2 remained eligible.",
+    "proximate_failure": "retry exhaustion with one unacknowledged selective-repeat entry",
+    "safety_classification": "NO_DIGITAL_TX_SAFETY_VIOLATION_OBSERVED",
+    "external_measurement_limit": "No oscilloscope, rail-current, temperature, or optical-detector evidence exists for this run; digital counters do not prove external electrical or optical behavior."
+  },
+  "remediation": {
+    "existing_requirement": "P10_3-ARQ-001",
+    "policy": "A timed-out retry excludes its immediately previous lane whenever another safe eligible lane exists; it may reuse the previous lane only when that lane is the sole eligible path.",
+    "safety_effect": "The change only removes a lane from a scheduler selection mask. It cannot assert GLOBAL_PERMIT, arm an endpoint, bypass lane permit, create PHY readiness, increase duty headroom, bypass frame admission, or override TX kill.",
+    "old_hardware_pass_inherited": false,
+    "new_artifact_bundle_and_hardware_reacceptance_required": true
+  }
+}

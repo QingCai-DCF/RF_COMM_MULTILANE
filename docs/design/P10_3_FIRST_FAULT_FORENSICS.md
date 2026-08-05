@@ -261,6 +261,36 @@ run's `SHUTDOWN_FIXED=PASS` and `SHUTDOWN_ROTATING=PASS` are preserved, but a
 new committed host bundle, current-run authorization, complete campaign, and
 fresh final shutdown remain mandatory.
 
+## Immutable lane-3-degrade failure and retry path-diversity correction
+
+The immutable run
+`p10_3f_full_20260804T231038Z_81e05d27_9ae79d14_e7389fda` remains FAIL
+evidence and is not reclassified. With lane 3 intentionally unavailable, the
+fixed endpoint scheduled 3,822 frames on each of lanes 0, 1, and 2. The
+rotating endpoint accepted 3,822, 3,797, and 3,821 respectively and recorded
+one lane-1 CRC-bad frame. The sender reached 29 retries, 30 timeouts, and one
+retry exhaustion with ACK base 11,420, next sequence 11,451; the receiver was
+at base 11,419 with SACK `0x000FFFFE`.
+
+The prior scheduler kept the immediately failed lane eligible. Its per-lane
+counters show 11 retries selected onto lane 1 and zero migrations for those
+selections, while lanes 0 and 2 remained eligible. The correction therefore
+excludes the entry's previous lane for a timed-out retry whenever another safe
+eligible lane exists. The previous lane remains selectable only in the exact
+one-eligible-lane fallback so degradation to one lane cannot deadlock. This is
+deterministic enforcement of existing requirement `P10_3-ARQ-001`, not a new
+permit or safety channel.
+
+The selection mask can only remove an option; it cannot assert
+`GLOBAL_PERMIT`, endpoint arm, lane permit, PHY readiness, duty headroom, frame
+admission, or physical TX, and it cannot bypass SD, Mode, rolling-duty,
+continuous-high, or TX-kill guards. The failed run recorded no digital safety
+fault, a maximum continuous-high of 16 cycles, and maximum rolling duty of
+11,504/64,000 cycles. Its final independent shutdown markers for both boards
+remain PASS. New artifacts and complete offline and hardware reacceptance are
+still required. The detailed immutable-source hashes and counters are in
+`evidence/generated/p10_3_retry_path_diversity_diagnosis.json`.
+
 ## Evidence limits
 
 The PL counters and event recorder can show what the implemented digital logic requested and what its internal safety monitors observed. They are not a substitute for an oscilloscope, rail-current measurement, module temperature measurement, or optical detector. Because the user excluded those manual measurements, this follow-up cannot independently prove actual pin voltage, optical pulse energy, rail droop, current, or temperature.

@@ -152,6 +152,38 @@ module tb_ir_scheduler_migration;
     end
     global_permit=1;
 
+    // A retry must use path diversity whenever another eligible lane exists.
+    // This prevents a module-local outage from consuming every bounded retry
+    // on the same physical path.  The one-lane degraded case must still make
+    // progress on its sole remaining lane.
+    lane_health=8'hff; duty_headroom=8'hff; mapping_valid=8'hff;
+    lane_tx_permit=8'hff; lane_ready=8'hff; frame_admission=8'hff;
+    fault_free=8'hff;
+    @(negedge clk); state_reset=1; clear_counters=1;
+    @(posedge clk); #1; state_reset=0; clear_counters=0;
+    active_mask=8'h07; request_retry=1; request_last_lane=3'd1;
+    begin logic [2:0] lane;
+      issue_admitted(lane);
+      check_expect(lane != 3'd1,
+                   "retry selects an alternate healthy lane when available");
+      check_expect(migration_reason == 4'd1,
+                   "alternate retry is explicitly classified as migration");
+      check_expect(migration_counts[lane*32 +: 32] == 32'd1,
+                   "alternate retry increments its destination migration counter");
+    end
+
+    @(negedge clk); state_reset=1; clear_counters=1;
+    @(posedge clk); #1; state_reset=0; clear_counters=0;
+    active_mask=8'h02; request_retry=1; request_last_lane=3'd1;
+    begin logic [2:0] lane;
+      issue_admitted(lane);
+      check_expect(lane == 3'd1,
+                   "single-lane degradation permits retry on the sole lane");
+      check_expect(migration_reason == 4'd0 && migration_counts == '0,
+                   "sole-lane fallback is not misclassified as migration");
+    end
+    request_retry=0; active_mask=8'hff;
+
     #1; check_expect(migration_allowed && migration_required && migrated_lane==3,
                "unacknowledged retry may migrate to healthy scheduler lane");
     entry_acked=1; #1;
@@ -162,6 +194,7 @@ module tb_ir_scheduler_migration;
     $display("P8D_HEALTH_AWARE_WEIGHTED_SCHEDULER_PASS=1");
     $display("P8D_SCHEDULER_FAIRNESS_PASS=1");
     $display("P8D_SCHEDULER_UNEQUAL_WEIGHT_PASS=1");
+    $display("P8D_RETRY_ALTERNATE_LANE_PASS=1");
     $display("P8D_RETRY_MIGRATION_ACKED_BLOCK_PASS=1");
     $display("TB_IR_SCHEDULER_MIGRATION_PASS=1");
     $finish;

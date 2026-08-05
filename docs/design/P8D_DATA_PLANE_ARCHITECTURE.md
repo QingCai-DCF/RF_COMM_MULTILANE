@@ -31,7 +31,7 @@ flowchart LR
   REORDER --> ACK
 ```
 
-The TX entry owns its sequence, session, payload reference, descriptor correlation, priority, last lane/path epoch, attempt count, retry count, and timer until ACK, deterministic failure, or abort. A retry may update attempt metadata and lane/path only. Its sequence, session, object/fragment identity, and bytes do not change. ACKed entries are removed from the attempt set and can neither migrate nor complete twice.
+The TX entry owns its sequence, session, payload reference, descriptor correlation, priority, last lane/path epoch, attempt count, retry count, and timer until ACK, deterministic failure, or abort. A retry may update attempt metadata and lane/path only. Its sequence, session, object/fragment identity, and bytes do not change. ACKed entries are removed from the attempt set and can neither migrate nor complete twice. A timed-out retry excludes its previous lane whenever at least one other safe eligible lane exists; the previous lane is admitted only when it is the sole eligible path. This provides deterministic path diversity without preventing 4-to-3-to-2-to-1 degradation.
 
 RX validates L1 CRC/length before session, sequence, and path rules. An out-of-order entry is stored once. Only a contiguous prefix advances `rx_base` and reaches application delivery. Duplicate, old, future, stale-session, and stale-path frames cannot publish payload or release a descriptor.
 

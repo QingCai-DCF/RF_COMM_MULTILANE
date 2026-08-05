@@ -72,6 +72,8 @@ module ir_health_weighted_scheduler #(
   logic [LANE_WIDTH-1:0] last_lane_snapshot;
   logic [15:0] path_epoch_snapshot;
   logic [LANE_COUNT-1:0] affordable_mask;
+  logic [LANE_COUNT-1:0] retry_alternate_mask;
+  logic [LANE_COUNT-1:0] selection_eligible_snapshot;
   logic [LANE_COUNT-1:0] rotated_affordable;
   logic [LANE_COUNT-1:0] first_one_rotated;
   logic [LANE_WIDTH-1:0] rotated_index;
@@ -85,10 +87,22 @@ module ir_health_weighted_scheduler #(
       assign scheduled_bytes_o[lane*32 +: 32] = scheduled_bytes[lane];
       assign retry_count_o[lane*32 +: 32] = retries[lane];
       assign migration_count_o[lane*32 +: 32] = migrations[lane];
-      assign affordable_mask[lane] = eligible_snapshot[lane] &&
+      assign affordable_mask[lane] = selection_eligible_snapshot[lane] &&
           deficit[lane] >= cost_snapshot;
     end
   endgenerate
+
+  // A timeout is direct evidence that the previous physical path did not
+  // complete the frame/ACK exchange.  When another safe path exists, exclude
+  // that last lane for this retry so a transient or module-local outage cannot
+  // consume the complete bounded retry budget on the same failed path.  The
+  // fallback is deliberately exact: with only one eligible lane, retrying that
+  // lane remains allowed so 4->3->2->1 degradation cannot deadlock.
+  assign retry_alternate_mask = eligible_snapshot &
+      ~({{(LANE_COUNT-1){1'b0}}, 1'b1} << last_lane_snapshot);
+  assign selection_eligible_snapshot =
+      (retry_snapshot && retry_alternate_mask != '0) ?
+      retry_alternate_mask : eligible_snapshot;
 
   // Rotate, isolate the least-significant set bit, then decode.  This maps to
   // a short barrel/one-hot tree rather than an eight-lane serial if/else chain.
@@ -207,7 +221,7 @@ module ir_health_weighted_scheduler #(
           end else if (affordable_mask == '0) begin
             decision_defer_reason_o <= 4'd5;
             for (lane = 0; lane < LANE_COUNT; lane = lane + 1) begin
-              if (eligible_snapshot[lane]) begin
+              if (selection_eligible_snapshot[lane]) begin
                 weight_value = weight_snapshot[lane*WEIGHT_WIDTH +: WEIGHT_WIDTH];
                 if (weight_value == 0) weight_value = 1;
                 deficit[lane] <= deficit[lane] + QUANTUM_BYTES * weight_value;
@@ -226,7 +240,7 @@ module ir_health_weighted_scheduler #(
             if (retry_snapshot && selected_lane != last_lane_snapshot)
               migrations[selected_lane] <= migrations[selected_lane] + 1'b1;
             for (lane = 0; lane < LANE_COUNT; lane = lane + 1) begin
-              if (eligible_snapshot[lane]) begin
+              if (selection_eligible_snapshot[lane]) begin
                 if (lane == selected_lane) begin
                   starvation[lane] <= 32'd0;
                 end else begin
