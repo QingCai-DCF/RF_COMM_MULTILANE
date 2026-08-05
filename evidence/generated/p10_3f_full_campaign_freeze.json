@@ -1,5 +1,5 @@
 {
-  "acceptance_eligible": false,
+  "acceptance_eligible": true,
   "allowed_hardware_stages": [
     "preflight",
     "module_intake",
@@ -122,10 +122,7 @@
   },
   "current_run_hardware_authorization": false,
   "eligibility_scope": "NEW_EXACT_CURRENT_RUN_AUTHORIZATION_ONLY",
-  "errors": [
-    "static repository intake canonical-input set/hash is stale",
-    "offline readiness gate failed: full_runner_regression"
-  ],
+  "errors": [],
   "forbidden": {
     "ethernet": true,
     "lane_mask_above_0xF": true,
@@ -136,7 +133,7 @@
     "rotation": true,
     "two_hour_test": true
   },
-  "generated_at_utc": "2026-08-05T01:03:33+00:00",
+  "generated_at_utc": "2026-08-05T01:06:35+00:00",
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": false,
   "hardware_first_fault_kill_active_during_each_command": true,
@@ -314,35 +311,35 @@
     {
       "bytes": 5036,
       "path": "evidence/generated/p10_3_repo_intake.json",
-      "sha256": "e2920781baf101ddeed5cb071a40943710f6dd3347b438153a86c27ebd4cb640"
+      "sha256": "36d5657a3e82ea8d37dba3ab39d1d0b6d5d84fa8dbb6e7ef45b6c5cff27b69a1"
     },
     {
       "bytes": 5228,
       "path": "evidence/generated/p10_3_repo_intake.md",
-      "sha256": "90e8c33ef9e70064c4189ff3449ddb3aa5d5cba75f02ccf750622fda4453c452"
+      "sha256": "d5eaf78369f4421e1524434485df549d6937cf3cdff8614d472cf7e768c8d20c"
     },
     {
       "bytes": 3741,
       "path": "evidence/generated/p10_3_wiring.json",
-      "sha256": "2f333cb2ac6121408dd1259cf49d0d57494b06e5d74dd6bea720f7a11043c83b"
+      "sha256": "ca89d42ac92a77f104f0b82e5de237738435d69b862e0e1260f6e8e7d3d49782"
     },
     {
       "bytes": 4014,
       "path": "evidence/generated/p10_3_wiring.md",
-      "sha256": "64c7aa7ceb41bfafd5c06439d18565d97e186af6d48c78166476c0294c8e5cb8"
+      "sha256": "995a4e81ddfe30662dfdb474c93bdce8672cd08c66757b2bd79b063cbd8ac946"
     },
     {
       "bytes": 5647,
       "path": "evidence/generated/p10_3_module_inventory.json",
-      "sha256": "9ad8243ef3cf43c664144c29f52bd98f73b2bea7d01b67a61d1df71f11095f60"
+      "sha256": "6c3001b5fb580701302c275f329ce73ce2ef151779c0adecc4ca05418afaa6fa"
     },
     {
       "bytes": 5921,
       "path": "evidence/generated/p10_3_module_inventory.md",
-      "sha256": "445d9027ea9d08385f8169512511fbe8890c2608ec06201972c585ba1791926b"
+      "sha256": "26a0513ef4be3e73c2834afd37ed0b7cf91ae33a35e61665024303048682be61"
     }
   ],
-  "host_source_commit": "0a825cb2cee1136a8d75974ae46f1fc880000824",
+  "host_source_commit": "f07b69328591678a2ab52e94a250d9f370b45fce",
   "internal_stream_object_bytes": 262144,
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_board_autonomous_aggregate_command_bytes": 67108864,
@@ -373,12 +370,12 @@
         "tests.test_p10_3_hardware_acceptance"
       ],
       "log": {
-        "bytes": 1121,
+        "bytes": 136,
         "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
-        "sha256": "c6e10a94d59369e274e1bcefd7edf3287af2c80f68d25c16276349f20a22a16e"
+        "sha256": "6333e2d65119f5c61a905b7297437c002d9a053be8726b1e6a31db1caba23b0b"
       },
-      "returncode": 1,
-      "status": "FAIL"
+      "returncode": 0,
+      "status": "PASS"
     },
     "no_hardware_static_scan": {
       "command": [
@@ -545,6 +542,6 @@
     "streaming_64m": "e425d898d1576f5b751c5c8219532d42268fe922d25dc2ee9aee3f794022f083",
     "two_lane_regression": "90cacb29425008bb52c3393414e3bd4cbdc2a5c34dfb83300886fa51cbc13dda"
   },
-  "status": "FAIL",
+  "status": "PASS",
   "test_id": "P10_3F-FULL-CAMPAIGN-FREEZE"
 }
