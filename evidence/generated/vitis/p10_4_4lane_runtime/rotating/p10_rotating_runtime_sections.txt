@@ -3,17 +3,17 @@ C:\p10_vitis\p10_4_rotating\p10_rotating_runtime\Debug\p10_rotating_runtime.elf:
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000d200  00000000  00000000  00010000  2**6
+  0 .text         0000d240  00000000  00000000  00010000  2**6
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .init         0000000c  0000d200  0000d200  0001d200  2**2
+  1 .init         0000000c  0000d240  0000d240  0001d240  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .fini         0000000c  0000d20c  0000d20c  0001d20c  2**2
+  2 .fini         0000000c  0000d24c  0000d24c  0001d24c  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  3 .rodata       000004a5  0000d218  0000d218  0001d218  2**2
+  3 .rodata       000004a5  0000d258  0000d258  0001d258  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  4 .data         000008d0  0000d6c0  0000d6c0  0001d6c0  2**3
+  4 .data         000008d0  0000d700  0000d700  0001d700  2**3
                   CONTENTS, ALLOC, LOAD, DATA
-  5 .eh_frame     00000004  0000df90  0000df90  0001df90  2**2
+  5 .eh_frame     00000004  0000dfd0  0000dfd0  0001dfd0  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   6 .mmu_tbl      00004000  00010000  00010000  00020000  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
@@ -37,20 +37,20 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  16 .debug_abbrev 00002aa7  00000000  00000000  0003d6f5  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_loclists 0000fe6b  00000000  00000000  0004019c  2**0
+ 17 .debug_loclists 0001006c  00000000  00000000  0004019c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_aranges 00000358  00000000  00000000  00050008  2**3
+ 18 .debug_aranges 00000358  00000000  00000000  00050208  2**3
                   CONTENTS, READONLY, DEBUGGING
- 19 .debug_rnglists 00002b90  00000000  00000000  00050360  2**0
+ 19 .debug_rnglists 00002bb0  00000000  00000000  00050560  2**0
                   CONTENTS, READONLY, DEBUGGING
- 20 .debug_macro  00004b05  00000000  00000000  00052ef0  2**0
+ 20 .debug_macro  00004b05  00000000  00000000  00053110  2**0
                   CONTENTS, READONLY, DEBUGGING
- 21 .debug_line   0001298d  00000000  00000000  000579f5  2**0
+ 21 .debug_line   0001299d  00000000  00000000  00057c15  2**0
                   CONTENTS, READONLY, DEBUGGING
- 22 .debug_str    0001caad  00000000  00000000  0006a382  2**0
+ 22 .debug_str    0001caad  00000000  00000000  0006a5b2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 23 .debug_frame  000010a0  00000000  00000000  00086e30  2**2
+ 23 .debug_frame  000010a0  00000000  00000000  00087060  2**2
                   CONTENTS, READONLY, DEBUGGING
- 24 .debug_line_str 0000009e  00000000  00000000  00087ed0  2**0
+ 24 .debug_line_str 0000009e  00000000  00000000  00088100  2**0
                   CONTENTS, READONLY, DEBUGGING
 

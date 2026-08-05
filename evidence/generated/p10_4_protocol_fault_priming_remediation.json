@@ -1,0 +1,46 @@
+{
+  "artifact_freeze_sha256": "2b745161c67aedc1bd62725f5e2d1d35f6f4ac1d3c19b805c1934d1b2ba2b5e3",
+  "artifact_source_commit": "6c7418e630d07be54e01d51ba05d90d6ceac3990",
+  "cause": "The diagnostic selected object 1, but only object 0 is directly receiver-primed before sender launch. The handshake-free object pipeline allowed the sender to consume the three corrupt-attempt budget before the receiver changed to object 1.",
+  "current_run_hardware_authorization": false,
+  "direct_observations": {
+    "fixed_protocol_fault_flags": 8,
+    "fixed_tx_attempts": 1817,
+    "rotating_injected_fault_observed_count": 0,
+    "rotating_physical_data_good": 1785,
+    "rotating_rx_duplicate_count": 0,
+    "rotating_rx_old_count": 0,
+    "rotating_rx_protocol_error_count": 0
+  },
+  "hardware_actions_executed": false,
+  "new_artifacts": {
+    "fixed_elf_sha256": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb",
+    "fixed_functional_bitstream_sha256": "b20f137ede6d2592a5bf75604715d631847a6935e11d5147c62ecd3ff5abda76",
+    "rotating_elf_sha256": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1",
+    "rotating_functional_bitstream_sha256": "795f3f340dd9bf998658e8c71704937394019e34dd0668f6e253e6d201539c4a"
+  },
+  "offline_verification": {
+    "artifact_count": 10,
+    "artifact_freeze": "PASS",
+    "model_reconciliation": "PASS",
+    "offline_gate_failures": 0,
+    "offline_gate_total": 13,
+    "p10_4_unit_tests": "12/12 PASS",
+    "xsim": "PASS"
+  },
+  "old_hardware_pass_inherited": false,
+  "prior_evidence": {
+    "evidence_commit": "306d76acaf88978b67627fa6ca268eb190d6dffc",
+    "run_id": "p10_4_20260805T144037Z_a32afe5b_6f915067_ace48b07",
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "stage_error": "duplicate_segment:rotating:injected fault not observed",
+    "stage_summary": "evidence/hardware/p10_4/p10_4_20260805T144037Z_a32afe5b_6f915067_ace48b07/stages/duplicate_fault/stage_summary.json",
+    "status": "PARTIAL"
+  },
+  "remediation": "Duplicate/stale diagnostics select recovery object 0, which the host has directly verified PRIMED before sender publication.",
+  "safety_path_changed": false,
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_4-PROTOCOL-FAULT-PRIMING-REMEDIATION"
+}
