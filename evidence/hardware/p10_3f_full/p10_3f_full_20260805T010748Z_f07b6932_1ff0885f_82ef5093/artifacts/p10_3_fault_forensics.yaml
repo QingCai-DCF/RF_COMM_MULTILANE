@@ -1,0 +1,81 @@
+schema_version: 1
+scope: P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP
+status: OFFLINE_IMPLEMENTED_PENDING_NEW_ARTIFACT_AND_HARDWARE_ACCEPTANCE
+clock:
+  domain: protocol_64mhz
+  hz: 64000000
+capture:
+  policy: first_fault_only
+  local_modules_per_endpoint: 4
+  snapshot_words: 64
+  event_depth: 256
+  event_words: 8
+  event_storage:
+    implementation: eight_independent_256x32_simple_dual_port_banks
+    synthesis_requirement: physical_RAMB_primitives_under_forensic_hierarchy
+    distributed_ram_substitution_allowed: false
+  pre_fault_entries: 248
+  post_fault_cycles: 8
+  periodic_sample_interval_cycles: 1024
+  trigger_sources:
+    - local_tfdu_stuck_high_or_rolling_duty_fault
+    - terminal_object_failure
+  snapshot_fields:
+    - per_module_physical_tx_count
+    - per_module_continuous_high_current_and_max_cycles
+    - per_module_rolling_duty_current_and_max_cycles
+    - per_module_duty_headroom_and_hard_fault_count
+    - per_module_sd_mode_permit_kill_fault_ready_startup
+    - configured_raw_and_unavailable_lane_masks
+    - object_id_object_error_and_active_state
+    - tx_sequence_ack_sack_outstanding_and_high_watermark
+    - tx_attempt_retry_exhaustion_timeout_and_migration_counts
+    - input_and_output_byte_counts
+    - local_raw_rx_and_target_throttle_counts
+persistence:
+  functional_reset_clears_capture: false
+  axi_reset_clears_capture: false
+  ps_reset_clears_capture: false
+  transport_reset_clears_capture: false
+  functional_shutdown_clears_capture: false
+  fpga_reconfiguration_preserves_capture: false
+  power_loss_preserves_capture: false
+  limitation: PL state is volatile and must be archived before loading the independent shutdown bitstream.
+safety_path:
+  immediate_detected_fault_tx_kill: true
+  first_fault_hold_adds_only_kill_and_full_shutdown: true
+  full_shutdown_state:
+    physical_txd: LOW
+    physical_sd: HIGH
+  waits_for_software_evidence_read: false
+  recorder_can_enable_tx: false
+  recorder_can_supply_permit: false
+  recorder_can_backpressure_or_modify_data: false
+archive:
+  canonical_binary_magic_words:
+    - '0x46303150'
+    - '0x57415246'
+  digest: SHA256
+  required_before_archive_commit:
+    - complete_ordered_snapshot_read
+    - complete_ordered_event_read
+    - parsed_json_written
+    - binary_sha256_written_and_verified
+  archive_commit_magic: '0x41524348'
+  explicit_clear_keys:
+    - '0x46524F5A'
+    - '0x434C5241'
+  clear_requires:
+    - archive_committed
+    - effective_full_shutdown
+    - tx_kill_active
+    - all_physical_txd_low
+    - all_sd_high
+    - triggering_fault_not_currently_asserted
+  default_operational_policy: archive_then_program_independent_shutdown_without_clearing
+hardware_scope:
+  no_hardware: true
+  current_run_hardware_authorization: false
+  hardware_actions_executed: false
+  manual_instrumentation_in_this_followup: OMITTED_BY_USER
+  ethernet_allowed: false
