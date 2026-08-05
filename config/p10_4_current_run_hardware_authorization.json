@@ -599,11 +599,13 @@
     "new_run_id_per_diagnostic_stage": 2,
     "program": 2
   },
-  "consumed": false,
+  "consumed": true,
+  "consumed_at_utc": "2026-08-05T20:42:45+00:00",
   "created_at_utc": "2026-08-05T17:37:45.272149+00:00",
-  "current_run_hardware_authorization": true,
+  "current_run_hardware_authorization": false,
   "errors": [],
   "ethernet_allowed": false,
+  "evidence_consistency": "PASS",
   "external_instrumentation_allowed": false,
   "external_instrumentation_used": false,
   "fixed_jtag_serial": "210249855178",
@@ -652,6 +654,7 @@
     "hash_low": "0xBCFECB39",
     "version": "0x0A000004"
   },
+  "result": "evidence/hardware/p10_4/p10_4_20260805T173745Z_6c7418e6_b20f137e_795f3f34/final/orchestrator_result.json",
   "rotating_jtag_serial": "210512180081",
   "run_id": "p10_4_20260805T173745Z_6c7418e6_b20f137e_795f3f34",
   "schema_version": 1,
@@ -664,6 +667,6 @@
     "verify_both_shutdown_markers": true
   },
   "source_commit": "6c7418e630d07be54e01d51ba05d90d6ceac3990",
-  "status": "READY_FOR_EXACT_CURRENT_RUN",
+  "status": "CONSUMED_AFTER_P10_4_PARTIAL",
   "wiring_changed": false
 }

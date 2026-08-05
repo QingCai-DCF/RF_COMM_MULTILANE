@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_4-CRC-BAD-ROOT-CAUSE-DIAGNOSIS-001",
+  "status": "REMEDIATION_REQUIRED",
+  "generated_at_utc": "2026-08-05T20:56:53Z",
+  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+  "run_id": "p10_4_20260805T173745Z_6c7418e6_b20f137e_795f3f34",
+  "source_commit": "6c7418e630d07be54e01d51ba05d90d6ceac3990",
+  "artifact_hashes": {
+    "fixed_functional_bitstream": "b20f137ede6d2592a5bf75604715d631847a6935e11d5147c62ecd3ff5abda76",
+    "rotating_functional_bitstream": "795f3f340dd9bf998658e8c71704937394019e34dd0668f6e253e6d201539c4a",
+    "fixed_elf": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb",
+    "rotating_elf": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1"
+  },
+  "observed_failure": {
+    "campaign_status": "PARTIAL",
+    "mandatory_gate": "CRC_BAD_ZERO",
+    "maximum_physical_crc_bad": 929,
+    "all_other_hard_zero_counters": true,
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS"
+  },
+  "localization": {
+    "first_nonzero": {
+      "window": "mixed_30min_2plus2_fallback_00",
+      "direction": "F_TO_R",
+      "lane_mask": "0x3",
+      "receiver": "rotating",
+      "lane": 1,
+      "crc_bad": 2
+    },
+    "dominant": {
+      "windows": [
+        "mixed_30min_2plus2_fallback_01",
+        "mixed_30min_2plus2_fallback_03",
+        "mixed_30min_2plus2_fallback_05",
+        "mixed_30min_2plus2_fallback_07"
+      ],
+      "direction": "R_TO_F",
+      "lane_mask": "0xC",
+      "receiver": "fixed",
+      "lane": 3,
+      "crc_bad_after_each_window": [113, 324, 604, 929]
+    },
+    "not_observed_before_fallback_segment": true,
+    "application_integrity_failures": 0,
+    "retry_exhausted": 0,
+    "duty_violations": 0,
+    "continuous_high_violations": 0
+  },
+  "causal_evidence": {
+    "connector_pairs": {
+      "J10": [0, 1],
+      "J11": [2, 3]
+    },
+    "ack_lane_policy": "first schedulable lane in the active mask",
+    "mask_0x3_ack_lane": 0,
+    "mask_0xC_ack_lane": 2,
+    "existing_rx_quarantine_scope": "same physical module only",
+    "matrix_observation": "F2 transmission produced non-target raw edges on F3 while non-target accepted DATA/control remained zero",
+    "matrix_examples": {
+      "matrix_F2_raw1024_F3_raw_edges": 11,
+      "matrix_F2_frame30s_first_object_F3_raw_edges": 45,
+      "matrix_R2_frame30s_first_object_F3_raw_edges": 95
+    },
+    "classification": "EVIDENCE_SUPPORTED_CAUSAL_HYPOTHESIS",
+    "hypothesis": "A physical ACK emitted by the first enabled module can create connector-pair optical echo on its adjacent local receiver. The current same-module-only admission quarantine permits that known local ACK echo to reach the adjacent parser; when repeated in the two-lane fallback masks it increments physical CRC-reject counters, most strongly F2 ACK to F3 RX."
+  },
+  "remediation_contract": {
+    "strategy": "ACK_ONLY_CONNECTOR_PAIR_RX_QUARANTINE",
+    "same_module_local_tx_quarantine_preserved": true,
+    "ordinary_data_tx_does_not_blank_peer_lane": true,
+    "paired_ack_tx_quarantines_only_the_other_lane_on_the_same_connector": true,
+    "cross_connector_receive_path_remains_open": true,
+    "uses_final_physical_txd_after_all_tx_safety_gates": true,
+    "feeds_back_to_tx_or_safety_path": false,
+    "new_artifact_bundle_required": true,
+    "old_hardware_pass_inherited": false,
+    "required_reverification": [
+      "focused XSIM",
+      "complete offline gates",
+      "fixed and rotating Vivado synthesis/implementation/timing/CDC/DRC",
+      "new bitstream/XSA/BSP/ELF SHA256 freeze",
+      "fresh current-run authorization",
+      "fresh P10.4 hardware campaign"
+    ]
+  },
+  "evidence": {
+    "mixed_stage": "evidence/hardware/p10_4/p10_4_20260805T173745Z_6c7418e6_b20f137e_795f3f34/stages/mixed_30min/stage_summary.json",
+    "matrix_stage": "evidence/hardware/p10_4/p10_4_20260805T173745Z_6c7418e6_b20f137e_795f3f34/stages/echo_crosstalk_8x8/stage_summary.json",
+    "final_result": "evidence/hardware/p10_4/p10_4_20260805T173745Z_6c7418e6_b20f137e_795f3f34/final/orchestrator_result.json",
+    "rtl_admission": "rtl/p10_1r_rx_admission.sv",
+    "rtl_transport": "rtl/p9_optical_transport_core.sv"
+  },
+  "hardware_actions_executed_by_diagnosis": false,
+  "hardware_state": "BOTH_ENDPOINTS_SHUTDOWN"
+}
