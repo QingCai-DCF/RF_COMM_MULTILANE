@@ -6,8 +6,8 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 242
-PASS: 190
-PENDING: 47
+PASS: 186
+PENDING: 51
 FAIL: 5
 WAIVED: 0
 ```
@@ -60,17 +60,17 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `PHY-SAFE-005` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-HISTORY-COOLDOWN` | `evidence/generated/p8e_p0_p8d_regression_summary.json` | Duty-history invalidation requires at least 1000 us all-TX-low cooldown before reuse. |
 | `PHY-SAFE-006` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-PHYSICAL-MODULE-ACCOUNTING` | `evidence/generated/p8c_physical_module_accounting_summary.json` | Rolling-duty state is bound to physical-module identity and survives lane, path, and permit transitions. |
 | `L2-ARQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` | Each endpoint direction uses bounded selective-repeat TX/RX windows. |
-| `L2-ARQ-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10-P8D-SOURCE-BINDING-REVERIFICATION` | `evidence/generated/p10_p8d_source_reverification/summary.json` | The shared global outstanding window supports at least 32 frames. |
+| `L2-ARQ-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | The shared global outstanding window supports at least 32 frames. |
 | `L2-SEQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8e_raw/r8d/p8d_selective_repeat_rtl_summary.json` | Sequence width is at least 16 bits and modular wrap is bit-exact. |
-| `L2-SACK-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SACK-ACK-AGGREGATION` | `evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json` | The negotiated SACK window supports at least 32 bits. |
-| `L2-SACK-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10-P8D-SOURCE-BINDING-REVERIFICATION` | `evidence/generated/p10_p8d_source_reverification/summary.json` | ACK aggregation has a bounded frame threshold and maximum delay. |
+| `L2-SACK-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | The negotiated SACK window supports at least 32 bits. |
+| `L2-SACK-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | ACK aggregation has a bounded frame threshold and maximum delay. |
 | `L2-DUP-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-PYTHON-REFERENCE-CAMPAIGN` | `evidence/generated/p8e_precompletion_reverification_summary.json` | A duplicate logical frame never commits or completes twice. |
 | `L2-STALE-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` | Stale session/path data and ACK records are rejected. |
-| `L2-MIG-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Only unacknowledged frames may migrate across eligible lanes or paths. |
-| `L2-RETRY-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` | Retry count, timeout/backoff, and exhaustion are bounded. |
-| `SCHED-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Scheduling is health-aware and weighted across eligible lanes. |
-| `SCHED-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8e_precompletion_reverification_summary.json` | A faulted lane does not block work on healthy eligible lanes. |
-| `SCHED-003` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SCHEDULER-MIGRATION` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Scheduler fairness and starvation are explicitly bounded. |
+| `L2-MIG-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | Only unacknowledged frames may migrate across eligible lanes or paths. |
+| `L2-RETRY-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | Retry count, timeout/backoff, and exhaustion are bounded. |
+| `SCHED-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | Scheduling is health-aware and weighted across eligible lanes. |
+| `SCHED-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | A faulted lane does not block work on healthy eligible lanes. |
+| `SCHED-003` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | Scheduler fairness and starvation are explicitly bounded. |
 | `AXIS-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-AXIS-BACKPRESSURE` | `evidence/generated/p8e_raw/r8d/p8d_axis_backpressure_summary.json` | Aggregate AXI-Stream transfers have no loss or duplication under arbitrary backpressure. |
 | `DMA-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-DMA-DESCRIPTOR-RING` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Independent bounded TX and RX scatter-gather descriptor rings are modeled. |
 | `DMA-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-DMA-DESCRIPTOR-RING` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Descriptor ownership permits exactly one completion and one reclaim. |
@@ -78,7 +78,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `DMA-004` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-DMA-DESCRIPTOR-RING` | `evidence/generated/p8e_precompletion_reverification_summary.json` | Descriptor generation rejects stale completions after wrap or reset. |
 | `RFAP-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-RFAP-V1-VNEXT-COMPATIBILITY` | `evidence/generated/p8e_raw/r8d/p8d_rfap_compatibility_summary.json` | RFAP v1/P7 vectors and legacy fallback remain compatible. |
 | `RFAP-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-RFAP-V1-VNEXT-COMPATIBILITY` | `evidence/generated/p8e_raw/r8d/p8d_rfap_compatibility_summary.json` | RFAP vNext streaming validates large objects with bounded memory and atomic publish. |
-| `PERF-MODEL-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-AIRTIME-BUDGET-MODEL` | `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` | The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead. The P10.1 extension also closes a complete dual-node streaming sensitivity model without changing the original P8D scope. |
+| `PERF-MODEL-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | The airtime model includes duty, framing, ACK, retry, handover, and descriptor overhead. The P10.1 extension also closes a complete dual-node streaming sensitivity model without changing the original P8D scope. |
 | `PERF-MODEL-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-AIRTIME-BUDGET-MODEL` | `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` | The 16 Mbit/s architecture target is explicitly evaluated without increasing duty. The P10.1 extension directly evaluates the current two-lane 4.0 Mbit/s-per-direction scale-equivalent target without increasing duty. |
 | `BUILD-001` | `PASS` | P8E_MULTI_PROFILE_OFFLINE | `P8E` | `P8E-DUAL-TARGET-BUILD-MATRIX` | `evidence/generated/p8e_build_matrix_summary.json` | Z7010 and exact-part Z7020 use a common-source reproducible build matrix. |
 | `BUILD-002` | `PASS` | P8E_MULTI_PROFILE_OFFLINE | `P8E` | `P8E-SOURCE-MANIFEST-COMMON-CORE` | `evidence/generated/p8e_source_manifest_summary.json` | Fixed and rotating endpoint role wrappers remain thin consumers of one common core. |
@@ -251,10 +251,10 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_3-PERF-002` | `PENDING` | P10_3_FOUR_LANE_PERFORMANCE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-PERF-002` | `evidence/generated/p10_3_performance.json` | Rotating-to-fixed application goodput shall be at least 8 Mbit/s under the frozen four-lane test contract. |
 | `P10_3-SOAK-001` | `PENDING` | P10_3_STATIONARY_30MIN | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-SOAK-001` | `evidence/generated/p10_3_formal_30min.json` | A single stationary four-lane formal run shall last 1800 seconds with bounded telemetry gaps and zero integrity, protocol, descriptor, deadlock, or safety errors. |
 | `P10_3-EVID-001` | `PENDING` | P10_3_EVIDENCE_CONSISTENCY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-EVID-001` | `evidence/generated/p10_3_evidence_consistency.json` | Every P10.3 PASS claim shall bind exact boards, modules, wiring, artifacts, run ID, raw logs, and a consistent SHA256 manifest. |
-| `P10_3F-OFF-001` | `PASS` | P10_3F_FIRST_FAULT_SAFETY_PATH | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-001` | `evidence/generated/p10_3_fault_forensics_offline.json` | A detected local TFDU safety fault or terminal object failure shall freeze the first-fault recorder and force endpoint-wide physical TX kill and full shutdown without waiting for software evidence handling. |
-| `P10_3F-OFF-002` | `PASS` | P10_3F_RESET_INDEPENDENT_CAPTURE | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-002` | `evidence/generated/p10_3_fault_forensics_offline.json` | The first-fault snapshot and event history shall not be cleared by functional reset or functional shutdown and shall clear only after complete ordered readout, nonzero SHA256 commit, verified full shutdown, and the explicit two-key clear command. |
-| `P10_3F-OFF-003` | `PASS` | P10_3F_SNAPSHOT_EVENT_ARCHIVE | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-003` | `evidence/generated/p10_3_fault_forensics_offline.json` | Each endpoint shall retain a 64-word four-module first-fault snapshot and a BRAM-backed circular event log with 248 pre-fault records and eight post-fault records, and the archive tool shall emit exact raw binary, parsed JSON, and SHA256 evidence. |
-| `P10_3F-OFF-004` | `PASS` | P10_3F_STAIRCASE_THEN_BOARD_AUTONOMOUS_AGGREGATION | `P10_3F_FULL_CAMPAIGN_HOST_REMEDIATION` | `P10_3F-OFF-004` | `evidence/generated/p10_3f_full_campaign_freeze.json` | The long-test contract shall first pass bidirectional 1, 4, 16, 64, and 256 KiB staircase levels with a safety snapshot gate after each direction; later board-autonomous commands may contain multiple 256 KiB internal objects up to 64 MiB, with continuous PL first-fault TX kill during each command and a coherent safety snapshot before another aggregate command is admitted, while every formal run remains bounded to 1800 seconds. |
+| `P10_3F-OFF-001` | `PENDING` | P10_3F_FIRST_FAULT_SAFETY_PATH | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-001` | `evidence/generated/p10_3_fault_forensics_offline.json` | A detected local TFDU safety fault or terminal object failure shall freeze the first-fault recorder and force endpoint-wide physical TX kill and full shutdown without waiting for software evidence handling. |
+| `P10_3F-OFF-002` | `PENDING` | P10_3F_RESET_INDEPENDENT_CAPTURE | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-002` | `evidence/generated/p10_3_fault_forensics_offline.json` | The first-fault snapshot and event history shall not be cleared by functional reset or functional shutdown and shall clear only after complete ordered readout, nonzero SHA256 commit, verified full shutdown, and the explicit two-key clear command. |
+| `P10_3F-OFF-003` | `PENDING` | P10_3F_SNAPSHOT_EVENT_ARCHIVE | `P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP` | `P10_3F-OFF-003` | `evidence/generated/p10_3_fault_forensics_offline.json` | Each endpoint shall retain a 64-word four-module first-fault snapshot and a BRAM-backed circular event log with 248 pre-fault records and eight post-fault records, and the archive tool shall emit exact raw binary, parsed JSON, and SHA256 evidence. |
+| `P10_3F-OFF-004` | `PENDING` | P10_3F_STAIRCASE_THEN_BOARD_AUTONOMOUS_AGGREGATION | `P10_3F_FULL_CAMPAIGN_HOST_REMEDIATION` | `P10_3F-OFF-004` | `evidence/generated/p10_3f_full_campaign_freeze.json` | The long-test contract shall first pass bidirectional 1, 4, 16, 64, and 256 KiB staircase levels with a safety snapshot gate after each direction; later board-autonomous commands may contain multiple 256 KiB internal objects up to 64 MiB, with continuous PL first-fault TX kill during each command and a coherent safety snapshot before another aggregate command is admitted, while every formal run remains bounded to 1800 seconds. |
 | `P10_3F-HW-001` | `PENDING` | P10_3F_CURRENT_HARDWARE_FAULT_PATH | `P10_3F_HARDWARE_REACCEPTANCE` | `P10_3F-HW-001` | `evidence/generated/p10_3f_hardware/final/summary.json` | Current-artifact hardware evidence shall demonstrate that an injected or naturally detected fault kills all local physical transmitters and asserts full shutdown before any XSDB evidence read. |
 | `P10_3F-HW-002` | `PENDING` | P10_3F_CURRENT_HARDWARE_ARCHIVE_SHUTDOWN | `P10_3F_HARDWARE_REACCEPTANCE` | `P10_3F-HW-002` | `evidence/generated/p10_3f_hardware/final/summary.json` | On current hardware, any frozen evidence shall be read completely, archived as raw binary and parsed JSON with verified SHA256, committed in PL, and followed by programming and verification of both role-bound independent shutdown bitstreams without clearing the capture first. |
 | `P10_3F-HW-003` | `PENDING` | P10_3F_CURRENT_HARDWARE_STAIRCASE_FORMAL | `P10_3F_HARDWARE_REACCEPTANCE` | `P10_3F-HW-003` | `evidence/generated/p10_3f_hardware/final/summary.json` | Current hardware shall pass both directions at each 1, 4, 16, 64, and 256 KiB level, passing the safety gate before advancement, then pass the separately bounded 1800-second stationary formal stage. |
@@ -449,9 +449,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-ARQ-002`
 
-- `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
+- `config/p8d_data_plane.yaml` — `7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732`
 - `rtl/ir_data_plane_top.sv` — `8205959e9d3602224aec1dac2a476b3b150fdf86921f1ff545aa47f3d40b6eab`
-- `evidence/generated/p10_p8d_source_reverification/summary.json` — `cfd688fe36572d929f57d50bfc9dba1a2cfdef8b1a5a8b2b6c29a6dd427a7a8f`
+- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
 
 ### `L2-SEQ-001`
 
@@ -462,14 +462,14 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `L2-SACK-001`
 
 - `rtl/ir_sack_codec.sv` — `bde58a1da521b38d7cdf6459c69d952e0bbc42738a91d4d417f3f45776b5346e`
-- `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
-- `evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json` — `4e94640c66f08534a4baa422b214b3dab61381010a2f071e2f77674ee1322dc8`
+- `config/p8d_data_plane.yaml` — `7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732`
+- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
 
 ### `L2-SACK-002`
 
 - `rtl/ir_ack_aggregator.sv` — `bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa`
 - `sim/tb/tb_ir_sack_ack_aggregation.sv` — `926ef09ea677487e14a9defd87419208bbfd97fee947527e3552e9ed9ad1c075`
-- `evidence/generated/p10_p8d_source_reverification/summary.json` — `cfd688fe36572d929f57d50bfc9dba1a2cfdef8b1a5a8b2b6c29a6dd427a7a8f`
+- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
 
 ### `L2-DUP-001`
 
@@ -486,32 +486,36 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `L2-MIG-001`
 
 - `rtl/ir_retry_migration.sv` — `53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951`
-- `sim/tb/tb_ir_scheduler_migration.sv` — `a9f2fc05f9ef5184c775e94d6bc742262ed26dda37df319a86d3a8b492474c8d`
-- `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
+- `rtl/ir_health_weighted_scheduler.sv` — `215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c`
+- `sim/tb/tb_ir_scheduler_migration.sv` — `2790f02c5e63301fc356f917c3342fa71c8231ac4678a96894e64e8e6f876b8e`
+- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
 
 ### `L2-RETRY-001`
 
 - `rtl/ir_selective_repeat_tx.sv` — `48baa0852b5beed2fca7009dbc7dbc9facbe343e2a85ee72a0d36ed46c0ac25f`
-- `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
-- `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` — `d05dc4bb99e184cb3a45a1eacc9973e79f3fbf95be4bb8127c3fdca4cef33389`
+- `rtl/ir_health_weighted_scheduler.sv` — `215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c`
+- `config/p8d_data_plane.yaml` — `7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732`
+- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
 
 ### `SCHED-001`
 
-- `rtl/ir_health_weighted_scheduler.sv` — `0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a`
+- `rtl/ir_health_weighted_scheduler.sv` — `215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c`
 - `tools/p8d_data_plane_reference.py` — `bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9`
-- `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
+- `sim/tb/tb_ir_scheduler_migration.sv` — `2790f02c5e63301fc356f917c3342fa71c8231ac4678a96894e64e8e6f876b8e`
+- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
 
 ### `SCHED-002`
 
-- `rtl/ir_health_weighted_scheduler.sv` — `0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a`
-- `sim/tb/tb_ir_scheduler_migration.sv` — `a9f2fc05f9ef5184c775e94d6bc742262ed26dda37df319a86d3a8b492474c8d`
-- `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
+- `rtl/ir_health_weighted_scheduler.sv` — `215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c`
+- `sim/tb/tb_ir_scheduler_migration.sv` — `2790f02c5e63301fc356f917c3342fa71c8231ac4678a96894e64e8e6f876b8e`
+- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
 
 ### `SCHED-003`
 
-- `rtl/ir_health_weighted_scheduler.sv` — `0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a`
-- `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
-- `evidence/generated/p8e_precompletion_reverification_summary.json` — `d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf`
+- `rtl/ir_health_weighted_scheduler.sv` — `215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c`
+- `config/p8d_data_plane.yaml` — `7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732`
+- `sim/tb/tb_ir_scheduler_migration.sv` — `2790f02c5e63301fc356f917c3342fa71c8231ac4678a96894e64e8e6f876b8e`
+- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
 
 ### `AXIS-001`
 
@@ -558,9 +562,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `PERF-MODEL-001`
 
 - `scripts/model_p8d_airtime.py` — `9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986`
-- `config/p8d_data_plane.yaml` — `2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02`
-- `evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json` — `9afa54ffcc485c0b2438f93eac9727a93260ac2849aa9d2b0bfc9f9877864d75`
+- `config/p8d_data_plane.yaml` — `7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732`
 - `evidence/generated/p10_1_performance_model.json` — `bb75f5ac204263646bc6c7dd999530d837f4563c38bfddfc11968d5b478bacb9`
+- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
 
 ### `PERF-MODEL-002`
 
@@ -1386,59 +1390,3 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `P10_2-HWPREP-002`
 
 - `evidence/generated/p10_2_p10_3_readiness.json` — `565c66693fad55688eb03f59b1c3cc7a9b2908ad896c9ff08c1d51a40e729b63`
-
-### `P10_3F-OFF-001`
-
-- `rtl/p10_fault_forensics.sv` — `e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3`
-- `sim/tb/tb_p10_fault_forensics.sv` — `2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4`
-- `sim/tb/tb_p10_forensic_safety_integration.sv` — `df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752`
-- `config/safety/p10_3_fault_forensics.yaml` — `ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256`
-- `config/performance/p10_3f_staircase.yaml` — `069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8`
-- `scripts/archive_p10_fault_forensics.py` — `45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c`
-- `scripts/run_p10_3f_staircase_hardware.py` — `55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40`
-- `evidence/generated/p10_3_fault_forensics_xsim/summary.json` — `eed590f97a6c72b604fa68752b606460393ce4464619635dcb05329c669fc799`
-- `evidence/generated/p10_3_fault_forensics_offline.json` — `da02c8d9929ff1ea0b25e590bd191c3bcab84c173b4a9b1fd2a3e70074e49be0`
-- `artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a/p10_ax7020_fixed_functional.bit` — `9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a`
-- `artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2/p10_ax7020_rotating_functional.bit` — `e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2`
-
-### `P10_3F-OFF-002`
-
-- `rtl/p10_fault_forensics.sv` — `e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3`
-- `sim/tb/tb_p10_fault_forensics.sv` — `2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4`
-- `sim/tb/tb_p10_forensic_safety_integration.sv` — `df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752`
-- `config/safety/p10_3_fault_forensics.yaml` — `ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256`
-- `config/performance/p10_3f_staircase.yaml` — `069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8`
-- `scripts/archive_p10_fault_forensics.py` — `45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c`
-- `scripts/run_p10_3f_staircase_hardware.py` — `55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40`
-- `evidence/generated/p10_3_fault_forensics_xsim/summary.json` — `eed590f97a6c72b604fa68752b606460393ce4464619635dcb05329c669fc799`
-- `evidence/generated/p10_3_fault_forensics_offline.json` — `da02c8d9929ff1ea0b25e590bd191c3bcab84c173b4a9b1fd2a3e70074e49be0`
-- `artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a/p10_ax7020_fixed_functional.bit` — `9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a`
-- `artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2/p10_ax7020_rotating_functional.bit` — `e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2`
-
-### `P10_3F-OFF-003`
-
-- `rtl/p10_fault_forensics.sv` — `e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3`
-- `sim/tb/tb_p10_fault_forensics.sv` — `2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4`
-- `sim/tb/tb_p10_forensic_safety_integration.sv` — `df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752`
-- `config/safety/p10_3_fault_forensics.yaml` — `ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256`
-- `config/performance/p10_3f_staircase.yaml` — `069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8`
-- `scripts/archive_p10_fault_forensics.py` — `45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c`
-- `scripts/run_p10_3f_staircase_hardware.py` — `55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40`
-- `evidence/generated/p10_3_fault_forensics_xsim/summary.json` — `eed590f97a6c72b604fa68752b606460393ce4464619635dcb05329c669fc799`
-- `evidence/generated/p10_3_fault_forensics_offline.json` — `da02c8d9929ff1ea0b25e590bd191c3bcab84c173b4a9b1fd2a3e70074e49be0`
-- `artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a/p10_ax7020_fixed_functional.bit` — `9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a`
-- `artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2/p10_ax7020_rotating_functional.bit` — `e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2`
-
-### `P10_3F-OFF-004`
-
-- `rtl/p10_fault_forensics.sv` — `e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3`
-- `sim/tb/tb_p10_fault_forensics.sv` — `2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4`
-- `sim/tb/tb_p10_forensic_safety_integration.sv` — `df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752`
-- `config/safety/p10_3_fault_forensics.yaml` — `ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256`
-- `config/performance/p10_3f_staircase.yaml` — `069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8`
-- `scripts/archive_p10_fault_forensics.py` — `45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c`
-- `scripts/run_p10_3f_staircase_hardware.py` — `55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40`
-- `evidence/generated/p10_3_fault_forensics_xsim/summary.json` — `eed590f97a6c72b604fa68752b606460393ce4464619635dcb05329c669fc799`
-- `evidence/generated/p10_3_fault_forensics_offline.json` — `da02c8d9929ff1ea0b25e590bd191c3bcab84c173b4a9b1fd2a3e70074e49be0`
-- `artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a/p10_ax7020_fixed_functional.bit` — `9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a`
-- `artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2/p10_ax7020_rotating_functional.bit` — `e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2`

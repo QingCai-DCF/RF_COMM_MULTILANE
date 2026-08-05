@@ -718,27 +718,35 @@ requirements:
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: P10-P8D-SOURCE-BINDING-REVERIFICATION
-  evidence_path: evidence/generated/p10_p8d_source_reverification/summary.json
+  test_id: P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION
+  evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: config/p8d_data_plane.yaml
-    sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
+    sha256: 7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732
   - path: rtl/ir_data_plane_top.sv
     sha256: 8205959e9d3602224aec1dac2a476b3b150fdf86921f1ff545aa47f3d40b6eab
-  - path: evidence/generated/p10_p8d_source_reverification/summary.json
-    sha256: cfd688fe36572d929f57d50bfc9dba1a2cfdef8b1a5a8b2b6c29a6dd427a7a8f
+  - path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    sha256: 0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
-  source_commit: 63ff1d08eeb60822c6ad350a32f56c5b30f45641
-  reverification_stage: P10_DUAL_ENDPOINT_SOURCE_REVERIFY
+  artifact_hash: 7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732
+  source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
+  reverification_stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
   reverification_history:
   - stage: P10_DUAL_ENDPOINT_SOURCE_REVERIFY
     previous_source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
     previous_evidence_path: evidence/generated/p8e_raw/r8d/p8d_data_plane_config_summary.json
     previous_artifact_hash: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 63ff1d08eeb60822c6ad350a32f56c5b30f45641
+    previous_evidence_path: evidence/generated/p10_p8d_source_reverification/summary.json
+    previous_artifact_hash: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 0e6032a1a55745e1c7131cd7b6c0457b6c783553
+    previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    previous_artifact_hash: 7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732
 - requirement_id: L2-SEQ-001
   requirement_text: Sequence width is at least 16 bits and modular wrap is bit-exact.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -767,30 +775,39 @@ requirements:
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: P8D-SACK-ACK-AGGREGATION
-  evidence_path: evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json
+  test_id: P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION
+  evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_sack_codec.sv
     sha256: bde58a1da521b38d7cdf6459c69d952e0bbc42738a91d4d417f3f45776b5346e
   - path: config/p8d_data_plane.yaml
-    sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
-  - path: evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json
-    sha256: 4e94640c66f08534a4baa422b214b3dab61381010a2f071e2f77674ee1322dc8
+    sha256: 7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732
+  - path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    sha256: 0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
   artifact_hash: bde58a1da521b38d7cdf6459c69d952e0bbc42738a91d4d417f3f45776b5346e
-  source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
-  reverification_stage: P8E
+  source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
+  reverification_stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+  reverification_history:
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
+    previous_evidence_path: evidence/generated/p8e_raw/r8d/p8d_sack_ack_aggregation_summary.json
+    previous_artifact_hash: bde58a1da521b38d7cdf6459c69d952e0bbc42738a91d4d417f3f45776b5346e
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 0e6032a1a55745e1c7131cd7b6c0457b6c783553
+    previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    previous_artifact_hash: bde58a1da521b38d7cdf6459c69d952e0bbc42738a91d4d417f3f45776b5346e
 - requirement_id: L2-SACK-002
   requirement_text: ACK aggregation has a bounded frame threshold and maximum delay.
   profile: P8D_MULTI_PROFILE_OFFLINE
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: P10-P8D-SOURCE-BINDING-REVERIFICATION
-  evidence_path: evidence/generated/p10_p8d_source_reverification/summary.json
+  test_id: P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION
+  evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
   status: PASS
   waiver: null
   artifact_hashes:
@@ -798,8 +815,8 @@ requirements:
     sha256: bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa
   - path: sim/tb/tb_ir_sack_ack_aggregation.sv
     sha256: 926ef09ea677487e14a9defd87419208bbfd97fee947527e3552e9ed9ad1c075
-  - path: evidence/generated/p10_p8d_source_reverification/summary.json
-    sha256: cfd688fe36572d929f57d50bfc9dba1a2cfdef8b1a5a8b2b6c29a6dd427a7a8f
+  - path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    sha256: 0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
   artifact_hash: bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa
@@ -812,8 +829,16 @@ requirements:
     previous_source_commit: 871a7bb727496025f9270128da92846a3883ddbc
     previous_evidence_path: evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json
     previous_artifact_hash: 1d7c3d27b10943468ead9e7673efca72306e4e5a5844ded160d5f2a827c18ae7
-  source_commit: 63ff1d08eeb60822c6ad350a32f56c5b30f45641
-  reverification_stage: P10_DUAL_ENDPOINT_SOURCE_REVERIFY
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 63ff1d08eeb60822c6ad350a32f56c5b30f45641
+    previous_evidence_path: evidence/generated/p10_p8d_source_reverification/summary.json
+    previous_artifact_hash: bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 0e6032a1a55745e1c7131cd7b6c0457b6c783553
+    previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    previous_artifact_hash: bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa
+  source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
+  reverification_stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
 - requirement_id: L2-DUP-001
   requirement_text: A duplicate logical frame never commits or completes twice.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -882,17 +907,19 @@ requirements:
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: P8D-SCHEDULER-MIGRATION
-  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
+  test_id: P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION
+  evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_retry_migration.sv
     sha256: 53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951
+  - path: rtl/ir_health_weighted_scheduler.sv
+    sha256: 215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c
   - path: sim/tb/tb_ir_scheduler_migration.sv
-    sha256: a9f2fc05f9ef5184c775e94d6bc742262ed26dda37df319a86d3a8b492474c8d
-  - path: evidence/generated/p8e_precompletion_reverification_summary.json
-    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
+    sha256: 2790f02c5e63301fc356f917c3342fa71c8231ac4678a96894e64e8e6f876b8e
+  - path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    sha256: 0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
   artifact_hash: 53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951
@@ -901,25 +928,35 @@ requirements:
     previous_source_commit: null
     previous_evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
     previous_artifact_hash: 53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951
-  source_commit: 55fe57509896babec48bbf897ab32ab161382599
-  reverification_stage: P8E_PRECOMPLETION
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 55fe57509896babec48bbf897ab32ab161382599
+    previous_evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
+    previous_artifact_hash: 53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 0e6032a1a55745e1c7131cd7b6c0457b6c783553
+    previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    previous_artifact_hash: 53864a36ed5a041b1acab24645853faf0439a7e2577fcbb12ddbec7dcc0d9951
+  source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
+  reverification_stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
 - requirement_id: L2-RETRY-001
   requirement_text: Retry count, timeout/backoff, and exhaustion are bounded.
   profile: P8D_MULTI_PROFILE_OFFLINE
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: P8D-SELECTIVE-REPEAT-RTL
-  evidence_path: evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json
+  test_id: P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION
+  evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_selective_repeat_tx.sv
     sha256: 48baa0852b5beed2fca7009dbc7dbc9facbe343e2a85ee72a0d36ed46c0ac25f
+  - path: rtl/ir_health_weighted_scheduler.sv
+    sha256: 215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c
   - path: config/p8d_data_plane.yaml
-    sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
-  - path: evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json
-    sha256: d05dc4bb99e184cb3a45a1eacc9973e79f3fbf95be4bb8127c3fdca4cef33389
+    sha256: 7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732
+  - path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    sha256: 0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
   artifact_hash: 48baa0852b5beed2fca7009dbc7dbc9facbe343e2a85ee72a0d36ed46c0ac25f
@@ -936,89 +973,125 @@ requirements:
     previous_source_commit: 871a7bb727496025f9270128da92846a3883ddbc
     previous_evidence_path: evidence/generated/p9_ack_sack_source_reverification_871a7bb7.json
     previous_artifact_hash: edbece615530d9ef0ca1939ba64fb76fea11e1264be6273c1dbf9b02e0c60ce0
-  source_commit: 19bdeced49b01804611c2ce56a114b3fc164745c
-  reverification_stage: P9_TIMING_RECOVERY_P8D_SOURCE_REVERIFY
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 19bdeced49b01804611c2ce56a114b3fc164745c
+    previous_evidence_path: evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json
+    previous_artifact_hash: 48baa0852b5beed2fca7009dbc7dbc9facbe343e2a85ee72a0d36ed46c0ac25f
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 0e6032a1a55745e1c7131cd7b6c0457b6c783553
+    previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    previous_artifact_hash: 48baa0852b5beed2fca7009dbc7dbc9facbe343e2a85ee72a0d36ed46c0ac25f
+  source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
+  reverification_stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
 - requirement_id: SCHED-001
   requirement_text: Scheduling is health-aware and weighted across eligible lanes.
   profile: P8D_MULTI_PROFILE_OFFLINE
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: P8D-SCHEDULER-MIGRATION
-  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
+  test_id: P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION
+  evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_health_weighted_scheduler.sv
-    sha256: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
+    sha256: 215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c
   - path: tools/p8d_data_plane_reference.py
     sha256: bc43e3be3171215a72dfc1ed283e40b4b560cff42c18472983c65c63f39bf9f9
-  - path: evidence/generated/p8e_precompletion_reverification_summary.json
-    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
+  - path: sim/tb/tb_ir_scheduler_migration.sv
+    sha256: 2790f02c5e63301fc356f917c3342fa71c8231ac4678a96894e64e8e6f876b8e
+  - path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    sha256: 0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
+  artifact_hash: 215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c
   reverification_history:
   - stage: P8E_PRECOMPLETION
     previous_source_commit: null
     previous_evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
     previous_artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
-  source_commit: 55fe57509896babec48bbf897ab32ab161382599
-  reverification_stage: P8E_PRECOMPLETION
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 55fe57509896babec48bbf897ab32ab161382599
+    previous_evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
+    previous_artifact_hash: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 0e6032a1a55745e1c7131cd7b6c0457b6c783553
+    previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    previous_artifact_hash: 215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c
+  source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
+  reverification_stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
 - requirement_id: SCHED-002
   requirement_text: A faulted lane does not block work on healthy eligible lanes.
   profile: P8D_MULTI_PROFILE_OFFLINE
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: P8D-SCHEDULER-MIGRATION
-  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
+  test_id: P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION
+  evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_health_weighted_scheduler.sv
-    sha256: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
+    sha256: 215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c
   - path: sim/tb/tb_ir_scheduler_migration.sv
-    sha256: a9f2fc05f9ef5184c775e94d6bc742262ed26dda37df319a86d3a8b492474c8d
-  - path: evidence/generated/p8e_precompletion_reverification_summary.json
-    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
+    sha256: 2790f02c5e63301fc356f917c3342fa71c8231ac4678a96894e64e8e6f876b8e
+  - path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    sha256: 0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
+  artifact_hash: 215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c
   reverification_history:
   - stage: P8E_PRECOMPLETION
     previous_source_commit: null
     previous_evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
     previous_artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
-  source_commit: 55fe57509896babec48bbf897ab32ab161382599
-  reverification_stage: P8E_PRECOMPLETION
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 55fe57509896babec48bbf897ab32ab161382599
+    previous_evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
+    previous_artifact_hash: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 0e6032a1a55745e1c7131cd7b6c0457b6c783553
+    previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    previous_artifact_hash: 215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c
+  source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
+  reverification_stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
 - requirement_id: SCHED-003
   requirement_text: Scheduler fairness and starvation are explicitly bounded.
   profile: P8D_MULTI_PROFILE_OFFLINE
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: P8D-SCHEDULER-MIGRATION
-  evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
+  test_id: P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION
+  evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_health_weighted_scheduler.sv
-    sha256: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
+    sha256: 215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c
   - path: config/p8d_data_plane.yaml
-    sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
-  - path: evidence/generated/p8e_precompletion_reverification_summary.json
-    sha256: d73981e29e772e026fcbf219daf5e23fc7ee90ec78f1c45a3602ff88812b5bdf
+    sha256: 7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732
+  - path: sim/tb/tb_ir_scheduler_migration.sv
+    sha256: 2790f02c5e63301fc356f917c3342fa71c8231ac4678a96894e64e8e6f876b8e
+  - path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    sha256: 0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
+  artifact_hash: 215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c
   reverification_history:
   - stage: P8E_PRECOMPLETION
     previous_source_commit: null
     previous_evidence_path: evidence/generated/p8d_scheduler_migration_summary.json
     previous_artifact_hash: 5cbbbf9edba29e1c605aa33d70a9ef6751c1787059cb3eca34237058425afa3a
-  source_commit: 55fe57509896babec48bbf897ab32ab161382599
-  reverification_stage: P8E_PRECOMPLETION
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 55fe57509896babec48bbf897ab32ab161382599
+    previous_evidence_path: evidence/generated/p8e_precompletion_reverification_summary.json
+    previous_artifact_hash: 0513e5e22f235f5180725fecdb43320e58d624dbca30ffde895f7119ad8efa7a
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 0e6032a1a55745e1c7131cd7b6c0457b6c783553
+    previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    previous_artifact_hash: 215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c
+  source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
+  reverification_stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
 - requirement_id: AXIS-001
   requirement_text: Aggregate AXI-Stream transfers have no loss or duplication under arbitrary backpressure.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -1200,24 +1273,33 @@ requirements:
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: P8D-AIRTIME-BUDGET-MODEL
-  evidence_path: evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json
+  test_id: P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION
+  evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: scripts/model_p8d_airtime.py
     sha256: 9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986
   - path: config/p8d_data_plane.yaml
-    sha256: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
-  - path: evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json
-    sha256: 9afa54ffcc485c0b2438f93eac9727a93260ac2849aa9d2b0bfc9f9877864d75
+    sha256: 7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732
   - path: evidence/generated/p10_1_performance_model.json
     sha256: bb75f5ac204263646bc6c7dd999530d837f4563c38bfddfc11968d5b478bacb9
+  - path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    sha256: 0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
   artifact_hash: 9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986
-  source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
-  reverification_stage: P8E
+  source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
+  reverification_stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+  reverification_history:
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
+    previous_evidence_path: evidence/generated/p8e_raw/r8d/p8d_airtime_budget_summary.json
+    previous_artifact_hash: 9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986
+  - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+    previous_source_commit: 0e6032a1a55745e1c7131cd7b6c0457b6c783553
+    previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    previous_artifact_hash: 9ead4a661d080895a449216d6d6b317d1ae8d8ebd9ea2949c90f261210462986
 - requirement_id: PERF-MODEL-002
   requirement_text: The 16 Mbit/s architecture target is explicitly evaluated without increasing duty. The P10.1 extension
     directly evaluates the current two-lane 4.0 Mbit/s-per-direction scale-equivalent target without increasing duty.
@@ -3936,7 +4018,6 @@ requirements:
   hardware_followup: Scoped PASS is limited to the frozen AX7020 stationary two-lane half-duplex no-Ethernet bundle; it does
     not promote P11, 1+1 full duplex, 8x32, 600 rpm, external electrical/optical measurement, or product-final acceptance.
   artifact_hash: 292dd32ebae4d66c02782627228a6b0d9c8bf52ce7ad12111160b6c725993acd
-# BEGIN P10_2 GENERATED REQUIREMENTS
 - requirement_id: P10_2-CLOSE-001
   requirement_text: P10.1R authorization is closed and its PASS tag/checkpoint remain immutable.
   profile: P10_1R_CLOSEOUT
@@ -4256,8 +4337,6 @@ requirements:
     sha256: 565c66693fad55688eb03f59b1c3cc7a9b2908ad896c9ff08c1d51a40e729b63
   hardware_followup: P10.3 hardware claims remain pending physical wiring, eight accepted modules and a new current-run authorization.
   artifact_hash: 565c66693fad55688eb03f59b1c3cc7a9b2908ad896c9ff08c1d51a40e729b63
-# END P10_2 GENERATED REQUIREMENTS
-# BEGIN P10_3 REQUIREMENTS
 - requirement_id: P10_3-WIRE-001
   requirement_text: The actual stationary four-lane wiring shall be frozen and hash-bound before hardware execution.
   profile: P10_3_AX7020_STATIONARY_4LANE
@@ -4281,7 +4360,8 @@ requirements:
   waiver: null
   artifact_hashes: []
 - requirement_id: P10_3-INV-002
-  requirement_text: The historical failed F1 module shall remain quarantined and shall never be selected as an active P10.3 module.
+  requirement_text: The historical failed F1 module shall remain quarantined and shall never be selected as an active P10.3
+    module.
   profile: P10_3_EIGHT_MODULE_INVENTORY
   verification_method: Validate quarantine state and active-module exclusion in inventory, authorization, and runtime evidence.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
@@ -4292,7 +4372,8 @@ requirements:
   waiver: null
   artifact_hashes: []
 - requirement_id: P10_3-HW-001
-  requirement_text: A current-run authorization shall bind the exact P10.3 run, boards, modules, wiring, artifacts, limits, and shutdown policy.
+  requirement_text: A current-run authorization shall bind the exact P10.3 run, boards, modules, wiring, artifacts, limits,
+    and shutdown policy.
   profile: P10_3_CURRENT_RUN_AUTHORIZATION
   verification_method: Validate and consume the committed machine-readable current-run authorization.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
@@ -4303,7 +4384,8 @@ requirements:
   waiver: null
   artifact_hashes: []
 - requirement_id: P10_3-HW-002
-  requirement_text: Fixed and rotating-role shutdown bitstreams, functional bitstreams, XSAs, BSPs, and ELFs shall be immutable and content-addressed.
+  requirement_text: Fixed and rotating-role shutdown bitstreams, functional bitstreams, XSAs, BSPs, and ELFs shall be immutable
+    and content-addressed.
   profile: P10_3_IMMUTABLE_ARTIFACT_BUNDLE
   verification_method: Run complete offline gates and verify every frozen artifact path, size, and SHA256.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
@@ -4314,9 +4396,11 @@ requirements:
   waiver: null
   artifact_hashes: []
 - requirement_id: P10_3-LED-001
-  requirement_text: Each AX7020 PL LED shall indicate the corresponding lane module TX-or-valid-RX activity and shall be off during reset, fault, or full shutdown.
+  requirement_text: Each AX7020 PL LED shall indicate the corresponding lane module TX-or-valid-RX activity and shall be off
+    during reset, fault, or full shutdown.
   profile: P10_3_AX7020_PL_ACTIVITY_LEDS
-  verification_method: Verify independent AX7020 XDC pins, active-low RTL monitor taps, 200 ms hold behavior, reset/fault/shutdown priority, and current-bundle hardware telemetry.
+  verification_method: Verify independent AX7020 XDC pins, active-low RTL monitor taps, 200 ms hold behavior, reset/fault/shutdown
+    priority, and current-bundle hardware telemetry.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
   verification_scope: P10_3_LED_OBSERVABILITY
   test_id: P10_3-LED-001
@@ -4325,9 +4409,11 @@ requirements:
   waiver: null
   artifact_hashes: []
 - requirement_id: P10_3-LED-002
-  requirement_text: AX7020 PS LED1 and PS LED2 shall indicate actual MM2S and S2MM descriptor activity and remain diagnostic-only and fail-off on cleanup.
+  requirement_text: AX7020 PS LED1 and PS LED2 shall indicate actual MM2S and S2MM descriptor activity and remain diagnostic-only
+    and fail-off on cleanup.
   profile: P10_3_AX7020_PS_ACTIVITY_LEDS
-  verification_method: Audit official MIO pin bindings, XSA GPIO mux, BSP gpiops support, firmware descriptor accounting, and current-bundle DIRM/OEN/DATA readback.
+  verification_method: Audit official MIO pin bindings, XSA GPIO mux, BSP gpiops support, firmware descriptor accounting,
+    and current-bundle DIRM/OEN/DATA readback.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
   verification_scope: P10_3_LED_OBSERVABILITY
   test_id: P10_3-LED-002
@@ -4402,9 +4488,11 @@ requirements:
   waiver: null
   artifact_hashes: []
 - requirement_id: P10_3-XTALK-001
-  requirement_text: The complete eight-transmitter by eight-receiver raw matrix shall show target raw echo without accepted non-target DATA.
+  requirement_text: The complete eight-transmitter by eight-receiver raw matrix shall show target raw echo without accepted
+    non-target DATA.
   profile: P10_3_RAW_8X8_MATRIX
-  verification_method: Exercise each transmitter individually and record every receiver raw, CRC-valid, and accepted-DATA counter.
+  verification_method: Exercise each transmitter individually and record every receiver raw, CRC-valid, and accepted-DATA
+    counter.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-XTALK-001
@@ -4481,7 +4569,14 @@ requirements:
 - requirement_id: P10_3-DEG-001
   requirement_text: The endpoint shall degrade and recover across four, three, two, and one available lane without false commit.
   profile: P10_3_DEGRADED_MODES
-  verification_method: Inject live unavailable-lane masks and verify persistent exclusion, progress, recovery, and integrity; for each in-flight migration case arm the validation-only PL atomic migration diagnostic with the selected target lane, require its first accepted physical DATA attempt to carry a deliberately invalid CRC, and in the same PL clock as that serializer-complete event replace target-only internal eligibility with target-unavailable eligibility. Read back the frozen trigger sequence, cumulative ACK base, one-to-32-frame outstanding count, attempt count, target physical-TX count, target scheduler count, zero prior migrations, trigger count of one, effective unavailable mask, and receiver target-lane CRC rejection; then require terminal retry migration on a healthy lane. External unavailable bits must remain ORed, the diagnostic may only remove lane eligibility, and no permit, PHY-ready, duty-headroom, or TX safety condition may be bypassed.
+  verification_method: Inject live unavailable-lane masks and verify persistent exclusion, progress, recovery, and integrity;
+    for each in-flight migration case arm the validation-only PL atomic migration diagnostic with the selected target lane,
+    require its first accepted physical DATA attempt to carry a deliberately invalid CRC, and in the same PL clock as that
+    serializer-complete event replace target-only internal eligibility with target-unavailable eligibility. Read back the
+    frozen trigger sequence, cumulative ACK base, one-to-32-frame outstanding count, attempt count, target physical-TX count,
+    target scheduler count, zero prior migrations, trigger count of one, effective unavailable mask, and receiver target-lane
+    CRC rejection; then require terminal retry migration on a healthy lane. External unavailable bits must remain ORed, the
+    diagnostic may only remove lane eligibility, and no permit, PHY-ready, duty-headroom, or TX safety condition may be bypassed.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-DEG-001
@@ -4492,7 +4587,12 @@ requirements:
 - requirement_id: P10_3-ARQ-001
   requirement_text: Four-lane selective-repeat, 32-frame SACK, scheduler fairness, and cross-lane retry migration shall pass.
   profile: P10_3_FOUR_LANE_ARQ
-  verification_method: Run deterministic loss, wrap, scheduler, and migration experiments with zero integrity errors; each migration experiment shall use the validation-only PL atomic trigger to prove a deliberately CRC-bad current-object target-lane physical transmission, receiver CRC rejection, frozen initial ACK base, one-to-32 outstanding frames, one trigger, zero prior migrations, exact effective target-unavailable readback, and non-zero terminal cross-lane retry migration. The target-only to target-unavailable transition must occur in PL on serializer completion rather than through a host-timed JTAG write, and all normal lane-health, permit, duty, pulse-width, SD, Mode, and TX-kill safety paths remain mandatory.
+  verification_method: Run deterministic loss, wrap, scheduler, and migration experiments with zero integrity errors; each
+    migration experiment shall use the validation-only PL atomic trigger to prove a deliberately CRC-bad current-object target-lane
+    physical transmission, receiver CRC rejection, frozen initial ACK base, one-to-32 outstanding frames, one trigger, zero
+    prior migrations, exact effective target-unavailable readback, and non-zero terminal cross-lane retry migration. The target-only
+    to target-unavailable transition must occur in PL on serializer completion rather than through a host-timed JTAG write,
+    and all normal lane-health, permit, duty, pulse-width, SD, Mode, and TX-kill safety paths remain mandatory.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
   verification_scope: P10_3_STATIONARY_4LANE_HARDWARE
   test_id: P10_3-ARQ-001
@@ -4545,7 +4645,8 @@ requirements:
   waiver: null
   artifact_hashes: []
 - requirement_id: P10_3-SOAK-001
-  requirement_text: A single stationary four-lane formal run shall last 1800 seconds with bounded telemetry gaps and zero integrity, protocol, descriptor, deadlock, or safety errors.
+  requirement_text: A single stationary four-lane formal run shall last 1800 seconds with bounded telemetry gaps and zero
+    integrity, protocol, descriptor, deadlock, or safety errors.
   profile: P10_3_STATIONARY_30MIN
   verification_method: Execute the immutable formal plan under the safe wrapper and audit complete raw evidence.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
@@ -4556,7 +4657,8 @@ requirements:
   waiver: null
   artifact_hashes: []
 - requirement_id: P10_3-EVID-001
-  requirement_text: Every P10.3 PASS claim shall bind exact boards, modules, wiring, artifacts, run ID, raw logs, and a consistent SHA256 manifest.
+  requirement_text: Every P10.3 PASS claim shall bind exact boards, modules, wiring, artifacts, run ID, raw logs, and a consistent
+    SHA256 manifest.
   profile: P10_3_EVIDENCE_CONSISTENCY
   verification_method: Recompute the final evidence manifest and cross-check summaries against raw stage records.
   verification_stage: P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE
@@ -4566,143 +4668,69 @@ requirements:
   status: PENDING
   waiver: null
   artifact_hashes: []
-# END P10_3 REQUIREMENTS
 - requirement_id: P10_3F-OFF-001
-  requirement_text: A detected local TFDU safety fault or terminal object failure shall freeze the first-fault recorder and force endpoint-wide physical TX kill and full shutdown without waiting for software evidence handling.
+  requirement_text: A detected local TFDU safety fault or terminal object failure shall freeze the first-fault recorder and
+    force endpoint-wide physical TX kill and full shutdown without waiting for software evidence handling.
   profile: P10_3F_FIRST_FAULT_SAFETY_PATH
-  verification_method: XSIM shall prove same-cycle causal safety kill, persistent forensic hold, all-local-Txd low, and all-local-SD high; implemented fixed and rotating-role designs shall pass timing, CDC, DRC, and safety checks.
+  verification_method: XSIM shall prove same-cycle causal safety kill, persistent forensic hold, all-local-Txd low, and all-local-SD
+    high; implemented fixed and rotating-role designs shall pass timing, CDC, DRC, and safety checks.
   verification_stage: P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP
   verification_scope: P10_3F_OFFLINE_ARTIFACT
   test_id: P10_3F-OFF-001
   evidence_path: evidence/generated/p10_3_fault_forensics_offline.json
-  status: PASS
+  status: PENDING
   waiver: null
-  artifact_hashes:
-  - path: rtl/p10_fault_forensics.sv
-    sha256: e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3
-  - path: sim/tb/tb_p10_fault_forensics.sv
-    sha256: 2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4
-  - path: sim/tb/tb_p10_forensic_safety_integration.sv
-    sha256: df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752
-  - path: config/safety/p10_3_fault_forensics.yaml
-    sha256: ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256
-  - path: config/performance/p10_3f_staircase.yaml
-    sha256: 069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8
-  - path: scripts/archive_p10_fault_forensics.py
-    sha256: 45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c
-  - path: scripts/run_p10_3f_staircase_hardware.py
-    sha256: 55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40
-  - path: evidence/generated/p10_3_fault_forensics_xsim/summary.json
-    sha256: eed590f97a6c72b604fa68752b606460393ce4464619635dcb05329c669fc799
-  - path: evidence/generated/p10_3_fault_forensics_offline.json
-    sha256: da02c8d9929ff1ea0b25e590bd191c3bcab84c173b4a9b1fd2a3e70074e49be0
-  - path: artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a/p10_ax7020_fixed_functional.bit
-    sha256: 9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a
-  - path: artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2/p10_ax7020_rotating_functional.bit
-    sha256: e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2
+  artifact_hashes: []
 - requirement_id: P10_3F-OFF-002
-  requirement_text: The first-fault snapshot and event history shall not be cleared by functional reset or functional shutdown and shall clear only after complete ordered readout, nonzero SHA256 commit, verified full shutdown, and the explicit two-key clear command.
+  requirement_text: The first-fault snapshot and event history shall not be cleared by functional reset or functional shutdown
+    and shall clear only after complete ordered readout, nonzero SHA256 commit, verified full shutdown, and the explicit two-key
+    clear command.
   profile: P10_3F_RESET_INDEPENDENT_CAPTURE
-  verification_method: XSIM shall exercise reset and shutdown persistence, incomplete-read rejection, archive commit interlocks, unsafe clear rejection, and the explicit safe clear sequence.
+  verification_method: XSIM shall exercise reset and shutdown persistence, incomplete-read rejection, archive commit interlocks,
+    unsafe clear rejection, and the explicit safe clear sequence.
   verification_stage: P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP
   verification_scope: P10_3F_OFFLINE_ARTIFACT
   test_id: P10_3F-OFF-002
   evidence_path: evidence/generated/p10_3_fault_forensics_offline.json
-  status: PASS
+  status: PENDING
   waiver: null
-  artifact_hashes:
-  - path: rtl/p10_fault_forensics.sv
-    sha256: e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3
-  - path: sim/tb/tb_p10_fault_forensics.sv
-    sha256: 2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4
-  - path: sim/tb/tb_p10_forensic_safety_integration.sv
-    sha256: df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752
-  - path: config/safety/p10_3_fault_forensics.yaml
-    sha256: ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256
-  - path: config/performance/p10_3f_staircase.yaml
-    sha256: 069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8
-  - path: scripts/archive_p10_fault_forensics.py
-    sha256: 45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c
-  - path: scripts/run_p10_3f_staircase_hardware.py
-    sha256: 55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40
-  - path: evidence/generated/p10_3_fault_forensics_xsim/summary.json
-    sha256: eed590f97a6c72b604fa68752b606460393ce4464619635dcb05329c669fc799
-  - path: evidence/generated/p10_3_fault_forensics_offline.json
-    sha256: da02c8d9929ff1ea0b25e590bd191c3bcab84c173b4a9b1fd2a3e70074e49be0
-  - path: artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a/p10_ax7020_fixed_functional.bit
-    sha256: 9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a
-  - path: artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2/p10_ax7020_rotating_functional.bit
-    sha256: e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2
+  artifact_hashes: []
 - requirement_id: P10_3F-OFF-003
-  requirement_text: Each endpoint shall retain a 64-word four-module first-fault snapshot and a BRAM-backed circular event log with 248 pre-fault records and eight post-fault records, and the archive tool shall emit exact raw binary, parsed JSON, and SHA256 evidence.
+  requirement_text: Each endpoint shall retain a 64-word four-module first-fault snapshot and a BRAM-backed circular event
+    log with 248 pre-fault records and eight post-fault records, and the archive tool shall emit exact raw binary, parsed
+    JSON, and SHA256 evidence.
   profile: P10_3F_SNAPSHOT_EVENT_ARCHIVE
-  verification_method: XSIM and host unit tests shall verify field ordering, circular chronology, post-fault tail, ordered reads, canonical binary round trip, parsed fields, and digest generation; routed utilization shall confirm block RAM implementation.
+  verification_method: XSIM and host unit tests shall verify field ordering, circular chronology, post-fault tail, ordered
+    reads, canonical binary round trip, parsed fields, and digest generation; routed utilization shall confirm block RAM implementation.
   verification_stage: P10_3_FIRST_FAULT_FORENSICS_OFFLINE_FOLLOWUP
   verification_scope: P10_3F_OFFLINE_ARTIFACT
   test_id: P10_3F-OFF-003
   evidence_path: evidence/generated/p10_3_fault_forensics_offline.json
-  status: PASS
+  status: PENDING
   waiver: null
-  artifact_hashes:
-  - path: rtl/p10_fault_forensics.sv
-    sha256: e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3
-  - path: sim/tb/tb_p10_fault_forensics.sv
-    sha256: 2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4
-  - path: sim/tb/tb_p10_forensic_safety_integration.sv
-    sha256: df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752
-  - path: config/safety/p10_3_fault_forensics.yaml
-    sha256: ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256
-  - path: config/performance/p10_3f_staircase.yaml
-    sha256: 069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8
-  - path: scripts/archive_p10_fault_forensics.py
-    sha256: 45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c
-  - path: scripts/run_p10_3f_staircase_hardware.py
-    sha256: 55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40
-  - path: evidence/generated/p10_3_fault_forensics_xsim/summary.json
-    sha256: eed590f97a6c72b604fa68752b606460393ce4464619635dcb05329c669fc799
-  - path: evidence/generated/p10_3_fault_forensics_offline.json
-    sha256: da02c8d9929ff1ea0b25e590bd191c3bcab84c173b4a9b1fd2a3e70074e49be0
-  - path: artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a/p10_ax7020_fixed_functional.bit
-    sha256: 9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a
-  - path: artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2/p10_ax7020_rotating_functional.bit
-    sha256: e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2
+  artifact_hashes: []
 - requirement_id: P10_3F-OFF-004
-  requirement_text: The long-test contract shall first pass bidirectional 1, 4, 16, 64, and 256 KiB staircase levels with a safety snapshot gate after each direction; later board-autonomous commands may contain multiple 256 KiB internal objects up to 64 MiB, with continuous PL first-fault TX kill during each command and a coherent safety snapshot before another aggregate command is admitted, while every formal run remains bounded to 1800 seconds.
+  requirement_text: The long-test contract shall first pass bidirectional 1, 4, 16, 64, and 256 KiB staircase levels with
+    a safety snapshot gate after each direction; later board-autonomous commands may contain multiple 256 KiB internal objects
+    up to 64 MiB, with continuous PL first-fault TX kill during each command and a coherent safety snapshot before another
+    aggregate command is admitted, while every formal run remains bounded to 1800 seconds.
   profile: P10_3F_STAIRCASE_THEN_BOARD_AUTONOMOUS_AGGREGATION
-  verification_method: Static and unit validation shall bind the immutable stage plans to the staircase and supplemental aggregate-runtime configurations, prove one host command per exact 64 MiB transfer, verify 256 KiB internal-object ID accounting, preserve continuous PL first-fault kill and archive-before-shutdown cleanup, and reject split or enlarged out-of-contract observations.
+  verification_method: Static and unit validation shall bind the immutable stage plans to the staircase and supplemental aggregate-runtime
+    configurations, prove one host command per exact 64 MiB transfer, verify 256 KiB internal-object ID accounting, preserve
+    continuous PL first-fault kill and archive-before-shutdown cleanup, and reject split or enlarged out-of-contract observations.
   verification_stage: P10_3F_FULL_CAMPAIGN_HOST_REMEDIATION
   verification_scope: P10_3F_OFFLINE_TOOLING
   test_id: P10_3F-OFF-004
   evidence_path: evidence/generated/p10_3f_full_campaign_freeze.json
-  status: PASS
+  status: PENDING
   waiver: null
-  artifact_hashes:
-  - path: rtl/p10_fault_forensics.sv
-    sha256: e807543682dbd072afe811447eb16379b937aa8d483499807f375f7bae264bc3
-  - path: sim/tb/tb_p10_fault_forensics.sv
-    sha256: 2b50132a333581aaec904417306a3bdf3605ae84a26ec33b7407212b49f3c6a4
-  - path: sim/tb/tb_p10_forensic_safety_integration.sv
-    sha256: df97712c48dadd05fb231aeb7a31b818d62cb3d51469ce6ff6c8427c73af6752
-  - path: config/safety/p10_3_fault_forensics.yaml
-    sha256: ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256
-  - path: config/performance/p10_3f_staircase.yaml
-    sha256: 069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8
-  - path: scripts/archive_p10_fault_forensics.py
-    sha256: 45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c
-  - path: scripts/run_p10_3f_staircase_hardware.py
-    sha256: 55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40
-  - path: evidence/generated/p10_3_fault_forensics_xsim/summary.json
-    sha256: eed590f97a6c72b604fa68752b606460393ce4464619635dcb05329c669fc799
-  - path: evidence/generated/p10_3_fault_forensics_offline.json
-    sha256: da02c8d9929ff1ea0b25e590bd191c3bcab84c173b4a9b1fd2a3e70074e49be0
-  - path: artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a/p10_ax7020_fixed_functional.bit
-    sha256: 9ae79d140693409fe630d1ea4ab3bec8d6d6ef5715edb72df2b44764b50f278a
-  - path: artifacts/p10_3_fault_forensics/21f159e3fdb250d1a25e9f521e104d6240d9caae/e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2/p10_ax7020_rotating_functional.bit
-    sha256: e7389fdae7db41b8e7b409ab91075bfd3e70de3460f1a4355aceb99696efd4d2
+  artifact_hashes: []
 - requirement_id: P10_3F-HW-001
-  requirement_text: Current-artifact hardware evidence shall demonstrate that an injected or naturally detected fault kills all local physical transmitters and asserts full shutdown before any XSDB evidence read.
+  requirement_text: Current-artifact hardware evidence shall demonstrate that an injected or naturally detected fault kills
+    all local physical transmitters and asserts full shutdown before any XSDB evidence read.
   profile: P10_3F_CURRENT_HARDWARE_FAULT_PATH
-  verification_method: Execute a separately authorized current-artifact hardware fault campaign and preserve direct register and frozen-event evidence.
+  verification_method: Execute a separately authorized current-artifact hardware fault campaign and preserve direct register
+    and frozen-event evidence.
   verification_stage: P10_3F_HARDWARE_REACCEPTANCE
   verification_scope: P10_3F_CURRENT_HARDWARE
   test_id: P10_3F-HW-001
@@ -4711,9 +4739,12 @@ requirements:
   waiver: null
   artifact_hashes: []
 - requirement_id: P10_3F-HW-002
-  requirement_text: On current hardware, any frozen evidence shall be read completely, archived as raw binary and parsed JSON with verified SHA256, committed in PL, and followed by programming and verification of both role-bound independent shutdown bitstreams without clearing the capture first.
+  requirement_text: On current hardware, any frozen evidence shall be read completely, archived as raw binary and parsed JSON
+    with verified SHA256, committed in PL, and followed by programming and verification of both role-bound independent shutdown
+    bitstreams without clearing the capture first.
   profile: P10_3F_CURRENT_HARDWARE_ARCHIVE_SHUTDOWN
-  verification_method: Execute the current-run-authorized wrapper and audit ordered read markers, archive digest readback, immutable files, and both shutdown markers.
+  verification_method: Execute the current-run-authorized wrapper and audit ordered read markers, archive digest readback,
+    immutable files, and both shutdown markers.
   verification_stage: P10_3F_HARDWARE_REACCEPTANCE
   verification_scope: P10_3F_CURRENT_HARDWARE
   test_id: P10_3F-HW-002
@@ -4722,9 +4753,11 @@ requirements:
   waiver: null
   artifact_hashes: []
 - requirement_id: P10_3F-HW-003
-  requirement_text: Current hardware shall pass both directions at each 1, 4, 16, 64, and 256 KiB level, passing the safety gate before advancement, then pass the separately bounded 1800-second stationary formal stage.
+  requirement_text: Current hardware shall pass both directions at each 1, 4, 16, 64, and 256 KiB level, passing the safety
+    gate before advancement, then pass the separately bounded 1800-second stationary formal stage.
   profile: P10_3F_CURRENT_HARDWARE_STAIRCASE_FORMAL
-  verification_method: Execute the new immutable artifact bundle under a new current-run authorization and preserve every per-command safety snapshot and cleanup marker.
+  verification_method: Execute the new immutable artifact bundle under a new current-run authorization and preserve every
+    per-command safety snapshot and cleanup marker.
   verification_stage: P10_3F_HARDWARE_REACCEPTANCE
   verification_scope: P10_3F_CURRENT_HARDWARE
   test_id: P10_3F-HW-003
@@ -4732,4 +4765,3 @@ requirements:
   status: PENDING
   waiver: null
   artifact_hashes: []
-# END P10_3F REQUIREMENTS
