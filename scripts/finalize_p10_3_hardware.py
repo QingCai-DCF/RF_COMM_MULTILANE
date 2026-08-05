@@ -294,6 +294,7 @@ def verify_campaign(errors: list[str]) -> tuple[dict[str, Any], int]:
 
 def update_state(summary: dict[str, Any]) -> dict[str, Any]:
     state = load_json(STATE)
+    consistency = load_json(CONSISTENCY)
     metrics = summary["metrics"]
     state.setdefault("stage_status", {})[P10_3_STAGE] = "PASS"
     state["p10_3_status"] = "PASS"
@@ -328,8 +329,8 @@ def update_state(summary: dict[str, Any]) -> dict[str, Any]:
         "evidence_sha256": sha256(ORCHESTRATOR),
         "evidence_manifest_path": rel(MANIFEST),
         "evidence_manifest_sha256": sha256(MANIFEST),
-        "actual_wiring_sha256": summary["actual_wiring_sha256"],
-        "module_inventory_sha256": summary["module_inventory_sha256"],
+        "actual_wiring_sha256": consistency["actual_wiring_sha256"],
+        "module_inventory_sha256": consistency["module_inventory_sha256"],
         "fixed_board_id": "AX7020-F/JTAG:210249855178",
         "rotating_board_id": "AX7020-R/JTAG:210512180081",
         "module_binding": summary["module_binding"],
