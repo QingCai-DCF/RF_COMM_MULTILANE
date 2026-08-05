@@ -68,6 +68,11 @@ module p9_optical_transport_core #(
   input  wire [7:0]   cfg_drop_data_count_i,
   input  wire [7:0]   cfg_drop_ack_count_i,
   input  wire [LANE_COUNT-1:0] cfg_lane_unavailable_i,
+  // P10.4 validation-only source-ID injection.  The peripheral may pulse
+  // these bits only while the endpoint is fully shut down, TX-killed, and
+  // idle.  The pulse enters the source-ID rejection predicate directly; it
+  // cannot create a physical frame, RX delivery, or application commit.
+  input  wire [LANE_COUNT-1:0] local_source_test_inject_i,
 
   input  wire         raw_start_i,
   input  wire         raw_direction_i,
@@ -139,6 +144,12 @@ module p9_optical_transport_core #(
   output wire [31:0]  ack_aggregation_count_o,
   output wire [31:0]  ack_timer_expiry_count_o,
   output wire [31:0]  ack_frames_sent_o,
+  // P10.4 direct stall semantics.  These are instantaneous predicates for
+  // the performance monitor, not reconstructed host-side classifications.
+  output wire         tx_idle_due_to_ack_o,
+  output wire         window_full_stall_o,
+  output wire         receiver_credit_stall_o,
+  output wire         direction_turnaround_idle_o,
   output wire [LANE_COUNT*32-1:0] scheduler_frames_flat_o,
   output wire [LANE_COUNT*32-1:0] scheduler_bytes_flat_o,
   output wire [LANE_COUNT*32-1:0] scheduler_retries_flat_o,
@@ -915,6 +926,31 @@ module p9_optical_transport_core #(
        dp_attempt_descriptor[0] || dp_attempt_retry);
   wire lanes_idle = (&serializer_start_ready) && !(|lane_start_pending) &&
                     !(|serializer_busy);
+  // ``endpoint_waiting_for_ack_q`` is asserted only after an accepted final
+  // physical DATA-frame launch closes the bounded burst.  Counting it while
+  // all serializers are idle therefore measures TX idle caused specifically
+  // by awaiting the reverse ACK, rather than merely having unacked frames.
+  assign tx_idle_due_to_ack_o = object_active_q && local_sender &&
+      endpoint_waiting_for_ack_q && lanes_idle;
+  // Allocation is held at a fragment boundary only when the selective-repeat
+  // window cannot accept another immutable slot.  Require the directly
+  // observed full occupancy to keep this counter semantically narrow.
+  assign window_full_stall_o = object_active_q && local_sender &&
+      allocate_pending_q && !dp_allocate_ready &&
+      tx_outstanding_count_o == WINDOW_SIZE;
+  // A ready retry/new attempt together with zero peer-advertised credit is a
+  // direct receiver-credit stall.  Safety/mapping/serializer deferrals are
+  // intentionally excluded and remain observable through their own paths.
+  assign receiver_credit_stall_o = object_active_q && local_sender &&
+      dp_attempt_valid &&
+      ((endpoint_mode ? dp_peer_ack_credit_q : {10'd0, dp_rx_credit}) == 0);
+  // Count only deliberate half-duplex turnaround/wait intervals in which no
+  // serializer is active.  ACK serialization itself is useful wire activity,
+  // not idle time, and is excluded.
+  assign direction_turnaround_idle_o = object_active_q && lanes_idle &&
+      (endpoint_waiting_for_ack_q || phase_q == PH_ACK_GUARD ||
+       phase_q == PH_ACK_START || phase_q == PH_ACK_WAIT_RX ||
+       phase_q == PH_ACK_REPEAT_WAIT || phase_q == PH_DATA_GUARD);
   // P9's monolithic fixture admits an entire encoded frame against current
   // headroom.  Independent P10.1R endpoints instead establish a clean exact-
   // duty history before the first DATA frame, then use the proved fixed
@@ -1851,8 +1887,10 @@ module p9_optical_transport_core #(
             rx_frame_source_node[rx_status_lane] != local_node_id &&
             rx_role_valid[rx_status_lane]));
       assign rx_local_source_rejected[rx_status_lane] = endpoint_mode &&
-          rx_frame_valid[rx_status_lane] && rx_frame_crc[rx_status_lane] &&
-          rx_frame_source_node[rx_status_lane] == local_node_id;
+          ((rx_frame_valid[rx_status_lane] && rx_frame_crc[rx_status_lane] &&
+            rx_frame_source_node[rx_status_lane] == local_node_id) ||
+           (local_source_test_inject_i[rx_status_lane] &&
+            effective_full_shutdown_o && tx_kill && !object_active_q));
       assign physical_data_good_by_lane_o[32*rx_status_lane +: 32] =
           physical_data_good_lane_q[rx_status_lane];
       assign physical_ack_good_by_lane_o[32*rx_status_lane +: 32] =

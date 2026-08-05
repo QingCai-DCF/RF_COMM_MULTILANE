@@ -17,6 +17,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 P10_3_GOAL = "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md"
 P10_3_GOAL_SHA256 = "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+P10_4_GOAL = "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md"
+P10_4_GOAL_SHA256 = "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f"
 BIN = Path(r"D:\Xilinx\Vivado\2023.1\bin")
 TOOLS = {name: BIN / f"{name}.bat" for name in ("xvlog", "xelab", "xsim")}
 SUITE = "sim/tb/tb_p10_2_4lane_suite.sv"
@@ -59,6 +61,19 @@ P10_3_TESTS = (
     ("tb_p10_forensic_safety_integration",
      "P10_FORENSIC_SAFETY_INTEGRATION_XSIM=PASS",
      [*CORE, "sim/tb/tb_p10_forensic_safety_integration.sv"]),
+)
+P10_4_TESTS = (
+    ("tb_p10_4_perf_command", "P10_4_PERF_COUNTER_SPLIT_XSIM=PASS", [
+        "rtl/generated/ir_register_map_defs.svh",
+        "rtl/p10_1_metric_counter.sv",
+        "rtl/p10_1_timer_snapshot.sv",
+        "rtl/p10_1_event_fifo.sv",
+        "rtl/p10_1_perf_monitor.sv",
+        "sim/tb/tb_p10_4_perf_command.sv",
+    ]),
+    ("tb_p10_4_forensic_safety_integration",
+     "P10_4_FORENSIC_SAFETY_INTEGRATION_XSIM=PASS",
+     [*CORE, "sim/tb/tb_p10_4_forensic_safety_integration.sv"]),
 )
 
 
@@ -105,10 +120,12 @@ def run_one(top: str, marker: str, sources: list[str], raw: Path) -> dict[str, o
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir")
-    parser.add_argument("--campaign", choices=("p10_2", "p10_3", "p10_3f"),
+    parser.add_argument("--campaign", choices=("p10_2", "p10_3", "p10_3f", "p10_4"),
                         default="p10_2")
     parser.add_argument(
-        "--only", choices=[test[0] for test in (*TESTS, *P10_3_TESTS)])
+        "--only", choices=[
+            test[0] for test in (*TESTS, *P10_3_TESTS, *P10_4_TESTS)
+        ])
     args = parser.parse_args()
     if os.environ.get("NO_HARDWARE", "1") != "1" or os.environ.get(
             "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false").lower() != "false":
@@ -117,23 +134,34 @@ def main() -> int:
     if any(not tool.is_file() for tool in TOOLS.values()):
         print("P10_2_XSIM_REFUSED=MISSING_VIVADO_SIMULATOR", file=sys.stderr)
         return 2
-    if args.campaign in {"p10_3", "p10_3f"} and (
+    if args.campaign in {"p10_3", "p10_3f", "p10_4"} and (
             not (ROOT / P10_3_GOAL).is_file() or
             sha(ROOT / P10_3_GOAL) != P10_3_GOAL_SHA256):
         print("P10_3_XSIM_REFUSED=GOAL_HASH_MISMATCH", file=sys.stderr)
+        return 2
+    if args.campaign == "p10_4" and (
+            not (ROOT / P10_4_GOAL).is_file() or
+            sha(ROOT / P10_4_GOAL) != P10_4_GOAL_SHA256):
+        print("P10_4_XSIM_REFUSED=GOAL_HASH_MISMATCH", file=sys.stderr)
         return 2
     output_name = args.output_dir or {
         "p10_2": "evidence/generated/p10_2_raw/xsim",
         "p10_3": "evidence/generated/p10_3_xsim",
         "p10_3f": "evidence/generated/p10_3_fault_forensics_xsim",
+        "p10_4": "evidence/generated/p10_4_xsim",
     }[args.campaign]
     output = (ROOT / output_name).resolve()
     output.relative_to(ROOT.resolve())
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     raw = output / "raw" / run_id
     raw.mkdir(parents=True)
-    available = (*TESTS, *P10_3_TESTS) \
-        if args.campaign in {"p10_3", "p10_3f"} else TESTS
+    available = (
+        (*TESTS, *P10_3_TESTS, *P10_4_TESTS)
+        if args.campaign == "p10_4"
+        else (*TESTS, *P10_3_TESTS)
+        if args.campaign in {"p10_3", "p10_3f"}
+        else TESTS
+    )
     selected = [test for test in available
                 if args.only is None or args.only == test[0]]
     if not selected:
@@ -144,7 +172,7 @@ def main() -> int:
     status = "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL"
     source_files = sorted({item for _, _, sources in selected for item in sources} |
                           {rel(Path(__file__).resolve())})
-    if args.campaign in {"p10_3", "p10_3f"}:
+    if args.campaign in {"p10_3", "p10_3f", "p10_4"}:
         source_files.extend([
             P10_3_GOAL,
             "config/hardware/p10_3_actual_wiring.yaml",
@@ -152,7 +180,7 @@ def main() -> int:
             "config/hardware/p10_3_ax7020_activity_leds.yaml",
             "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
         ])
-        if args.campaign == "p10_3f":
+        if args.campaign in {"p10_3f", "p10_4"}:
             source_files.extend([
                 "config/safety/p10_3_fault_forensics.yaml",
                 "config/performance/p10_3f_staircase.yaml",
@@ -164,6 +192,8 @@ def main() -> int:
                 "scripts/freeze_p10_3f_artifacts.py",
                 "scripts/finalize_p10_3f_offline.py",
             ])
+        if args.campaign == "p10_4":
+            source_files.extend([P10_4_GOAL])
         source_files = sorted(set(source_files))
     summary = {
         "schema_version": 1,
@@ -171,6 +201,7 @@ def main() -> int:
             "p10_2": "P10_2_4LANE_XSIM",
             "p10_3": "P10_3_4LANE_XSIM",
             "p10_3f": "P10_3F_FIRST_FAULT_4LANE_XSIM",
+            "p10_4": "P10_4_HARDENED_4LANE_XSIM",
         }[args.campaign],
         "campaign": args.campaign,
         "status": status, "source_commit": subprocess.check_output(

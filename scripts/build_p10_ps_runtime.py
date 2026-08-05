@@ -90,6 +90,8 @@ P10_2_GOAL = ROOT / "goals/P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINE
 P10_2_GOAL_SHA256 = "f09ddcd1556b6def7eab250cae92b1cc69f7316a4c3338b5b04d23b10f22a8f5"
 P10_3_GOAL = ROOT / "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md"
 P10_3_GOAL_SHA256 = "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+P10_4_GOAL = ROOT / "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md"
+P10_4_GOAL_SHA256 = "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f"
 P10_3F_PROVENANCE = [
     ROOT / "config/safety/p10_3_fault_forensics.yaml",
     ROOT / "config/performance/p10_3f_staircase.yaml",
@@ -190,6 +192,25 @@ def configure_campaign(campaign: str) -> None:
             },
         }
         return
+    if campaign == "p10_4":
+        OUT = ROOT / "evidence/generated/vitis/p10_4_4lane_runtime"
+        ARTIFACTS = ROOT / "artifacts/p10_4"
+        SUMMARY_JSON = ROOT / "evidence/generated/p10_4_ps_runtime_build_summary.json"
+        SUMMARY_MD = ROOT / "evidence/generated/p10_4_ps_runtime_build_summary.md"
+        FUNCTIONAL_OUT = ROOT / "evidence/generated/vivado/p10_4_4lane"
+        TEST_ID = "P10_4-AX7020-DUAL-4LANE-HARDENED-PS-RUNTIME-BUILD"
+        SUMMARY_TITLE = "P10.4 AX7020 role-bound hardened PS runtime build"
+        ROLES = {
+            "fixed": {
+                "role_value": 1,
+                "header": ROOT / "board_profiles/ax7020_fixed_4lane/p10_4_runtime_role.h",
+            },
+            "rotating": {
+                "role_value": 2,
+                "header": ROOT / "board_profiles/ax7020_rotating_4lane/p10_4_runtime_role.h",
+            },
+        }
+        return
     if campaign != "p10_1_led":
         raise ValueError(f"unsupported campaign: {campaign}")
     OUT = ROOT / "evidence/generated/vitis/p10_1_ax7020_pl_activity_led_runtime"
@@ -237,7 +258,7 @@ def freeze(path: Path, bundle: str) -> dict[str, Any]:
         subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip()
-        if CAMPAIGN in {"p10_1", "p10_1r", "p10_3", "p10_3f"}
+        if CAMPAIGN in {"p10_1", "p10_1r", "p10_3", "p10_3f", "p10_4"}
         else bundle
     )
     destination = ARTIFACTS / namespace / digest / path.name
@@ -263,9 +284,10 @@ def run(command: list[str], timeout: int = 1800) -> subprocess.CompletedProcess[
 
 def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]]:
     paths = [*SOURCES, header, xsa]
-    if CAMPAIGN in {"p10_2", "p10_3", "p10_3f"}:
-        paths.append(P10_3_GOAL if CAMPAIGN in {"p10_3", "p10_3f"} else P10_2_GOAL)
-    if CAMPAIGN in {"p10_3", "p10_3f"}:
+    if CAMPAIGN in {"p10_2", "p10_3", "p10_3f", "p10_4"}:
+        paths.append(P10_4_GOAL if CAMPAIGN == "p10_4" else
+                     P10_3_GOAL if CAMPAIGN in {"p10_3", "p10_3f"} else P10_2_GOAL)
+    if CAMPAIGN in {"p10_3", "p10_3f", "p10_4"}:
         paths.extend([
             ROOT / "config/hardware/p10_3_actual_wiring.yaml",
             ROOT / "config/hardware/tfdu_module_inventory.yaml",
@@ -273,7 +295,7 @@ def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]
             ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
             ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
         ])
-    if CAMPAIGN == "p10_3f":
+    if CAMPAIGN in {"p10_3f", "p10_4"}:
         paths.extend(P10_3F_PROVENANCE)
     if CAMPAIGN == "p10_1":
         paths.extend(P10_1_PROVENANCE)
@@ -364,7 +386,7 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
         "dma_sg_width": bool(re.search(r"#define\s+XPAR_AXI_DMA_0_SG_LENGTH_WIDTH\s+26", xparam_text)),
         "endpoint_base": bool(re.search(r"#define\s+XPAR_P10_ENDPOINT_0_BASEADDR\s+0x43C00000", xparam_text)),
     }
-    if CAMPAIGN in {"p10_3", "p10_3f"}:
+    if CAMPAIGN in {"p10_3", "p10_3f", "p10_4"}:
         xparam_checks.update({
             "ps_gpio_device": bool(re.search(
                 r"#define\s+XPAR_PS7_GPIO_0_DEVICE_ID\s+0", xparam_text)),
@@ -378,7 +400,7 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
     mss_text = system_mss.read_text(encoding="utf-8", errors="replace") \
         if system_mss.is_file() else ""
     mss_checks = {}
-    if CAMPAIGN in {"p10_3", "p10_3f"}:
+    if CAMPAIGN in {"p10_3", "p10_3f", "p10_4"}:
         mss_checks = {
             "gpiops_driver": bool(re.search(
                 r"DRIVER_NAME\s*=\s*gpiops[\s\S]*?HW_INSTANCE\s*=\s*ps7_gpio_0",
@@ -427,7 +449,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--campaign",
-        choices=("p10", "p10_1_led", "p10_1", "p10_1r", "p10_2", "p10_3", "p10_3f"),
+        choices=("p10", "p10_1_led", "p10_1", "p10_1r", "p10_2", "p10_3", "p10_3f", "p10_4"),
         default="p10",
         help="Use a separate source-XSA, artifact, and evidence namespace.",
     )
@@ -468,6 +490,11 @@ def main() -> int:
     ):
         print("P10_RUNTIME_BUILD_REFUSED: P10.3 goal hash mismatch", file=sys.stderr)
         return 2
+    if CAMPAIGN == "p10_4" and (
+        not P10_4_GOAL.is_file() or sha256(P10_4_GOAL) != P10_4_GOAL_SHA256
+    ):
+        print("P10_RUNTIME_BUILD_REFUSED: P10.4 goal hash mismatch", file=sys.stderr)
+        return 2
     source_worktree_dirty = tracked_source_dirty([
         *SOURCES,
         *(
@@ -476,14 +503,14 @@ def main() -> int:
             if CAMPAIGN == "p10_1r"
             else [P10_2_GOAL] if CAMPAIGN == "p10_2"
             else [
-                P10_3_GOAL,
+                P10_4_GOAL if CAMPAIGN == "p10_4" else P10_3_GOAL,
                 ROOT / "config/hardware/p10_3_actual_wiring.yaml",
                 ROOT / "config/hardware/tfdu_module_inventory.yaml",
                 ROOT / "docs/hardware/P10_3_AS_WIRED_RECORD.md",
                 ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
                 ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
-                *(P10_3F_PROVENANCE if CAMPAIGN == "p10_3f" else []),
-            ] if CAMPAIGN in {"p10_3", "p10_3f"}
+                *(P10_3F_PROVENANCE if CAMPAIGN in {"p10_3f", "p10_4"} else []),
+            ] if CAMPAIGN in {"p10_3", "p10_3f", "p10_4"}
             else []
         ),
         *(cfg["header"] for cfg in ROLES.values()),

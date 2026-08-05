@@ -114,6 +114,10 @@ module p9_axi_dma_peripheral #(
   logic object_fail_sticky_q;
   logic object_fail_d_q;
   logic raw_done_sticky_q;
+  logic [LANE_COUNT-1:0] local_source_test_inject_q;
+  logic [LANE_COUNT-1:0] local_source_test_last_mask_q;
+  logic [31:0] local_source_test_accept_count_q;
+  logic [31:0] local_source_test_reject_count_q;
 
   logic endpoint_armed;
   logic tx_kill_active;
@@ -169,6 +173,10 @@ module p9_axi_dma_peripheral #(
   logic [31:0] ack_aggregation_count;
   logic [31:0] ack_timer_expiry_count;
   logic [31:0] ack_frames_sent;
+  logic tx_idle_due_to_ack;
+  logic window_full_stall;
+  logic receiver_credit_stall;
+  logic direction_turnaround_idle;
   logic [LANE_COUNT*32-1:0] scheduler_frames_flat;
   logic [LANE_COUNT*32-1:0] scheduler_bytes_flat;
   logic [LANE_COUNT*32-1:0] scheduler_retries_flat;
@@ -374,6 +382,10 @@ module p9_axi_dma_peripheral #(
       object_fail_sticky_q <= 0;
       object_fail_d_q <= 0;
       raw_done_sticky_q <= 0;
+      local_source_test_inject_q <= 0;
+      local_source_test_last_mask_q <= 0;
+      local_source_test_accept_count_q <= 0;
+      local_source_test_reject_count_q <= 0;
       forensic_snapshot_index_q <= 0;
       forensic_event_index_q <= 0;
       forensic_event_word_q <= 0;
@@ -403,6 +415,7 @@ module p9_axi_dma_peripheral #(
       start_pulse_q <= 0;
       abort_pulse_q <= 0;
       raw_start_pulse_q <= 0;
+      local_source_test_inject_q <= 0;
       forensic_archive_digest_write_q <= 0;
       forensic_archive_commit_q <= 0;
       forensic_clear_key_write_q <= 0;
@@ -419,6 +432,11 @@ module p9_axi_dma_peripheral #(
       if (object_fail && !object_fail_d_q) object_fail_sticky_q <= 1;
       if (raw_done) raw_done_sticky_q <= 1;
       if (safety_fault_mask != 0) receiver_enable_q <= 0;
+      if (clear_pulse_q) begin
+        local_source_test_last_mask_q <= 0;
+        local_source_test_accept_count_q <= 0;
+        local_source_test_reject_count_q <= 0;
+      end
 
       if (reg_wr_en) begin
         unique case (reg_wr_addr)
@@ -523,6 +541,27 @@ module p9_axi_dma_peripheral #(
           `IR_REG_P10_FF_CHECKPOINT: begin
             forensic_checkpoint_event_q <= 1'b1;
             forensic_checkpoint_tag_q <= reg_wr_data;
+          end
+          `IR_REG_P10_4_LOCAL_SOURCE_TEST_CONTROL: begin
+            // Fail closed: malformed keys, empty/out-of-range masks, armed
+            // endpoints, active objects, or an incomplete shutdown can only
+            // increment the rejected-command counter.  The accepted pulse is
+            // an internal source-ID-filter stimulus and has no TX path.
+            if (reg_wr_data[31:16] == 16'h4C53 &&
+                reg_wr_data[LANE_COUNT-1:0] != 0 &&
+                (reg_wr_data[15:LANE_COUNT] == 0) &&
+                monitor_effective_full_shutdown_o && tx_kill_active &&
+                !endpoint_armed && !object_active) begin
+              local_source_test_inject_q <=
+                  reg_wr_data[LANE_COUNT-1:0];
+              local_source_test_last_mask_q <=
+                  reg_wr_data[LANE_COUNT-1:0];
+              local_source_test_accept_count_q <=
+                  local_source_test_accept_count_q + 1'b1;
+            end else begin
+              local_source_test_reject_count_q <=
+                  local_source_test_reject_count_q + 1'b1;
+            end
           end
           // Atomic P10.1R telemetry snapshot.  All values and the even
           // generation advance on the same protocol clock edge.
@@ -695,6 +734,10 @@ module p9_axi_dma_peripheral #(
     .queue_occupancy_i(tx_outstanding_count),
     .ack_wait_i(object_active && tx_outstanding_count != 0),
     .direction_quiet_i(!object_active),
+    .tx_idle_due_to_ack_i(tx_idle_due_to_ack),
+    .window_full_stall_i(window_full_stall),
+    .receiver_credit_stall_i(receiver_credit_stall),
+    .direction_turnaround_idle_i(direction_turnaround_idle),
     .retry_i(tx_retry_exhausted_count != retry_exhausted_d_q),
     .integrity_error_i(object_fail && !object_fail_d_q),
     .perf_active_o(p10_1_perf_active),
@@ -967,8 +1010,18 @@ module p9_axi_dma_peripheral #(
           forensic_archive_committed, forensic_event_read_complete,
           forensic_snapshot_read_complete, forensic_post_complete,
           forensic_frozen, forensic_fault_hold};
+      `IR_REG_P10_4_LOCAL_SOURCE_TEST_CONTROL: reg_rd_data = 0;
+      `IR_REG_P10_4_LOCAL_SOURCE_TEST_STATUS: reg_rd_data = {
+          (monitor_effective_full_shutdown_o && tx_kill_active &&
+           !endpoint_armed && !object_active),
+          {(31-LANE_COUNT){1'b0}}, local_source_test_last_mask_q};
+      `IR_REG_P10_4_LOCAL_SOURCE_TEST_ACCEPT_COUNT:
+          reg_rd_data = local_source_test_accept_count_q;
+      `IR_REG_P10_4_LOCAL_SOURCE_TEST_REJECT_COUNT:
+          reg_rd_data = local_source_test_reject_count_q;
       default: begin
-        if (reg_rd_addr >= 12'h900 && reg_rd_addr <= 12'h9BC)
+        if ((reg_rd_addr >= 12'h900 && reg_rd_addr <= 12'h9BC) ||
+            (reg_rd_addr >= 12'hD84 && reg_rd_addr <= 12'hDAC))
           reg_rd_data = p10_1_reg_rd_data;
         else if (reg_rd_addr >= 12'hB0C && reg_rd_addr <= 12'hD08)
           reg_rd_data = p10_2_snapshot_q[(reg_rd_addr-12'hB0C) >> 2];
@@ -1092,6 +1145,7 @@ module p9_axi_dma_peripheral #(
     .cfg_fault_flags_i(cfg_fault_flags_q),
     .cfg_drop_data_count_i(cfg_drop_data_q), .cfg_drop_ack_count_i(cfg_drop_ack_q),
     .cfg_lane_unavailable_i(cfg_lane_unavailable_q),
+    .local_source_test_inject_i(local_source_test_inject_q),
     .raw_start_i(raw_start_pulse_q), .raw_direction_i(raw_direction_q),
     .raw_lane_mask_i(raw_lane_mask_q), .raw_pulse_target_i(raw_target_q),
     .raw_spacing_cycles_i(raw_spacing_q),
@@ -1131,6 +1185,10 @@ module p9_axi_dma_peripheral #(
     .ack_aggregation_count_o(ack_aggregation_count),
     .ack_timer_expiry_count_o(ack_timer_expiry_count),
     .ack_frames_sent_o(ack_frames_sent), .scheduler_frames_flat_o(scheduler_frames_flat),
+    .tx_idle_due_to_ack_o(tx_idle_due_to_ack),
+    .window_full_stall_o(window_full_stall),
+    .receiver_credit_stall_o(receiver_credit_stall),
+    .direction_turnaround_idle_o(direction_turnaround_idle),
     .scheduler_bytes_flat_o(scheduler_bytes_flat),
     .scheduler_retries_flat_o(scheduler_retries_flat),
     .scheduler_migrations_flat_o(scheduler_migrations_flat),

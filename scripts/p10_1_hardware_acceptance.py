@@ -128,6 +128,7 @@ SELECTED_OBJECT_BYTES = 512 * 1024
 SELECTED_DESCRIPTOR_BYTES = 64 * 1024
 FLAG_DMA_RESET_RECEIVER = 1 << 24
 FLAG_ABORT_50 = 1 << 25
+FLAG_PL_RESET_LOCAL_TX = 1 << 26
 RECOVERY_FLAGS = (
     FLAG_ABORT_25
     | FLAG_ABORT_75
@@ -136,6 +137,7 @@ RECOVERY_FLAGS = (
     | FLAG_DUPLICATE_SEGMENT
     | FLAG_STALE_SEGMENT
     | FLAG_DMA_RESET_RECEIVER
+    | FLAG_PL_RESET_LOCAL_TX
     | FLAG_ABORT_50
 )
 SERVICE_RESET_FLAGS = FLAG_PS_RESET_SENDER | FLAG_PS_RESET_RECEIVER
@@ -1499,6 +1501,11 @@ def parse_p101(path: Path) -> dict[str, Any]:
         "final_phy_status": words[163],
         "descriptors_reclaimed_by_reset": words[164],
         "injected_fault_observed_count": words[165],
+        "perf_outstanding_unacked": u64(words, 166),
+        "perf_tx_idle_due_to_ack": u64(words, 168),
+        "perf_window_full_stall": u64(words, 170),
+        "perf_receiver_credit_stall": u64(words, 172),
+        "perf_direction_turnaround_idle": u64(words, 174),
     }
 
 
@@ -1716,6 +1723,11 @@ def evaluate_p101_pair(
             if row["flags"] & FLAG_PL_RESET:
                 checks["pl_reset_recorded"] = (
                     result["pl_reset_count"] > 0
+                )
+            if row["flags"] & FLAG_PL_RESET_LOCAL_TX:
+                checks["role_selected_pl_reset"] = (
+                    result["pl_reset_count"] > 0
+                    if local_sender else result["pl_reset_count"] == 0
                 )
         else:
             checks.update(

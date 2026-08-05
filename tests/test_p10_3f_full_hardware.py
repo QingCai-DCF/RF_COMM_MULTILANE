@@ -379,8 +379,11 @@ class P103FFullHardwareTests(unittest.TestCase):
         tcl = runner.STAGE_TCL.read_text(encoding="utf-8")
         self.assertIn("STREAMING_SERVICE_RESET", tcl)
         self.assertIn(
-            'set p10ff_expected_fault_stage [expr {$p10_stage eq "P10_3F-STREAMING_FAULT"}]',
+            '$p10_stage in {P10_3F-STREAMING_FAULT P10_4-STREAMING_FAULT}',
             tcl,
+        )
+        self.assertNotIn(
+            "P10_3F-STREAMING_SERVICE_RESET P10_4-STREAMING_FAULT", tcl
         )
         body = tcl[
             tcl.index("proc p10_execute_ps_service_reset"):
@@ -664,7 +667,23 @@ class P103FFullHardwareTests(unittest.TestCase):
         self.assertTrue(current_functional_hashes.isdisjoint(old_functional_hashes))
 
     def test_goal_named_static_intake_matches_current_canonical_inputs(self) -> None:
-        self.assertEqual(runner.validate_static_intake_evidence(), [])
+        branch = subprocess.check_output(
+            ["git", "branch", "--show-current"], cwd=ROOT, text=True
+        ).strip()
+        errors = runner.validate_static_intake_evidence()
+        if branch == "p10.4/autonomous-4lane-hardening":
+            # The immutable P10.3 intake describes the P10.3 branch and its
+            # then-current canonical inputs.  A later P10.4 branch must not
+            # rewrite that historical evidence merely to match HEAD.
+            self.assertEqual(
+                errors,
+                [
+                    "static repository-intake branch is not the current allowed branch",
+                    "static repository intake canonical-input set/hash is stale",
+                ],
+            )
+        else:
+            self.assertEqual(errors, [])
         self.assertTrue(set(runner.STATIC_INTAKE_FILES).issubset(runner.HOST_INPUTS))
         self.assertIn(
             ROOT / "scripts/prepare_p10_3_offline.py", runner.HOST_INPUTS

@@ -404,6 +404,93 @@ proc p10ff_checkpoint {label tag} {
   p10_say [format "P10_3F_CHECKPOINT=%s:0x%08X" $label $tag]
 }
 
+# P10.4 direct source-ID-filter diagnostic.  The immutable plan must first
+# place both endpoint runtimes in full shutdown with a normal command-10 CASE.
+# This procedure then pulses only the validation predicate added at 0xDB0 and
+# proves, from coherent snapshots, that every requested local-source reject
+# counter advances exactly once while application commits and final physical
+# TX counters remain unchanged.
+proc p104_local_source_test {label lane_mask} {
+  global p10_dump_dir p10_endpoint_shutdown_complete p10_max_lane_mask
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      ![string is integer -strict $lane_mask] || $lane_mask <= 0 ||
+      $lane_mask > $p10_max_lane_mask || !$p10_endpoint_shutdown_complete} {
+    error "invalid or not-shutdown P10.4 local-source test"
+  }
+  set output [file join $p10_dump_dir "${label}.p10_4_local_source.psv"]
+  set out [open $output w]
+  puts $out "role|lane_mask|safe_status_before|accept_before|accept_after|reject_before|reject_after|local_reject_before_csv|local_reject_after_csv|physical_tx_before_csv|physical_tx_after_csv|application_commit_before|application_commit_after"
+  foreach role {fixed rotating} {
+    set safe_before [p10_read32 $role 0x43C00DB4]
+    if {(($safe_before >> 31) & 1) != 1} {
+      close $out
+      error "P10.4 $role local-source injection safety interlock is low"
+    }
+    set before [p10_read_p10_2_snapshot $role]
+    p10_write32 $role 0x43C00934 1
+    after 1
+    set commit_before [expr {
+        [p10_read32 $role 0x43C0094C] |
+        ([p10_read32 $role 0x43C00950] << 32)}]
+    set accept_before [p10_read32 $role 0x43C00DB8]
+    set reject_before [p10_read32 $role 0x43C00DBC]
+    set local_before {}
+    set tx_before {}
+    for {set lane 0} {$lane < 4} {incr lane} {
+      lappend local_before [lindex $before [expr {2 + 8 + 12*$lane + 10}]]
+    }
+    set first_module [expr {$role eq "fixed" ? 0 : 4}]
+    for {set module $first_module} {$module < $first_module + 4} {incr module} {
+      lappend tx_before [lindex $before [expr {2 + 56 + 8*$module + 1}]]
+    }
+
+    p10_write32 $role 0x43C00DB0 [expr {0x4C530000 | $lane_mask}]
+    after 2
+    set after_values [p10_read_p10_2_snapshot $role]
+    p10_write32 $role 0x43C00934 1
+    after 1
+    set commit_after [expr {
+        [p10_read32 $role 0x43C0094C] |
+        ([p10_read32 $role 0x43C00950] << 32)}]
+    set accept_after [p10_read32 $role 0x43C00DB8]
+    set reject_after [p10_read32 $role 0x43C00DBC]
+    set safe_after [p10_read32 $role 0x43C00DB4]
+    set local_after {}
+    set tx_after {}
+    for {set lane 0} {$lane < 4} {incr lane} {
+      set prior [lindex $local_before $lane]
+      set current [lindex $after_values [expr {2 + 8 + 12*$lane + 10}]]
+      lappend local_after $current
+      set expected_delta [expr {($lane_mask & (1 << $lane)) != 0 ? 1 : 0}]
+      if {$current - $prior != $expected_delta} {
+        close $out
+        error "P10.4 $role lane$lane local-source reject delta mismatch"
+      }
+    }
+    for {set module $first_module} {$module < $first_module + 4} {incr module} {
+      lappend tx_after [lindex $after_values [expr {2 + 56 + 8*$module + 1}]]
+    }
+    puts $out [join [list $role [format "0x%X" $lane_mask] \
+        [format "0x%08X" $safe_before] $accept_before $accept_after \
+        $reject_before $reject_after [join $local_before ,] \
+        [join $local_after ,] [join $tx_before ,] [join $tx_after ,] \
+        $commit_before $commit_after] "|"]
+    flush $out
+    if {$accept_after != $accept_before + 1 ||
+        $reject_after != $reject_before || $commit_after != $commit_before ||
+        $tx_after ne $tx_before || (($safe_after >> 31) & 1) != 1 ||
+        ($safe_after & $p10_max_lane_mask) != $lane_mask} {
+      close $out
+      error "P10.4 $role local-source fail-closed invariants failed"
+    }
+  }
+  close $out
+  p10_say "P10_4_LOCAL_SOURCE_REJECTION=PASS"
+  p10_say "P10_4_LOCAL_SOURCE_APPLICATION_COMMIT_ZERO=PASS"
+  p10_say "P10_4_LOCAL_SOURCE_PHYSICAL_TX_ZERO=PASS"
+  p10_say "P10_4_LOCAL_SOURCE_EVIDENCE=$output"
+}
+
 proc p10_record_p10_1r_telemetry {sequence label} {
   global p10_telemetry_handle
   set captured [clock milliseconds]
@@ -994,7 +1081,8 @@ proc p10_execute_case {d {window "NA"}} {
     error "P10 paired result mismatch label=[dict get $d label] expected_status=$expected fixed=$fixed_status/$fixed_state rotating=$rotating_status/$rotating_state"
   }
   p10_say "P10_CASE_PASS=[dict get $d label]"
-  set reset_recovery_flags [expr {(1 << 18) | (1 << 19) | (1 << 24)}]
+  set reset_recovery_flags [expr {
+      (1 << 18) | (1 << 19) | (1 << 24) | (1 << 25) | (1 << 26)}]
   set reset_recovery_case [expr {
       $command == 13 && ([dict get $d flags] & $reset_recovery_flags) != 0}]
   if {$reset_recovery_case} {
@@ -1010,13 +1098,47 @@ proc p10_execute_case {d {window "NA"}} {
 }
 
 proc p10_p101_case {label object_id size direction lane timeout_ms {flags 0}} {
-  global p10_default_weights
-  # Hardware-selected sustained configuration: buffer=4, ring=32, batch=8,
-  # object=256 KiB.  Source run and hashes are frozen in the selected tuning
-  # configuration evidence; this helper is used by windows and recovery cases.
-  set fields [list CASE $label 13 0 $flags $lane $direction 2 $p10_default_weights $size 32 1 0 0 \
-      $timeout_ms 0xA1010001 0x101 $object_id 32 32 0 262144 65536 4 8 0 0 0 0]
+  global p10_default_weights p104_ring p104_cache p104_ack p104_outstanding
+  global p104_object_bytes p104_descriptor_bytes p104_buffers p104_batch
+  # P10.4 may select one of a bounded set of runtime/DMA configurations after
+  # the tuning stage.  The defaults remain the exact P10.3 configuration, and
+  # no safety, PHY, SACK-width, permit, duty, or guard parameter is mutable.
+  set fields [list CASE $label 13 0 $flags $lane $direction 2 $p10_default_weights $size \
+      $p104_ring $p104_cache 0 0 $timeout_ms 0xA1010001 0x101 $object_id \
+      $p104_ack $p104_outstanding 0 $p104_object_bytes $p104_descriptor_bytes \
+      $p104_buffers $p104_batch 0 0 0 0]
   return [p10_case_dict $fields]
+}
+
+proc p104_select_runtime_config {label ring cache buffers batch ack outstanding \
+                                 object_bytes descriptor_bytes} {
+  global p104_ring p104_cache p104_buffers p104_batch p104_ack
+  global p104_outstanding p104_object_bytes p104_descriptor_bytes
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
+      $ring ni {8 16 32} || $cache != 1 || $buffers < 2 || $buffers > 16 ||
+      $batch < 1 || $batch > $ring || $ack != 32 || $outstanding != 32 ||
+      $object_bytes < 65536 || $object_bytes > 67108864 ||
+      $descriptor_bytes < 4 || $descriptor_bytes > $object_bytes ||
+      ($descriptor_bytes % 4) != 0 ||
+      (($object_bytes + $descriptor_bytes - 1) / $descriptor_bytes) *
+          min($buffers, 2) > $ring} {
+    error "invalid P10.4 selected runtime configuration"
+  }
+  set descriptor_count [expr {
+      ($object_bytes + $descriptor_bytes - 1) / $descriptor_bytes}]
+  if {$batch < $descriptor_count || $descriptor_count * $buffers > $ring ||
+      $object_bytes * $buffers > 67108864} {
+    error "P10.4 selected runtime configuration exceeds ring/memory bounds"
+  }
+  set p104_ring $ring
+  set p104_cache $cache
+  set p104_buffers $buffers
+  set p104_batch $batch
+  set p104_ack $ack
+  set p104_outstanding $outstanding
+  set p104_object_bytes $object_bytes
+  set p104_descriptor_bytes $descriptor_bytes
+  p10_say "P10_4_SELECTED_CONFIG=$label:ring=$ring,cache=$cache,buffers=$buffers,batch=$batch,ack=$ack,outstanding=$outstanding,object_bytes=$object_bytes,descriptor_bytes=$descriptor_bytes"
 }
 
 proc p10_run_p101_window {label duration_sec direction lane maximum_chunk \
@@ -1513,16 +1635,115 @@ proc p10ff_run_formal {label duration_sec} {
   p10_say "P10_3F_FORMAL_RESULT=PASS"
 }
 
+proc p104_run_mixed_formal {label duration_sec} {
+  global p10_max_lane_mask
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] || $duration_sec != 1800} {
+    error "P10.4 mixed formal must be exactly 1800 seconds"
+  }
+  set started [clock milliseconds]
+  set deadline $started
+  p10_say "P10_4_MIXED_START_MS=$started"
+  foreach spec {
+      {warmup_f2r 60 0 15} {warmup_r2f 60 1 15}
+      {half_f2r 420 0 15} {half_r2f 420 1 15}} {
+    set seconds [lindex $spec 1]
+    set deadline [expr {$deadline + $seconds * 1000}]
+    p10ff_run_bounded_window "${label}_[lindex $spec 0]" $seconds \
+        [lindex $spec 2] [lindex $spec 3] $deadline
+  }
+  for {set cycle 0} {$cycle < 5} {incr cycle} {
+    foreach direction {0 1} {
+      set deadline [expr {$deadline + 30000}]
+      p10ff_run_bounded_window [format "%s_switch_%02d_d%d" $label $cycle $direction] \
+          30 $direction 15 $deadline
+    }
+  }
+  set masks {14 15 13 15 11 15 7 15 3 15 5 15 10 15 1 15}
+  for {set index 0} {$index < [llength $masks]} {incr index} {
+    set seconds [expr {$index < 12 ? 19 : 18}]
+    set deadline [expr {$deadline + $seconds * 1000}]
+    p10ff_run_bounded_window [format "%s_degrade_%02d_mask%X" \
+        $label $index [lindex $masks $index]] $seconds \
+        [expr {$index & 1}] [lindex $masks $index] $deadline
+  }
+  # The frozen endpoint has one bundle-wide direction bit and cannot admit
+  # simultaneous opposite-direction objects.  Preserve the nonblocking 240-s
+  # segment as alternating 2-lane compatibility traffic and emit an explicit
+  # non-PASS capability marker; never mislabel this as simultaneous 2+2.
+  for {set index 0} {$index < 8} {incr index} {
+    set direction [expr {$index & 1}]
+    set lane [expr {$direction == 0 ? 3 : 12}]
+    set deadline [expr {$deadline + 30000}]
+    p10ff_run_bounded_window [format "%s_2plus2_fallback_%02d" $label $index] \
+        30 $direction $lane $deadline
+  }
+  set finished [clock milliseconds]
+  set elapsed [expr {$finished - $started}]
+  if {$elapsed < 1800000 || $elapsed > 1800500 ||
+      $deadline != $started + 1800000} {
+    error "P10.4 mixed formal duration mismatch elapsed=$elapsed"
+  }
+  p10_say "P10_4_MIXED_TWO_PLUS_TWO=UNSUPPORTED_NONBLOCKING_SINGLE_BUNDLE_DIRECTION"
+  p10_say "P10_4_MIXED_END_MS=$finished"
+  p10_say "P10_4_MIXED_ELAPSED_MS=$elapsed"
+  p10_say "P10_4_MIXED_RESULT=PASS"
+}
+
+proc p104_two_plus_two_probe {label duration_sec} {
+  global p10_dump_dir
+  if {![regexp {^[A-Za-z0-9_.-]+$} $label] || $duration_sec != 300} {
+    error "invalid P10.4 2+2 capability probe"
+  }
+  set started [clock milliseconds]
+  set before_by_role [dict create]
+  foreach role {fixed rotating} {
+    set values [p10_read_p10_2_snapshot $role]
+    set first [expr {$role eq "fixed" ? 0 : 4}]
+    set counts {}
+    for {set module $first} {$module < $first + 4} {incr module} {
+      lappend counts [lindex $values [expr {2 + 56 + 8*$module + 1}]]
+    }
+    dict set before_by_role $role $counts
+  }
+  for {set sample 0} {$sample < 60} {incr sample} {
+    set target [expr {$started + ($sample + 1) * 5000}]
+    set remaining [expr {$target - [clock milliseconds]}]
+    if {$remaining > 0} { after $remaining }
+    foreach role {fixed rotating} {
+      p10_dump_p10_2_snapshot $role [format "%s_receive_only_%02d" $label $sample]
+    }
+  }
+  foreach role {fixed rotating} {
+    set values [p10_read_p10_2_snapshot $role]
+    set first [expr {$role eq "fixed" ? 0 : 4}]
+    set counts {}
+    for {set module $first} {$module < $first + 4} {incr module} {
+      lappend counts [lindex $values [expr {2 + 56 + 8*$module + 1}]]
+    }
+    if {$counts ne [dict get $before_by_role $role]} {
+      error "P10.4 2+2 unsupported probe observed unexpected physical TX"
+    }
+  }
+  set elapsed [expr {[clock milliseconds] - $started}]
+  if {$elapsed < 300000 || $elapsed > 300500} {
+    error "P10.4 2+2 probe duration mismatch"
+  }
+  p10_say "P10_4_TWO_PLUS_TWO_CAPABILITY=UNSUPPORTED_SINGLE_BUNDLE_DIRECTION"
+  p10_say "P10_4_TWO_PLUS_TWO_TX_EXECUTED=false"
+  p10_say "P10_4_TWO_PLUS_TWO_PROBE_ELAPSED_MS=$elapsed"
+  p10_say "P10_4_TWO_PLUS_TWO_RESULT=FAIL_WITH_NONBLOCKING_EVIDENCE"
+}
+
 # Execute one board-autonomous aggregate command.  The endpoint internally
 # pipelines 256-KiB objects; the host is not in the per-object fast path.  The
 # PL first-fault monitor remains active throughout the command and can kill TX
 # immediately.  A coherent safety snapshot is checked before another aggregate
 # command or stage may be admitted.
 proc p10ff_run_total {label total_bytes direction lane unavailable first_object_id} {
-  global p10_max_lane_mask
+  global p10_max_lane_mask p10_max_aggregate_bytes
   if {![regexp {^[A-Za-z0-9_.-]+$} $label] ||
       ![string is wideinteger -strict $total_bytes] ||
-      $total_bytes < 262144 || $total_bytes > 67108864 ||
+      $total_bytes < 262144 || $total_bytes > $p10_max_aggregate_bytes ||
       ($total_bytes % 262144) != 0 || $direction ni {0 1} ||
       $lane < 1 || $lane > $p10_max_lane_mask ||
       ![string is integer -strict $unavailable] ||
@@ -1545,7 +1766,7 @@ proc p10ff_run_total {label total_bytes direction lane unavailable first_object_
   p10ff_assert_safety $label
   set finished [clock milliseconds]
   set elapsed [expr {$finished - $started}]
-  p10_say "P10_3F_TOTAL_PASS_${marker_label}=commands:1,bytes:$total_bytes,elapsed_ms:$elapsed,internal_objects:$internal_object_count,internal_object_bytes:262144,max_aggregate_command_bytes:67108864,unavailable_mask:$unavailable"
+  p10_say "P10_3F_TOTAL_PASS_${marker_label}=commands:1,bytes:$total_bytes,elapsed_ms:$elapsed,internal_objects:$internal_object_count,internal_object_bytes:262144,max_aggregate_command_bytes:$p10_max_aggregate_bytes,unavailable_mask:$unavailable"
 }
 
 proc p10ff_run_window {label duration_sec direction lane} {
@@ -1969,8 +2190,8 @@ proc p10_run_soak {label duration_sec} {
   }
 }
 
-if {[llength $argv] ni {16 18}} {
-  error "usage: p10_dual_xsdb_stage.tcl <xsdb-url> <fixed-serial> <rotating-serial> <fixed-bit> <rotating-bit> <fixed-elf> <rotating-elf> <fixed-ps7-init> <rotating-ps7-init> <plan> <dump-dir> <abort-file> <result> <stage> <authorization> <run-id> ?<fixed-build-id> <rotating-build-id>?"
+if {[llength $argv] ni {16 18 20}} {
+  error "usage: p10_dual_xsdb_stage.tcl <xsdb-url> <fixed-serial> <rotating-serial> <fixed-bit> <rotating-bit> <fixed-elf> <rotating-elf> <fixed-ps7-init> <rotating-ps7-init> <plan> <dump-dir> <abort-file> <result> <stage> <authorization> <run-id> ?<fixed-build-id> <rotating-build-id>? ?<map-version> <map-hash-low>?"
 }
 set p10_xsdb_url [lindex $argv 0]
 set p10_fixed_serial [lindex $argv 1]
@@ -1989,10 +2210,13 @@ set p10_stage [lindex $argv 13]
 set p10_authorization_file [file normalize [lindex $argv 14]]
 set p10_run_id [lindex $argv 15]
 set p10_campaign_p103f [expr {[string match "P10_3F-*" $p10_stage]}]
+set p10_campaign_p104 [expr {[string match "P10_4-*" $p10_stage]}]
+set p10_campaign_forensic [expr {$p10_campaign_p103f || $p10_campaign_p104}]
 set p10_campaign_p103 [expr {[string match "P10_3-*" $p10_stage] ||
-    $p10_campaign_p103f}]
+    $p10_campaign_forensic}]
 set p10_lane_count [expr {$p10_campaign_p103 ? 4 : 2}]
 set p10_max_lane_mask [expr {$p10_campaign_p103 ? 15 : 3}]
+set p10_max_aggregate_bytes [expr {$p10_campaign_p104 ? 134217728 : 67108864}]
 # P9_PHY_STATUS concatenates three fields of width 2*LANE_COUNT in the
 # order {safety, startup, ready}.  The historical 0x00000F00 safety mask is
 # correct only for LANE_COUNT=2; for P10.3 LANE_COUNT=4 it aliases the low
@@ -2002,12 +2226,20 @@ set p10_phy_field_width [expr {2 * $p10_lane_count}]
 set p10_phy_safety_mask [expr {((1 << $p10_phy_field_width) - 1) <<
     (2 * $p10_phy_field_width)}]
 set p10_default_weights [expr {$p10_campaign_p103 ? 0x01010101 : 0x0101}]
+set p104_ring 32
+set p104_cache 1
+set p104_buffers 4
+set p104_batch 8
+set p104_ack 32
+set p104_outstanding 32
+set p104_object_bytes 262144
+set p104_descriptor_bytes 65536
 set p10_expected_capabilities [expr {$p10_campaign_p103 ? 0xF7204441 : 0xF7204221}]
 set p10_expected_profile(fixed) [expr {$p10_campaign_p103 ? 0x702004F0 : 0x702000F0}]
 set p10_expected_profile(rotating) [expr {$p10_campaign_p103 ? 0x702004A0 : 0x702000A0}]
 set p10_expected_build(fixed) 0x50313046
 set p10_expected_build(rotating) 0x50313052
-if {[llength $argv] == 18} {
+if {[llength $argv] >= 18} {
   foreach {role index} {fixed 16 rotating 17} {
     set value [lindex $argv $index]
     if {![regexp {^0x[0-9A-Fa-f]{8}$} $value]} {
@@ -2016,13 +2248,26 @@ if {[llength $argv] == 18} {
     set p10_expected_build($role) $value
   }
 }
+if {[llength $argv] == 20} {
+  foreach {name index} {
+      p10_expected_register_map_version 18
+      p10_expected_register_map_hash_low 19} {
+    set value [lindex $argv $index]
+    if {![regexp {^0x[0-9A-Fa-f]{8}$} $value]} {
+      error "invalid P10 expected register-map identity"
+    }
+    set $name $value
+  }
+}
 set p10_connected 0
 set p10_active_target_id -1
 set p10_command_sequence 1000
 set p10ff_window_next_object_id 0x6F000000
 set p10_active_case_label "boot"
 set p10ff_fault_terminal 0
-set p10ff_expected_fault_stage [expr {$p10_stage eq "P10_3F-STREAMING_FAULT"}]
+set p10_endpoint_shutdown_complete 0
+set p10ff_expected_fault_stage [expr {
+    $p10_stage in {P10_3F-STREAMING_FAULT P10_4-STREAMING_FAULT}}]
 file mkdir $p10_dump_dir
 file mkdir [file dirname $p10_result_file]
 set p10_result_handle [open $p10_result_file w]
@@ -2042,16 +2287,23 @@ flush $p10_ps_gpio_handle
 set rc [catch {
   if {![info exists ::env(RF_COMM_P10_HW_AUTH)] ||
       $::env(RF_COMM_P10_HW_AUTH) ni {
-        P10_FASTTRACK_IMMUTABLE_AUTHORIZED P10_3F_IMMUTABLE_AUTHORIZED}} {
+        P10_FASTTRACK_IMMUTABLE_AUTHORIZED P10_3F_IMMUTABLE_AUTHORIZED
+        P10_4_IMMUTABLE_AUTHORIZED}} {
     error "P10 immutable current-run environment marker required"
   }
   set p10_1r_stage_ok [regexp {^P10_1R-(PREFLIGHT|ECHO_TAIL|CROSSTALK|PHY_SANITY|ACK_TUNING|PERFORMANCE|STREAMING_64M|FORMAL_30MIN)$} $p10_stage]
   set p10_3_stage_ok [regexp {^P10_3-(PREFLIGHT|MODULE_INTAKE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STREAMING_64M|PERFORMANCE|FORMAL_30MIN|LANE2_RAW_RETEST|LANE3_RAW_RETEST)$} $p10_stage]
   set p10_3f_stage_ok [regexp {^P10_3F-(PREFLIGHT|MODULE_INTAKE|FAULT_CAPTURE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STAIRCASE|STREAMING_64M|STREAMING_FAULT|STREAMING_SERVICE_RESET|PERFORMANCE|FORMAL)$} $p10_stage]
-  if {!$p10_1r_stage_ok && !$p10_3_stage_ok && !$p10_3f_stage_ok} {
+  set p10_4_stage_ok [regexp {^P10_4-(PREFLIGHT|BASELINE_SMOKE|COUNTER_SEMANTICS|TUNING|HALF_DUPLEX|STREAMING_64M|STREAMING_128M|STREAMING_FAULT|DEGRADE|DIRECTION_SWITCH|RESET_RECOVERY|ECHO_CROSSTALK|TWO_PLUS_TWO|MIXED_FORMAL)$} $p10_stage]
+  if {!$p10_1r_stage_ok && !$p10_3_stage_ok && !$p10_3f_stage_ok &&
+      !$p10_4_stage_ok} {
     error "unsupported P10 XSDB stage"
   }
-  if {$p10_campaign_p103f} {
+  if {$p10_campaign_p104} {
+    if {![regexp {^p10_4_[A-Za-z0-9_.-]+$} $p10_run_id]} {
+      error "unsafe P10.4 run id"
+    }
+  } elseif {$p10_campaign_p103f} {
     if {![regexp {^p10_3f_[A-Za-z0-9_.-]+$} $p10_run_id]} {
       error "unsafe P10.3F run id"
     }
@@ -2142,7 +2394,8 @@ set rc [catch {
       if {[llength $fields] != 7 ||
           ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
           ![string is wideinteger -strict [lindex $fields 2]] ||
-          [lindex $fields 2] < 262144 || [lindex $fields 2] > 67108864 ||
+          [lindex $fields 2] < 262144 ||
+          [lindex $fields 2] > $p10_max_aggregate_bytes ||
           ([lindex $fields 2] % 262144) != 0 ||
           [lindex $fields 3] ni {0 1} ||
           ![string is integer -strict [lindex $fields 4]] ||
@@ -2161,7 +2414,10 @@ set rc [catch {
           [lindex $fields 2] < 10 || [lindex $fields 2] > 840 ||
           [lindex $fields 3] ni {0 1} ||
           ![string is integer -strict [lindex $fields 4]] ||
-          [lindex $fields 4] != $p10_max_lane_mask} {
+          [lindex $fields 4] < 1 ||
+          [lindex $fields 4] > $p10_max_lane_mask ||
+          (!$p10_campaign_p104 &&
+           [lindex $fields 4] != $p10_max_lane_mask)} {
         error "invalid P10.3F window record"
       }
       lappend parsed_plan $fields
@@ -2174,6 +2430,40 @@ set rc [catch {
           ![string is wideinteger -strict [lindex $fields 4]] ||
           [lindex $fields 4] != 262144} {
         error "invalid P10.3F controlled-fault record"
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P104_LOCAL_SOURCE_TEST"} {
+      if {[llength $fields] != 3 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          ![string is integer -strict [lindex $fields 2]] ||
+          [lindex $fields 2] <= 0 ||
+          [lindex $fields 2] > $p10_max_lane_mask} {
+        error "invalid P10.4 local-source test record"
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P104_CONFIG"} {
+      if {[llength $fields] != 10 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]]} {
+        error "invalid P10.4 configuration record"
+      }
+      foreach index {2 3 4 5 6 7 8 9} {
+        if {![string is integer -strict [lindex $fields $index]]} {
+          error "invalid numeric P10.4 configuration field"
+        }
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P104_MIXED_FORMAL"} {
+      if {[llength $fields] != 3 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          [lindex $fields 2] != 1800} {
+        error "invalid P10.4 mixed formal record"
+      }
+      lappend parsed_plan $fields
+    } elseif {$kind eq "P104_TWO_PLUS_TWO_PROBE"} {
+      if {[llength $fields] != 3 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]] ||
+          [lindex $fields 2] != 300} {
+        error "invalid P10.4 2+2 probe record"
       }
       lappend parsed_plan $fields
     } elseif {$kind eq "P101_1PLUS1_PROBE"} {
@@ -2274,7 +2564,10 @@ set rc [catch {
     set kind [lindex $record 0]
     if {$kind eq "CASE"} {
       p10_execute_case [lindex $record 1]
-      if {$p10_campaign_p103f} {
+      if {[dict get [lindex $record 1] command] == 10} {
+        set p10_endpoint_shutdown_complete 1
+      }
+      if {$p10_campaign_forensic} {
         set case_label [dict get [lindex $record 1] label]
         if {$p10ff_expected_fault_stage} {
           p10ff_verify_terminal_fault $case_label 0x10
@@ -2287,7 +2580,7 @@ set rc [catch {
     } elseif {$kind eq "SOAK"} {
       p10_run_soak [lindex $record 1] [lindex $record 2]
     } elseif {$kind eq "P101_WINDOW"} {
-      if {$p10_campaign_p103f} {
+      if {$p10_campaign_forensic} {
         # P10.3F admits aggregate commands only after its staircase.  Each
         # command still contains 256-KiB protocol objects; PL first-fault kill
         # is continuous and the host gates the next aggregate on a snapshot.
@@ -2320,6 +2613,17 @@ set rc [catch {
     } elseif {$kind eq "P10FF_ABORT_FAULT"} {
       p10ff_abort_fault [lindex $record 1] [lindex $record 2] \
           [lindex $record 3] [lindex $record 4]
+    } elseif {$kind eq "P104_LOCAL_SOURCE_TEST"} {
+      p104_local_source_test [lindex $record 1] [lindex $record 2]
+    } elseif {$kind eq "P104_CONFIG"} {
+      p104_select_runtime_config [lindex $record 1] [lindex $record 2] \
+          [lindex $record 3] [lindex $record 4] [lindex $record 5] \
+          [lindex $record 6] [lindex $record 7] [lindex $record 8] \
+          [lindex $record 9]
+    } elseif {$kind eq "P104_MIXED_FORMAL"} {
+      p104_run_mixed_formal [lindex $record 1] [lindex $record 2]
+    } elseif {$kind eq "P104_TWO_PLUS_TWO_PROBE"} {
+      p104_two_plus_two_probe [lindex $record 1] [lindex $record 2]
     } elseif {$kind eq "P101_1PLUS1_PROBE"} {
       p10_probe_1plus1 [lindex $record 1]
     } elseif {$kind eq "P101R_ECHO_SWEEP"} {
@@ -2349,6 +2653,9 @@ set rc [catch {
     p10_say "P10_ENDPOINT_SHUTDOWN_FIXED=PASS"
     p10_say "P10_ENDPOINT_SHUTDOWN_ROTATING=PASS"
     p10_say "P10_3F_FAULT_CAPTURE_LEFT_FROZEN=1"
+  } elseif {$p10_endpoint_shutdown_complete} {
+    p10_say "P10_ENDPOINT_SHUTDOWN_FIXED=PASS"
+    p10_say "P10_ENDPOINT_SHUTDOWN_ROTATING=PASS"
   } else {
     set shutdown_fields [list CASE "${p10_stage}_endpoint_shutdown" 10 0 0 0 0 0 0 0 \
         8 0 0 0 10000 0 0 0 0 0 0 0 1024 0 0 0 0 0 0]

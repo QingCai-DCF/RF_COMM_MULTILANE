@@ -348,10 +348,10 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 0c3aa09eef4705769d5851594fd5449184068964873c11cc717ed40527a30951
+    sha256: 79b98a3ca6e59fbbad2fc8139d0e66aef039510a36a6d3ec5565f42c477a1dd1
   - path: PROJECT_STATUS.md
-    sha256: da14d85b05339b026054977d7e2273d8058002eeb60acda2f3521dd19c777ef6
-  artifact_hash: da14d85b05339b026054977d7e2273d8058002eeb60acda2f3521dd19c777ef6
+    sha256: a335dda1c4ab9412b56e3e0529837aa353b74b9e647d68b28b18f68e91ff2fbf
+  artifact_hash: a335dda1c4ab9412b56e3e0529837aa353b74b9e647d68b28b18f68e91ff2fbf
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -365,7 +365,7 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 0c3aa09eef4705769d5851594fd5449184068964873c11cc717ed40527a30951
+    sha256: 79b98a3ca6e59fbbad2fc8139d0e66aef039510a36a6d3ec5565f42c477a1dd1
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -395,12 +395,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 0c3aa09eef4705769d5851594fd5449184068964873c11cc717ed40527a30951
+    sha256: 79b98a3ca6e59fbbad2fc8139d0e66aef039510a36a6d3ec5565f42c477a1dd1
   - path: PROJECT_STATUS.md
-    sha256: da14d85b05339b026054977d7e2273d8058002eeb60acda2f3521dd19c777ef6
+    sha256: a335dda1c4ab9412b56e3e0529837aa353b74b9e647d68b28b18f68e91ff2fbf
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: da14d85b05339b026054977d7e2273d8058002eeb60acda2f3521dd19c777ef6
+  artifact_hash: a335dda1c4ab9412b56e3e0529837aa353b74b9e647d68b28b18f68e91ff2fbf
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -4357,6 +4357,171 @@ requirements:
   artifact_hash: ca89d42ac92a77f104f0b82e5de237738435d69b862e0e1260f6e8e7d3d49782
   hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
     external electrical/duty measurement and product-final acceptance remain pending.
+- requirement_id: P10_4-CLOSE-001
+  requirement_text: P10.3 evidence, pass tag, closeout tag, and stationary four-lane scoped PASS shall remain immutable and directly rechecked before P10.4.
+  profile: P10_4_P10_3_IMMUTABLE_CLOSEOUT
+  verification_method: Verify exact commits, annotated tag targets, ancestry, evidence manifest, and frozen P10.3 consistency without rewriting prior evidence.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_REPOSITORY_INTAKE
+  test_id: P10_4-CLOSE-001
+  evidence_path: evidence/generated/p10_4_p10_3_closeout.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-METRIC-001
+  requirement_text: ACK-related performance attribution shall use separate direct counters for outstanding occupancy, ACK-caused TX idle, full-window stall, receiver-credit stall, and direction-turnaround idle.
+  profile: P10_4_DIRECT_PERFORMANCE_COUNTERS
+  verification_method: XSIM, routed build, local-source injection, coherent hardware snapshots, and exact register-map identity shall verify the append-only direct predicates.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_ARTIFACT
+  test_id: P10_4-METRIC-001
+  evidence_path: evidence/generated/p10_4_counter_semantics.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-MODEL-001
+  requirement_text: PHY raw, frame payload, RFAP useful, application-commit, and host-orchestrated rates shall remain distinct and current hardware measurements shall reconcile to the airtime model.
+  profile: P10_4_MODEL_MEASURED_RECONCILIATION
+  verification_method: Deterministic model plus direct endpoint timers and committed-byte counters in both 300-second directions.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_ARTIFACT
+  test_id: P10_4-MODEL-001
+  evidence_path: evidence/generated/p10_4_half_duplex_performance.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-PERF-001
+  requirement_text: The current four-lane stationary artifact shall sustain at least 8.0 Mbit/s integrity-verified application goodput from fixed to rotating for 300 seconds.
+  profile: P10_4_STATIONARY_4LANE_HALF_DUPLEX
+  verification_method: Board-autonomous lane-mask-0xF transfer with direct PS/PL timer crosscheck and complete safety/integrity snapshots.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE
+  test_id: P10_4-PERF-001
+  evidence_path: evidence/generated/p10_4_half_duplex_performance.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-PERF-002
+  requirement_text: The current four-lane stationary artifact shall sustain at least 8.0 Mbit/s integrity-verified application goodput from rotating to fixed for 300 seconds.
+  profile: P10_4_STATIONARY_4LANE_HALF_DUPLEX
+  verification_method: Board-autonomous lane-mask-0xF transfer with direct PS/PL timer crosscheck and complete safety/integrity snapshots.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE
+  test_id: P10_4-PERF-002
+  evidence_path: evidence/generated/p10_4_half_duplex_performance.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-PERF-003
+  requirement_text: Both stationary half-duplex directions should reach the nonblocking 9.0 Mbit/s performance-margin target without weakening safety or integrity constraints.
+  profile: P10_4_STATIONARY_4LANE_MARGIN
+  verification_method: Use the selected bounded tuning candidate and report each 300-second direction independently; failure remains nonblocking.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE_NONBLOCKING
+  test_id: P10_4-PERF-003
+  evidence_path: evidence/generated/p10_4_performance_tuning.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-STREAM-001
+  requirement_text: Fixed to rotating shall complete ten independent 64 MiB board-autonomous objects with CRC32, SHA256, atomic commit, and exact descriptor accounting.
+  profile: P10_4_STATIONARY_4LANE_STREAMING
+  verification_method: Ten content-bound lane-mask-0xF command-13 aggregates with a coherent safety snapshot after each object.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE
+  test_id: P10_4-STREAM-001
+  evidence_path: evidence/generated/p10_4_streaming_64m.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-STREAM-002
+  requirement_text: Rotating to fixed shall complete ten independent 64 MiB board-autonomous objects with CRC32, SHA256, atomic commit, and exact descriptor accounting.
+  profile: P10_4_STATIONARY_4LANE_STREAMING
+  verification_method: Ten content-bound lane-mask-0xF command-13 aggregates with a coherent safety snapshot after each object.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE
+  test_id: P10_4-STREAM-002
+  evidence_path: evidence/generated/p10_4_streaming_64m.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-DEG-001
+  requirement_text: Every required degraded lane mask shall retain healthy-lane progress and recover to at least 90 percent of the full-mask baseline without duplicate or stale commit.
+  profile: P10_4_LANE_DEGRADATION_RECOVERY
+  verification_method: Execute the exact 0xF/degraded/0xF sequence, each degraded interval at least 10 seconds, plus per-lane unavailable 64 MiB recovery vectors.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE
+  test_id: P10_4-DEG-001
+  evidence_path: evidence/generated/p10_4_degraded_modes.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-DIR-001
+  requirement_text: Ten 30-second fixed-to-rotating and 30-second rotating-to-fixed direction cycles shall complete without session reconstruction, leak, cross-lane acceptance, or deadlock.
+  profile: P10_4_DIRECTION_SWITCH
+  verification_method: Execute twenty content-bound board-autonomous windows and inspect direct turnaround, commit, and safety counters.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE
+  test_id: P10_4-DIR-001
+  evidence_path: evidence/generated/p10_4_direction_switch.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-RESET-001
+  requirement_text: The campaign shall complete the exact fixed/rotating PS, DMA, and role-selected PL reset counts and a fresh 64 MiB integrity object after every injected reset or protocol fault.
+  profile: P10_4_ENDPOINT_DMA_PL_RECOVERY
+  verification_method: Isolated fail-closed reset stages, first-fault archive before reconfiguration, role counters, and exact post-reset clean-object evidence.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE
+  test_id: P10_4-RESET-001
+  evidence_path: evidence/generated/p10_4_reset_recovery.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-XTALK-001
+  requirement_text: All eight physical TX directions shall pass 64-pulse, 1024-pulse, and 30-second one-lane frame vectors with zero non-target CRC-valid acceptance.
+  profile: P10_4_DIGITAL_ECHO_CROSSTALK_8X8
+  verification_method: Read all eight module and four-lane counters after every direction while preserving same-module raw echo as non-accepted diagnostic input.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE_DIGITAL_ONLY
+  test_id: P10_4-XTALK-001
+  evidence_path: evidence/generated/p10_4_echo_crosstalk.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-FD-001
+  requirement_text: A direct 300-second 2+2 simultaneous opposite-direction experiment shall be executed or rejected with current-artifact capability evidence without claiming final full duplex.
+  profile: P10_4_2PLUS2_EXPERIMENT
+  verification_method: Attempt only the bounded Goal configuration and record actual TX, direction-state, integrity, and goodput evidence; the result is nonblocking.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE_NONBLOCKING
+  test_id: P10_4-FD-001
+  evidence_path: evidence/generated/p10_4_two_plus_two.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-SOAK-001
+  requirement_text: The exact 1800-second mixed stationary campaign shall preserve integrity, descriptor, protocol, liveness, echo-admission, and TFDU safety invariants.
+  profile: P10_4_MIXED_30MIN
+  verification_method: Execute the immutable warm-up, both half-duplex directions, switch loop, degrade loop, and truthful 2+2 compatibility segment under continuous first-fault protection.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE
+  test_id: P10_4-SOAK-001
+  evidence_path: evidence/generated/p10_4_mixed_30min.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_4-SAFE-001
+  requirement_text: Every stage and every exit path shall leave both serial-bound AX7020 endpoints in independently programmed and verified full shutdown.
+  profile: P10_4_FAIL_CLOSED_DUAL_SHUTDOWN
+  verification_method: Require shutdown-before, archive-before-reconfiguration, shutdown-after, finally shutdown, and exact markers from both role-bound shutdown bitstreams.
+  verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
+  verification_scope: P10_4_CURRENT_HARDWARE
+  test_id: P10_4-SAFE-001
+  evidence_path: evidence/generated/p10_4_shutdown.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
 - requirement_id: P10_3-INV-001
   requirement_text: All eight active TFDU modules shall have unique IDs, endpoints, positions, and lane assignments.
   profile: P10_3_EIGHT_MODULE_INVENTORY

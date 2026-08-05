@@ -2,9 +2,9 @@
 
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
-- Register map version: `P10-3` (`0x0A000003`)
-- Canonical source SHA256: `8783951ad23bb2d966aa36b2da01892f807b94cdf10dfda0512a609fffa1c1b3`
-- Compatibility: P0-P10.2 offsets and meanings are preserved; P10.3F appends a reset-independent first-fault forensic window at 0x0D10-0x0D80.
+- Register map version: `P10-4` (`0x0A000004`)
+- Canonical source SHA256: `06c2105e05cbad4dd780316cf44dd857b13a32dad584e2df2ab4a5b8bcfecb39`
+- Compatibility: P0-P10.3F offsets and meanings are preserved; P10.4 appends unambiguous performance counters at 0x0D84-0x0DAC and a fail-closed local-source test injection at 0x0DB0-0x0DBC.
 
 | Name | Offset | Access | Description |
 |---|---:|---|---|
@@ -462,3 +462,18 @@
 | `P10_FF_CLEAR_AUDIT` | `0x0D78` | `RO` | Accepted clear count bits 15:0 and rejected archive/clear count bits 31:16 |
 | `P10_FF_CHECKPOINT` | `0x0D7C` | `RW` | Write an observational staircase/checkpoint tag into the pre-fault event ring |
 | `P10_FF_READ_PROGRESS` | `0x0D80` | `RO` | Frozen/read/archive progress and frozen event count summary |
+| `P10_4_COUNTER_SCHEMA` | `0x0D84` | `RO` | P10.4 split performance-counter schema identity 0x50310401 |
+| `P10_4_OUTSTANDING_UNACKED_LOW` | `0x0D88` | `RO` | Snapshotted cycles with an active object and one or more unacknowledged frames; accurate alias for deprecated ambiguous ACK_WAIT |
+| `P10_4_OUTSTANDING_UNACKED_HIGH` | `0x0D8C` | `RO` | High word of P10_4_OUTSTANDING_UNACKED |
+| `P10_4_TX_IDLE_DUE_TO_ACK_LOW` | `0x0D90` | `RO` | Snapshotted sender cycles deliberately idle after a physical DATA burst while awaiting reverse ACK |
+| `P10_4_TX_IDLE_DUE_TO_ACK_HIGH` | `0x0D94` | `RO` | High word of P10_4_TX_IDLE_DUE_TO_ACK |
+| `P10_4_WINDOW_FULL_STALL_LOW` | `0x0D98` | `RO` | Snapshotted payload-allocation cycles blocked by a directly full selective-repeat window |
+| `P10_4_WINDOW_FULL_STALL_HIGH` | `0x0D9C` | `RO` | High word of P10_4_WINDOW_FULL_STALL |
+| `P10_4_RECEIVER_CREDIT_STALL_LOW` | `0x0DA0` | `RO` | Snapshotted ready-attempt cycles blocked specifically by zero peer receiver credit |
+| `P10_4_RECEIVER_CREDIT_STALL_HIGH` | `0x0DA4` | `RO` | High word of P10_4_RECEIVER_CREDIT_STALL |
+| `P10_4_DIRECTION_TURNAROUND_IDLE_LOW` | `0x0DA8` | `RO` | Snapshotted idle cycles in explicit DATA/ACK half-duplex turnaround and guard states |
+| `P10_4_DIRECTION_TURNAROUND_IDLE_HIGH` | `0x0DAC` | `RO` | High word of P10_4_DIRECTION_TURNAROUND_IDLE |
+| `P10_4_LOCAL_SOURCE_TEST_CONTROL` | `0x0DB0` | `WO` | Write 0x4C53 in bits31:16 and a nonzero lane mask in bits3:0; accepted only while full-shutdown, TX-killed, and object-idle; creates no Txd |
+| `P10_4_LOCAL_SOURCE_TEST_STATUS` | `0x0DB4` | `RO` | Bit31 injection-safe now; bits3:0 last accepted lane mask |
+| `P10_4_LOCAL_SOURCE_TEST_ACCEPT_COUNT` | `0x0DB8` | `RO` | Accepted fail-closed digital source-ID injection command count |
+| `P10_4_LOCAL_SOURCE_TEST_REJECT_COUNT` | `0x0DBC` | `RO` | Rejected malformed or unsafe local-source test command count |

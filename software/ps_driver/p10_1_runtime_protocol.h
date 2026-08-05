@@ -63,7 +63,12 @@ enum p10_1_runtime_flags {
   P10_1_RUNTIME_FLAG_EXPECT_PS_RESET_SENDER = 1U << 22,
   P10_1_RUNTIME_FLAG_EXPECT_PS_RESET_RECEIVER = 1U << 23,
   P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_RECEIVER = 1U << 24,
+  /* P10.4 role-selective PL reset: only the endpoint that is the local
+   * transmitter for the requested direction resets its PL data plane.  The
+   * earlier bit-19 vector deliberately retains its historical both-endpoint
+   * semantics for immutable P10.1/P10.3 replay. */
   P10_1_RUNTIME_FLAG_EXPECT_ABORT_50 = 1U << 25,
+  P10_1_RUNTIME_FLAG_EXPECT_PL_RESET_LOCAL_TX = 1U << 26,
 };
 
 typedef struct p10_1_runtime_result {
@@ -206,7 +211,20 @@ typedef struct p10_1_runtime_result {
    */
   volatile uint32_t descriptors_reclaimed_by_reset;
   volatile uint32_t injected_fault_observed_count;
-  volatile uint32_t reserved[62];
+  /* P10.4 append-only, direct hardware counter semantics.  The legacy
+   * perf_ack_wait field remains at words 112/113 for compatibility and is
+   * DEPRECATED_AMBIGUOUS; new code must use these named fields. */
+  volatile uint32_t perf_outstanding_unacked_low;
+  volatile uint32_t perf_outstanding_unacked_high;
+  volatile uint32_t perf_tx_idle_due_to_ack_low;
+  volatile uint32_t perf_tx_idle_due_to_ack_high;
+  volatile uint32_t perf_window_full_stall_low;
+  volatile uint32_t perf_window_full_stall_high;
+  volatile uint32_t perf_receiver_credit_stall_low;
+  volatile uint32_t perf_receiver_credit_stall_high;
+  volatile uint32_t perf_direction_turnaround_idle_low;
+  volatile uint32_t perf_direction_turnaround_idle_high;
+  volatile uint32_t reserved[52];
 } p10_1_runtime_result_t;
 
 _Static_assert(offsetof(p10_1_runtime_result_t, service_state) == 4U * 4U,
@@ -220,6 +238,12 @@ _Static_assert(offsetof(p10_1_runtime_result_t,
 _Static_assert(offsetof(p10_1_runtime_result_t,
                         injected_fault_observed_count) == 165U * 4U,
                "P10.1 injected-fault word moved");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        perf_outstanding_unacked_low) == 166U * 4U,
+               "P10.4 split-counter tail moved");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        perf_direction_turnaround_idle_high) == 175U * 4U,
+               "P10.4 split-counter tail length changed");
 _Static_assert(sizeof(p10_1_runtime_result_t) <= 2048U,
                "P10.1 result must fit the reserved two-KiB OCM window");
 

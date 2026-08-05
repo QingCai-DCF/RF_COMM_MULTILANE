@@ -26,6 +26,10 @@ module p10_1_perf_monitor #(
   input  logic [5:0]   queue_occupancy_i,
   input  logic         ack_wait_i,
   input  logic         direction_quiet_i,
+  input  logic         tx_idle_due_to_ack_i,
+  input  logic         window_full_stall_i,
+  input  logic         receiver_credit_stall_i,
+  input  logic         direction_turnaround_idle_i,
   input  logic         retry_i,
   input  logic         integrity_error_i,
   output logic         perf_active_o,
@@ -59,6 +63,10 @@ module p10_1_perf_monitor #(
   logic [63:0] axis_stall_live_q;
   logic [63:0] ack_wait_live_q;
   logic [63:0] direction_quiet_live_q;
+  logic [63:0] tx_idle_due_to_ack_live_q;
+  logic [63:0] window_full_stall_live_q;
+  logic [63:0] receiver_credit_stall_live_q;
+  logic [63:0] direction_turnaround_idle_live_q;
   logic [63:0] integrity_error_live_q;
   logic [63:0] retry_exhausted_live_q;
   logic [63:0] descriptor_leak_live_q;
@@ -75,6 +83,10 @@ module p10_1_perf_monitor #(
   logic [63:0] axis_stall_snapshot_q;
   logic [63:0] ack_wait_snapshot_q;
   logic [63:0] direction_quiet_snapshot_q;
+  logic [63:0] tx_idle_due_to_ack_snapshot_q;
+  logic [63:0] window_full_stall_snapshot_q;
+  logic [63:0] receiver_credit_stall_snapshot_q;
+  logic [63:0] direction_turnaround_idle_snapshot_q;
   logic [63:0] integrity_error_snapshot_q;
   logic [63:0] retry_exhausted_snapshot_q;
   logic [63:0] descriptor_leak_snapshot_q;
@@ -199,6 +211,10 @@ module p10_1_perf_monitor #(
       axis_stall_live_q <= '0;
       ack_wait_live_q <= '0;
       direction_quiet_live_q <= '0;
+      tx_idle_due_to_ack_live_q <= '0;
+      window_full_stall_live_q <= '0;
+      receiver_credit_stall_live_q <= '0;
+      direction_turnaround_idle_live_q <= '0;
       integrity_error_live_q <= '0;
       retry_exhausted_live_q <= '0;
       descriptor_leak_live_q <= '0;
@@ -214,6 +230,10 @@ module p10_1_perf_monitor #(
       axis_stall_snapshot_q <= '0;
       ack_wait_snapshot_q <= '0;
       direction_quiet_snapshot_q <= '0;
+      tx_idle_due_to_ack_snapshot_q <= '0;
+      window_full_stall_snapshot_q <= '0;
+      receiver_credit_stall_snapshot_q <= '0;
+      direction_turnaround_idle_snapshot_q <= '0;
       integrity_error_snapshot_q <= '0;
       retry_exhausted_snapshot_q <= '0;
       descriptor_leak_snapshot_q <= '0;
@@ -277,6 +297,10 @@ module p10_1_perf_monitor #(
         axis_stall_live_q <= '0;
         ack_wait_live_q <= '0;
         direction_quiet_live_q <= '0;
+        tx_idle_due_to_ack_live_q <= '0;
+        window_full_stall_live_q <= '0;
+        receiver_credit_stall_live_q <= '0;
+        direction_turnaround_idle_live_q <= '0;
         integrity_error_live_q <= '0;
         retry_exhausted_live_q <= '0;
         descriptor_leak_live_q <= '0;
@@ -305,6 +329,15 @@ module p10_1_perf_monitor #(
           ack_wait_live_q <= ack_wait_live_q + 1'b1;
         if (direction_quiet_i)
           direction_quiet_live_q <= direction_quiet_live_q + 1'b1;
+        if (tx_idle_due_to_ack_i)
+          tx_idle_due_to_ack_live_q <= tx_idle_due_to_ack_live_q + 1'b1;
+        if (window_full_stall_i)
+          window_full_stall_live_q <= window_full_stall_live_q + 1'b1;
+        if (receiver_credit_stall_i)
+          receiver_credit_stall_live_q <= receiver_credit_stall_live_q + 1'b1;
+        if (direction_turnaround_idle_i)
+          direction_turnaround_idle_live_q <=
+              direction_turnaround_idle_live_q + 1'b1;
         if (integrity_error_i)
           integrity_error_live_q <= integrity_error_live_q + 1'b1;
         if (retry_i)
@@ -324,6 +357,11 @@ module p10_1_perf_monitor #(
         axis_stall_snapshot_q <= axis_stall_live_q;
         ack_wait_snapshot_q <= ack_wait_live_q;
         direction_quiet_snapshot_q <= direction_quiet_live_q;
+        tx_idle_due_to_ack_snapshot_q <= tx_idle_due_to_ack_live_q;
+        window_full_stall_snapshot_q <= window_full_stall_live_q;
+        receiver_credit_stall_snapshot_q <= receiver_credit_stall_live_q;
+        direction_turnaround_idle_snapshot_q <=
+            direction_turnaround_idle_live_q;
         integrity_error_snapshot_q <= integrity_error_live_q;
         retry_exhausted_snapshot_q <= retry_exhausted_live_q;
         descriptor_leak_snapshot_q <= descriptor_leak_live_q;
@@ -419,6 +457,31 @@ module p10_1_perf_monitor #(
           reg_rd_data_o = descriptor_leak_snapshot_q[31:0];
       `IR_REG_P10_1_DOUBLE_COMPLETION_COUNT:
           reg_rd_data_o = double_completion_snapshot_q[31:0];
+      `IR_REG_P10_4_COUNTER_SCHEMA:
+          reg_rd_data_o = 32'h5031_0401;
+      // The old ACK_WAIT register remains bit-for-bit compatible but is
+      // explicitly deprecated as ambiguous.  P10.4 exposes the same direct
+      // occupancy predicate under its accurate name for new readers.
+      `IR_REG_P10_4_OUTSTANDING_UNACKED_LOW:
+          reg_rd_data_o = ack_wait_snapshot_q[31:0];
+      `IR_REG_P10_4_OUTSTANDING_UNACKED_HIGH:
+          reg_rd_data_o = ack_wait_snapshot_q[63:32];
+      `IR_REG_P10_4_TX_IDLE_DUE_TO_ACK_LOW:
+          reg_rd_data_o = tx_idle_due_to_ack_snapshot_q[31:0];
+      `IR_REG_P10_4_TX_IDLE_DUE_TO_ACK_HIGH:
+          reg_rd_data_o = tx_idle_due_to_ack_snapshot_q[63:32];
+      `IR_REG_P10_4_WINDOW_FULL_STALL_LOW:
+          reg_rd_data_o = window_full_stall_snapshot_q[31:0];
+      `IR_REG_P10_4_WINDOW_FULL_STALL_HIGH:
+          reg_rd_data_o = window_full_stall_snapshot_q[63:32];
+      `IR_REG_P10_4_RECEIVER_CREDIT_STALL_LOW:
+          reg_rd_data_o = receiver_credit_stall_snapshot_q[31:0];
+      `IR_REG_P10_4_RECEIVER_CREDIT_STALL_HIGH:
+          reg_rd_data_o = receiver_credit_stall_snapshot_q[63:32];
+      `IR_REG_P10_4_DIRECTION_TURNAROUND_IDLE_LOW:
+          reg_rd_data_o = direction_turnaround_idle_snapshot_q[31:0];
+      `IR_REG_P10_4_DIRECTION_TURNAROUND_IDLE_HIGH:
+          reg_rd_data_o = direction_turnaround_idle_snapshot_q[63:32];
       default: reg_rd_data_o = '0;
     endcase
   end

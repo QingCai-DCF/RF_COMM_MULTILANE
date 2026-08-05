@@ -235,7 +235,7 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
         self.assertIn('"two_hour_test": False', source)
         self.assertIn('"p11": False', source)
 
-    def test_xsdb_register_map_identity_matches_generated_manifest(self) -> None:
+    def test_xsdb_register_map_identity_is_backward_compatible_and_overridable(self) -> None:
         manifest = json.loads((
             ROOT / "config/register_map/generated/ir_regs_manifest.json"
         ).read_text(encoding="utf-8"))
@@ -252,11 +252,27 @@ class P103HardwareAcceptanceTests(unittest.TestCase):
         )
         self.assertIsNotNone(version)
         self.assertIsNotNone(hash_low)
+        # The defaults remain the frozen P10.3 identity so historical P10.3
+        # replay is unchanged.  P10.4 passes its immutable map identity via
+        # the new 20-argument interface.
         self.assertEqual(
             version.group(1).upper(),
-            manifest["register_map_version_value"].upper(),
+            "0X0A000003",
         )
-        self.assertEqual(hash_low.group(1).upper(), manifest["hash_low"].upper())
+        self.assertEqual(hash_low.group(1).upper(), "0XFFA1C1B3")
+        self.assertIn("if {[llength $argv] == 20}", source)
+        self.assertIn("p10_expected_register_map_version 18", source)
+        self.assertIn("p10_expected_register_map_hash_low 19", source)
+        p104 = (ROOT / "scripts/run_p10_4_hardware.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            f"REGISTER_MAP_VERSION = {manifest['register_map_version_value']}",
+            p104,
+        )
+        self.assertIn(
+            f"REGISTER_MAP_HASH_LOW = {manifest['hash_low']}", p104
+        )
 
     def test_strict_duty_boundary_matches_generated_rtl_contract(self) -> None:
         safety = (

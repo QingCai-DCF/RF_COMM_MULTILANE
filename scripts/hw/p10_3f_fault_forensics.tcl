@@ -339,8 +339,8 @@ if {[llength $argv] == 1 && [lindex $argv 0] eq "selftest"} {
   exit 0
 }
 
-if {[llength $argv] < 10 || [llength $argv] > 12} {
-  puts stderr "usage: p10_3f_fault_forensics.tcl MODE URL FIXED_SERIAL ROTATING_SERIAL OUT_DIR AUTH RUN_ID FIXED_BUILD ROTATING_BUILD RESULT ?FIXED_SHA ROTATING_SHA?"
+if {[llength $argv] < 10 || [llength $argv] > 14} {
+  puts stderr "usage: p10_3f_fault_forensics.tcl MODE URL FIXED_SERIAL ROTATING_SERIAL OUT_DIR AUTH RUN_ID FIXED_BUILD ROTATING_BUILD RESULT ?FIXED_SHA ROTATING_SHA? ?MAP_VERSION MAP_HASH_LOW?"
   exit 2
 }
 set p10ff_mode [string tolower [lindex $argv 0]]
@@ -357,6 +357,15 @@ set p10ff_digest(fixed) ""
 set p10ff_digest(rotating) ""
 if {[llength $argv] > 10} { set p10ff_digest(fixed) [lindex $argv 10] }
 if {[llength $argv] > 11} { set p10ff_digest(rotating) [lindex $argv 11] }
+if {[llength $argv] > 12} {
+  if {[llength $argv] != 14 ||
+      ![regexp {^0x[0-9A-Fa-f]{8}$} [lindex $argv 12]] ||
+      ![regexp {^0x[0-9A-Fa-f]{8}$} [lindex $argv 13]]} {
+    error "invalid P10 forensic register-map identity"
+  }
+  set p10_ff_register_map_version [lindex $argv 12]
+  set p10_ff_register_map_hash_low [lindex $argv 13]
+}
 set p10ff_active_target -1
 set p10ff_connected 0
 file mkdir $p10ff_out_dir
@@ -367,13 +376,14 @@ set rc [catch {
   if {$p10ff_mode ni {capture abort_capture commit clear}} {
     error "invalid P10.3F forensic mode"
   }
-  if {![regexp {^p10_3f_[A-Za-z0-9_.-]+$} $p10ff_run_id]} {
-    error "unsafe P10.3F run ID"
+  if {![regexp {^p10_(3f|4)_[A-Za-z0-9_.-]+$} $p10ff_run_id]} {
+    error "unsafe P10.3F/P10.4 run ID"
   }
   if {![file isfile $p10ff_auth]} { error "P10.3F current-run authorization missing" }
   if {![info exists ::env(RF_COMM_P10_HW_AUTH)] ||
-      $::env(RF_COMM_P10_HW_AUTH) ne "P10_3F_IMMUTABLE_AUTHORIZED"} {
-    error "P10.3F immutable current-run environment marker required"
+      $::env(RF_COMM_P10_HW_AUTH) ni {
+        P10_3F_IMMUTABLE_AUTHORIZED P10_4_IMMUTABLE_AUTHORIZED}} {
+    error "P10.3F/P10.4 immutable current-run environment marker required"
   }
   if {$p10ff_fixed_serial eq $p10ff_rotating_serial} {
     error "P10.3F board serials are ambiguous"

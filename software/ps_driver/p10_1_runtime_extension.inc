@@ -242,6 +242,16 @@ static void p10_1_snapshot_perf(
   first[21] = p9_pl_read(0x09b4U);
   first[22] = p9_pl_read(0x09b8U);
   first[23] = p9_pl_read(0x09bcU);
+  result->perf_outstanding_unacked_low = p9_pl_read(0x0d88U);
+  result->perf_outstanding_unacked_high = p9_pl_read(0x0d8cU);
+  result->perf_tx_idle_due_to_ack_low = p9_pl_read(0x0d90U);
+  result->perf_tx_idle_due_to_ack_high = p9_pl_read(0x0d94U);
+  result->perf_window_full_stall_low = p9_pl_read(0x0d98U);
+  result->perf_window_full_stall_high = p9_pl_read(0x0d9cU);
+  result->perf_receiver_credit_stall_low = p9_pl_read(0x0da0U);
+  result->perf_receiver_credit_stall_high = p9_pl_read(0x0da4U);
+  result->perf_direction_turnaround_idle_low = p9_pl_read(0x0da8U);
+  result->perf_direction_turnaround_idle_high = p9_pl_read(0x0dacU);
   /*
    * The PL wire counter is derived from actual final-boundary TFDU symbol
    * pulses, not from DMA payload acceptance.  Publish that local optical
@@ -633,7 +643,8 @@ static int p10_1_validate_stream_args(
   uint32_t reset_flags = mailbox->command_flags &
       (P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_SENDER |
        P10_1_RUNTIME_FLAG_EXPECT_PL_RESET |
-       P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_RECEIVER);
+       P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_RECEIVER |
+       P10_1_RUNTIME_FLAG_EXPECT_PL_RESET_LOCAL_TX);
   uint32_t injected_fault_flags = mailbox->command_flags &
       (P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT |
        P10_1_RUNTIME_FLAG_STALE_SEGMENT);
@@ -656,15 +667,8 @@ static int p10_1_validate_stream_args(
       (descriptor_bytes & 3U) != 0U ||
       mailbox->timeout_ms == 0U ||
       mailbox->timeout_ms > P10_1_RUNTIME_MAX_TIMEOUT_MS ||
-      reset_flags ==
-          (P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_SENDER |
-           P10_1_RUNTIME_FLAG_EXPECT_PL_RESET) ||
-      reset_flags ==
-          (P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_RECEIVER |
-           P10_1_RUNTIME_FLAG_EXPECT_PL_RESET) ||
-      reset_flags ==
-          (P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_SENDER |
-           P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_RECEIVER) ||
+      (reset_flags != 0U &&
+       (reset_flags & (reset_flags - 1U)) != 0U) ||
       injected_fault_flags ==
           (P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT |
            P10_1_RUNTIME_FLAG_STALE_SEGMENT) ||
@@ -769,14 +773,12 @@ static int p10_1_complete_expected_recovery(
   status = p9_shutdown();
   if (status != P9_RUNTIME_OK)
     return P10_1_RUNTIME_STATUS_ABORT_RECOVERY;
-  if ((((flags & P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_SENDER) != 0U &&
-        local_tx != 0U) ||
-       ((flags & P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_RECEIVER) != 0U &&
-        local_tx == 0U)) &&
-      (flags & P10_1_RUNTIME_FLAG_EXPECT_PL_RESET) == 0U) {
-    status = p9_dma_initialize(result->ring_depth, 1U);
-  } else {
+  if ((flags & P10_1_RUNTIME_FLAG_EXPECT_PL_RESET) != 0U ||
+      ((flags & P10_1_RUNTIME_FLAG_EXPECT_PL_RESET_LOCAL_TX) != 0U &&
+       local_tx != 0U)) {
     status = p9_reset_stream_path(result->ring_depth, 1U, 1U);
+  } else {
+    status = p9_dma_initialize(result->ring_depth, 1U);
   }
   if (status == P9_RUNTIME_OK)
     status = p9_shutdown();
@@ -1171,7 +1173,8 @@ static int p10_1_command_autonomous_stream(
        P10_1_RUNTIME_FLAG_EXPECT_PL_RESET |
        P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT |
        P10_1_RUNTIME_FLAG_STALE_SEGMENT |
-       P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_RECEIVER);
+       P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_RECEIVER |
+       P10_1_RUNTIME_FLAG_EXPECT_PL_RESET_LOCAL_TX);
   if ((recovery_flags & P10_1_RUNTIME_FLAG_EXPECT_ABORT_25) != 0U) {
     recovery_ordinal = result->object_count / 4U;
   } else if ((recovery_flags &

@@ -143,7 +143,7 @@
       "xdc_path": "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc"
     }
   ],
-  "current_program_stage": "USER_DECISION_AFTER_P10_3",
+  "current_program_stage": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
   "current_run_hardware_authorization": false,
   "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
   "final_product_status": "PENDING_HW",
@@ -743,6 +743,21 @@
     "status": "CONSUMED_AFTER_P10_3F_FULL_PASS"
   },
   "p10_3_status": "PASS",
+  "p10_4_acceptance": {
+    "automation_only": true,
+    "current_run_hardware_authorization": false,
+    "external_instrumentation_allowed": false,
+    "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+    "hardware_actions_executed": false,
+    "maximum_lane_mask": "0xF",
+    "maximum_single_formal_run_seconds": 1800,
+    "network_allowed": false,
+    "p10_3_scoped_pass_preserved": true,
+    "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+    "status": "IN_PROGRESS",
+    "user_hold_points": 0
+  },
+  "p10_4_status": "IN_PROGRESS",
   "p10_acceptance": {
     "application_goodput_f_to_r_bps": 5767.861069534447,
     "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",
@@ -1120,6 +1135,7 @@
     "P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE": "FAIL",
     "P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS": "PASS",
     "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE": "PASS",
+    "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT": "IN_PROGRESS",
     "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
     "P1_OFFLINE_HARDENING": "PASS",
     "P2_SIMULATION_BASELINE": "PASS",
@@ -1135,7 +1151,7 @@
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
-  "state_revision": "P10-3-STATIONARY-4LANE-HARDWARE-PASS-1",
+  "state_revision": "P10-4-AUTONOMOUS-4LANE-IN-PROGRESS-1",
   "stationary_4lane_hardware": "PASS",
   "two_lane_baseline_status": "FROZEN_ACCEPTED",
   "two_lane_speed_stability": "PASS_STATIONARY_AX7020_2LANE_HALF_DUPLEX",

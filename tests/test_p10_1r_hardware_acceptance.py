@@ -559,7 +559,8 @@ class P101RHardwareAcceptanceTests(unittest.TestCase):
             runtime,
         )
         tcl = TCL_PATH.read_text(encoding="utf-8")
-        self.assertIn("[llength $argv] ni {16 18}", tcl)
+        self.assertIn("[llength $argv] ni {16 18 20}", tcl)
+        self.assertIn("if {[llength $argv] == 20}", tcl)
         self.assertIn("$p10_expected_build(fixed)", tcl)
         self.assertIn("$p10_expected_build(rotating)", tcl)
         runner = RUNNER_PATH.read_text(encoding="utf-8")
