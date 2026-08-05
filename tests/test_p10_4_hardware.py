@@ -185,6 +185,37 @@ class P104PlanTests(unittest.TestCase):
             tcl,
         )
 
+    def test_protocol_faults_use_host_primed_first_object(self) -> None:
+        extension = (
+            ROOT / "software/ps_driver/p10_1_runtime_extension.inc"
+        ).read_text(encoding="utf-8")
+        primed_fault_text = (
+            "(P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT |\n"
+            "        P10_1_RUNTIME_FLAG_STALE_SEGMENT)) != 0U"
+        )
+        self.assertIn(primed_fault_text, extension)
+        primed_fault = extension.index(primed_fault_text)
+        object_zero = extension.index("recovery_ordinal = 0U;", primed_fault)
+        generic_recovery = extension.index(
+            "recovery_ordinal = result->object_count / 2U;",
+            primed_fault,
+        )
+        self.assertLess(primed_fault, object_zero)
+        self.assertLess(object_zero, generic_recovery)
+        tcl = p10.STAGE_TCL.read_text(encoding="utf-8")
+        execute = tcl[
+            tcl.index("proc p10_execute_case"):
+            tcl.index("proc p10_p101_case")
+        ]
+        self.assertLess(
+            execute.index("p10_publish_case $receiver $d $sequence"),
+            execute.index("p10_wait_receiver_primed $receiver $d"),
+        )
+        self.assertLess(
+            execute.index("p10_wait_receiver_primed $receiver $d"),
+            execute.index("p10_publish_case $sender $d $sequence"),
+        )
+
     def test_vitis_build_selects_and_verifies_p10_4_role_headers(self) -> None:
         tcl = (
             ROOT / "scripts/vitis/build_p10_ax7020_runtime.tcl"

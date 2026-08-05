@@ -1175,7 +1175,23 @@ static int p10_1_command_autonomous_stream(
        P10_1_RUNTIME_FLAG_STALE_SEGMENT |
        P10_1_RUNTIME_FLAG_EXPECT_DMA_RESET_RECEIVER |
        P10_1_RUNTIME_FLAG_EXPECT_PL_RESET_LOCAL_TX);
-  if ((recovery_flags & P10_1_RUNTIME_FLAG_EXPECT_ABORT_25) != 0U) {
+  /*
+   * Duplicate/stale protocol stimuli must use object 0.  The host has already
+   * observed the receiving endpoint in PRIMED with object 0 active before it
+   * publishes the sender command.  A later recovery object deliberately has
+   * no per-object optical-ready exchange; selecting it here lets a faster
+   * sender consume the bounded corrupt-attempt budget before the receiver has
+   * changed object identity, so the intended protocol counter is never
+   * observable.  Keeping these diagnostic-only stimuli on the host-primed
+   * object removes that race without adding a normal-stream handshake or
+   * changing any TX safety path.
+   */
+  if ((recovery_flags &
+       (P10_1_RUNTIME_FLAG_DUPLICATE_SEGMENT |
+        P10_1_RUNTIME_FLAG_STALE_SEGMENT)) != 0U) {
+    recovery_ordinal = 0U;
+  } else if ((recovery_flags &
+              P10_1_RUNTIME_FLAG_EXPECT_ABORT_25) != 0U) {
     recovery_ordinal = result->object_count / 4U;
   } else if ((recovery_flags &
               P10_1_RUNTIME_FLAG_EXPECT_ABORT_50) != 0U) {
