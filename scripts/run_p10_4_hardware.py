@@ -603,7 +603,9 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
         except (KeyError, OSError, TypeError, ValueError):
             errors.append(f"malformed offline input: {name}")
     if set(freeze.get("offline_inputs", {})) != {
-        "performance_model", "performance_config", "register_map", "goal"
+        "performance_model", "performance_config", "register_map", "goal",
+        "crc_bad_diagnosis", "crc_bad_remediation",
+        "connector_ack_quarantine",
     }:
         errors.append("offline input set mismatch")
     if not file_matches_head(AUTH) or not file_matches_head(FREEZE):

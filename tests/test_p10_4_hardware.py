@@ -162,6 +162,23 @@ class P104PlanTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stdout)
 
+    def test_remediation_inputs_are_hashed_after_regenerating_gates(self) -> None:
+        freeze = (
+            ROOT / "scripts/freeze_p10_4_artifacts.py"
+        ).read_text(encoding="utf-8")
+        runner = Path(p10.__file__).read_text(encoding="utf-8")
+        for name in (
+            "crc_bad_diagnosis",
+            "crc_bad_remediation",
+            "connector_ack_quarantine",
+        ):
+            self.assertIn(f'"{name}"', freeze)
+            self.assertIn(f'"{name}"', runner)
+        self.assertLess(
+            freeze.index("gates = {name: run_gate"),
+            freeze.index("offline_inputs: dict[str, dict[str, Any]] = {}"),
+        )
+
     def test_runtime_flag_bits_are_unique_and_local_pl_reset_is_bit_26(self) -> None:
         protocol = (
             ROOT / "software/ps_driver/p10_1_runtime_protocol.h"

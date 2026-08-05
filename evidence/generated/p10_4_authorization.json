@@ -2,12 +2,15 @@
   "artifact_freeze": "evidence/generated/p10_4_artifact_freeze.json",
   "artifact_freeze_sha256": "5973f357d56b0f44391b2e052b942cb35275cb2aea1e7deaf59c7abe4a223308",
   "authorization": "config/p10_4_current_run_hardware_authorization.json",
-  "authorization_sha256": "8b8af5db25846c6c8b41765047b510b02a141d8344da8ca8d715b7894039cca3",
-  "current_run_hardware_authorization": true,
-  "errors": [],
+  "authorization_sha256": "21df5a37ba01b34b058a2cf4278dd2e9f28cb0463139dc1d88a8ccf035969247",
+  "current_run_hardware_authorization": false,
+  "errors": [
+    "validate-only rejected stale crc_bad_remediation digest",
+    "validate-only rejected incomplete offline-input validator set"
+  ],
   "hardware_actions_executed": false,
   "run_id": "p10_4_20260805T213436Z_161bef2f_b8810b6b_c11fb74e",
   "schema_version": 1,
-  "status": "READY_FOR_EXACT_CURRENT_RUN",
+  "status": "INVALIDATED_BEFORE_HARDWARE",
   "test_id": "P10_4-CURRENT-RUN-AUTHORIZATION"
 }

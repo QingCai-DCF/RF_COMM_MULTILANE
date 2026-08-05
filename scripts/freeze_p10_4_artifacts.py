@@ -153,6 +153,12 @@ def main() -> int:
             errors.append(f"{name} source inputs were dirty")
         if summary.get("hardware_actions_executed") is not False:
             errors.append(f"{name} executed hardware")
+    # Run every gate before hashing OFFLINE_INPUTS. Some gates intentionally
+    # regenerate their canonical evidence; hashing first would freeze a stale
+    # pre-gate digest and make the otherwise valid authorization unverifiable.
+    gates = {name: run_gate(name, command) for name, command in GATES.items()}
+    errors.extend(f"offline gate failed: {name}" for name, item in gates.items()
+                  if item["status"] != "PASS")
     offline_inputs: dict[str, dict[str, Any]] = {}
     for name, path in OFFLINE_INPUTS.items():
         try:
@@ -202,9 +208,6 @@ def main() -> int:
                 ))
         except (KeyError, OSError, TypeError, ValueError) as exc:
             errors.append(f"artifact extraction failed: {exc}")
-    gates = {name: run_gate(name, command) for name, command in GATES.items()}
-    errors.extend(f"offline gate failed: {name}" for name, item in gates.items()
-                  if item["status"] != "PASS")
     status = "PASS" if not errors else "FAIL"
     payload = {
         "schema_version": 1, "test_id": "P10_4-IMMUTABLE-ARTIFACT-FREEZE",
