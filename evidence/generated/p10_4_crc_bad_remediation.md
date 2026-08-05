@@ -1,7 +1,7 @@
 # P10.4 connector ACK RX-quarantine verification
 
 - Status: `PASS`
-- Source commit: `161bef2f181c41d50853ba590f19d81fa89c68b6`
+- Source commit: `6ff17d33a0ea111fbd796899c49decbfa339e2c1`
 - Hardware actions executed: `false`
 - Fresh hardware acceptance required: `true`
 
