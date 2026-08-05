@@ -93,11 +93,11 @@
   },
   "campaign_freeze": {
     "path": "evidence/generated/p10_3f_full_campaign_freeze.json",
-    "sha256": "37d5bbda9fbd6636994b28f1fd1e4e59ff3f2da55e4ab3323064621d626e9ebf"
+    "sha256": "74ec4bf3ab42c85df7cf733d82884df1e5082adbe04df2ff4332f042baf04616"
   },
   "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
   "hardware_actions_executed": true,
-  "host_source_commit": "4ae863a86cb07b3a3b176aa7656a1575c5b59cd6",
+  "host_source_commit": "e356dd9216da528af0a21d39a0eced9b4e96ee1e",
   "manual_instrumentation": "OMITTED_BY_USER",
   "maximum_lane_mask_authorized": "0xF",
   "module_binding": {
@@ -118,22 +118,124 @@
   "realignment": false,
   "rewiring": false,
   "rotation": false,
-  "run_id": "p10_3f_full_20260805T055527Z_4ae863a8_1ff0885f_82ef5093",
+  "run_id": "p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093",
   "schema_version": 1,
   "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_WITH_FIRST_FAULT_FORENSICS",
   "stage_evidence": [
     {
-      "errors": [
-        "stage not executed"
-      ],
-      "raw_summary": null,
-      "semantics": {},
+      "errors": [],
+      "raw_summary": {
+        "bytes": 1645173,
+        "path": "stages/performance/stage_summary.json",
+        "repository_path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/stages/performance/stage_summary.json",
+        "sha256": "93f8e9227c520e5ce7cc4cdb383bf9378af9a89216878544fa6ae0cc20a87ee2"
+      },
+      "semantics": {
+        "continuous_pl_first_fault_kill_during_command": true,
+        "internal_object_bytes": 262144,
+        "maximum_board_autonomous_aggregate_command_bytes": 67108864,
+        "maximum_staircase_level_bytes": 262144,
+        "ps_gpio_activity_evidence": [
+          {
+            "direction": 0,
+            "labels": [
+              "sustained_300s_f2r_00000_4194304",
+              "sustained_300s_f2r_00001_16777216",
+              "sustained_300s_f2r_00002_67108864",
+              "sustained_300s_f2r_00003_4194304",
+              "sustained_300s_f2r_00004_16777216",
+              "sustained_300s_f2r_00005_67108864",
+              "sustained_300s_f2r_00006_4194304",
+              "sustained_300s_f2r_00007_16777216",
+              "sustained_300s_f2r_00008_16777216",
+              "sustained_300s_f2r_00009_4194304",
+              "sustained_300s_f2r_00010_16777216",
+              "sustained_300s_f2r_00011_16777216",
+              "sustained_300s_f2r_00012_4194304",
+              "sustained_300s_f2r_00013_16777216",
+              "sustained_300s_f2r_00014_16777216",
+              "sustained_300s_f2r_00015_4194304",
+              "sustained_300s_f2r_00016_4194304",
+              "sustained_300s_f2r_00017_4194304",
+              "sustained_300s_f2r_00018_4194304",
+              "sustained_300s_f2r_00019_4194304",
+              "sustained_300s_f2r_00020_1048576",
+              "sustained_300s_f2r_00021_1048576",
+              "sustained_300s_f2r_00022_1048576",
+              "sustained_300s_f2r_00023_1048576",
+              "sustained_300s_f2r_00024_1048576"
+            ],
+            "receiver": "rotating",
+            "receiver_rx_active_samples": 63,
+            "sample_count": 126,
+            "sender": "fixed",
+            "sender_tx_active_samples": 38
+          },
+          {
+            "direction": 1,
+            "labels": [
+              "sustained_300s_r2f_00000_4194304",
+              "sustained_300s_r2f_00001_16777216",
+              "sustained_300s_r2f_00002_67108864",
+              "sustained_300s_r2f_00003_4194304",
+              "sustained_300s_r2f_00004_16777216",
+              "sustained_300s_r2f_00005_67108864",
+              "sustained_300s_r2f_00006_4194304",
+              "sustained_300s_r2f_00007_16777216",
+              "sustained_300s_r2f_00008_16777216",
+              "sustained_300s_r2f_00009_4194304",
+              "sustained_300s_r2f_00010_16777216",
+              "sustained_300s_r2f_00011_16777216",
+              "sustained_300s_r2f_00012_4194304",
+              "sustained_300s_r2f_00013_16777216",
+              "sustained_300s_r2f_00014_16777216",
+              "sustained_300s_r2f_00015_4194304",
+              "sustained_300s_r2f_00016_4194304",
+              "sustained_300s_r2f_00017_4194304",
+              "sustained_300s_r2f_00018_4194304",
+              "sustained_300s_r2f_00019_4194304",
+              "sustained_300s_r2f_00020_1048576",
+              "sustained_300s_r2f_00021_1048576",
+              "sustained_300s_r2f_00022_1048576",
+              "sustained_300s_r2f_00023_1048576",
+              "sustained_300s_r2f_00024_1048576",
+              "sustained_300s_r2f_00025_1048576"
+            ],
+            "receiver": "fixed",
+            "receiver_rx_active_samples": 64,
+            "sample_count": 128,
+            "sender": "rotating",
+            "sender_tx_active_samples": 38
+          }
+        ],
+        "snapshot_after_each_completed_aggregate_command": true,
+        "windows": [
+          {
+            "application_goodput_bps": 8416570.026666667,
+            "commands": 25,
+            "committed_bytes": 315621376,
+            "direction": 0,
+            "duration_seconds": 300,
+            "label": "sustained_300s_f2r",
+            "lane_mask": 15
+          },
+          {
+            "application_goodput_bps": 8444532.053333333,
+            "commands": 26,
+            "committed_bytes": 316669952,
+            "direction": 1,
+            "duration_seconds": 300,
+            "label": "sustained_300s_r2f",
+            "lane_mask": 15
+          }
+        ]
+      },
       "stage": "performance",
-      "status": "NOT_EXECUTED",
-      "test_id": null
+      "status": "PASS",
+      "test_id": "P10_3F-FULL-PERFORMANCE"
     }
   ],
-  "status": "FAIL",
+  "status": "PASS",
   "summary_name": "performance",
   "test_id": "P10_3F-FULL-PERFORMANCE",
   "two_hour_test": false
