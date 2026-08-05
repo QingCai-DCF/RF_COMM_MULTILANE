@@ -1,8 +1,8 @@
 # P10.3F full-campaign offline freeze
 
-- Status: `PASS`
-- Artifact source commit: `21f159e3fdb250d1a25e9f521e104d6240d9caae`
-- Host source commit: `81e05d275ea841abf353dac2f429e3273100ce3e`
+- Status: `FAIL`
+- Artifact source commit: `7fc3a7cb03f9ee19793403f9f1deaef139b11d7d`
+- Host source commit: `0a825cb2cee1136a8d75974ae46f1fc880000824`
 - Hardware actions executed: `false`
 - Current-run hardware authorization: `false`
 - Manual instrumentation: `OMITTED_BY_USER`
@@ -11,3 +11,8 @@
 - Maximum board-autonomous aggregate command: `67108864` bytes
 - Maximum bounded functional diagnostic object: `16777216` bytes
 - Stages: `23`
+
+## Errors
+
+- static repository intake canonical-input set/hash is stale
+- offline readiness gate failed: full_runner_regression

@@ -1,5 +1,21 @@
-.....................................
+..........F..........................
+======================================================================
+FAIL: test_goal_named_static_intake_matches_current_canonical_inputs (tests.test_p10_3f_full_hardware.P103FFullHardwareTests.test_goal_named_static_intake_matches_current_canonical_inputs)
 ----------------------------------------------------------------------
-Ran 37 tests in 0.417s
+Traceback (most recent call last):
+  File "C:\Users\user\Documents\RF_COMM_MULTILANE_P10_3\tests\test_p10_3f_full_hardware.py", line 372, in test_goal_named_static_intake_matches_current_canonical_inputs
+    self.assertEqual(runner.validate_static_intake_evidence(), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['static repository intake canonical-input set/hash is stale'] != []
 
-OK
+First list contains 1 additional elements.
+First extra element 0:
+'static repository intake canonical-input set/hash is stale'
+
+- ['static repository intake canonical-input set/hash is stale']
++ []
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.408s
+
+FAILED (failures=1)
