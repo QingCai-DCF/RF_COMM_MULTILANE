@@ -1280,12 +1280,69 @@ proc p10_execute_ps_service_reset {label reset_role direction lane size object_i
   p10_dump_p10_2_snapshot fixed $label
   p10_dump_p10_2_snapshot rotating $label
 
-  p10_select_cpu $reset_role
-  rst -processor
+  # A planned PS service reset is a controlled recovery vector, not a PL
+  # safety/terminal-object fault.  Put both endpoints into PL full shutdown
+  # before resetting either processor, then directly prove that the effective
+  # TX mask is zero and that no final physical-TX counter advances.  The
+  # first-fault recorder must remain NO_FAULT; a real concurrent PL fault is
+  # therefore preserved and makes this stage fail closed instead of being
+  # mislabelled as the service-reset event.
   foreach role {fixed rotating} {
     p10_write32 $role 0x43C00718 0x0000001A
   }
+  set shutdown_deadline [expr {[clock milliseconds] + 1000}]
+  set shutdown_ready 0
+  while {[clock milliseconds] < $shutdown_deadline} {
+    set shutdown_ready 1
+    foreach role {fixed rotating} {
+      set ff_status [p10_read32 $role 0x43C00D14]
+      set effective_tx [expr {[p10_read32 $role 0x43C00424] & 0xF}]
+      if {($ff_status & 0x00000181) != 0x00000180 || $effective_tx != 0} {
+        set shutdown_ready 0
+      }
+    }
+    if {$shutdown_ready} { break }
+    after 1
+  }
+  if {!$shutdown_ready} {
+    error "P10.3F controlled service reset did not reach NO_FAULT kill/full-shutdown"
+  }
+  set before_counts {}
+  foreach role {fixed rotating} {
+    set role_counts {}
+    foreach address {0x43C007E4 0x43C007E8 0x43C007EC 0x43C007F0} {
+      lappend role_counts [p10_read32 $role $address]
+    }
+    dict set before_counts $role $role_counts
+  }
   after 10
+  set direct_file [file join $p10_dump_dir \
+      "${label}.service_reset_shutdown.psv"]
+  set direct_handle [open $direct_file w]
+  puts $direct_handle "role|ff_status|effective_tx_enable_mask|physical_tx_counts_before|physical_tx_counts_after"
+  foreach role {fixed rotating} {
+    set ff_status [p10_read32 $role 0x43C00D14]
+    set effective_tx [expr {[p10_read32 $role 0x43C00424] & 0xF}]
+    set after_counts {}
+    foreach address {0x43C007E4 0x43C007E8 0x43C007EC 0x43C007F0} {
+      lappend after_counts [p10_read32 $role $address]
+    }
+    set prior [dict get $before_counts $role]
+    puts $direct_handle [join [list $role [format "0x%08X" $ff_status] \
+        [format "0x%X" $effective_tx] [join $prior ,] \
+        [join $after_counts ,]] "|"]
+    if {($ff_status & 0x00000181) != 0x00000180 || $effective_tx != 0 ||
+        $after_counts ne $prior} {
+      close $direct_handle
+      error "P10.3F controlled service-reset shutdown evidence failed for $role"
+    }
+  }
+  close $direct_handle
+  p10_say "P10_3F_SERVICE_RESET_SHUTDOWN_BEFORE_PS_RESET=PASS"
+  p10_say "P10_3F_SERVICE_RESET_SHUTDOWN_DIRECT_EVIDENCE=$direct_file"
+
+  p10_select_cpu $reset_role
+  rst -processor
   p10_reboot_role $reset_role "${label}_selected_reboot"
   set peer [expr {$reset_role eq "fixed" ? "rotating" : "fixed"}]
   p10_reboot_role $peer "${label}_peer_recovery_reboot"
@@ -1987,7 +2044,7 @@ set rc [catch {
   }
   set p10_1r_stage_ok [regexp {^P10_1R-(PREFLIGHT|ECHO_TAIL|CROSSTALK|PHY_SANITY|ACK_TUNING|PERFORMANCE|STREAMING_64M|FORMAL_30MIN)$} $p10_stage]
   set p10_3_stage_ok [regexp {^P10_3-(PREFLIGHT|MODULE_INTAKE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STREAMING_64M|PERFORMANCE|FORMAL_30MIN|LANE2_RAW_RETEST|LANE3_RAW_RETEST)$} $p10_stage]
-  set p10_3f_stage_ok [regexp {^P10_3F-(PREFLIGHT|MODULE_INTAKE|FAULT_CAPTURE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STAIRCASE|STREAMING_64M|STREAMING_FAULT|PERFORMANCE|FORMAL)$} $p10_stage]
+  set p10_3f_stage_ok [regexp {^P10_3F-(PREFLIGHT|MODULE_INTAKE|FAULT_CAPTURE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STAIRCASE|STREAMING_64M|STREAMING_FAULT|STREAMING_SERVICE_RESET|PERFORMANCE|FORMAL)$} $p10_stage]
   if {!$p10_1r_stage_ok && !$p10_3_stage_ok && !$p10_3f_stage_ok} {
     error "unsupported P10 XSDB stage"
   }

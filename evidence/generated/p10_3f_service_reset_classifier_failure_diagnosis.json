@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_3F-SERVICE-RESET-CLASSIFIER-FAILURE-DIAGNOSIS",
+  "status": "PASS",
+  "diagnosis_only": true,
+  "hardware_actions_executed": false,
+  "failed_run_id": "p10_3f_full_20260805T035439Z_d1227f1a_1ff0885f_82ef5093",
+  "failed_run_preservation_commit": "bb8a2290b5c5114d5fcb773708d75e9ad22e0588",
+  "artifact_source_commit": "7fc3a7cb03f9ee19793403f9f1deaef139b11d7d",
+  "host_source_commit": "d1227f1a5685c42caf3cec6665c3029ec71c7323",
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "artifact_freeze_sha256": "6f30490a4fbff4a5dd0a82eaaf4774dbe1abd7e59255d1f405b4c5ce081f3877",
+  "campaign_freeze_sha256": "a37cc1ceb870c2c924b9ca3981d6cbf8cf9b3379add71211ce51da4aab163c07",
+  "evidence": [
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T035439Z_d1227f1a_1ff0885f_82ef5093/stages/stream_service_reset_fault/stage_summary.json",
+      "bytes": 30309,
+      "sha256": "dd789bba2a3d78d49a10c950245478468256f6da15377abb1c00d311dbd5c06f"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T035439Z_d1227f1a_1ff0885f_82ef5093/stages/stream_service_reset_fault/xsdb.result.txt",
+      "bytes": 3461,
+      "sha256": "90658769f049ebd118f1a7f9456efda0b129a21494e9eadebb4e35136cde837c"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T035439Z_d1227f1a_1ff0885f_82ef5093/forensics/stream_service_reset_fault/summary.json",
+      "bytes": 3723,
+      "sha256": "8841ae3c60ad83ffbacd2f6a419c9adcc9efa2481d6e73f5adc52055909b340a"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T035439Z_d1227f1a_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json",
+      "bytes": 455724,
+      "sha256": "8224679a018af622da6d37fb7ecc8bd43794af24e189ecf00913c7042a33aeb1"
+    }
+  ],
+  "observations": {
+    "service_reset_command_executed": true,
+    "selected_role": "fixed",
+    "selected_reboot_pass": true,
+    "peer_recovery_reboot_pass": true,
+    "both_recovered_safe": true,
+    "both_forensic_archives": "NO_FAULT",
+    "both_fault_causes": "0x00000000",
+    "both_tx_kill": true,
+    "both_effective_full_shutdown": true,
+    "hardware_safety_fault_observed": false,
+    "terminal_object_failure_observed": false,
+    "final_independent_shutdown_fixed": "PASS",
+    "final_independent_shutdown_rotating": "PASS"
+  },
+  "root_cause": "The host/Tcl STREAMING_FAULT classifier incorrectly required every recovery vector, including a planned PS service reset, to produce a frozen terminal-object fault on both PL recorders. The canonical recorder trigger contract contains only local TFDU safety faults and terminal object failures; a controlled PS service reset is not a third trigger class.",
+  "correction": {
+    "artifact_change": false,
+    "rtl_change": false,
+    "functional_bitstream_hashes_unchanged": true,
+    "separate_service_reset_stage_identity": true,
+    "shutdown_before_processor_reset": true,
+    "direct_zero_effective_tx_and_stable_physical_tx_evidence": true,
+    "exact_two_role_no_fault_archive_required": true,
+    "true_fault_stages_still_require_both_recorders_frozen": true,
+    "new_full_campaign_required": true,
+    "old_run_reclassified": false
+  },
+  "generated_at_utc": "2026-08-05T04:54:10Z"
+}

@@ -180,11 +180,11 @@ STAGES = (
     "performance",
     "formal_30min",
 )
-EXPECTED_FAULT_STAGES = (
+FORENSIC_FAULT_STAGES = (
     "fault_capture",
     "stream_dma_reset_fault",
-    "stream_service_reset_fault",
 )
+CONTROLLED_SERVICE_RESET_STAGES = ("stream_service_reset_fault",)
 STREAM_RECOVERY_STAGES = (
     "stream_dma_reset_recovery_64m",
     "stream_service_reset_recovery_64m",
@@ -213,7 +213,7 @@ TCL_STAGE = {
     "streaming_64m": "P10_3F-STREAMING_64M",
     "stream_dma_reset_fault": "P10_3F-STREAMING_FAULT",
     "stream_dma_reset_recovery_64m": "P10_3F-STREAMING_64M",
-    "stream_service_reset_fault": "P10_3F-STREAMING_FAULT",
+    "stream_service_reset_fault": "P10_3F-STREAMING_SERVICE_RESET",
     "stream_service_reset_recovery_64m": "P10_3F-STREAMING_64M",
     "performance": "P10_3F-PERFORMANCE",
     "formal_30min": "P10_3F-FORMAL",
@@ -565,7 +565,7 @@ def build_plans() -> dict[str, str]:
     )
     service_id = ids.allocate()
     plans["stream_service_reset_fault"] = (
-        "# Expected endpoint-service-reset terminal fault; archive before shutdown\n"
+        "# Controlled endpoint service reset; PL shutdown precedes PS reset\n"
         "P101_PSRESET stream_service_reset_receiver fixed 1 15 "
         f"{INTERNAL_OBJECT_BYTES} {service_id}\n"
     )
@@ -654,7 +654,7 @@ def validate_plans(plans: dict[str, str]) -> list[str]:
                 errors.append(f"{stage}: unexpected long-test primitive")
             if fields[0] == "P10FF_ABORT_FAULT" and stage != "fault_capture":
                 errors.append(f"{stage}: unexpected direct fault primitive")
-            if stage in EXPECTED_FAULT_STAGES and fields[0] in {
+            if stage in FORENSIC_FAULT_STAGES and fields[0] in {
                 "P10FF_TOTAL", "P10FF_WINDOW", "P10FF_FORMAL"
             }:
                 errors.append(f"{stage}: expected-fault stage cannot continue streaming")
@@ -664,17 +664,25 @@ def validate_plans(plans: dict[str, str]) -> list[str]:
             errors.append(
                 f"bounded object-ID overlap: {previous[2]} and {current[2]}"
             )
-    for stage in EXPECTED_FAULT_STAGES:
+    for stage in FORENSIC_FAULT_STAGES:
         records = [
             line.split()[0]
             for line in plans.get(stage, "").splitlines()
             if line.split() and not line.lstrip().startswith("#") and
             line.split()[0] != "P10FF_CHECKPOINT"
         ]
-        expected = ["P10FF_ABORT_FAULT"] if stage == "fault_capture" else \
-            (["CASE"] if stage == "stream_dma_reset_fault" else ["P101_PSRESET"])
+        expected = ["P10FF_ABORT_FAULT"] if stage == "fault_capture" else ["CASE"]
         if records != expected:
             errors.append(f"{stage}: terminal-fault record set/order mismatch")
+    service_reset_records = [
+        line.split()[0]
+        for line in plans.get("stream_service_reset_fault", "").splitlines()
+        if line.split() and not line.lstrip().startswith("#")
+    ]
+    if service_reset_records != ["P101_PSRESET"]:
+        errors.append(
+            "stream_service_reset_fault: controlled service-reset record set/order mismatch"
+        )
     if "67108864" in plans["formal_30min"]:
         errors.append("formal plan contains a 64-MiB command")
     return errors
@@ -1272,7 +1280,7 @@ def validate_custom_observation_shape(
     or out-of-plan autonomous transfers and verifies actual object-ID separation.
     """
     errors: list[str] = []
-    expected_fault = stage in EXPECTED_FAULT_STAGES
+    expected_fault = stage in FORENSIC_FAULT_STAGES
     shutdown_positions = [
         index for index, row in enumerate(rows)
         if str(row.get("label", "")).endswith("_endpoint_shutdown")
@@ -1644,6 +1652,160 @@ def post_fault_archive_errors(forensic_summary: dict[str, Any]) -> list[str]:
     return errors
 
 
+def no_fault_archive_errors(forensic_summary: dict[str, Any]) -> list[str]:
+    """Validate the exact NO_FAULT archive produced by a controlled reset.
+
+    A PS service reset is not one of the recorder's two trigger classes
+    (local TFDU safety fault or terminal object failure).  Treating it as a
+    frozen PL fault would invent a cause that the hardware did not observe.
+    The controlled-reset stage must instead prove that both endpoints were
+    already in full shutdown/TX kill and that both recorder archives remained
+    an internally consistent NO_FAULT record.
+    """
+    errors: list[str] = []
+    if forensic_summary.get("status") != "PASS":
+        return ["controlled service-reset forensic read failed"]
+    if forensic_summary.get("frozen_roles"):
+        errors.append("controlled service reset unexpectedly froze a recorder")
+    archives = forensic_summary.get("archives", [])
+    by_role = {
+        str(item.get("role")): item
+        for item in archives
+        if isinstance(item, dict)
+    }
+    if set(by_role) != {"fixed", "rotating"} or len(archives) != 2:
+        errors.append("controlled service reset lacks exact two-role archive set")
+        return errors
+    for role, item in by_role.items():
+        if item.get("status") != "NO_FAULT":
+            errors.append(f"{role}: controlled service reset archive is not NO_FAULT")
+            continue
+        try:
+            binary = Path(item["binary"])
+            parsed_path = Path(item["json"])
+            digest_path = Path(item["sha256_file"])
+            digest = str(item["binary_sha256"])
+            if not binary.is_file() or sha256(binary) != digest:
+                errors.append(f"{role}: NO_FAULT binary/hash mismatch")
+            if not digest_path.is_file() or not digest_path.read_text(
+                encoding="ascii"
+            ).split() or digest_path.read_text(encoding="ascii").split()[0] != digest:
+                errors.append(f"{role}: NO_FAULT SHA256 file mismatch")
+            parsed = load_json(parsed_path)
+            status_bits = parsed.get("status_bits", {})
+            if parsed.get("role") != role or parsed.get("status") != "NO_FAULT" or \
+                    int(str(parsed.get("fault_cause", "-1")), 0) != 0 or \
+                    parsed.get("snapshot") is not None or parsed.get("events") != []:
+                errors.append(f"{role}: NO_FAULT JSON payload mismatch")
+            if status_bits.get("effective_full_shutdown") is not True or \
+                    status_bits.get("tx_kill") is not True or \
+                    status_bits.get("frozen") is not False or \
+                    status_bits.get("first_fault_hold") is not False or \
+                    status_bits.get("capture_fault_current") is not False:
+                errors.append(f"{role}: NO_FAULT shutdown/status bits mismatch")
+            counts = parsed.get("event_counts", {})
+            if any(int(counts.get(name, -1)) != 0 for name in ("pre", "post", "total")):
+                errors.append(f"{role}: NO_FAULT archive contains event records")
+        except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            errors.append(f"{role}: NO_FAULT archive validation failed: {exc}")
+    return errors
+
+
+def controlled_service_reset_shutdown_errors(path: Path) -> list[str]:
+    """Independently parse the pre-PS-reset PL shutdown proof."""
+    if not path.is_file():
+        return ["controlled service-reset pre-reset shutdown evidence missing"]
+    errors: list[str] = []
+    try:
+        with path.open(encoding="ascii", newline="") as handle:
+            rows = list(csv.DictReader(handle, delimiter="|"))
+        by_role = {row.get("role", ""): row for row in rows}
+        if set(by_role) != {"fixed", "rotating"} or len(rows) != 2:
+            return ["controlled service-reset shutdown evidence role set mismatch"]
+        for role, row in by_role.items():
+            status = int(row["ff_status"], 0)
+            effective_tx = int(row["effective_tx_enable_mask"], 0)
+            before = [int(value, 0) for value in row["physical_tx_counts_before"].split(",")]
+            after = [int(value, 0) for value in row["physical_tx_counts_after"].split(",")]
+            if len(before) != 4 or len(after) != 4:
+                errors.append(f"{role}: service-reset physical-TX vector width mismatch")
+            if (status & 0x181) != 0x180:
+                errors.append(f"{role}: service-reset pre-reset state is not NO_FAULT kill/shutdown")
+            if effective_tx != 0:
+                errors.append(f"{role}: service-reset pre-reset effective TX mask nonzero")
+            if before != after:
+                errors.append(f"{role}: physical TX advanced after pre-reset shutdown")
+    except (OSError, KeyError, TypeError, ValueError) as exc:
+        errors.append(f"controlled service-reset shutdown evidence parse failed: {exc}")
+    return errors
+
+
+def controlled_service_reset_errors(
+    markers: dict[str, str],
+    forensic_summary: dict[str, Any],
+    details: list[dict[str, Any]],
+    direct_path: Path,
+) -> list[str]:
+    """Enforce the service-reset recovery contract without fabricating a fault."""
+    errors = no_fault_archive_errors(forensic_summary)
+    errors.extend(controlled_service_reset_shutdown_errors(direct_path))
+    expected_markers = {
+        "P10_1_PS_SERVICE_RESET_PASS": (
+            "stream_service_reset_receiver:reset_role=fixed"
+        ),
+        "P10_3F_SERVICE_RESET_SHUTDOWN_BEFORE_PS_RESET": "PASS",
+    }
+    for name, expected in expected_markers.items():
+        if markers.get(name) != expected:
+            errors.append(f"controlled service-reset marker mismatch: {name}")
+    expected_prefixes = {
+        "P10_REBOOT_PASS_FIXED": "stream_service_reset_receiver_selected_reboot:",
+        "P10_REBOOT_PASS_ROTATING": (
+            "stream_service_reset_receiver_peer_recovery_reboot:"
+        ),
+    }
+    for name, prefix in expected_prefixes.items():
+        if not markers.get(name, "").startswith(prefix):
+            errors.append(f"controlled service-reset reboot marker mismatch: {name}")
+    for role in ("FIXED", "ROTATING"):
+        marker = markers.get(
+            f"P10_SAFE_STATE_{role}_stream_service_reset_receiver_RECOVERED", ""
+        )
+        for token in (
+            "status:0x00000002", "phy:0x00000000", "physical_tx:0,0,0,0"
+        ):
+            if token not in marker:
+                errors.append(
+                    f"controlled service-reset recovered-safe marker mismatch: {role}:{token}"
+                )
+    if len(details) != 1:
+        errors.append("controlled service-reset observation count mismatch")
+        return errors
+    detail = details[0]
+    if detail.get("label") != "stream_service_reset_receiver" or \
+            detail.get("window") != "PS_SERVICE_RESET" or \
+            detail.get("recovery_case") is not True or \
+            detail.get("service_reset_case") is not True or \
+            detail.get("direction") != 1 or detail.get("lane_mask") != 15 or \
+            detail.get("requested_bytes") != INTERNAL_OBJECT_BYTES:
+        errors.append("controlled service-reset observation semantics mismatch")
+    for role, snapshot_name, local in (
+        ("fixed", "fixed_p10_2", range(4)),
+        ("rotating", "rotating_p10_2", range(4, 8)),
+    ):
+        snapshot = detail.get(snapshot_name)
+        if not isinstance(snapshot, dict):
+            errors.append(f"{role}: controlled service-reset safety snapshot missing")
+            continue
+        errors.extend(base.snapshot_errors(detail.get("label", "service_reset"), role, snapshot))
+        modules = snapshot.get("modules", [])
+        if len(modules) != 8 or not any(
+            int(modules[index].get("physical_tx", 0)) > 0 for index in local
+        ):
+            errors.append(f"{role}: no direct pre-reset physical TX activity")
+    return errors
+
+
 def evaluate_custom_stage(
     stage: str,
     stage_dir: Path,
@@ -1662,11 +1824,10 @@ def evaluate_custom_stage(
     errors.extend(validate_custom_observation_shape(
         stage, rows, build_plans()[stage]
     ))
-    if stage in EXPECTED_FAULT_STAGES:
+    if stage in FORENSIC_FAULT_STAGES:
         fault_label = {
             "fault_capture": "controlled_terminal_abort",
             "stream_dma_reset_fault": "stream_dma_reset_sender",
-            "stream_service_reset_fault": "stream_service_reset_receiver",
         }[stage]
         direct = stage_dir / f"dumps/{fault_label}.fault_before_forensic_read.psv"
         if markers.get("P10_3F_FAULT_KILL_BEFORE_FORENSIC_READ") != "PASS" or \
@@ -1688,7 +1849,6 @@ def evaluate_custom_stage(
             "fault_type": {
                 "fault_capture": "DIRECT_PL_ABORT_OF_ACTIVE_BOUNDED_OBJECT",
                 "stream_dma_reset_fault": "EXPECTED_DMA_RESET_OBJECT_ABORT",
-                "stream_service_reset_fault": "EXPECTED_ENDPOINT_SERVICE_RESET_ABORT",
             }[stage],
             "forensic_read_after_kill": True,
             "direct_evidence": rel(direct) if direct.is_file() else None,
@@ -1710,6 +1870,13 @@ def evaluate_custom_stage(
         ]
         if len(shutdown) != 1:
             errors.append("exactly one functional endpoint-shutdown observation required")
+        if stage in CONTROLLED_SERVICE_RESET_STAGES:
+            direct = stage_dir / (
+                "dumps/stream_service_reset_receiver.service_reset_shutdown.psv"
+            )
+            errors.extend(controlled_service_reset_errors(
+                markers, forensic_summary, non_shutdown, direct
+            ))
         for detail in non_shutdown:
             if detail["command"] in (3, 13):
                 maximum = (
@@ -1739,7 +1906,17 @@ def evaluate_custom_stage(
             "continuous_pl_first_fault_kill_during_command": True,
             "snapshot_after_each_completed_aggregate_command": True,
         }
-        if stage in STAIRCASE_STAGES:
+        if stage in CONTROLLED_SERVICE_RESET_STAGES:
+            semantics.update({
+                "recovery_type": "CONTROLLED_ENDPOINT_SERVICE_RESET",
+                "pl_fault_expected": False,
+                "recorder_state_expected": "NO_FAULT",
+                "shutdown_before_processor_reset": True,
+                "physical_tx_stable_after_shutdown": True,
+                "direct_evidence": rel(direct) if direct.is_file() else None,
+                "fresh_recovery_stage_required": True,
+            })
+        elif stage in STAIRCASE_STAGES:
             expected = dict(zip(STAIRCASE_STAGES, forensic.LEVELS, strict=True))[stage]
             _, size, _ = expected
             if len(non_shutdown) != 2 or {d["direction"] for d in non_shutdown} != {0, 1} or \
@@ -2469,7 +2646,7 @@ def materialize_run_views(
         "bounded_staircase", STAIRCASE_STAGES, by_stage, run_root, common
     )
     payloads["fault_forensics"] = grouped_stage_payload(
-        "fault_forensics", EXPECTED_FAULT_STAGES, by_stage, run_root, common
+        "fault_forensics", FORENSIC_FAULT_STAGES, by_stage, run_root, common
     )
 
     run_view = {

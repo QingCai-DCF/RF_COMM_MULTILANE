@@ -29,6 +29,45 @@ Failure to archive does not delay or undo the hardware TX kill. After a bounded 
 
 This is volatile PL state. FPGA reconfiguration and loss of PL power necessarily erase it. “Reset/shutdown does not clear” therefore means resets and shutdowns within the running functional image; it cannot mean persistence across loading another bitstream. The archive tool must run before the independent shutdown image is programmed.
 
+## Controlled PS service-reset boundary
+
+The recorder trigger contract is deliberately narrower than the recovery-test
+inventory. A local TFDU safety fault or a terminal object failure freezes the
+recorder. A planned PS service reset is a controlled recovery vector and does
+not, by itself, invent either of those PL fault causes. Reset and shutdown are
+observed and cannot clear an already frozen record, but they are not additional
+first-fault trigger classes.
+
+For the controlled service-reset vector, both endpoints must first receive the
+functional PL full-shutdown request. Before either processor is reset, XSDB
+must directly verify on both endpoints that the recorder remains `NO_FAULT`,
+effective TX enable is zero, TX kill and full shutdown are asserted, and all
+four final physical-TX counters remain unchanged across a bounded interval.
+Only then may the selected PS be reset and both services be rebooted. Both
+roles must subsequently report the exact safe recovered state, and the stage
+must finish with the normal endpoint-shutdown command and the independent
+role-bound shutdown images.
+
+This distinction does not weaken the actual fault path. Any real TFDU safety
+fault or terminal object failure during the service-reset stage must still
+freeze the recorder and causes that controlled-reset stage to fail as an
+unexpected fault. Conversely, a clean `NO_FAULT` service-reset record cannot
+be used as evidence for the first-fault hardware requirement; that requirement
+is exercised separately by the direct terminal abort and DMA-reset terminal
+failure stages.
+
+The immutable run
+`p10_3f_full_20260805T035439Z_d1227f1a_1ff0885f_82ef5093` exposed the prior
+classifier error. It completed the selected and peer service reboots and
+verified both recovered safe states, while both recorder archives correctly
+reported `NO_FAULT`, cause zero, TX kill, and full shutdown. The shared
+`STREAMING_FAULT` classifier nevertheless required a fabricated frozen cause
+and failed the run. That run remains immutable FAIL evidence and is not
+reclassified or promoted. The correction separates the controlled reset from
+the two true forensic-fault stages, adds the direct shutdown-before-PS-reset
+proof above, and requires a new committed host freeze, current-run
+authorization, complete campaign, and final verified dual-board shutdown.
+
 ## Frozen snapshot schema
 
 For a four-lane endpoint the snapshot contains 64 little-endian 32-bit words:

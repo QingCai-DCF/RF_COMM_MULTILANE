@@ -365,6 +365,108 @@ class P103FFullHardwareTests(unittest.TestCase):
             runner.STAGES.index("stream_service_reset_recovery_64m"),
         )
 
+    def test_service_reset_is_controlled_recovery_not_fabricated_pl_fault(self) -> None:
+        self.assertNotIn(
+            "stream_service_reset_fault", runner.FORENSIC_FAULT_STAGES
+        )
+        self.assertIn(
+            "stream_service_reset_fault", runner.CONTROLLED_SERVICE_RESET_STAGES
+        )
+        self.assertEqual(
+            runner.TCL_STAGE["stream_service_reset_fault"],
+            "P10_3F-STREAMING_SERVICE_RESET",
+        )
+        tcl = runner.STAGE_TCL.read_text(encoding="utf-8")
+        self.assertIn("STREAMING_SERVICE_RESET", tcl)
+        self.assertIn(
+            'set p10ff_expected_fault_stage [expr {$p10_stage eq "P10_3F-STREAMING_FAULT"}]',
+            tcl,
+        )
+        body = tcl[
+            tcl.index("proc p10_execute_ps_service_reset"):
+            tcl.index("proc p10_run_p101_formal {")
+        ]
+        self.assertIn("P10_3F_SERVICE_RESET_SHUTDOWN_BEFORE_PS_RESET=PASS", body)
+        self.assertIn("service_reset_shutdown.psv", body)
+        self.assertLess(
+            body.index("P10_3F_SERVICE_RESET_SHUTDOWN_BEFORE_PS_RESET=PASS"),
+            body.index("rst -processor"),
+        )
+
+    def test_controlled_service_reset_no_fault_archive_is_exact(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            archives = []
+            for role in ("fixed", "rotating"):
+                binary = root / f"{role}.p10ff.bin"
+                parsed_path = root / f"{role}.p10ff.json"
+                digest_path = root / f"{role}.p10ff.sha256"
+                binary.write_bytes(f"NO_FAULT:{role}".encode("ascii"))
+                digest = runner.sha256(binary)
+                parsed = {
+                    "role": role,
+                    "status": "NO_FAULT",
+                    "fault_cause": "0x00000000",
+                    "snapshot": None,
+                    "events": [],
+                    "event_counts": {"pre": 0, "post": 0, "total": 0},
+                    "status_bits": {
+                        "effective_full_shutdown": True,
+                        "tx_kill": True,
+                        "frozen": False,
+                        "first_fault_hold": False,
+                        "capture_fault_current": False,
+                    },
+                }
+                runner.write_json(parsed_path, parsed)
+                digest_path.write_text(
+                    f"{digest}  {binary.name}\n", encoding="ascii", newline="\n"
+                )
+                archives.append({
+                    "role": role,
+                    "status": "NO_FAULT",
+                    "binary": str(binary),
+                    "binary_sha256": digest,
+                    "json": str(parsed_path),
+                    "sha256_file": str(digest_path),
+                })
+            summary = {
+                "status": "PASS", "frozen_roles": [], "archives": archives
+            }
+            self.assertEqual(runner.no_fault_archive_errors(summary), [])
+            summary["frozen_roles"] = ["fixed"]
+            self.assertTrue(any(
+                "unexpectedly froze" in error
+                for error in runner.no_fault_archive_errors(summary)
+            ))
+
+    def test_controlled_service_reset_shutdown_proof_rejects_tx_growth(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            direct = Path(directory) / "service_reset_shutdown.psv"
+            direct.write_text(
+                "role|ff_status|effective_tx_enable_mask|"
+                "physical_tx_counts_before|physical_tx_counts_after\n"
+                "fixed|0x00000180|0x0|1,2,3,4|1,2,3,4\n"
+                "rotating|0x00000180|0x0|5,6,7,8|5,6,7,8\n",
+                encoding="ascii",
+                newline="\n",
+            )
+            self.assertEqual(
+                runner.controlled_service_reset_shutdown_errors(direct), []
+            )
+            direct.write_text(
+                "role|ff_status|effective_tx_enable_mask|"
+                "physical_tx_counts_before|physical_tx_counts_after\n"
+                "fixed|0x00000180|0x0|1,2,3,4|1,2,3,5\n"
+                "rotating|0x00000180|0x0|5,6,7,8|5,6,7,8\n",
+                encoding="ascii",
+                newline="\n",
+            )
+            self.assertTrue(any(
+                "physical TX advanced" in error
+                for error in runner.controlled_service_reset_shutdown_errors(direct)
+            ))
+
     def test_custom_observation_shape_is_exact_and_bounded(self) -> None:
         plan = runner.build_plans()["staircase_1k"]
         rows = []
