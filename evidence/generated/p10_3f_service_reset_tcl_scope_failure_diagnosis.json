@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_3F-SERVICE-RESET-TCL-SCOPE-FAILURE-DIAGNOSIS",
+  "status": "PASS",
+  "diagnosis_only": true,
+  "hardware_actions_executed": false,
+  "failed_run_id": "p10_3f_full_20260805T045828Z_d6e55e3d_1ff0885f_82ef5093",
+  "artifact_source_commit": "7fc3a7cb03f9ee19793403f9f1deaef139b11d7d",
+  "host_source_commit": "d6e55e3d55812c28b776b3dee8480b1fe4e13c8b",
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "campaign_freeze_sha256": "e7431a64978309eef3fb95ef07ba78d8568e85084d1e0d78bc7df1c63798b320",
+  "evidence": [
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T045828Z_d6e55e3d_1ff0885f_82ef5093/stages/stream_service_reset_fault/stage_summary.json",
+      "bytes": 11294,
+      "sha256": "76b62f5a7d52e296566326ede4548ccda56b64410af12a125d62cdcabc24e196"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T045828Z_d6e55e3d_1ff0885f_82ef5093/stages/stream_service_reset_fault/xsdb.result.txt",
+      "bytes": 2292,
+      "sha256": "d4849e455eed0c59c24ebd3e05087abcd3ec69ee80e420ea649a96151d44596f"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T045828Z_d6e55e3d_1ff0885f_82ef5093/forensics/stream_service_reset_fault/summary.json",
+      "bytes": 3723,
+      "sha256": "9f29f011acd547d74394333ae25552cb6a6f0307dfcaaf7fcb39e1539f15480f"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T045828Z_d6e55e3d_1ff0885f_82ef5093/final/orchestrator_result.json",
+      "bytes": 7300464,
+      "sha256": "a5e490ac38c219971d234e364b1c56e3d6f33281823c6e732e8dc63ce3c7e20a"
+    },
+    {
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T045828Z_d6e55e3d_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json",
+      "bytes": 455272,
+      "sha256": "4d849dd46165aaf2e751dcf4f17c6aac93e4a9bef21770332748dcedb7f9955a"
+    }
+  ],
+  "observations": {
+    "stages_before_service_reset": "PASS",
+    "service_reset_stage": "FAIL",
+    "xsdb_identity": "PASS",
+    "initial_safe_boot": "PASS",
+    "service_reset_executed": false,
+    "forensic_archive_fixed": "NO_FAULT",
+    "forensic_archive_rotating": "NO_FAULT",
+    "final_independent_shutdown_fixed": "PASS",
+    "final_independent_shutdown_rotating": "PASS",
+    "hardware_safety_fault_observed": false,
+    "terminal_object_failure_observed": false
+  },
+  "root_cause": "The Tcl procedure p10_execute_ps_service_reset referenced p10_dump_dir while declaring only p10_max_lane_mask, p10_command_sequence, and p10_active_case_label as globals. Tcl therefore resolved p10_dump_dir as an undefined local variable and failed before the controlled service reset was executed.",
+  "correction_required": {
+    "declare_p10_dump_dir_global": true,
+    "add_regression_assertion_for_scope_binding": true,
+    "artifact_change": false,
+    "rtl_change": false,
+    "functional_bitstream_hashes_unchanged": true,
+    "new_offline_freeze_required": true,
+    "new_current_run_authorization_required": true,
+    "new_full_campaign_required": true,
+    "old_run_reclassified": false
+  },
+  "generated_at_utc": "2026-08-05T05:50:03Z"
+}
