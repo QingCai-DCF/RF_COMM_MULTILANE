@@ -144,12 +144,12 @@
     }
   ],
   "current_program_stage": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
-  "current_run_hardware_authorization": false,
+  "current_run_hardware_authorization": true,
   "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
   "final_product_status": "PENDING_HW",
   "four_lane_application_8mbps": "PASS",
   "four_lane_raw_16mbps": "PASS",
-  "last_hardware_authorization_consumed": true,
+  "last_hardware_authorization_consumed": false,
   "last_hardware_authorization_id": "P10_3F-FULL-CURRENT-RUN-IMMUTABLE",
   "last_hardware_evidence_checkpoint": "e64c04843d5d996f8d66d650fafaf3a43a2dd7dc",
   "last_hardware_run_id": "p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093",
@@ -744,8 +744,11 @@
   },
   "p10_3_status": "PASS",
   "p10_4_acceptance": {
+    "artifact_freeze_sha256": "e276b91eef91957fb5cc76629d9cb3a54e5244a872c540dc5501b22457b3d8c6",
     "automation_only": true,
-    "current_run_hardware_authorization": false,
+    "authorization_path": "config/p10_4_current_run_hardware_authorization.json",
+    "authorization_sha256": "8621927e55ecec9cf44a45e1f3edea5bed159bda6a5f0203d2e972acfe1c1962",
+    "current_run_hardware_authorization": true,
     "external_instrumentation_allowed": false,
     "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
     "hardware_actions_executed": false,
@@ -753,9 +756,19 @@
     "maximum_single_formal_run_seconds": 1800,
     "network_allowed": false,
     "p10_3_scoped_pass_preserved": true,
+    "run_id": "p10_4_20260805T114453Z_91010956_83953269_d24a2711",
     "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+    "source_commit": "9101095609adac0503201b064caaf2f5456fc183",
     "status": "IN_PROGRESS",
     "user_hold_points": 0
+  },
+  "p10_4_current_run_authorization": {
+    "consumed": false,
+    "current_run_hardware_authorization": true,
+    "path": "config/p10_4_current_run_hardware_authorization.json",
+    "run_id": "p10_4_20260805T114453Z_91010956_83953269_d24a2711",
+    "sha256": "8621927e55ecec9cf44a45e1f3edea5bed159bda6a5f0203d2e972acfe1c1962",
+    "status": "READY_FOR_EXACT_CURRENT_RUN"
   },
   "p10_4_status": "IN_PROGRESS",
   "p10_acceptance": {

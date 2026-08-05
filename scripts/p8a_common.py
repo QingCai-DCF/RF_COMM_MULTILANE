@@ -961,7 +961,13 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                         r"[0-9a-f]{40}", str(p10_3_campaign.get(key, "")).lower()
                     ):
                         errors.append(f"p10_3_acceptance.{key} must be a full Git hash")
-                if state.get("current_run_hardware_authorization") is not False:
+                # A preserved P10.3 PASS may coexist with a newer, explicitly
+                # authorized P10.4 run.  Only require the global authorization
+                # to be false while P10.3 is the latest active program stage.
+                if (
+                    p10_4_stage is None
+                    and state.get("current_run_hardware_authorization") is not False
+                ):
                     errors.append("P10.3 PASS requires current authorization false")
 
         p10_1_campaign = state.get("p10_1_hardware_campaign", {})
