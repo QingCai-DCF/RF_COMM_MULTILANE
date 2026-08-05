@@ -25,6 +25,10 @@ class P104PlanTests(unittest.TestCase):
         self.assertEqual(tuple(self.plans), p10.STAGES)
         self.assertEqual(p10.validate_plans(), [])
         self.assertEqual(len(p10.STAGES), 52)
+        self.assertEqual(
+            self.records("counter_local_source")[0][:2],
+            ["CASE", "counter_local_source_endpoint_shutdown"],
+        )
         hashes = p10.allowed_plan_sha256()
         self.assertEqual(set(hashes), {
             str(item["name"]) for item in p10.candidate_configs()

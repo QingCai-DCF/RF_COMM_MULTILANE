@@ -309,7 +309,7 @@ def build_plans(selected: dict[str, Any] | None = None) -> dict[str, str]:
         base.Case("p10_4_identity_after_reset", 1).plan_line(),
     ]
     plans["counter_local_source"] = [
-        base.Case("counter_local_source_shutdown", 10).plan_line(),
+        base.Case("counter_local_source_endpoint_shutdown", 10).plan_line(),
         "P104_LOCAL_SOURCE_TEST counter_local_source_all 15",
     ]
     plans["counter_semantics"] = [
@@ -872,10 +872,7 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
             errors.append("unexpected first-fault recorder freeze")
         shutdown_rows = [item for item in details
                          if str(item.get("label", "")).endswith("endpoint_shutdown")]
-        explicit_shutdown = "counter_local_source_shutdown" in {
-            item.get("label") for item in details
-        }
-        if not explicit_shutdown and len(shutdown_rows) != 1:
+        if len(shutdown_rows) != 1:
             errors.append("exactly one functional endpoint-shutdown row required")
         for detail in non_shutdown:
             if detail.get("command") == 13 and not detail.get("recovery_case"):
