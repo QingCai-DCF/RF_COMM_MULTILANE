@@ -1,11 +1,16 @@
 {
+  "artifact_freeze": "evidence/generated/p10_4_artifact_freeze.json",
+  "artifact_freeze_sha256": "5973f357d56b0f44391b2e052b942cb35275cb2aea1e7deaf59c7abe4a223308",
   "authorization": "config/p10_4_current_run_hardware_authorization.json",
-  "consumed": true,
+  "authorization_sha256": "10f662870bb0d969e24f6395cdb49a0f53d008dad483de80976a8c73a5dfec27",
   "current_run_hardware_authorization": false,
-  "errors": [],
-  "result": "evidence/hardware/p10_4/p10_4_20260805T173745Z_6c7418e6_b20f137e_795f3f34/final/orchestrator_result.json",
-  "run_id": "p10_4_20260805T173745Z_6c7418e6_b20f137e_795f3f34",
+  "errors": [
+    "worktree must be clean before authorization materialization",
+    "artifact freeze is not the exact committed HEAD version"
+  ],
+  "hardware_actions_executed": false,
+  "run_id": "p10_4_20260805T213244Z_161bef2f_b8810b6b_c11fb74e",
   "schema_version": 1,
-  "status": "CONSUMED_AFTER_P10_4_PARTIAL",
-  "test_id": "P10_4-AUTHORIZATION"
+  "status": "FAIL",
+  "test_id": "P10_4-CURRENT-RUN-AUTHORIZATION"
 }

@@ -1,0 +1,67 @@
+{
+  "checks": {
+    "complete_p10_4_xsim_passed": true,
+    "connector_pairs_are_j10_and_j11": true,
+    "core_routes_quarantine_to_admission": true,
+    "core_uses_actual_final_txd": true,
+    "diagnosis_is_exact_failed_run": true,
+    "focused_test_passed": true,
+    "focused_test_present": true,
+    "helper_pairs_adjacent_lanes": true,
+    "helper_preserves_same_module_source": true,
+    "helper_requires_actual_peer_ack_txd": true,
+    "no_control_or_safety_feedback": true,
+    "old_results_not_inherited": true,
+    "ordinary_data_peer_independence_frozen": true,
+    "requirement_id_present": true,
+    "xsim_bound_to_current_commit": true,
+    "xsim_source_clean": true
+  },
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "fresh_hardware_acceptance_required": true,
+  "generated_at_utc": "2026-08-05T21:30:59.796230+00:00",
+  "hardware_actions_executed": false,
+  "inputs": {
+    "config/p10_4_connector_ack_rx_quarantine.yaml": {
+      "bytes": 1994,
+      "sha256": "7960cce667954063b92bed69fcf228e39561c4c5b0043bc182887e244e9763e2"
+    },
+    "config/project_requirements.yaml": {
+      "bytes": 340139,
+      "sha256": "18201e9776a0a120298cc4b7e4f2446bdeb4a2b1b35bde464e495a535f9ede4b"
+    },
+    "docs/design/P10_4_CONNECTOR_ACK_RX_QUARANTINE.md": {
+      "bytes": 2452,
+      "sha256": "4752f5ce56e3c876322001080a0cb95fe631f94a24e572c1e605386799a1d263"
+    },
+    "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json": {
+      "bytes": 4310,
+      "sha256": "ae082a2f1c0a6d09bf5cbeaba1010582560df1cd7defac489c35ca34712c5e48"
+    },
+    "evidence/generated/p10_4_xsim/summary.json": {
+      "bytes": 12552,
+      "sha256": "262983a3b0d3ead75fd4175611b68f192a2ad45f01672a6deb85cdf6b0d7a2b7"
+    },
+    "rtl/p10_4_connector_ack_rx_quarantine.sv": {
+      "bytes": 1561,
+      "sha256": "2a7345719709d9e487f5bf2c3bb34d78ecbf529cacd0da2ce3a148a534f79dea"
+    },
+    "rtl/p9_optical_transport_core.sv": {
+      "bytes": 123976,
+      "sha256": "adc7f6fb7dec98596d20e8d887740b4675d8850e9652b8ba09f36c27780dcf68"
+    },
+    "sim/tb/tb_p10_2_4lane_suite.sv": {
+      "bytes": 42145,
+      "sha256": "43f0412d836f4ac6cdbf7b2efa73c1c946171fb4c7bc4a0528840aad288c2f96"
+    }
+  },
+  "no_hardware": true,
+  "old_hardware_results_inherited": false,
+  "schema_version": 1,
+  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+  "source_commit": "161bef2f181c41d50853ba590f19d81fa89c68b6",
+  "status": "PASS",
+  "strategy": "ACK_ONLY_CONNECTOR_PAIR_RX_QUARANTINE",
+  "test_id": "P10_4-XTALK-002"
+}

@@ -1,0 +1,32 @@
+{
+  "current_run_hardware_authorization": false,
+  "generated_at_utc": "2026-08-05T21:06:42+00:00",
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "results": [
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_4_crc_remediation_p10_1r_regression/raw/20260805T210638.312317Z/tb_tfdu_rx_admission_other_lane.log",
+      "log_sha256": "b2236446d06537f15ce88aa1c11f11f410e70644c74fafe02a7f801a057ce37d",
+      "marker_present": true,
+      "required_marker": "TB_TFDU_RX_ADMISSION_OTHER_LANE=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_tfdu_rx_admission_other_lane",
+      "timed_out": false
+    }
+  ],
+  "schema_version": 1,
+  "source_commit": "98ec19d34498f93fa6c40fd9b49d4ebfecb22bbf",
+  "source_sha256": {
+    "rtl/ir_4ppm_codec.sv": "368035a217bd6d1c0bfe6c637dc38f14ade664724c4b0e6725c2ca4ac0f5d4a3",
+    "rtl/p10_1r_rx_admission.sv": "0cc24c1c17d012f1e097e88f5161dd8fd1a8887e97b90d0c05bc9860dd0cbf4b",
+    "rtl/p9_4ppm_frame_rx.sv": "f70d8011a5352d4be1e864702381663e14b71daa5ad6fbb2b92358594688c8ac",
+    "rtl/p9_4ppm_frame_tx.sv": "33a014b8666f6c82942755e563fbefaba4b1ce5995fe9e019936f70fc49a9b0e",
+    "rtl/p9_rate_4ppm_rx.sv": "c8bc0fa052f17f2e1f01b0d40985c91b63d083e64247860b3c2547975e77bdde",
+    "sim/tb/tb_p10_1r_focused.sv": "6eb62ae224b9c8ac123bb714445f5ac9722e34df7e0acf2a02ac4cfd72ebba48"
+  },
+  "source_worktree_dirty": false,
+  "status": "PASS",
+  "test_id": "P10_1R_FOCUSED_XSIM"
+}

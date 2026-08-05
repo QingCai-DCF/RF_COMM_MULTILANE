@@ -1,0 +1,47 @@
+{
+  "campaign": "p10_4",
+  "current_run_hardware_authorization": false,
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "results": [
+    {
+      "fatal_detected": false,
+      "log": "evidence/generated/p10_4_crc_remediation_xsim/raw/20260805T210456.319345Z/tb_p10_4_connector_ack_quarantine.log",
+      "log_sha256": "c67753f88a6dcc61bd7af4790e95292b491f577c5774c32bfe6ffd8485ed36df",
+      "marker_present": true,
+      "required_marker": "TB_P10_4_CONNECTOR_ACK_QUARANTINE=PASS",
+      "returncode": 0,
+      "status": "PASS",
+      "test_id": "tb_p10_4_connector_ack_quarantine"
+    }
+  ],
+  "schema_version": 1,
+  "source_commit": "98ec19d34498f93fa6c40fd9b49d4ebfecb22bbf",
+  "source_sha256": {
+    "config/hardware/p10_3_actual_wiring.yaml": "551f518f476deaa9219b826f2985d08baab5e953d92a4f734bb28ba6613bf2a1",
+    "config/hardware/p10_3_ax7020_activity_leds.yaml": "a525f5c2accda201e33a5f36a31a8e435a2b77c5a7c77afba9b8da851c6efbb1",
+    "config/hardware/tfdu_module_inventory.yaml": "85d915625b2f43fc5640f15a91b7ec1587615261bccb68568b22173d6ed21f6b",
+    "config/p10_4_connector_ack_rx_quarantine.yaml": "7960cce667954063b92bed69fcf228e39561c4c5b0043bc182887e244e9763e2",
+    "config/performance/p10_3f_staircase.yaml": "069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8",
+    "config/safety/p10_3_fault_forensics.yaml": "ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256",
+    "docs/design/P10_3_FIRST_FAULT_FORENSICS.md": "5cd09cce4162539becdb0a8b6018de81d4390afaf86db7bcedfb542d58207371",
+    "docs/design/P10_4_CONNECTOR_ACK_RX_QUARANTINE.md": "4752f5ce56e3c876322001080a0cb95fe631f94a24e572c1e605386799a1d263",
+    "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md": "7f8efdfc03662fa668a042ace129e2592747d8fc92784d5566ba11f91b98bfc8",
+    "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json": "ae082a2f1c0a6d09bf5cbeaba1010582560df1cd7defac489c35ca34712c5e48",
+    "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+    "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+    "rtl/p10_1r_rx_admission.sv": "0cc24c1c17d012f1e097e88f5161dd8fd1a8887e97b90d0c05bc9860dd0cbf4b",
+    "rtl/p10_4_connector_ack_rx_quarantine.sv": "2a7345719709d9e487f5bf2c3bb34d78ecbf529cacd0da2ce3a148a534f79dea",
+    "scripts/archive_p10_fault_forensics.py": "45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c",
+    "scripts/finalize_p10_3f_offline.py": "126a1b8dfdbcaf26e87a1e0880217eb2fd60c524d334d64fa1b47ee67a55a9f3",
+    "scripts/freeze_p10_3f_artifacts.py": "000c2225a8a4885647d471368114d4f07110c795804d86b84f4cf12609392d28",
+    "scripts/hw/p10_3f_fault_forensics.tcl": "37f11e4ba5808ecff5866aae1304be165d725ba1a2f1306118e570a49c4b1fd6",
+    "scripts/run_p10_2_xsim.py": "2f3cf25a8bcaf8865777040519f532181f462ce3dd0b8b378cc42f126654bff6",
+    "scripts/run_p10_3f_fault_forensics_offline.py": "c902aef5c16e9d8832a19b78c34790bbf3e85899615147a1b9c75bae7832b01d",
+    "scripts/run_p10_3f_staircase_hardware.py": "55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40",
+    "sim/tb/tb_p10_2_4lane_suite.sv": "43f0412d836f4ac6cdbf7b2efa73c1c946171fb4c7bc4a0528840aad288c2f96"
+  },
+  "source_worktree_dirty": true,
+  "status": "PASS",
+  "test_id": "P10_4_HARDENED_4LANE_XSIM"
+}
