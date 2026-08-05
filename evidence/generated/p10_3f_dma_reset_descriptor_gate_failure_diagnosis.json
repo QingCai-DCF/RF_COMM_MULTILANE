@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-05T03:49:19Z",
+  "status": "DIAGNOSED",
+  "test_id": "P10_3F-DMA-RESET-DESCRIPTOR-GATE-DIAGNOSIS",
+  "failed_run_id": "p10_3f_full_20260805T025754Z_650b94cf_1ff0885f_82ef5093",
+  "immutable_failed_evidence_commit": "ee83a7e4f588538ecaed4303dba1f4aa9938ede6",
+  "hardware_stage_result": "PASS",
+  "host_stage_result": "FAIL",
+  "read_only_replay_under_corrected_evaluator": "PASS",
+  "final_dual_shutdown": "PASS",
+  "root_cause": "The generic legacy mailbox evaluator interpreted the reset-boundary descriptor_leak field as a post-recovery leak. For the planned DMA-reset vector this field is the four descriptors intentionally outstanding at the reset boundary; the canonical P10.1 result records all four as reclaimed and records zero remaining leak and zero double completion.",
+  "direct_observations": {
+    "fixed": {
+      "legacy_submitted": 8,
+      "legacy_completed": 4,
+      "legacy_boundary_outstanding": 4,
+      "legacy_descriptor_leak_field": 4,
+      "canonical_descriptors_reclaimed_by_reset": 4,
+      "canonical_descriptor_leak_count": 0,
+      "canonical_double_completion_count": 0,
+      "canonical_perf_descriptor_leak_count": 0,
+      "canonical_perf_double_completion_count": 0
+    },
+    "rotating": {
+      "legacy_submitted": 8,
+      "legacy_completed": 4,
+      "legacy_boundary_outstanding": 4,
+      "legacy_descriptor_leak_field": 4,
+      "canonical_descriptors_reclaimed_by_reset": 4,
+      "canonical_descriptor_leak_count": 0,
+      "canonical_double_completion_count": 0,
+      "canonical_perf_descriptor_leak_count": 0,
+      "canonical_perf_double_completion_count": 0
+    }
+  },
+  "forensics": {
+    "status": "PASS",
+    "frozen_roles": ["fixed", "rotating"],
+    "fixed_binary_sha256": "a5bcf2db3715293308db5ade7a7f713601dd091417e77a89f1b1a2643dc3edb9",
+    "rotating_binary_sha256": "b84923ae1114a775dff81dea5f56a7d3f6449db1d2428bb4d8100f193f7dbee8"
+  },
+  "remediation": {
+    "scope": "host evaluator only",
+    "normal_case_legacy_leak_gate_preserved": true,
+    "expected_reset_requirements": [
+      "post-reset canonical leak and double-completion counters are zero",
+      "canonical submitted equals completed plus reclaimed",
+      "legacy reset-boundary outstanding equals its descriptor_leak field",
+      "legacy reset-boundary descriptor_leak equals canonical reclaimed count",
+      "legacy TX and RX double-completion counters are zero"
+    ],
+    "old_run_promoted": false,
+    "new_hardware_run_required": true
+  }
+}

@@ -255,6 +255,78 @@ class P103FFullHardwareTests(unittest.TestCase):
         self.assertEqual(evidence["sender_tx_active_samples"], 0)
         self.assertEqual(evidence["receiver_rx_active_samples"], 0)
 
+    def test_expected_reset_reconciles_boundary_descriptors_after_cleanup(self) -> None:
+        row = {
+            "label": "stream_dma_reset_sender",
+            "command": 13,
+            "flags": runner.base.p101.FLAG_DMA_RESET_SENDER,
+        }
+        combined = [
+            "stream_dma_reset_sender:fixed: descriptor double completion or leak",
+            "stream_dma_reset_sender:rotating: descriptor double completion or leak",
+            "stream_dma_reset_sender:fixed: sticky physical safety fault",
+        ]
+        self.assertEqual(
+            runner.filter_recovery_mailbox_errors(row, combined),
+            ["stream_dma_reset_sender:fixed: sticky physical safety fault"],
+        )
+
+        def canonical() -> dict[str, int]:
+            return {
+                "descriptor_leak_count": 0,
+                "double_completion_count": 0,
+                "perf_descriptor_leak_count": 0,
+                "perf_double_completion_count": 0,
+                "descriptors_submitted": 8,
+                "descriptors_completed": 4,
+                "descriptors_reclaimed_by_reset": 4,
+            }
+
+        detail = {
+            "fixed": canonical(),
+            "rotating": canonical(),
+            "fixed_mailbox": {
+                "tx_submitted": 8, "tx_completed": 4,
+                "rx_submitted": 0, "rx_completed": 0,
+                "descriptor_leak": 4,
+                "tx_double_completion": 0, "rx_double_completion": 0,
+            },
+            "rotating_mailbox": {
+                "tx_submitted": 0, "tx_completed": 0,
+                "rx_submitted": 8, "rx_completed": 4,
+                "descriptor_leak": 4,
+                "tx_double_completion": 0, "rx_double_completion": 0,
+            },
+        }
+        self.assertEqual(
+            runner.recovery_descriptor_reconciliation_errors(row, detail), []
+        )
+
+        detail["fixed_mailbox"]["descriptor_leak"] = 3
+        self.assertIn(
+            "stream_dma_reset_sender:fixed: boundary/reclaimed descriptor mismatch",
+            runner.recovery_descriptor_reconciliation_errors(row, detail),
+        )
+        detail["fixed_mailbox"]["descriptor_leak"] = 4
+        detail["fixed"]["descriptor_leak_count"] = 1
+        self.assertIn(
+            "stream_dma_reset_sender:fixed: post-reset descriptor_leak_count is nonzero",
+            runner.recovery_descriptor_reconciliation_errors(row, detail),
+        )
+        detail["fixed"]["descriptor_leak_count"] = 0
+        detail["fixed_mailbox"]["tx_double_completion"] = 1
+        self.assertIn(
+            "stream_dma_reset_sender:fixed: legacy double completion is nonzero",
+            runner.recovery_descriptor_reconciliation_errors(row, detail),
+        )
+
+    def test_normal_case_retains_legacy_descriptor_leak_failure(self) -> None:
+        row = {"label": "normal", "command": 13, "flags": 0}
+        error = "normal:fixed: descriptor double completion or leak"
+        self.assertEqual(
+            runner.filter_recovery_mailbox_errors(row, [error]), [error]
+        )
+
     def test_controlled_fault_kills_before_forensic_archive_and_shutdown_reprogram(self) -> None:
         plans = runner.build_plans()
         self.assertIn(

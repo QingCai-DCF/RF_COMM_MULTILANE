@@ -1420,6 +1420,113 @@ def validate_custom_observation_shape(
     return errors
 
 
+def expected_descriptor_reclaim(row: dict[str, Any]) -> bool:
+    """Identify a P10.1 reset vector whose in-flight descriptors are reclaimed.
+
+    The legacy P10 mailbox is captured at the reset boundary and therefore
+    reports the descriptors that were outstanding at that instant in its
+    ``descriptor_leak`` field.  The P10.1 result is captured after the recovery
+    cleanup and separately reports both the reclaimed count and the remaining
+    leak count.  Only an explicitly planned recovery vector has this split-time
+    interpretation.
+    """
+    flags = int(row.get("flags", 0))
+    return (
+        int(row.get("command", 0)) == 13
+        and bool(flags & base.p101.RECOVERY_FLAGS)
+        and not bool(flags & base.p101.SERVICE_RESET_FLAGS)
+    )
+
+
+def filter_recovery_mailbox_errors(
+    row: dict[str, Any], errors: list[str]
+) -> list[str]:
+    """Defer only the legacy combined descriptor error to reconciliation.
+
+    Normal cases retain the original fail-closed mailbox rule.  For an expected
+    reset vector, the combined legacy error cannot distinguish an intentional
+    in-flight reclaim from double completion, so the exact counters are checked
+    by :func:`recovery_descriptor_reconciliation_errors` after the canonical
+    P10.1 result has been decoded.
+    """
+    if not expected_descriptor_reclaim(row):
+        return errors
+    deferred = {
+        f"{row['label']}:{role}: descriptor double completion or leak"
+        for role in ("fixed", "rotating")
+    }
+    return [error for error in errors if error not in deferred]
+
+
+def recovery_descriptor_reconciliation_errors(
+    row: dict[str, Any], detail: dict[str, Any]
+) -> list[str]:
+    """Cross-check reset-boundary mailbox counters against post-reset cleanup."""
+    if not expected_descriptor_reclaim(row):
+        return []
+    errors: list[str] = []
+    for role in ("fixed", "rotating"):
+        canonical = detail.get(role)
+        mailbox = detail.get(f"{role}_mailbox")
+        if not isinstance(canonical, dict) or not isinstance(mailbox, dict):
+            errors.append(f"{row['label']}:{role}: descriptor evidence missing")
+            continue
+
+        zero_fields = (
+            "descriptor_leak_count",
+            "double_completion_count",
+            "perf_descriptor_leak_count",
+            "perf_double_completion_count",
+        )
+        for field in zero_fields:
+            if int(canonical.get(field, -1)) != 0:
+                errors.append(
+                    f"{row['label']}:{role}: post-reset {field} is nonzero"
+                )
+
+        reclaimed = int(canonical.get("descriptors_reclaimed_by_reset", 0))
+        submitted = int(canonical.get("descriptors_submitted", -1))
+        completed = int(canonical.get("descriptors_completed", -1))
+        if reclaimed <= 0:
+            errors.append(
+                f"{row['label']}:{role}: no descriptor reclaim was recorded"
+            )
+        if submitted < 0 or completed < 0 or submitted != completed + reclaimed:
+            errors.append(
+                f"{row['label']}:{role}: canonical descriptor accounting mismatch"
+            )
+
+        tx_submitted = int(mailbox.get("tx_submitted", -1))
+        tx_completed = int(mailbox.get("tx_completed", -1))
+        rx_submitted = int(mailbox.get("rx_submitted", -1))
+        rx_completed = int(mailbox.get("rx_completed", -1))
+        boundary_leak = int(mailbox.get("descriptor_leak", -1))
+        tx_double = int(mailbox.get("tx_double_completion", -1))
+        rx_double = int(mailbox.get("rx_double_completion", -1))
+        if tx_double != 0 or rx_double != 0:
+            errors.append(
+                f"{row['label']}:{role}: legacy double completion is nonzero"
+            )
+        if min(tx_submitted, tx_completed, rx_submitted, rx_completed) < 0 or \
+                tx_completed > tx_submitted or rx_completed > rx_submitted:
+            errors.append(
+                f"{row['label']}:{role}: legacy descriptor counters are malformed"
+            )
+            continue
+        outstanding = (
+            tx_submitted - tx_completed + rx_submitted - rx_completed
+        )
+        if boundary_leak != outstanding:
+            errors.append(
+                f"{row['label']}:{role}: reset-boundary outstanding mismatch"
+            )
+        if boundary_leak != reclaimed:
+            errors.append(
+                f"{row['label']}:{role}: boundary/reclaimed descriptor mismatch"
+            )
+    return errors
+
+
 def load_custom_details(
     stage_dir: Path, rows: list[dict[str, Any]]
 ) -> tuple[list[dict[str, Any]], list[str]]:
@@ -1442,6 +1549,9 @@ def load_custom_details(
             else:
                 mailbox_errors, mailbox_pair = with_current_build_expectations(
                     base.generic_pair, row, fixed_words, rotating_words
+                )
+                mailbox_errors = filter_recovery_mailbox_errors(
+                    row, mailbox_errors
                 )
             errors.extend(mailbox_errors)
             fixed_snap = base.parse_p103(
@@ -1467,6 +1577,9 @@ def load_custom_details(
                 if not service_reset:
                     detail["fixed_mailbox"] = mailbox_pair["fixed"]
                     detail["rotating_mailbox"] = mailbox_pair["rotating"]
+                    errors.extend(
+                        recovery_descriptor_reconciliation_errors(row, detail)
+                    )
                 errors.extend(pair_errors)
             else:
                 detail = mailbox_pair
