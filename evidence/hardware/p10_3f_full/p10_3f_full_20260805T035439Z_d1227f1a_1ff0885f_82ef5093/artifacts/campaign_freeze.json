@@ -1,0 +1,547 @@
+{
+  "acceptance_eligible": true,
+  "allowed_hardware_stages": [
+    "preflight",
+    "module_intake",
+    "staircase_1k",
+    "staircase_4k",
+    "staircase_16k",
+    "staircase_64k",
+    "staircase_256k",
+    "fault_capture",
+    "raw_8x8",
+    "per_lane_phy",
+    "two_lane_regression",
+    "four_lane_raw",
+    "mask_matrix",
+    "degrade",
+    "arq_sack",
+    "dma",
+    "streaming_64m",
+    "stream_dma_reset_fault",
+    "stream_dma_reset_recovery_64m",
+    "stream_service_reset_fault",
+    "stream_service_reset_recovery_64m",
+    "performance",
+    "formal_30min"
+  ],
+  "artifact_source_commit": "7fc3a7cb03f9ee19793403f9f1deaef139b11d7d",
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/df394f8a5d4eb68613749df78af43dab7705e87b3cbf091db8f69dd33cce251c/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "df394f8a5d4eb68613749df78af43dab7705e87b3cbf091db8f69dd33cce251c"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/1ff0885f89674557144e6c41bf40ef05bb56c8ef85f1b8bd16ef0fc8e8c3b724/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "1ff0885f89674557144e6c41bf40ef05bb56c8ef85f1b8bd16ef0fc8e8c3b724"
+    },
+    {
+      "bytes": 1307298,
+      "kind": "xsa",
+      "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/86945089f69cbb2b25dd6d71f08a7f6b6b699f9e7619dba70686f1e612379460/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "86945089f69cbb2b25dd6d71f08a7f6b6b699f9e7619dba70686f1e612379460"
+    },
+    {
+      "bytes": 1970179,
+      "kind": "bsp",
+      "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/330ebffd7de59df6fa6e6c20e39187885b521a73fba7d85697ed13e81a388600/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "330ebffd7de59df6fa6e6c20e39187885b521a73fba7d85697ed13e81a388600"
+    },
+    {
+      "bytes": 570652,
+      "kind": "elf",
+      "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/7ea3542ac346eb567371cd7635ebcb597f10df7b51b756e76ab57e9e03077b40/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "7ea3542ac346eb567371cd7635ebcb597f10df7b51b756e76ab57e9e03077b40"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/1fc058e1b83f5ef9d0a4a37090515301559c9e81f218b4de218577542d8fefa0/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "1fc058e1b83f5ef9d0a4a37090515301559c9e81f218b4de218577542d8fefa0"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/82ef5093e7f1de7676ad2fff26dae55a60a869c39e16f327b9db826f87cf0830/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "82ef5093e7f1de7676ad2fff26dae55a60a869c39e16f327b9db826f87cf0830"
+    },
+    {
+      "bytes": 1305672,
+      "kind": "xsa",
+      "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/328015e208f43db1faeb7a9272619a970c4ca895b73a6b817ead253f98af434d/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "328015e208f43db1faeb7a9272619a970c4ca895b73a6b817ead253f98af434d"
+    },
+    {
+      "bytes": 1970549,
+      "kind": "bsp",
+      "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/83e74bd963c23a639fd5dfb28d554e83264b79272ab1c4da4883a98216d586e0/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "83e74bd963c23a639fd5dfb28d554e83264b79272ab1c4da4883a98216d586e0"
+    },
+    {
+      "bytes": 571096,
+      "kind": "elf",
+      "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/c21f8c9c0d88783b1163d3c20c17ac49ff7b2463511abf9ddf3889f3152d1f7d/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "c21f8c9c0d88783b1163d3c20c17ac49ff7b2463511abf9ddf3889f3152d1f7d"
+    }
+  ],
+  "base_artifact_freeze": {
+    "path": "evidence/generated/p10_3_fault_forensics_artifact_freeze.json",
+    "sha256": "6f30490a4fbff4a5dd0a82eaaf4774dbe1abd7e59255d1f405b4c5ce081f3877"
+  },
+  "base_artifact_freeze_allowed_hardware_stages": [
+    "staircase",
+    "formal"
+  ],
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "current_run_hardware_authorization": false,
+  "eligibility_scope": "NEW_EXACT_CURRENT_RUN_AUTHORIZATION_ONLY",
+  "errors": [],
+  "forbidden": {
+    "ethernet": true,
+    "lane_mask_above_0xF": true,
+    "movement": true,
+    "p11": true,
+    "realignment": true,
+    "rewiring": true,
+    "rotation": true,
+    "two_hour_test": true
+  },
+  "generated_at_utc": "2026-08-05T03:53:56+00:00",
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "hardware_actions_executed": false,
+  "hardware_first_fault_kill_active_during_each_command": true,
+  "host_inputs": [
+    {
+      "bytes": 31921,
+      "path": "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md",
+      "sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
+    },
+    {
+      "bytes": 9946,
+      "path": "AGENTS.md",
+      "sha256": "6677e4589355aa96dd434f8eb5ab9567c97efcb87ca5b3aae137efbd6776aebb"
+    },
+    {
+      "bytes": 77090,
+      "path": "PROJECT_CONSTRAINTS.txt",
+      "sha256": "9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758"
+    },
+    {
+      "bytes": 48812,
+      "path": "config/project_state.json",
+      "sha256": "dc2fd2dd3112eb595b6da6f915ad81772cb3d76179c84df3addf903a4b12e2c4"
+    },
+    {
+      "bytes": 302734,
+      "path": "config/project_requirements.yaml",
+      "sha256": "d005fd17604c4ba245776f98e4927b5c973c8e6f4c7e42b79675b8c51311e5e9"
+    },
+    {
+      "bytes": 67360,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "8783951ad23bb2d966aa36b2da01892f807b94cdf10dfda0512a609fffa1c1b3"
+    },
+    {
+      "bytes": 2856,
+      "path": "config/safety/p10_3_fault_forensics.yaml",
+      "sha256": "ed7e54a6c157486edf1337d99124486388a334aba1fbbc5b6ad3230c97dd2256"
+    },
+    {
+      "bytes": 1774,
+      "path": "config/performance/p10_3f_staircase.yaml",
+      "sha256": "069137607e43e586af90572d1a03686d1d2973912f80526844b1a8c37cea27f8"
+    },
+    {
+      "bytes": 1775,
+      "path": "config/performance/p10_3f_full_aggregate_runtime.yaml",
+      "sha256": "7e15a1acec699f38fbcd6cd0747909598d2f89517ff00124a198d017956f5f4e"
+    },
+    {
+      "bytes": 5247,
+      "path": "config/hardware/p10_3_actual_wiring.yaml",
+      "sha256": "551f518f476deaa9219b826f2985d08baab5e953d92a4f734bb28ba6613bf2a1"
+    },
+    {
+      "bytes": 21172,
+      "path": "config/hardware/tfdu_module_inventory.yaml",
+      "sha256": "85d915625b2f43fc5640f15a91b7ec1587615261bccb68568b22173d6ed21f6b"
+    },
+    {
+      "bytes": 3998,
+      "path": "config/hardware/p10_3_ax7020_activity_leds.yaml",
+      "sha256": "a525f5c2accda201e33a5f36a31a8e435a2b77c5a7c77afba9b8da851c6efbb1"
+    },
+    {
+      "bytes": 5514,
+      "path": "docs/hardware/P10_3_AS_WIRED_RECORD.md",
+      "sha256": "ac1c541912a7edc4b883b6c3a378529d2a14ee9cdf0a04503c7d50394b912372"
+    },
+    {
+      "bytes": 2940,
+      "path": "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
+      "sha256": "7f8efdfc03662fa668a042ace129e2592747d8fc92784d5566ba11f91b98bfc8"
+    },
+    {
+      "bytes": 20763,
+      "path": "docs/design/P10_3_FIRST_FAULT_FORENSICS.md",
+      "sha256": "05290a488d96ff53ca09afea808ef2e94ffa6af4cd0bfdf38170b4d0840428ba"
+    },
+    {
+      "bytes": 23677,
+      "path": "config/hardware/p10_2_ax7020_4lane_wiring.yaml",
+      "sha256": "5b53408fe10c6cf1a04f4e5c88cc18eb5a400a91f987b27ec42c77c2bbec7dad"
+    },
+    {
+      "bytes": 19834,
+      "path": "docs/hardware/P10_2_AX7020_4LANE_WIRING_PROPOSAL.md",
+      "sha256": "5f4a89b818b007af4863534759068dda529fe3c34501569ea4da89a42d8026fc"
+    },
+    {
+      "bytes": 1769,
+      "path": "board_profiles/ax7020_fixed_4lane/profile.yaml",
+      "sha256": "6c05c738333f80836d141a833e45592342b3d83b62369d6eb91d5ba3f907c571"
+    },
+    {
+      "bytes": 1784,
+      "path": "board_profiles/ax7020_rotating_4lane/profile.yaml",
+      "sha256": "b79b87c90b56d442e3b3db228a49523aea72bd730a200a13d82a0e31d44560e8"
+    },
+    {
+      "bytes": 4550,
+      "path": "board_profiles/ax7020_fixed_4lane/ax7020_fixed_4lane.generated.xdc",
+      "sha256": "1360cf7871a635e0160b30074e12dc9b8c09aaeea046447d0e8e7357a99fb5f1"
+    },
+    {
+      "bytes": 4553,
+      "path": "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc",
+      "sha256": "95a049709b4ffe84156be3bce6653f0f7b8757750b9a30f543415eb290631b9b"
+    },
+    {
+      "bytes": 282,
+      "path": "board_profiles/ax7020_fixed_4lane/p10_3_runtime_role.h",
+      "sha256": "347fe7f3dfc76b9344af03967c7c30130431e71a915d9f34ade56d6599570d3c"
+    },
+    {
+      "bytes": 285,
+      "path": "board_profiles/ax7020_rotating_4lane/p10_3_runtime_role.h",
+      "sha256": "661603b4c192dcd6b77495765d706aeb52f496639e24a3c1786de6148949bb8f"
+    },
+    {
+      "bytes": 15023,
+      "path": "scripts/archive_p10_fault_forensics.py",
+      "sha256": "45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c"
+    },
+    {
+      "bytes": 10366,
+      "path": "scripts/prepare_p10_3_offline.py",
+      "sha256": "c8177f98ec62b98eef4e25ac96fe654d04b465ac961a43a426452ddfc5eebb86"
+    },
+    {
+      "bytes": 141991,
+      "path": "scripts/run_p10_3_ax7020_4lane_hardware.py",
+      "sha256": "e6e233701a984e810ac468cf9517dc3d6c08a88b2f78dbb1037d35091971a8b9"
+    },
+    {
+      "bytes": 23750,
+      "path": "scripts/run_p10_3f_staircase_hardware.py",
+      "sha256": "55bead09bc1ef179bd0943d5273deff1f362b1ef409333200e894f9fbc2efc40"
+    },
+    {
+      "bytes": 126377,
+      "path": "scripts/run_p10_3f_full_hardware.py",
+      "sha256": "9be0d670508e62c6274733e4e9ff175e7a3079dc6cb506096fcf5dd171b415ed"
+    },
+    {
+      "bytes": 107184,
+      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+      "sha256": "ea9ee2cf4286f59a32e049100c90373713610479b9f34fd875911a74b725ab08"
+    },
+    {
+      "bytes": 16185,
+      "path": "scripts/hw/p10_3f_fault_forensics.tcl",
+      "sha256": "e0f56b877a78fdea8ba2d30d4a54e9e157fed84f44fe22b650e1757b47d68505"
+    },
+    {
+      "bytes": 8149,
+      "path": "scripts/hw/p10_program_dual_shutdown.tcl",
+      "sha256": "aa7f563566e04d5736bc800c7b1f91a51b16dec61424bdedc49ed27a2e3d7127"
+    },
+    {
+      "bytes": 465,
+      "path": "scripts/hw/check_tcl_complete.tcl",
+      "sha256": "7fae49da16ea03c9abb7e0e4a083f7bb69a6f84561bd5e678e8de0696960f81a"
+    },
+    {
+      "bytes": 70823,
+      "path": "scripts/p10_hardware_runtime.py",
+      "sha256": "7ac6113661b1097aa5684a6083f1cac168e40efae42530d5f2d7c59231780d09"
+    },
+    {
+      "bytes": 23384,
+      "path": "tests/test_p10_3f_full_hardware.py",
+      "sha256": "d71b5f052122ad0ba467aea5fbbbabbb0635b34c23db9e7f6956c3e2e350d610"
+    },
+    {
+      "bytes": 5036,
+      "path": "evidence/generated/p10_3_repo_intake.json",
+      "sha256": "36d5657a3e82ea8d37dba3ab39d1d0b6d5d84fa8dbb6e7ef45b6c5cff27b69a1"
+    },
+    {
+      "bytes": 5228,
+      "path": "evidence/generated/p10_3_repo_intake.md",
+      "sha256": "d5eaf78369f4421e1524434485df549d6937cf3cdff8614d472cf7e768c8d20c"
+    },
+    {
+      "bytes": 3741,
+      "path": "evidence/generated/p10_3_wiring.json",
+      "sha256": "ca89d42ac92a77f104f0b82e5de237738435d69b862e0e1260f6e8e7d3d49782"
+    },
+    {
+      "bytes": 4014,
+      "path": "evidence/generated/p10_3_wiring.md",
+      "sha256": "995a4e81ddfe30662dfdb474c93bdce8672cd08c66757b2bd79b063cbd8ac946"
+    },
+    {
+      "bytes": 5647,
+      "path": "evidence/generated/p10_3_module_inventory.json",
+      "sha256": "6c3001b5fb580701302c275f329ce73ce2ef151779c0adecc4ca05418afaa6fa"
+    },
+    {
+      "bytes": 5921,
+      "path": "evidence/generated/p10_3_module_inventory.md",
+      "sha256": "26a0513ef4be3e73c2834afd37ed0b7cf91ae33a35e61665024303048682be61"
+    }
+  ],
+  "host_source_commit": "d1227f1a5685c42caf3cec6665c3029ec71c7323",
+  "internal_stream_object_bytes": 262144,
+  "manual_instrumentation": "OMITTED_BY_USER",
+  "maximum_board_autonomous_aggregate_command_bytes": 67108864,
+  "maximum_functional_diagnostic_object_bytes": 16777216,
+  "maximum_lane_mask": 15,
+  "maximum_long_test_command_bytes": 67108864,
+  "maximum_single_formal_run_seconds": 1800,
+  "maximum_staircase_level_bytes": 262144,
+  "module_binding": {
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0001",
+    "F3": "B0020",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0023",
+    "R3": "B0025"
+  },
+  "no_hardware": true,
+  "offline_gates": {
+    "full_runner_regression": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-m",
+        "unittest",
+        "tests.test_p10_3f_full_hardware",
+        "tests.test_p10_3f_fault_forensics",
+        "tests.test_p10_3_hardware_acceptance"
+      ],
+      "log": {
+        "bytes": 140,
+        "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/full_runner_regression.log",
+        "sha256": "b9de78a6645fd73c9936d67a3f89eef7d7b170e339af9b78e1ed1164dcb986f4"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "no_hardware_static_scan": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_no_hardware_calls.py"
+      ],
+      "log": {
+        "bytes": 31,
+        "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/no_hardware_static_scan.log",
+        "sha256": "22a36fafd58a794d360a159b85137bb06f7478d2aaad089567ffebfbc8d60a5c"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_1r_verify_existing": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_1r_existing.py"
+      ],
+      "log": {
+        "bytes": 254,
+        "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/p10_1r_verify_existing.log",
+        "sha256": "339e769a2706755be6d3adab99567a0abbe0ae1e464e4e4643d7b2de29f43385"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_2_verify_existing": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_2_existing.py"
+      ],
+      "log": {
+        "bytes": 181,
+        "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/p10_2_verify_existing.log",
+        "sha256": "181d803018fc436d877ae8daa2d7dedce9e8d7fcfd8103d1c72d21fb4794dbbf"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_verify_existing": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_frozen_existing.py"
+      ],
+      "log": {
+        "bytes": 254,
+        "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/p10_verify_existing.log",
+        "sha256": "140fe3c86000706c3307679c07f6ada728ed4bc9daabaed902b35a58a9297196"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p8c_safety_verify_existing": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p8c_existing.py"
+      ],
+      "log": {
+        "bytes": 25,
+        "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/p8c_safety_verify_existing.log",
+        "sha256": "42040d278511b798595228f906f6eb59f51b8a15d979941ac27ff3b10ad4861b"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "register_map_verify": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_register_headers.py",
+        "--verify"
+      ],
+      "log": {
+        "bytes": 149,
+        "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/register_map_verify.log",
+        "sha256": "92b2c163d46f8098601f9d612fd78a123c37aca8019e161d700204851ed16683"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "requirement_traceability": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_requirement_traceability.py",
+        "--check"
+      ],
+      "log": {
+        "bytes": 111,
+        "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/requirement_traceability.log",
+        "sha256": "44dff0fbdfbc50814da41d4e4c416cca8282cafcfa95c15c7f76abf48d6f4110"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "state_requirements_consistency": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_p8a_consistency.py",
+        "--check"
+      ],
+      "log": {
+        "bytes": 183,
+        "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/state_requirements_consistency.log",
+        "sha256": "30d94a2fdbbc42c42202d87c3fc5ca3cb4f550daa10c5d8c7a6e65d623cbf933"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "tcl_syntax_complete": {
+      "command": [
+        "D:\\Xilinx\\Vivado\\2023.1\\tps\\win64\\git-2.16.2\\mingw64\\bin\\tclsh.exe",
+        "scripts/hw/check_tcl_complete.tcl",
+        "scripts/hw/p10_dual_xsdb_stage.tcl",
+        "scripts/hw/p10_3f_fault_forensics.tcl",
+        "scripts/hw/p10_program_dual_shutdown.tcl"
+      ],
+      "log": {
+        "bytes": 201,
+        "path": "evidence/generated/p10_3f_full_campaign_freeze_raw/tcl_syntax_complete.log",
+        "sha256": "441b709d8dd87617efe7cc88e854494a87c82b75dc5f994b9bd97fcf4c45ee63"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    }
+  },
+  "old_hardware_pass_inherited": false,
+  "safety_snapshot_after_each_aggregate_command": true,
+  "safety_snapshot_after_each_functional_case": true,
+  "safety_snapshot_after_each_staircase_direction": true,
+  "schema_version": 1,
+  "scope": "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_WITH_FIRST_FAULT_FORENSICS",
+  "scope_expansion_policy": "SUPPLEMENTAL_HOST_AND_EVIDENCE_FREEZE; NO_OLD_HARDWARE_RESULT_INHERITANCE",
+  "shutdown_policy": {
+    "archive_before_independent_shutdown": true,
+    "clear_frozen_capture_before_shutdown_program": false,
+    "shutdown_before_every_stage": true,
+    "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
+    "verify_both_shutdown_markers": true
+  },
+  "source_tree_clean": true,
+  "source_tree_clean_before_generation": true,
+  "stage_plan_sha256": {
+    "arq_sack": "95f85ad6a0e507fd378265a016f4e686d3b4ea6eeeefb5060362c4b1e36b812c",
+    "degrade": "c167caf4807853df451a5955b8e3986ff73dfd172abf44de57adbf0cf481000d",
+    "dma": "8c42fd2bbf9953e2b1a8de73bd35ef9cd7dbe594b706e071c3bb4f8703f5d96d",
+    "fault_capture": "62ea545e01988b501e05ec2acf5374dd0b7f6562385d4c7af5f1166816977d16",
+    "formal_30min": "a08eecacc6adb11019d720774397a33e178f70050394e314841be1256ee11f98",
+    "four_lane_raw": "7737cfe68be0ac673a831a00e0bafa44780f8d114e46f71de573b9f84eed793e",
+    "mask_matrix": "693fe70c08e2fee3916adf6c5951c4b025daab8302f8f82ec38bfba2b7ab0b22",
+    "module_intake": "509af1e0ca1d42b0bf31662925ac0d3c73720aa3499478b62ccd51aa436487a9",
+    "per_lane_phy": "8353ac7f7500bd73938ba8af2a0719485184ff8c0bae345b8b8993e01ce330de",
+    "performance": "8367492057a7c543896e30471999a865802b33fcc999f089dc64376effbaf204",
+    "preflight": "56cf7e734882d844edfefdd424fef42373d3b6b6b2c4887b5c19ed42c14955ed",
+    "raw_8x8": "fcf3849374bdb9d6119f916a4ffd0043c0adb672a04c12cdc6f943d7747e4ff1",
+    "staircase_16k": "1822cf8e4f9cf454178f70cfc7dfa07744904f74c4079f1b2591405665e6964d",
+    "staircase_1k": "644607ba2e3e8647a6a31d7f277bf1a7abf107b05f5ce3082306ac5225adfea5",
+    "staircase_256k": "8395a553e95f3cff50866a79089e754488ca7a329a5aee7e4f2326a81230ab3b",
+    "staircase_4k": "31bb9929c09a3d2096e7a2e119f39fbb9923d1d6096b00f3b37608dbe0fc8daa",
+    "staircase_64k": "f4fe6af200ac316c6ac0fecf41a738c03dc1406fd5c96490835f29b83aacf8ff",
+    "stream_dma_reset_fault": "888230bd62931cdd34b600854deffa394b80e62c74d89c6266ed9d5ec521a33d",
+    "stream_dma_reset_recovery_64m": "5e66d24bf23067ed6974d0eaf820e228deae6045fd22d6f4b757b990bbef6a0f",
+    "stream_service_reset_fault": "f9e3174e77d2ea381e3e73210e7addc2f5bb684d6dbc30f5af7a9fac033c4c73",
+    "stream_service_reset_recovery_64m": "b2c9fab8f237c0a3fe0f8fc85b676ef289b256a54dc12f7d311c0eef60cba055",
+    "streaming_64m": "e425d898d1576f5b751c5c8219532d42268fe922d25dc2ee9aee3f794022f083",
+    "two_lane_regression": "90cacb29425008bb52c3393414e3bd4cbdc2a5c34dfb83300886fa51cbc13dda"
+  },
+  "status": "PASS",
+  "test_id": "P10_3F-FULL-CAMPAIGN-FREEZE"
+}

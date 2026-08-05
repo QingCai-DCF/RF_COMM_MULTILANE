@@ -1,0 +1,34 @@
+{
+  "errors": [],
+  "files": [
+    {
+      "derived": {
+        "bytes": 34511,
+        "path": "artifacts/fixed/ps7_init.tcl",
+        "sha256": "76ecb9eeebc0f6042a3743c81dbb5af6910c0980a083347013936f925719c125"
+      },
+      "role": "fixed",
+      "source_xsa": {
+        "bytes": 1307298,
+        "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/86945089f69cbb2b25dd6d71f08a7f6b6b699f9e7619dba70686f1e612379460/p10_ax7020_fixed_functional.xsa",
+        "sha256": "86945089f69cbb2b25dd6d71f08a7f6b6b699f9e7619dba70686f1e612379460"
+      }
+    },
+    {
+      "derived": {
+        "bytes": 34511,
+        "path": "artifacts/rotating/ps7_init.tcl",
+        "sha256": "76ecb9eeebc0f6042a3743c81dbb5af6910c0980a083347013936f925719c125"
+      },
+      "role": "rotating",
+      "source_xsa": {
+        "bytes": 1305672,
+        "path": "artifacts/p10_3_fault_forensics/7fc3a7cb03f9ee19793403f9f1deaef139b11d7d/328015e208f43db1faeb7a9272619a970c4ca895b73a6b817ead253f98af434d/p10_ax7020_rotating_functional.xsa",
+        "sha256": "328015e208f43db1faeb7a9272619a970c4ca895b73a6b817ead253f98af434d"
+      }
+    }
+  ],
+  "generated_at_utc": "2026-08-05T03:55:02+00:00",
+  "schema_version": 1,
+  "status": "PASS"
+}

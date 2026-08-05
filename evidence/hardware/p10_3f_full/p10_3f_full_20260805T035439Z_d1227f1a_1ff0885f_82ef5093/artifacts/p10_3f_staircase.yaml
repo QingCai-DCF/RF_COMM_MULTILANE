@@ -1,0 +1,65 @@
+schema_version: 1
+scope: P10_3F_BOUNDED_STAIRCASE_AND_FORMAL
+status: OFFLINE_DEFINED_PENDING_CURRENT_RUN_AUTHORIZATION
+lane_mask: '0xF'
+directions:
+  - fixed_to_rotating
+  - rotating_to_fixed
+levels:
+  - level: 0
+    bytes: 1024
+    kib: 1
+    checkpoint_tag: '0xF3000100'
+  - level: 1
+    bytes: 4096
+    kib: 4
+    checkpoint_tag: '0xF3000401'
+  - level: 2
+    bytes: 16384
+    kib: 16
+    checkpoint_tag: '0xF3001002'
+  - level: 3
+    bytes: 65536
+    kib: 64
+    checkpoint_tag: '0xF3004003'
+  - level: 4
+    bytes: 262144
+    kib: 256
+    checkpoint_tag: '0xF3010004'
+advance_gate:
+  check_after_each_direction: true
+  require_both_directions_before_next_level: true
+  snapshot_sources:
+    - p10_2_atomic_snapshot
+    - p10_first_fault_status
+  required:
+    safety_fault_mask: 0
+    first_fault_frozen: false
+    hard_fault_count_per_module: 0
+    continuous_txd_high_max_cycles_lte: 64
+    rolling_duty_max_cycles_lte: 11520
+    descriptor_leak_count: 0
+    descriptor_double_completion_count: 0
+    integrity_errors: 0
+    protocol_errors: 0
+  on_failure:
+    - hardware_tx_kill_and_full_shutdown
+    - archive_frozen_evidence_before_fpga_reconfiguration
+    - program_and_verify_independent_shutdown_on_both_endpoints
+formal:
+  duration_seconds: 1800
+  warmup_seconds_total: 120
+  measured_seconds_per_direction: 840
+  maximum_command_bytes: 262144
+  object_bytes: 262144
+  lane_mask: '0xF'
+  require_each_command_snapshot_gate: true
+  maximum_single_run_seconds: 1800
+manual_measurement:
+  oscilloscope: OMITTED_BY_USER
+  current_temperature: OMITTED_BY_USER
+  photodiode_probe: OMITTED_BY_USER
+authorization:
+  no_hardware: true
+  current_run_hardware_authorization: false
+  note: A future run must bind the new source commit and all new artifact SHA256 values.
