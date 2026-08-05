@@ -1,0 +1,54 @@
+{
+  "artifact_source_commit": "7fc3a7cb03f9ee19793403f9f1deaef139b11d7d",
+  "board_shutdown": {
+    "fixed": "PASS",
+    "rotating": "PASS",
+    "shutdown_exit": 0,
+    "tfdu_shutdown_programmed": true
+  },
+  "diagnosis": {
+    "failed_vector_total_bytes": 262144,
+    "internal_object_bytes": 262144,
+    "object_count": 1,
+    "receiver_observed_main_state": 4,
+    "receiver_observed_p10_1_sequence": 1001,
+    "receiver_observed_p10_1_state": 7,
+    "receiver_observed_p10_1_status": 0,
+    "root_cause": "The receiver-first command carried EXPECT_DMA_RESET_SENDER on both endpoints. With one internal object, recovery_ordinal was object 0, so the rotating receiver completed its expected-abort path before XSDB could publish the paired fixed sender command.",
+    "safety_interpretation": "This was a fail-closed orchestration/precondition failure, not evidence of continued transmission. The rotating PL recorder froze and both endpoints were independently programmed with the shutdown bitstreams.",
+    "selected_fix": "Use a two-internal-object (512 KiB aggregate) reset vector. Object 0 must establish a real paired transfer; the role-selected reset remains object 1. Each protocol object remains 256 KiB."
+  },
+  "evidence": [
+    {
+      "bytes": 11466,
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T015904Z_6f7063e9_1ff0885f_82ef5093/stages/stream_dma_reset_fault/stage_summary.json",
+      "sha256": "f0b555ac721f0b850c130c87178a93b7f39106abc7bf0ed4cfa9041f5b5044bb"
+    },
+    {
+      "bytes": 2469,
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T015904Z_6f7063e9_1ff0885f_82ef5093/stages/stream_dma_reset_fault/xsdb.result.txt",
+      "sha256": "4477f9159f01d153df5ad22507801a376c265ed6c18e1d021976d26b52b6e7f2"
+    },
+    {
+      "bytes": 8512,
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T015904Z_6f7063e9_1ff0885f_82ef5093/forensics/stream_dma_reset_fault/rotating.p10ff.bin",
+      "sha256": "1f17cbe487c0fbb7757bfb36904f791fe01ce57d18d32e8938ecbdb2138dfbe8"
+    },
+    {
+      "bytes": 7156448,
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T015904Z_6f7063e9_1ff0885f_82ef5093/final/orchestrator_result.json",
+      "sha256": "d2d88ab807f4261de403000d0cc6bb259a878718c7f0d1288cc33295e0645ccb"
+    },
+    {
+      "bytes": 437156,
+      "path": "evidence/hardware/p10_3f_full/p10_3f_full_20260805T015904Z_6f7063e9_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json",
+      "sha256": "3806bc1746b06c42eefbb421b8073b2c355def0cf87cedce953d244231550b7f"
+    }
+  ],
+  "failed_run_id": "p10_3f_full_20260805T015904Z_6f7063e9_1ff0885f_82ef5093",
+  "generated_at_utc": "2026-08-05T02:52:03Z",
+  "goal_sha256": "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281",
+  "host_source_commit": "6f7063e953b5124426da580732d7f156a8836cea",
+  "schema_version": 1,
+  "status": "DIAGNOSED_NOT_PROMOTED"
+}

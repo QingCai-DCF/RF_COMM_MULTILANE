@@ -13,6 +13,10 @@ admission_precondition:
 aggregate_runtime:
   internal_object_bytes: 262144
   segment_bytes: 65536
+  dma_reset_fault_aggregate_bytes: 524288
+  dma_reset_fault_internal_objects: 2
+  dma_reset_fault_injection_object_ordinal: 1
+  dma_reset_fault_requires_receiver_first_paired_object: true
   maximum_board_autonomous_aggregate_command_bytes: 67108864
   exact_64m_host_commands_per_direction: 1
   adaptive_window_command_bytes:

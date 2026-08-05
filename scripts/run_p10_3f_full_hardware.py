@@ -96,6 +96,11 @@ ALLOWED_EXECUTION_BRANCHES = {
 EXPECTED_BUILD = {"fixed": 0x50334646, "rotating": 0x50334652}
 INTERNAL_OBJECT_BYTES = 262_144
 MAX_STAIRCASE_LEVEL_BYTES = INTERNAL_OBJECT_BYTES
+# A role-selected reset cannot be the first object in a receiver-first launch:
+# both endpoints receive the same immutable recovery flag, so a one-object
+# receiver reaches its expected-abort point before XSDB can launch the sender.
+# Keep object 0 as a real paired transfer and inject the reset in object 1.
+RESET_FAULT_STREAM_BYTES = 2 * INTERNAL_OBJECT_BYTES
 MAX_AGGREGATE_COMMAND_BYTES = 64 << 20
 WINDOW_COMMAND_BYTES = frozenset((1 << 20, 4 << 20, 16 << 20, 64 << 20))
 # Compatibility name for callers that mean the protocol's internal object,
@@ -542,10 +547,10 @@ def build_plans() -> dict[str, str]:
 
     dma_reset = base.stream_case(
         "stream_dma_reset_sender",
-        size=INTERNAL_OBJECT_BYTES,
+        size=RESET_FAULT_STREAM_BYTES,
         direction=0,
         lane=15,
-        object_id=ids.allocate(),
+        object_id=ids.allocate(RESET_FAULT_STREAM_BYTES),
         flags=base.p101.FLAG_DMA_RESET_SENDER,
     )
     plans["stream_dma_reset_fault"] = (
@@ -610,10 +615,23 @@ def validate_plans(plans: dict[str, str]) -> list[str]:
                     errors.append(f"{stage}: malformed CASE")
                     continue
                 if command in (3, 13):
-                    if stage not in BASE_STAGES and size > INTERNAL_OBJECT_BYTES:
-                        errors.append(f"{stage}: bounded CASE exceeds 256 KiB")
+                    case_limit = (
+                        RESET_FAULT_STREAM_BYTES
+                        if stage == "stream_dma_reset_fault"
+                        else INTERNAL_OBJECT_BYTES
+                    )
+                    if stage not in BASE_STAGES and size > case_limit:
+                        errors.append(
+                            f"{stage}: bounded CASE exceeds {case_limit} bytes"
+                        )
                     if stage in BASE_STAGES and size > MAX_FUNCTIONAL_DIAGNOSTIC_BYTES:
                         errors.append(f"{stage}: functional diagnostic exceeds 16 MiB")
+                    if stage == "stream_dma_reset_fault" and \
+                            size != RESET_FAULT_STREAM_BYTES:
+                        errors.append(
+                            "stream_dma_reset_fault: receiver-first reset vector "
+                            "must span exactly two internal objects"
+                        )
             if fields[0] == "P10FF_TOTAL":
                 if len(fields) != 7:
                     errors.append(f"{stage}: malformed bounded total")
@@ -851,6 +869,10 @@ def validate_aggregate_runtime_contract() -> list[str]:
     expected_runtime = {
         "internal_object_bytes": INTERNAL_OBJECT_BYTES,
         "segment_bytes": 65_536,
+        "dma_reset_fault_aggregate_bytes": RESET_FAULT_STREAM_BYTES,
+        "dma_reset_fault_internal_objects": 2,
+        "dma_reset_fault_injection_object_ordinal": 1,
+        "dma_reset_fault_requires_receiver_first_paired_object": True,
         "maximum_board_autonomous_aggregate_command_bytes": (
             MAX_AGGREGATE_COMMAND_BYTES
         ),

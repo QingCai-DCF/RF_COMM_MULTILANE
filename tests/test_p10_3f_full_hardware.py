@@ -63,6 +63,12 @@ class P103FFullHardwareTests(unittest.TestCase):
         )
         self.assertEqual(plans["streaming_64m"].count("P10FF_TOTAL "), 10)
         self.assertIn("stream_dma_reset_sender", plans["stream_dma_reset_fault"])
+        dma_reset_line = next(
+            line for line in plans["stream_dma_reset_fault"].splitlines()
+            if line.startswith("CASE ")
+        ).split()
+        self.assertEqual(int(dma_reset_line[9], 0), runner.RESET_FAULT_STREAM_BYTES)
+        self.assertEqual(int(dma_reset_line[21], 0), runner.INTERNAL_OBJECT_BYTES)
         self.assertIn(
             "stream_clean_after_dma_reset",
             plans["stream_dma_reset_recovery_64m"],
@@ -88,8 +94,13 @@ class P103FFullHardwareTests(unittest.TestCase):
                     continue
                 if fields[0] == "CASE" and stage not in runner.BASE_STAGES:
                     if int(fields[2], 0) in (3, 13):
+                        limit = (
+                            runner.RESET_FAULT_STREAM_BYTES
+                            if stage == "stream_dma_reset_fault"
+                            else runner.INTERNAL_OBJECT_BYTES
+                        )
                         self.assertLessEqual(
-                            int(fields[9], 0), runner.INTERNAL_OBJECT_BYTES
+                            int(fields[9], 0), limit
                         )
                 if fields[0] == "P10FF_TOTAL":
                     total = int(fields[2], 0)
@@ -99,6 +110,18 @@ class P103FFullHardwareTests(unittest.TestCase):
         ranges.sort()
         for prior, current in zip(ranges, ranges[1:]):
             self.assertLess(prior[1], current[0], f"{prior[2]} / {current[2]}")
+
+        one_object = dict(plans)
+        fault_lines = one_object["stream_dma_reset_fault"].splitlines()
+        fields = fault_lines[1].split()
+        fields[9] = str(runner.INTERNAL_OBJECT_BYTES)
+        fault_lines[1] = " ".join(fields)
+        one_object["stream_dma_reset_fault"] = "\n".join(fault_lines) + "\n"
+        self.assertIn(
+            "stream_dma_reset_fault: receiver-first reset vector must span "
+            "exactly two internal objects",
+            runner.validate_plans(one_object),
+        )
 
     def test_total_is_one_board_autonomous_command_with_internal_objects(self) -> None:
         self.assertEqual(runner.validate_aggregate_runtime_contract(), [])
@@ -384,6 +407,7 @@ class P103FFullHardwareTests(unittest.TestCase):
         self.assertEqual(runner.EXPECTED_FIXED_SERIAL, "210249855178")
         self.assertEqual(runner.EXPECTED_ROTATING_SERIAL, "210512180081")
         self.assertEqual(runner.INTERNAL_OBJECT_BYTES, 256 * 1024)
+        self.assertEqual(runner.RESET_FAULT_STREAM_BYTES, 512 * 1024)
         self.assertEqual(runner.MAX_STAIRCASE_LEVEL_BYTES, 256 * 1024)
         self.assertEqual(runner.MAX_AGGREGATE_COMMAND_BYTES, 64 * 1024 * 1024)
         self.assertEqual(runner.STAGE_TIMEOUT["formal_30min"], 2100)
