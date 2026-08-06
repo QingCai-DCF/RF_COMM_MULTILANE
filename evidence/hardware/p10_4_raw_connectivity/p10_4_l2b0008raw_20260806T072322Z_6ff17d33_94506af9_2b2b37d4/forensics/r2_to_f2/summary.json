@@ -1,0 +1,75 @@
+{
+  "archives": [
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4_raw_connectivity\\p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4\\forensics\\r2_to_f2\\fixed.p10ff.bin",
+      "binary_sha256": "7f888efba21aa3cd7a884003d98f02e3f870755cd48dd7e675f30e6bf7e9efc1",
+      "digest_words_little_endian": [
+        "0xFB8E887F",
+        "0xCDA31AA2",
+        "0x0340887A",
+        "0xE3028FD9",
+        "0x5C7570F8",
+        "0xE6D78DD4",
+        "0x6B0EF375",
+        "0xC1EFE9F7"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4_raw_connectivity\\p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4\\forensics\\r2_to_f2\\fixed.p10ff.json",
+      "role": "fixed",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4_raw_connectivity\\p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4\\forensics\\r2_to_f2\\fixed.p10ff.sha256",
+      "status": "NO_FAULT"
+    },
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4_raw_connectivity\\p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4\\forensics\\r2_to_f2\\rotating.p10ff.bin",
+      "binary_sha256": "4955567261b64021e48b7435258c34fb187aed285caf4fcbf9da8eacc1efcddc",
+      "digest_words_little_endian": [
+        "0x72565549",
+        "0x2140B661",
+        "0x35748BE4",
+        "0xFB348C25",
+        "0x28ED7A18",
+        "0xCB4FAF5C",
+        "0xAC8EDAF9",
+        "0xDCCDEFC1"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4_raw_connectivity\\p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4\\forensics\\r2_to_f2\\rotating.p10ff.json",
+      "role": "rotating",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4_raw_connectivity\\p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4\\forensics\\r2_to_f2\\rotating.p10ff.sha256",
+      "status": "NO_FAULT"
+    }
+  ],
+  "capture_process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\scripts\\hw\\p10_3f_fault_forensics.tcl",
+      "capture",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4_raw_connectivity\\p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4\\forensics\\r2_to_f2",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\config\\p10_4_lane2_b0008_raw_retest_current_run_authorization.json",
+      "p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4",
+      "0x50343446",
+      "0x50343452",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4_raw_connectivity\\p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4\\forensics\\r2_to_f2\\capture.result.txt",
+      "NONE",
+      "NONE",
+      "0x0A000004",
+      "0xBCFECB39"
+    ],
+    "elapsed_seconds": 0.8395668999291956,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_4_raw_connectivity/p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4/forensics/r2_to_f2/capture.stderr.log",
+    "stdout": "evidence/hardware/p10_4_raw_connectivity/p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4/forensics/r2_to_f2/capture.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 180
+  },
+  "commit_process": null,
+  "errors": [],
+  "explicit_clear_executed": false,
+  "force_terminal_abort": false,
+  "frozen_roles": [],
+  "generated_at_utc": "2026-08-06T07:26:08+00:00",
+  "label": "r2_to_f2",
+  "schema_version": 1,
+  "status": "PASS"
+}

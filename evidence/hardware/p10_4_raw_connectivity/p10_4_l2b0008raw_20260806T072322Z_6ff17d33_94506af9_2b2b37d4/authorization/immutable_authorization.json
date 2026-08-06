@@ -104,9 +104,8 @@
   },
   "branch": "p10.4/autonomous-4lane-hardening",
   "campaign_standing_authorization": "The current user request authorizes exactly one bounded F2=B0008/R2=B0023 bidirectional RAW retest after the user-completed F2 replacement; it does not reactivate the terminated P10.4 campaign or authorize stress traffic.",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-06T07:26:47+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "diagnostic_runner_parent_commit": "5ee02491f200e589223a2bc367ed8e8ada9b6d81",
   "diagnostic_trigger": "The user reported replacing F2 B0001 with new B0008 and explicitly requested a fresh F2/R2 connectivity retest.",
   "evidence_retention": {
@@ -128,7 +127,7 @@
   },
   "generated_at_utc": "2026-08-06T07:23:22+00:00",
   "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
-  "hardware_actions_executed": true,
+  "hardware_actions_executed": false,
   "inputs": {
     "AGENTS.md": {
       "bytes": 9946,
@@ -314,7 +313,6 @@
     "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
     "source": "Direct user statement on 2026-08-06"
   },
-  "result": "evidence/generated/p10_4_lane2_b0008_raw_connectivity_retest.json",
   "retry_override": {
     "campaign_wide_unlimited_override": false,
     "goal_diagnostic_limit_previously_exhausted": true,
@@ -324,7 +322,6 @@
   },
   "rewiring_by_codex": false,
   "rotation": false,
-  "run_evidence": "evidence/hardware/p10_4_raw_connectivity/p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json",
   "run_id": "p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4",
   "runtime_limits": {
     "active_functional_total_seconds": 600,
@@ -344,7 +341,7 @@
     "on_timeout": true,
     "verify_both": true
   },
-  "status": "CONSUMED_AFTER_P10_4_LANE2_RAW_RETEST_PASS",
+  "status": "AUTHORIZED",
   "stimulus": {
     "commands": [
       "receive_only_5000ms",
