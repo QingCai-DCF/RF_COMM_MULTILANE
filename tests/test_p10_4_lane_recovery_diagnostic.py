@@ -41,6 +41,23 @@ class P104LaneRecoveryDiagnosticTests(unittest.TestCase):
         self.assertTrue(all(int(row[2], 0) == 64 << 20 for row in totals))
         self.assertTrue(all(int(row[4], 0) == 15 for row in totals))
 
+    def test_crosstalk_diagnostic_uses_exact_full_matrix_plan(self) -> None:
+        selected = MODULE.selected_config()
+        plan = MODULE.campaign.build_plans(selected)["echo_crosstalk_8x8"]
+        rows = [line.split() for line in plan.splitlines()]
+        raw = [row for row in rows if row and row[0] == "CASE"]
+        windows = [row for row in rows if row and row[0] == "P10FF_WINDOW"]
+        self.assertEqual(len(raw), 16)
+        self.assertEqual(len(windows), 8)
+        self.assertEqual(
+            {row[1] for row in windows},
+            {
+                f"matrix_{side}{lane}_frame30s"
+                for lane in range(4) for side in ("F", "R")
+            },
+        )
+        self.assertTrue(all(int(row[2], 0) == 30 for row in windows))
+
     def test_diagnostic_does_not_claim_full_campaign_pass(self) -> None:
         source = (SCRIPTS / "run_p10_4_lane_recovery_diagnostic.py").read_text(
             encoding="utf-8"

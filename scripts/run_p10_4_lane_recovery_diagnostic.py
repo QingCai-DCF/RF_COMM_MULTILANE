@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Run one immutable P10.4 lane-degradation/recovery diagnostic safely.
+"""Run one immutable P10.4 recovery or crosstalk diagnostic safely.
 
 This is deliberately separate from the full P10.4 orchestrator.  It reuses the
-exact authorized lane-recovery plan and frozen artifacts, produces a unique
-run root, consumes its own current-run authorization, and never promotes the
-result to a full-campaign PASS.
+exact authorized stage plan and frozen artifacts, produces a unique run root,
+consumes its own current-run authorization, and never promotes the result to a
+full-campaign PASS.
 """
 
 from __future__ import annotations
@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 AUTH = ROOT / "config/p10_4_lane_recovery_diagnostic_current_run_authorization.json"
 GENERATED = ROOT / "evidence/generated/p10_4_lane_recovery_diagnostic"
 STAGE = "lane_recovery"
+SUPPORTED_STAGES = (STAGE, "echo_crosstalk_8x8")
 SELECTED_CONFIG_NAME = "buffers2_batch16"
 
 
@@ -38,24 +39,29 @@ def selected_config() -> dict[str, Any]:
 
 
 def validate_diagnostic_authorization(
-    path: Path, run_id: str
+    path: Path, run_id: str, stage: str = STAGE
 ) -> tuple[dict[str, Any], dict[str, Path], list[str], str]:
     authorization, artifacts, errors = campaign.validate_authorization(path, run_id)
     selected = selected_config()
-    plan = campaign.build_plans(selected)[STAGE]
+    plan = campaign.build_plans(selected)[stage]
     expected = authorization.get("allowed_plan_sha256", {}).get(
         SELECTED_CONFIG_NAME, {}
-    ).get(STAGE)
+    ).get(stage)
     actual = hashlib.sha256(plan.encode("ascii")).hexdigest()
     if expected != actual:
-        errors.append("lane-recovery diagnostic plan is not exactly authorized")
-    if STAGE not in authorization.get("allowed_stages", []):
-        errors.append("lane-recovery diagnostic stage is not authorized")
+        errors.append(f"{stage} diagnostic plan is not exactly authorized")
+    if stage not in authorization.get("allowed_stages", []):
+        errors.append(f"{stage} diagnostic stage is not authorized")
     return authorization, artifacts, errors, plan
 
 
-def publish_terminal_evidence(run_root: Path, summary: dict[str, Any]) -> list[str]:
-    result = run_root / "final/lane_recovery_diagnostic_result.json"
+def publish_terminal_evidence(
+    run_root: Path, summary: dict[str, Any], generated: Path | None = None
+) -> list[str]:
+    if generated is None:
+        generated = GENERATED
+    stage = str(summary.get("diagnostic_stage", STAGE))
+    result = run_root / f"final/{stage}_diagnostic_result.json"
     manifest_path = run_root / "final/run_evidence_sha256_manifest.json"
     summary["evidence_manifest"] = campaign.rel(manifest_path)
     summary["evidence_manifest_verified"] = True
@@ -75,25 +81,25 @@ def publish_terminal_evidence(run_root: Path, summary: dict[str, Any]) -> list[s
             if item not in errors:
                 errors.append(item)
     campaign.write_pair(
-        GENERATED, summary, "P10.4 lane-recovery diagnostic"
+        generated, summary, f"P10.4 {stage} diagnostic"
     )
     return errors
 
 
 def consume_authorization(
     path: Path, authorization: dict[str, Any], run_root: Path,
-    status: str, errors: list[str]
+    status: str, errors: list[str], stage: str = STAGE
 ) -> None:
     consumed = dict(authorization)
     consumed.update({
-        "status": f"CONSUMED_AFTER_P10_4_LANE_RECOVERY_DIAGNOSTIC_{status}",
+        "status": f"CONSUMED_AFTER_P10_4_{stage.upper()}_DIAGNOSTIC_{status}",
         "current_run_hardware_authorization": False,
         "consumed": True,
         "consumed_at_utc": campaign.utc_now(),
         "result": campaign.rel(
-            run_root / "final/lane_recovery_diagnostic_result.json"
+            run_root / f"final/{stage}_diagnostic_result.json"
         ),
-        "diagnostic_stage": STAGE,
+        "diagnostic_stage": stage,
         "diagnostic_errors": errors,
     })
     campaign.write_json(path, consumed)
@@ -103,17 +109,23 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--authorization", type=Path, default=AUTH)
     parser.add_argument("--run-id", required=True)
+    parser.add_argument("--diagnostic-stage", choices=SUPPORTED_STAGES,
+                        default=STAGE)
     parser.add_argument("--validate-only", action="store_true")
     parser.add_argument("--execute-hardware", action="store_true")
     args = parser.parse_args(argv)
+    stage = args.diagnostic_stage
+    generated = GENERATED if stage == STAGE else (
+        ROOT / f"evidence/generated/p10_4_{stage}_diagnostic"
+    )
     auth_path = args.authorization.resolve()
     authorization, artifacts, errors, plan = validate_diagnostic_authorization(
-        auth_path, args.run_id
+        auth_path, args.run_id, stage
     )
     if args.validate_only:
         print(json.dumps({
             "status": "PASS" if not errors else "FAIL",
-            "stage": STAGE,
+            "stage": stage,
             "selected_config": SELECTED_CONFIG_NAME,
             "errors": errors,
         }, indent=2))
@@ -163,38 +175,38 @@ def main(argv: list[str] | None = None) -> int:
             raise RuntimeError("initial dual shutdown unconfirmed")
 
         before = campaign.guarded_shutdown(
-            run_root, auth_path, artifacts, f"{STAGE}_before", env
+            run_root, auth_path, artifacts, f"{stage}_before", env
         )
         shutdowns.append(before)
         if before.get("status") != "PASS":
-            raise RuntimeError("lane-recovery shutdown-before unconfirmed")
+            raise RuntimeError(f"{stage} shutdown-before unconfirmed")
 
         archived = False
         process, stage_dir = campaign.invoke_stage(
-            STAGE, plan, run_root, auth_path, artifacts, ps7, env
+            stage, plan, run_root, auth_path, artifacts, ps7, env
         )
         process_failed = bool(
             process.get("returncode") != 0 or process.get("timed_out")
         )
         archive = campaign.capture_and_archive(
-            STAGE, run_root, auth_path, env, force_abort=process_failed
+            stage, run_root, auth_path, env, force_abort=process_failed
         )
         forensics.append(archive)
         archived = archive.get("status") == "PASS"
         if not archived:
-            raise RuntimeError("lane-recovery forensic archive failed")
+            raise RuntimeError(f"{stage} forensic archive failed")
 
         after = campaign.guarded_shutdown(
-            run_root, auth_path, artifacts, f"{STAGE}_after", env
+            run_root, auth_path, artifacts, f"{stage}_after", env
         )
         shutdowns.append(after)
-        stage_result = campaign.evaluate_stage(STAGE, stage_dir, process, archive, plan)
+        stage_result = campaign.evaluate_stage(stage, stage_dir, process, archive, plan)
         stage_result["shutdown_before_status"] = before.get("status")
         stage_result["shutdown_after_status"] = after.get("status")
         if after.get("status") != "PASS":
-            raise RuntimeError("lane-recovery shutdown-after unconfirmed")
+            raise RuntimeError(f"{stage} shutdown-after unconfirmed")
         if stage_result.get("status") != "PASS":
-            raise RuntimeError("lane-recovery diagnostic failed closed")
+            raise RuntimeError(f"{stage} diagnostic failed closed")
 
         terminal = campaign.guarded_shutdown(
             run_root, auth_path, artifacts, "final", env
@@ -210,7 +222,7 @@ def main(argv: list[str] | None = None) -> int:
         if not archived:
             try:
                 retry = campaign.capture_and_archive(
-                    f"{STAGE}_finally_before_shutdown", run_root,
+                    f"{stage}_finally_before_shutdown", run_root,
                     auth_path, env, force_abort=True
                 )
                 forensics.append(retry)
@@ -245,12 +257,13 @@ def main(argv: list[str] | None = None) -> int:
     ) else "FAIL_CLOSED"
     summary = {
         "schema_version": 1,
-        "test_id": "P10_4-LANE-RECOVERY-DIAGNOSTIC",
+        "test_id": f"P10_4-{stage.upper()}-DIAGNOSTIC",
         "status": status,
         "scope": campaign.SCOPE,
         "run_id": args.run_id,
         "goal_sha256": campaign.GOAL_SHA256,
         "diagnostic_only": True,
+        "diagnostic_stage": stage,
         "full_campaign_pass_claimed": False,
         "artifact_source_commit": authorization["source_commit"],
         "artifacts": authorization["artifacts"],
@@ -271,11 +284,14 @@ def main(argv: list[str] | None = None) -> int:
         "errors": run_errors,
         "generated_at_utc": campaign.utc_now(),
     }
-    manifest_errors = publish_terminal_evidence(run_root, summary)
+    manifest_errors = publish_terminal_evidence(run_root, summary, generated)
     if manifest_errors:
         status = "FAIL_CLOSED"
-    consume_authorization(auth_path, authorization, run_root, status, summary["errors"])
-    print(f"P10_4_LANE_RECOVERY_DIAGNOSTIC={status}")
+    consume_authorization(
+        auth_path, authorization, run_root, status, summary["errors"], stage
+    )
+    marker = stage.upper().replace("-", "_")
+    print(f"P10_4_{marker}_DIAGNOSTIC={status}")
     print(f"P10_4_RUN_ID={args.run_id}")
     print(f"SHUTDOWN_FIXED={summary['SHUTDOWN_FIXED']}")
     print(f"SHUTDOWN_ROTATING={summary['SHUTDOWN_ROTATING']}")
