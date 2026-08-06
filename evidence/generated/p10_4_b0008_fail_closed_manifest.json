@@ -1,0 +1,151 @@
+{
+  "artifact_source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "hardware_actions_executed_during_finalization": false,
+  "hardware_evidence_checkpoint": "6c0f074f233d94c5f42f494263eae40ec350d5be",
+  "output_records": [
+    {
+      "bytes": 9860,
+      "path": "evidence/generated/p10_4_f2_to_r2_directional_blocker.json",
+      "sha256": "6a7ca37156b46d3aee60fa005750f401a8ead0a9c3d08ea4f65452c1461e704f"
+    },
+    {
+      "bytes": 9327,
+      "path": "evidence/generated/p10_4_completion_audit.json",
+      "sha256": "d425780fa569d98283ec4cc30db5c9cb99212f89a97af7081b554d3658a04081"
+    },
+    {
+      "bytes": 1509,
+      "path": "evidence/generated/p10_4_terminal_offline_closure.json",
+      "sha256": "27f10d42a8bb53f8971951b9ead1b6dd05d95da058ec2adc5288df1bca2c7712"
+    },
+    {
+      "bytes": 8538,
+      "path": "evidence/generated/p10_4_final_summary.json",
+      "sha256": "e6ffaa4ac89ac6b8bf1ad9ed2e6a63e541238ebc06f0a42b14fb0260da40aa6d"
+    },
+    {
+      "bytes": 1856,
+      "path": "evidence/generated/p10_4_shutdown.json",
+      "sha256": "8c67127497310a8fbc0cde91ba701f4061569944e9ee0ce37d0bcb3a033f6a62"
+    },
+    {
+      "bytes": 4707,
+      "path": "evidence/generated/p10_4_echo_crosstalk.json",
+      "sha256": "16e5d857770b43c9d79a5242d5074d10e074cbb3e578e9e3452019d43ce747c3"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+  "source_records": [
+    {
+      "bytes": 74464,
+      "path": "evidence/generated/p10_4_lane2_b0008_raw_connectivity_retest.json",
+      "sha256": "1c346b2cab52a70ac4e918f7645022635545cc07606ecc578bcc4bb5046bf81b"
+    },
+    {
+      "bytes": 8223522,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json",
+      "sha256": "b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99"
+    },
+    {
+      "bytes": 40709,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4/final/lane_recovery_diagnostic_result.json",
+      "sha256": "e9b6c5670c4b25f17876cc4c535dd836305b827d79cbe8be30863c4ab992e46a"
+    },
+    {
+      "bytes": 771642,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4/final/echo_crosstalk_8x8_diagnostic_result.json",
+      "sha256": "3724c971709763d05745dec647f95dc38de9d080c8163d56c29193dee624ca4d"
+    },
+    {
+      "bytes": 46455,
+      "path": "config/p10_4_b0008_current_run_hardware_authorization.json",
+      "sha256": "ca4a2edf05de4c25aeda5cdd24aed3ef89cdd3494a45f89c35cdd42d5dd51de0"
+    },
+    {
+      "bytes": 46576,
+      "path": "config/p10_4_lane_recovery_diagnostic_current_run_authorization.json",
+      "sha256": "48224281542e1600f5732c33dc32473d906bc1223774119eaff3a14c6fbdd31b"
+    },
+    {
+      "bytes": 46596,
+      "path": "config/p10_4_echo_crosstalk_8x8_diagnostic_current_run_authorization.json",
+      "sha256": "68fffe4237fb7cf1fad76e9d1b4b1959e90bc0d25a0fbe29ca291367c0a04377"
+    },
+    {
+      "bytes": 90015,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/forensics/lane_recovery/fixed.p10ff.json",
+      "sha256": "bce7edf64ce84e5585f94ea5c31dde2a81e1cdc91a5c5a15bd141b114b945511"
+    },
+    {
+      "bytes": 87955,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/forensics/lane_recovery/rotating.p10ff.json",
+      "sha256": "380b172df784869b140c14b27b35d68d35ccc9a6745e81d2af1c03466e907b06"
+    },
+    {
+      "bytes": 90002,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4/forensics/lane_recovery/fixed.p10ff.json",
+      "sha256": "cd25c1ed26ff315b8b62f2b30dc03fdcf3f2d5091d23e6116e5a5df2ef78b2c9"
+    },
+    {
+      "bytes": 87943,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4/forensics/lane_recovery/rotating.p10ff.json",
+      "sha256": "5077333e88f0663b505f87e797a91bee4535bd17ba10942c503e855e935c5b62"
+    },
+    {
+      "bytes": 575551,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+      "sha256": "44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b"
+    },
+    {
+      "bytes": 12832,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+      "sha256": "d7370dd6c2e163dd90da5467bd28e372b5e821803fe4f482ba519cf3e613655c"
+    },
+    {
+      "bytes": 63875,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+      "sha256": "914e705f7ee591c0b2208825c242c32a121d5dac1d548283941abf0992764658"
+    },
+    {
+      "bytes": 36335,
+      "path": "evidence/hardware/p10_4_raw_connectivity/p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+      "sha256": "9fc28fc8fc9b011d91c4dfddc75a17bf79d2b4e8e74b45758ca99e9f5100649c"
+    }
+  ],
+  "source_run_manifests_verified": {
+    "full_campaign": {
+      "bytes": 575551,
+      "file_count": 2088,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+      "sha256": "44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b",
+      "status": "PASS"
+    },
+    "isolated_echo_crosstalk": {
+      "bytes": 63875,
+      "file_count": 230,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+      "sha256": "914e705f7ee591c0b2208825c242c32a121d5dac1d548283941abf0992764658",
+      "status": "PASS"
+    },
+    "isolated_lane_recovery": {
+      "bytes": 12832,
+      "file_count": 51,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+      "sha256": "d7370dd6c2e163dd90da5467bd28e372b5e821803fe4f482ba519cf3e613655c",
+      "status": "PASS"
+    },
+    "qualification": {
+      "bytes": 36335,
+      "file_count": 127,
+      "path": "evidence/hardware/p10_4_raw_connectivity/p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+      "sha256": "9fc28fc8fc9b011d91c4dfddc75a17bf79d2b4e8e74b45758ca99e9f5100649c",
+      "status": "PASS"
+    }
+  },
+  "status": "PASS",
+  "test_id": "P10_4-B0008-FAIL-CLOSED-MANIFEST"
+}

@@ -1,123 +1,264 @@
 {
-  "schema_version": 1,
-  "test_id": "P10_4-COMPLETION-AUDIT",
-  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
-  "status": "FAIL_CLOSED",
-  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
-  "hardware_run_id": "p10_4_20260806T034503Z_6ff17d33_94506af9_2b2b37d4",
   "artifact_source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
-  "goal_result_fields": {
-    "P10_4_CORE_ROBUSTNESS": "FAIL",
-    "P10_4_HALF_DUPLEX_8MBPS_RETENTION": "FAIL_NOT_EXECUTED_AFTER_FAIL_CLOSED",
-    "P10_4_MARGIN_TARGET_9MBPS": "FAIL_NONBLOCKING_NOT_EXECUTED",
-    "P10_4_STRETCH_9P6MBPS": "FAIL_NONBLOCKING_NOT_EXECUTED",
-    "P10_4_2PLUS2_EXPERIMENT": "PARTIAL_NOT_EXECUTED_AFTER_FAIL_CLOSED",
-    "P10_4_EXTERNAL_ELECTRICAL": "PENDING_NOT_IN_SCOPE"
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
   },
-  "completed_pre_hardware_scope": {
-    "p10_3_closeout": {
-      "status": "PASS",
-      "path": "evidence/generated/p10_4_p10_3_closeout.json",
-      "sha256": "df043ad4e654b47048b303fdc1d6246019d70dad8e766f299109f0ed393773a1"
+  "direct_achievements": {
+    "baseline_smoke": "PASS",
+    "counter_semantics": "PASS",
+    "half_duplex_300s": {
+      "F_TO_R_application_goodput_bps": 8388608.0,
+      "F_TO_R_committed_bytes": 314572800,
+      "R_TO_F_application_goodput_bps": 8416570.026666667,
+      "R_TO_F_committed_bytes": 315621376,
+      "eight_mbps_retention": "PASS_BOTH_DIRECTIONS",
+      "nine_mbps_margin": "FAIL_NONBLOCKING_BOTH_DIRECTIONS"
     },
-    "repository_intake": {
-      "status": "PASS",
-      "path": "evidence/generated/p10_4_repo_intake.json",
-      "sha256": "fe9c89eeeaab1c3cd8f76c6587eef56b768e7caf5c2d3c1e869f4687858715d6"
+    "p10_3_baseline_recheck": "PASS",
+    "selected_config": {
+      "ack_threshold": 32,
+      "buffer_count": 2,
+      "cache_batching": 1,
+      "descriptor_batch": 16,
+      "descriptor_bytes": 65536,
+      "name": "buffers2_batch16",
+      "object_bytes": 262144,
+      "outstanding": 32,
+      "ring_depth": 32
     },
-    "artifact_freeze": {
-      "status": "PASS",
-      "path": "evidence/generated/p10_4_artifact_freeze.json",
-      "sha256": "f8f09b71563e837c435c06e8cfd8ab1d06f59b755ac855d388ae5c30b2894c47"
-    },
-    "canonical_offline_gate": {
-      "status": "PASS_AFTER_VERIFIER_REMEDIATION",
-      "path": "evidence/generated/offline_gate_summary.json",
-      "sha256": "e5c4bb88d52cdb2b479de6e2603825f59753126f6a9922b8ddfc1ba00c0952cf",
-      "result_count": 31,
-      "failed_result_count": 0,
-      "no_hardware": true
-    }
+    "streaming_128m": "PASS_3_OF_3_EACH_DIRECTION_NONBLOCKING",
+    "streaming_64m": "PASS_10_OF_10_EACH_DIRECTION"
   },
-  "executed_hardware_stages": [
+  "executed_full_campaign_stages": [
     {
-      "stage": "preflight",
+      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/preflight/stage_summary.json",
       "status": "PASS",
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T034503Z_6ff17d33_94506af9_2b2b37d4/stages/preflight/stage_summary.json",
-      "evidence_sha256": "7597fd5f9affb3c38a4fb0481584da9fe05ab980a3a9d792f9a970249f7f73ec"
+      "test_id": "P10_4-PREFLIGHT"
     },
     {
-      "stage": "counter_local_source",
+      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/counter_local_source/stage_summary.json",
       "status": "PASS",
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T034503Z_6ff17d33_94506af9_2b2b37d4/stages/counter_local_source/stage_summary.json",
-      "evidence_sha256": "4db1e5670b2b43c76267d619b3dbc84a1b9c46463ea38c3cb5ab2c400300033c"
+      "test_id": "P10_4-COUNTER_LOCAL_SOURCE"
     },
     {
-      "stage": "counter_semantics",
+      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/counter_semantics/stage_summary.json",
+      "status": "PASS",
+      "test_id": "P10_4-COUNTER_SEMANTICS"
+    },
+    {
+      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/baseline_smoke/stage_summary.json",
+      "status": "PASS",
+      "test_id": "P10_4-BASELINE_SMOKE"
+    },
+    {
+      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/tuning/stage_summary.json",
+      "status": "PASS",
+      "test_id": "P10_4-TUNING"
+    },
+    {
+      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/half_duplex/stage_summary.json",
+      "status": "PASS",
+      "test_id": "P10_4-HALF_DUPLEX"
+    },
+    {
+      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_64m/stage_summary.json",
+      "status": "PASS",
+      "test_id": "P10_4-STREAMING_64M"
+    },
+    {
+      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_128m/stage_summary.json",
+      "status": "PASS",
+      "test_id": "P10_4-STREAMING_128M"
+    },
+    {
+      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/lane_recovery/stage_summary.json",
       "status": "FAIL",
-      "error": "counter_direct_f2r_00000_4194304:lane2:selected lane made no progress",
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T034503Z_6ff17d33_94506af9_2b2b37d4/stages/counter_semantics/stage_summary.json",
-      "evidence_sha256": "1ed950b11d269b43a5dfd325d6c7f212d933a89feed10d8554c14e73c9c38a55"
+      "test_id": "P10_4-LANE_RECOVERY"
     }
   ],
-  "direct_blocker": {
-    "status": "FAIL_CLOSED_PHYSICAL_DIRECTIONAL_BLOCKER",
-    "path": "evidence/generated/p10_4_f2_to_r2_directional_blocker.json",
-    "sha256": "da1f3a44aee2c7de066344030257196fd9168fc75c248db63305b0cb2e819810",
-    "f2_to_r2": {
-      "sender_physical_tx": 5324445,
-      "receiver_raw_rx": 99,
-      "retries": 5076,
-      "timeouts": 5076,
-      "migrations": 5076,
-      "result": "FAIL_SELECTED_LANE_NO_PROGRESS"
-    },
-    "r2_to_f2": {
-      "sender_physical_tx": 4450326,
-      "receiver_raw_rx": 4450326,
-      "retries": 0,
-      "timeouts": 0,
-      "migrations": 0,
-      "result": "PASS_DIRECTIONAL_RAW_PROGRESS"
-    }
+  "goal_result_fields": {
+    "P10_4_2PLUS2_EXPERIMENT": "PARTIAL_NOT_EXECUTED_AFTER_FAIL_CLOSED",
+    "P10_4_CORE_ROBUSTNESS": "FAIL",
+    "P10_4_EXTERNAL_ELECTRICAL": "PENDING_NOT_IN_SCOPE",
+    "P10_4_HALF_DUPLEX_8MBPS_RETENTION": "PASS",
+    "P10_4_MARGIN_TARGET_9MBPS": "FAIL_NONBLOCKING",
+    "P10_4_STRETCH_9P6MBPS": "FAIL_NONBLOCKING"
+  },
+  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "hardware_evidence_checkpoint": "6c0f074f233d94c5f42f494263eae40ec350d5be",
+  "module_binding": {
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0008",
+    "F3": "B0020",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0023",
+    "R3": "B0025"
   },
   "not_executed_after_fail_closed": [
-    "baseline_smoke",
-    "performance_tuning",
-    "half_duplex_performance_300s_each_direction",
-    "streaming_64m_10_each_direction",
-    "streaming_128m_3_each_direction",
-    "lane_degradation_and_recovery",
-    "direction_switch_10_cycles",
-    "ps_dma_pl_reset_recovery",
-    "digital_echo_crosstalk_8x8",
-    "two_plus_two_300s",
-    "mixed_formal_1800s"
+    "remaining lane recovery vectors",
+    "remaining 8x8 matrix vectors",
+    "direction switch loop",
+    "reset recovery",
+    "2+2 experiment",
+    "1800-second mixed formal"
+  ],
+  "preserved_scoped_status": {
+    "P10_3": "PASS",
+    "P10_4": "FAIL",
+    "P11": "NOT_STARTED"
+  },
+  "requirement_counts": {
+    "FAIL": 3,
+    "PASS": 8,
+    "PENDING": 5,
+    "TOTAL": 16
+  },
+  "requirement_disposition": [
+    {
+      "evidence_path": "evidence/generated/p10_4_p10_3_closeout.json",
+      "reason": "P10.3 immutable closeout rechecked",
+      "requirement_id": "P10_4-CLOSE-001",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_counter_semantics.json",
+      "reason": "direct counter semantics and local-source injection passed",
+      "requirement_id": "P10_4-METRIC-001",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_half_duplex_performance.json",
+      "reason": "both 300-second windows reconciled to the frozen airtime model",
+      "requirement_id": "P10_4-MODEL-001",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_half_duplex_performance.json",
+      "reason": "F-to-R 300-second goodput was 8,388,608 bit/s",
+      "requirement_id": "P10_4-PERF-001",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_half_duplex_performance.json",
+      "reason": "R-to-F 300-second goodput was 8,416,570.026666667 bit/s",
+      "requirement_id": "P10_4-PERF-002",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_half_duplex_performance.json",
+      "reason": "both directions were below the nonblocking 9 Mbit/s target",
+      "requirement_id": "P10_4-PERF-003",
+      "status": "FAIL"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_streaming_64m.json",
+      "reason": "ten exact 64 MiB F-to-R objects passed",
+      "requirement_id": "P10_4-STREAM-001",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_streaming_64m.json",
+      "reason": "ten exact 64 MiB R-to-F objects passed",
+      "requirement_id": "P10_4-STREAM-002",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_degraded_modes.json",
+      "reason": "lane recovery failed repeatedly on current F2-to-R2 path",
+      "requirement_id": "P10_4-DEG-001",
+      "status": "FAIL"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_direction_switch.json",
+      "reason": "not executed after fail-closed trigger",
+      "requirement_id": "P10_4-DIR-001",
+      "status": "PENDING"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_reset_recovery.json",
+      "reason": "not executed after fail-closed trigger",
+      "requirement_id": "P10_4-RESET-001",
+      "status": "PENDING"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_echo_crosstalk.json",
+      "reason": "8x8 matrix stopped at F2 raw64: 64 TX / 0 remote RX",
+      "requirement_id": "P10_4-XTALK-001",
+      "status": "FAIL"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_crc_bad_remediation.json",
+      "reason": "required current-hardware masks/formal coverage not completed",
+      "requirement_id": "P10_4-XTALK-002",
+      "status": "PENDING"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_two_plus_two.json",
+      "reason": "2+2 experiment not executed after fail-closed trigger",
+      "requirement_id": "P10_4-FD-001",
+      "status": "PENDING"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_mixed_30min.json",
+      "reason": "1800-second mixed formal not executed after fail-closed trigger",
+      "requirement_id": "P10_4-SOAK-001",
+      "status": "PENDING"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_shutdown.json",
+      "reason": "all four current-B0008 runs ended with verified dual shutdown",
+      "requirement_id": "P10_4-SAFE-001",
+      "status": "PASS"
+    }
   ],
   "safety_and_shutdown": {
-    "observed_safety_counters_zero": true,
-    "first_fault_capture": "NO_FAULT_BECAUSE_LOSS_WAS_DETECTED_BY_STAGE_PROGRESS_EVALUATOR",
-    "shutdown_path": "evidence/generated/p10_4_shutdown.json",
-    "shutdown_sha256": "3c355035dfd4b637451048293d61ce8d5f3aaad758d3255d44ae2186f8c6f77c",
-    "SHUTDOWN_FIXED": "PASS",
-    "SHUTDOWN_ROTATING": "PASS",
-    "SHUTDOWN_EXIT": 0,
-    "TFDU_SHUTDOWN_PROGRAMMED": true,
-    "current_run_hardware_authorization": false
+    "current_run_hardware_authorization": false,
+    "integrity_and_safety_counters": {
+      "continuous_high_violation": 0,
+      "crc_bad": 0,
+      "cross_lane_accepted_data": 0,
+      "deadlock": 0,
+      "descriptor_leak": 0,
+      "double_completion": 0,
+      "duplicate_commit": 0,
+      "duty_violation": 0,
+      "partial_commit": 0,
+      "retry_exhausted": 0,
+      "same_module_accepted_data": 0,
+      "sha_mismatch": 0,
+      "stale_commit": 0,
+      "transport_timeout": 0
+    },
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS"
   },
+  "schema_version": 2,
+  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
   "scope_controls": {
-    "network_used": false,
-    "hardware_moved": false,
-    "rotation_executed": false,
-    "realignment_executed": false,
-    "wiring_changed": false,
-    "module_replaced": false,
     "external_instrumentation_used": false,
-    "p11_started": false
+    "hardware_moved": false,
+    "module_replaced_during_campaign_runs": false,
+    "network_used": false,
+    "p11_started": false,
+    "rotation_or_realignment_executed": false,
+    "wiring_changed": false
   },
-  "canonical_requirement_disposition": {
-    "p10_4_requirement_count": 16,
-    "requirements_promoted_by_this_audit": 0,
-    "reason": "The mandatory campaign stopped at counter_semantics. Unexecuted hardware requirements remain PENDING; this audit does not convert partial or proxy evidence into PASS."
-  }
+  "status": "FAIL_CLOSED",
+  "terminal_blocker": {
+    "classification": "CURRENT_DIRECT_RAW_PHYSICAL_DIRECTIONAL_PATH_FAILURE",
+    "path": "evidence/generated/p10_4_f2_to_r2_directional_blocker.json",
+    "reproduction_count_after_short_qualification": 3,
+    "terminal_measurement": {
+      "direction": "F2_TO_R2",
+      "evidence_class": "RAW_PHYSICAL_ONLY",
+      "receiver_raw_rx": 0,
+      "requested_raw_pulses": 64,
+      "sender_physical_tx": 64
+    }
+  },
+  "terminal_run_id": "p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4",
+  "test_id": "P10_4-COMPLETION-AUDIT-B0008"
 }

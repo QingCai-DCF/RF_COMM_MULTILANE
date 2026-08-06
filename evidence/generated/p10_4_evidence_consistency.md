@@ -1,8 +1,7 @@
 # P10.4 evidence consistency
 
 - Status: `PASS`
-- test_id: `P10_4-EVIDENCE-CONSISTENCY`
-- run_id: `p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4`
-- artifact_source_commit: `6ff17d33a0ea111fbd796899c49decbfa339e2c1`
-- hardware_actions_executed: `True`
-- current_run_hardware_authorization: `False`
+- Four immutable run manifests: `PASS`
+- Three terminal campaign authorizations: consumed and non-current.
+- Hardware result: `FAIL`; evidence consistency: `PASS`.
+- P10.3 scoped PASS is preserved and P11 remains not started.

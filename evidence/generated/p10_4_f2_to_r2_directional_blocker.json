@@ -1,103 +1,243 @@
 {
-  "schema_version": 1,
-  "test_id": "P10_4-F2-R2-DIRECTIONAL-BLOCKER",
-  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
-  "status": "FAIL_CLOSED_PHYSICAL_DIRECTIONAL_BLOCKER",
-  "classification": "CURRENT_DIRECT_HARDWARE_EVIDENCE",
-  "run_id": "p10_4_20260806T034503Z_6ff17d33_94506af9_2b2b37d4",
-  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "artifact_sha256": {
+    "fixed_elf": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb",
+    "fixed_functional_bitstream": "94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b",
+    "fixed_shutdown_bitstream": "7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762",
+    "rotating_elf": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1",
+    "rotating_functional_bitstream": "2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e",
+    "rotating_shutdown_bitstream": "d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36"
+  },
   "artifact_source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
   "board_binding": {
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
+  "classification": "CURRENT_DIRECT_RAW_PHYSICAL_DIRECTIONAL_PATH_FAILURE",
+  "disposition": "TERMINAL_FAIL_CLOSED_NO_FURTHER_HARDWARE_ACTION",
+  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "latest_hardware_evidence_checkpoint": "6c0f074f233d94c5f42f494263eae40ec350d5be",
+  "latest_run_id": "p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4",
   "module_binding": {
-    "F2": "B0001",
-    "R2": "B0023"
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0008",
+    "F3": "B0020",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0023",
+    "R3": "B0025"
   },
-  "artifact_sha256": {
-    "fixed_functional_bitstream": "94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b",
-    "rotating_functional_bitstream": "2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e",
-    "fixed_elf": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb",
-    "rotating_elf": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1",
-    "fixed_shutdown_bitstream": "7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762",
-    "rotating_shutdown_bitstream": "d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36"
-  },
-  "direct_measurements": {
-    "F2_TO_R2": {
-      "case": "counter_direct_f2r_00000_4194304",
-      "requested_bytes": 4194304,
-      "application_goodput_bps": 1005824.4080671758,
-      "fixed_physical_tx_by_lane": [5942631, 5940868, 5324445, 5934726],
-      "rotating_raw_rx_by_lane": [6417580, 5940868, 99, 5934726],
-      "lane2_sender_physical_tx": 5324445,
-      "lane2_receiver_raw_rx": 99,
-      "sender_attempts": 22068,
-      "sender_retries": 5076,
-      "sender_timeouts": 5076,
-      "sender_migrations": 5076,
-      "sender_retry_exhausted": 0,
-      "result": "FAIL_SELECTED_LANE_NO_PROGRESS"
+  "not_claimed": [
+    "DATA_PATH_PASS",
+    "COMPONENT_SPECIFIC_ROOT_CAUSE",
+    "EXTERNAL_ELECTRICAL_PASS",
+    "P11_PASS",
+    "PRODUCT_FINAL_PASS"
+  ],
+  "raw_evidence": {
+    "full_campaign": {
+      "bytes": 8223522,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json",
+      "sha256": "b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99"
     },
-    "R2_TO_F2": {
-      "case": "counter_direct_r2f_00000_4194304",
-      "requested_bytes": 4194304,
-      "application_goodput_bps": 9265725.556265285,
-      "rotating_physical_tx_by_lane": [4467281, 4455941, 4450326, 4449094],
-      "fixed_raw_rx_by_lane": [4518561, 4455941, 4450326, 4449094],
-      "lane2_sender_physical_tx": 4450326,
-      "lane2_receiver_raw_rx": 4450326,
-      "sender_retries": 0,
-      "sender_timeouts": 0,
-      "sender_migrations": 0,
-      "sender_retry_exhausted": 0,
-      "result": "PASS_DIRECTIONAL_RAW_PROGRESS"
+    "isolated_lane_recovery": {
+      "bytes": 40709,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4/final/lane_recovery_diagnostic_result.json",
+      "sha256": "e9b6c5670c4b25f17876cc4c535dd836305b827d79cbe8be30863c4ab992e46a"
+    },
+    "isolated_matrix": {
+      "bytes": 771642,
+      "path": "evidence/hardware/p10_4/p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4/final/echo_crosstalk_8x8_diagnostic_result.json",
+      "sha256": "3724c971709763d05745dec647f95dc38de9d080c8163d56c29193dee624ca4d"
+    },
+    "manifests": {
+      "full_campaign": {
+        "bytes": 575551,
+        "file_count": 2088,
+        "path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+        "sha256": "44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b",
+        "status": "PASS"
+      },
+      "isolated_echo_crosstalk": {
+        "bytes": 63875,
+        "file_count": 230,
+        "path": "evidence/hardware/p10_4/p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+        "sha256": "914e705f7ee591c0b2208825c242c32a121d5dac1d548283941abf0992764658",
+        "status": "PASS"
+      },
+      "isolated_lane_recovery": {
+        "bytes": 12832,
+        "file_count": 51,
+        "path": "evidence/hardware/p10_4/p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+        "sha256": "d7370dd6c2e163dd90da5467bd28e372b5e821803fe4f482ba519cf3e613655c",
+        "status": "PASS"
+      },
+      "qualification": {
+        "bytes": 36335,
+        "file_count": 127,
+        "path": "evidence/hardware/p10_4_raw_connectivity/p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+        "sha256": "9fc28fc8fc9b011d91c4dfddc75a17bf79d2b4e8e74b45758ca99e9f5100649c",
+        "status": "PASS"
+      }
+    },
+    "qualification": {
+      "bytes": 74464,
+      "path": "evidence/generated/p10_4_lane2_b0008_raw_connectivity_retest.json",
+      "sha256": "1c346b2cab52a70ac4e918f7645022635545cc07606ecc578bcc4bb5046bf81b"
     }
   },
-  "inference": "The same exact artifact and lane mapping show a unidirectional F2-to-R2 physical receive loss while R2-to-F2 is healthy. Cross-lane retry completed the object but cannot satisfy the mandatory four-lane counter-semantics gate.",
-  "safety_counters": {
-    "crc_bad": 0,
-    "sha_mismatch": 0,
-    "partial_commit": 0,
-    "duplicate_commit": 0,
-    "stale_commit": 0,
-    "retry_exhausted": 0,
-    "descriptor_leak": 0,
-    "double_completion": 0,
-    "deadlock": 0,
-    "duty_violation": 0,
-    "continuous_high_violation": 0
+  "reproduction_count_after_short_qualification": 3,
+  "root_cause_boundary": "The current evidence localizes an intermittent/reproducible F2-to-R2 physical directional path loss. Without the forbidden physical intervention or external instrumentation it cannot distinguish F2 emitter/module, optical path/alignment, R2 receiver/module, local power/connection, or another analog path cause.",
+  "safety_observation": {
+    "boundary": "PL counters show no configured high-time, duty or hard-fault breach. No external electrical/optical measurement was permitted, so this is not external proof of the analog waveform or component health.",
+    "continuous_high_max_cycles": 8,
+    "external_electrical_or_optical_waveform_measured": false,
+    "hard_fault_count": 0,
+    "rolling_duty_fraction": 0.007875,
+    "rolling_duty_max_cycles": 504,
+    "rolling_duty_window_cycles": 64000,
+    "safety_limit_breach_observed_by_pl": false
   },
-  "first_fault_freeze": {
-    "fixed": "NO_FAULT",
-    "rotating": "NO_FAULT",
-    "interpretation": "No safety fault fired; the mandatory stage evaluator detected loss of physical lane progress."
-  },
+  "schema_version": 2,
+  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+  "status": "FAIL_CLOSED_PHYSICAL_DIRECTIONAL_BLOCKER",
   "terminal_action": {
-    "new_tx_stopped": true,
+    "arm_revoked_by_fail_closed_exit": true,
     "current_run_hardware_authorization": false,
-    "authorization_status": "CONSUMED_AFTER_P10_4_FAIL",
+    "further_hardware_runs_allowed_by_this_closeout": false,
+    "new_tx_stopped": true,
     "shutdown_fixed": "PASS",
-    "shutdown_rotating": "PASS",
-    "shutdown_exit": 0,
-    "tfdu_shutdown_programmed": true,
-    "further_hardware_retries_performed": false
+    "shutdown_rotating": "PASS"
   },
-  "scope_controls": {
-    "network_used": false,
-    "hardware_moved": false,
-    "wiring_changed": false,
-    "module_replaced": false,
-    "external_instrumentation_used": false
+  "terminal_matrix_measurement": {
+    "direction": "F2_TO_R2",
+    "evidence_class": "RAW_PHYSICAL_ONLY",
+    "receiver_raw_rx": 0,
+    "requested_raw_pulses": 64,
+    "sender_physical_tx": 64
   },
-  "raw_evidence": {
-    "stage_summary": "evidence/hardware/p10_4/p10_4_20260806T034503Z_6ff17d33_94506af9_2b2b37d4/stages/counter_semantics/stage_summary.json",
-    "final_result": "evidence/hardware/p10_4/p10_4_20260806T034503Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json",
-    "final_result_sha256": "d7461aeeaf288bfdf07f9ce5f615801df2a16c7952be1919781c856df8623077",
-    "manifest": "evidence/hardware/p10_4/p10_4_20260806T034503Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
-    "manifest_sha256": "74bc79ca7a01dc3ea0db12b7507988dff5654fd32af285e0fbb36607246e8f26",
-    "manifest_status": "PASS",
-    "manifest_file_count": 270
-  },
-  "disposition": "TERMINAL_FAIL_CLOSED_NO_FURTHER_HARDWARE_ACTION"
+  "test_id": "P10_4-F2-R2-DIRECTIONAL-BLOCKER-B0008",
+  "timeline": [
+    {
+      "classification": "SHORT_RAW_QUALIFICATION_PASS",
+      "evidence_class": "RAW_PHYSICAL_ONLY",
+      "interpretation": "A short current-artifact check passed both physical directions at 64 and 1024 requested pulses. It was not a DATA or sustained-path acceptance.",
+      "module_binding": {
+        "F2": "B0008",
+        "R2": "B0023"
+      },
+      "run_id": "p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4",
+      "sequence": 1,
+      "vectors": [
+        {
+          "direction": "F2_TO_R2",
+          "evidence_class": "RAW_PHYSICAL_ONLY",
+          "label": "lane2_F2_to_R2_raw_1024",
+          "receiver_module": "R2",
+          "receiver_raw_rx_count": 1024,
+          "requested_raw_pulses": 1024,
+          "rolling_duty_high_max_cycles": 504,
+          "sender_module": "F2",
+          "sender_physical_tx_count": 1024,
+          "status": "PASS",
+          "tx_high_max_cycles": 8
+        },
+        {
+          "direction": "F2_TO_R2",
+          "evidence_class": "RAW_PHYSICAL_ONLY",
+          "label": "lane2_F2_to_R2_raw_64",
+          "receiver_module": "R2",
+          "receiver_raw_rx_count": 64,
+          "requested_raw_pulses": 64,
+          "rolling_duty_high_max_cycles": 504,
+          "sender_module": "F2",
+          "sender_physical_tx_count": 64,
+          "status": "PASS",
+          "tx_high_max_cycles": 8
+        },
+        {
+          "direction": "R2_TO_F2",
+          "evidence_class": "RAW_PHYSICAL_ONLY",
+          "label": "lane2_R2_to_F2_raw_1024",
+          "receiver_module": "F2",
+          "receiver_raw_rx_count": 1024,
+          "requested_raw_pulses": 1024,
+          "rolling_duty_high_max_cycles": 504,
+          "sender_module": "R2",
+          "sender_physical_tx_count": 1024,
+          "status": "PASS",
+          "tx_high_max_cycles": 8
+        },
+        {
+          "direction": "R2_TO_F2",
+          "evidence_class": "RAW_PHYSICAL_ONLY",
+          "label": "lane2_R2_to_F2_raw_64",
+          "receiver_module": "F2",
+          "receiver_raw_rx_count": 64,
+          "requested_raw_pulses": 64,
+          "rolling_duty_high_max_cycles": 504,
+          "sender_module": "R2",
+          "sender_physical_tx_count": 64,
+          "status": "PASS",
+          "tx_high_max_cycles": 8
+        }
+      ]
+    },
+    {
+      "classification": "FULL_CAMPAIGN_LANE2_CLEAN64_FAILURE",
+      "fault_cause": "0x00002030",
+      "receiver": "R2/B0023",
+      "receiver_raw_rx": 30943083,
+      "receiver_to_sender_ratio": 0.40949114096487277,
+      "result": "FAIL_REMOTE_RAW_LOSS",
+      "retry_exhausted": 0,
+      "run_id": "p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4",
+      "safety_fault": false,
+      "sender": "F2/B0008",
+      "sender_physical_tx": 75564719,
+      "sequence": 2,
+      "stage": "lane_recovery/lane2_clean64",
+      "tx_migrations": 42537,
+      "tx_retries": 42537,
+      "tx_timeouts": 42537
+    },
+    {
+      "classification": "ISOLATED_LANE_RECOVERY_FAILURE",
+      "explicitly_unavailable_lane": 0,
+      "fault_cause": "0x00002030",
+      "receiver": "R2/B0023",
+      "receiver_raw_rx": 7915,
+      "receiver_to_sender_ratio": 0.00013018833193777693,
+      "result": "FAIL_REMOTE_RAW_LOSS_NOT_STALE_UNAVAILABLE_MASK",
+      "retry_exhausted": 0,
+      "run_id": "p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4",
+      "safety_fault": false,
+      "sender": "F2/B0008",
+      "sender_physical_tx": 60796539,
+      "sequence": 3,
+      "stage": "lane_recovery/lane0_unavailable",
+      "tx_migrations": 58150,
+      "tx_retries": 61164,
+      "tx_timeouts": 61164,
+      "unexpected_failed_path": "F2_TO_R2"
+    },
+    {
+      "classification": "ISOLATED_MATRIX_RAW64_FAILURE",
+      "continuous_high_max_cycles": 8,
+      "fixed_command_status": 0,
+      "hard_fault_count": 0,
+      "receiver": "R2/B0023",
+      "receiver_raw_rx": 0,
+      "requested_raw_pulses": 64,
+      "result": "FAIL_64_TX_0_REMOTE_RAW_RX",
+      "rolling_duty_max_cycles": 504,
+      "rolling_duty_window_cycles": 64000,
+      "rotating_command_status": 14,
+      "run_id": "p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4",
+      "sender": "F2/B0008",
+      "sender_physical_tx": 64,
+      "sequence": 4,
+      "stage": "echo_crosstalk_8x8/matrix_F2_raw64"
+    }
+  ]
 }

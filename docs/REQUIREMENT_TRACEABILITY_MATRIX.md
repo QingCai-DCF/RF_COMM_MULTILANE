@@ -6,9 +6,9 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 258
-PASS: 221
-PENDING: 32
-FAIL: 5
+PASS: 229
+PENDING: 21
+FAIL: 8
 WAIVED: 0
 ```
 
@@ -224,22 +224,22 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_2-HWPREP-001` | `PASS` | P10_3_FAIL_CLOSED_RUNNER | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-001` | `evidence/generated/p10_2_hardware_dry_run.json` | The P10.3 command validator fails closed on missing authorization, old F1, mask>0xF, Ethernet, movement and two-hour requests. |
 | `P10_2-HWPREP-002` | `PASS` | P10_3_EVIDENCE_SCHEMA | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-002` | `evidence/generated/p10_2_p10_3_readiness.json` | P10.3 has machine-readable stage and 8x8 evidence templates without granting hardware authority. |
 | `P10_3-WIRE-001` | `PASS` | P10_3_AX7020_STATIONARY_4LANE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-WIRE-001` | `evidence/generated/p10_3_wiring.json` | The actual stationary four-lane wiring shall be frozen and hash-bound before hardware execution. |
-| `P10_4-CLOSE-001` | `PENDING` | P10_4_P10_3_IMMUTABLE_CLOSEOUT | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-CLOSE-001` | `evidence/generated/p10_4_p10_3_closeout.json` | P10.3 evidence, pass tag, closeout tag, and stationary four-lane scoped PASS shall remain immutable and directly rechecked before P10.4. |
-| `P10_4-METRIC-001` | `PENDING` | P10_4_DIRECT_PERFORMANCE_COUNTERS | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-METRIC-001` | `evidence/generated/p10_4_counter_semantics.json` | ACK-related performance attribution shall use separate direct counters for outstanding occupancy, ACK-caused TX idle, full-window stall, receiver-credit stall, and direction-turnaround idle. |
-| `P10_4-MODEL-001` | `PENDING` | P10_4_MODEL_MEASURED_RECONCILIATION | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-MODEL-001` | `evidence/generated/p10_4_half_duplex_performance.json` | PHY raw, frame payload, RFAP useful, application-commit, and host-orchestrated rates shall remain distinct and current hardware measurements shall reconcile to the airtime model. |
-| `P10_4-PERF-001` | `PENDING` | P10_4_STATIONARY_4LANE_HALF_DUPLEX | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-PERF-001` | `evidence/generated/p10_4_half_duplex_performance.json` | The current four-lane stationary artifact shall sustain at least 8.0 Mbit/s integrity-verified application goodput from fixed to rotating for 300 seconds. |
-| `P10_4-PERF-002` | `PENDING` | P10_4_STATIONARY_4LANE_HALF_DUPLEX | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-PERF-002` | `evidence/generated/p10_4_half_duplex_performance.json` | The current four-lane stationary artifact shall sustain at least 8.0 Mbit/s integrity-verified application goodput from rotating to fixed for 300 seconds. |
-| `P10_4-PERF-003` | `PENDING` | P10_4_STATIONARY_4LANE_MARGIN | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-PERF-003` | `evidence/generated/p10_4_performance_tuning.json` | Both stationary half-duplex directions should reach the nonblocking 9.0 Mbit/s performance-margin target without weakening safety or integrity constraints. |
-| `P10_4-STREAM-001` | `PENDING` | P10_4_STATIONARY_4LANE_STREAMING | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-STREAM-001` | `evidence/generated/p10_4_streaming_64m.json` | Fixed to rotating shall complete ten independent 64 MiB board-autonomous objects with CRC32, SHA256, atomic commit, and exact descriptor accounting. |
-| `P10_4-STREAM-002` | `PENDING` | P10_4_STATIONARY_4LANE_STREAMING | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-STREAM-002` | `evidence/generated/p10_4_streaming_64m.json` | Rotating to fixed shall complete ten independent 64 MiB board-autonomous objects with CRC32, SHA256, atomic commit, and exact descriptor accounting. |
-| `P10_4-DEG-001` | `PENDING` | P10_4_LANE_DEGRADATION_RECOVERY | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-DEG-001` | `evidence/generated/p10_4_degraded_modes.json` | Every required degraded lane mask shall retain healthy-lane progress and recover to at least 90 percent of the full-mask baseline without duplicate or stale commit. |
+| `P10_4-CLOSE-001` | `PASS` | P10_4_P10_3_IMMUTABLE_CLOSEOUT | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-CLOSE-001` | `evidence/generated/p10_4_p10_3_closeout.json` | P10.3 evidence, pass tag, closeout tag, and stationary four-lane scoped PASS shall remain immutable and directly rechecked before P10.4. |
+| `P10_4-METRIC-001` | `PASS` | P10_4_DIRECT_PERFORMANCE_COUNTERS | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-METRIC-001` | `evidence/generated/p10_4_counter_semantics.json` | ACK-related performance attribution shall use separate direct counters for outstanding occupancy, ACK-caused TX idle, full-window stall, receiver-credit stall, and direction-turnaround idle. |
+| `P10_4-MODEL-001` | `PASS` | P10_4_MODEL_MEASURED_RECONCILIATION | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-MODEL-001` | `evidence/generated/p10_4_half_duplex_performance.json` | PHY raw, frame payload, RFAP useful, application-commit, and host-orchestrated rates shall remain distinct and current hardware measurements shall reconcile to the airtime model. |
+| `P10_4-PERF-001` | `PASS` | P10_4_STATIONARY_4LANE_HALF_DUPLEX | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-PERF-001` | `evidence/generated/p10_4_half_duplex_performance.json` | The current four-lane stationary artifact shall sustain at least 8.0 Mbit/s integrity-verified application goodput from fixed to rotating for 300 seconds. |
+| `P10_4-PERF-002` | `PASS` | P10_4_STATIONARY_4LANE_HALF_DUPLEX | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-PERF-002` | `evidence/generated/p10_4_half_duplex_performance.json` | The current four-lane stationary artifact shall sustain at least 8.0 Mbit/s integrity-verified application goodput from rotating to fixed for 300 seconds. |
+| `P10_4-PERF-003` | `FAIL` | P10_4_STATIONARY_4LANE_MARGIN | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-PERF-003` | `evidence/generated/p10_4_half_duplex_performance.json` | Both stationary half-duplex directions should reach the nonblocking 9.0 Mbit/s performance-margin target without weakening safety or integrity constraints. |
+| `P10_4-STREAM-001` | `PASS` | P10_4_STATIONARY_4LANE_STREAMING | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-STREAM-001` | `evidence/generated/p10_4_streaming_64m.json` | Fixed to rotating shall complete ten independent 64 MiB board-autonomous objects with CRC32, SHA256, atomic commit, and exact descriptor accounting. |
+| `P10_4-STREAM-002` | `PASS` | P10_4_STATIONARY_4LANE_STREAMING | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-STREAM-002` | `evidence/generated/p10_4_streaming_64m.json` | Rotating to fixed shall complete ten independent 64 MiB board-autonomous objects with CRC32, SHA256, atomic commit, and exact descriptor accounting. |
+| `P10_4-DEG-001` | `FAIL` | P10_4_LANE_DEGRADATION_RECOVERY | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-DEG-001` | `evidence/generated/p10_4_degraded_modes.json` | Every required degraded lane mask shall retain healthy-lane progress and recover to at least 90 percent of the full-mask baseline without duplicate or stale commit. |
 | `P10_4-DIR-001` | `PENDING` | P10_4_DIRECTION_SWITCH | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-DIR-001` | `evidence/generated/p10_4_direction_switch.json` | Ten 30-second fixed-to-rotating and 30-second rotating-to-fixed direction cycles shall complete without session reconstruction, leak, cross-lane acceptance, or deadlock. |
 | `P10_4-RESET-001` | `PENDING` | P10_4_ENDPOINT_DMA_PL_RECOVERY | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-RESET-001` | `evidence/generated/p10_4_reset_recovery.json` | The campaign shall complete the exact fixed/rotating PS, DMA, and role-selected PL reset counts and a fresh 64 MiB integrity object after every injected reset or protocol fault. |
-| `P10_4-XTALK-001` | `PENDING` | P10_4_DIGITAL_ECHO_CROSSTALK_8X8 | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-XTALK-001` | `evidence/generated/p10_4_echo_crosstalk.json` | All eight physical TX directions shall pass 64-pulse, 1024-pulse, and 30-second one-lane frame vectors with zero non-target CRC-valid acceptance. |
+| `P10_4-XTALK-001` | `FAIL` | P10_4_DIGITAL_ECHO_CROSSTALK_8X8 | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-XTALK-001` | `evidence/generated/p10_4_echo_crosstalk.json` | All eight physical TX directions shall pass 64-pulse, 1024-pulse, and 30-second one-lane frame vectors with zero non-target CRC-valid acceptance. |
 | `P10_4-XTALK-002` | `PENDING` | P10_4_CONNECTOR_LOCAL_ACK_ECHO_REJECTION | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-XTALK-002` | `evidence/generated/p10_4_crc_bad_remediation.json` | An actual physical ACK shall quarantine the adjacent RX parser on the same two-module AX7020 connector for the complete existing post-TX guard, while ordinary peer-lane DATA TX and the other connector remain independently receivable. |
 | `P10_4-FD-001` | `PENDING` | P10_4_2PLUS2_EXPERIMENT | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-FD-001` | `evidence/generated/p10_4_two_plus_two.json` | A direct 300-second 2+2 simultaneous opposite-direction experiment shall be executed or rejected with current-artifact capability evidence without claiming final full duplex. |
 | `P10_4-SOAK-001` | `PENDING` | P10_4_MIXED_30MIN | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-SOAK-001` | `evidence/generated/p10_4_mixed_30min.json` | The exact 1800-second mixed stationary campaign shall preserve integrity, descriptor, protocol, liveness, echo-admission, and TFDU safety invariants. |
-| `P10_4-SAFE-001` | `PENDING` | P10_4_FAIL_CLOSED_DUAL_SHUTDOWN | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-SAFE-001` | `evidence/generated/p10_4_shutdown.json` | Every stage and every exit path shall leave both serial-bound AX7020 endpoints in independently programmed and verified full shutdown. |
+| `P10_4-SAFE-001` | `PASS` | P10_4_FAIL_CLOSED_DUAL_SHUTDOWN | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-SAFE-001` | `evidence/generated/p10_4_shutdown.json` | Every stage and every exit path shall leave both serial-bound AX7020 endpoints in independently programmed and verified full shutdown. |
 | `P10_3-INV-001` | `PASS` | P10_3_EIGHT_MODULE_INVENTORY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-INV-001` | `evidence/generated/p10_3_module_inventory.json` | All eight active TFDU modules shall have unique IDs, endpoints, positions, and lane assignments. |
 | `P10_3-INV-002` | `PASS` | P10_3_EIGHT_MODULE_INVENTORY | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-INV-002` | `evidence/generated/p10_3_module_inventory.json` | The historical failed F1 module shall remain quarantined and shall never be selected as an active P10.3 module. |
 | `P10_3-HW-001` | `PASS` | P10_3_CURRENT_RUN_AUTHORIZATION | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-HW-001` | `evidence/generated/p10_3_authorization.json` | A current-run authorization shall bind the exact P10.3 run, boards, modules, wiring, artifacts, limits, and shutdown policy. |
@@ -347,13 +347,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `c81399270cd8121a13caa31e5a46dffbc7a2db27770aea2b3e40df5f451c3686`
-- `PROJECT_STATUS.md` — `2457854ba21b3f5145fd35430a4f9a9efc9767066393846f2c4c3fca65446bdc`
+- `config/project_state.json` — `e99f57e5dbea3d3049bdb626e4eb8ba781d963224dec1a3a8a3362e65b9380f6`
+- `PROJECT_STATUS.md` — `516d87276181f5e7907e1897ca925854abf18f31fd3388a385c6c1da7ce4a341`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `c81399270cd8121a13caa31e5a46dffbc7a2db27770aea2b3e40df5f451c3686`
+- `config/project_state.json` — `e99f57e5dbea3d3049bdb626e4eb8ba781d963224dec1a3a8a3362e65b9380f6`
 
 ### `P8A-EVID-001`
 
@@ -363,8 +363,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `c81399270cd8121a13caa31e5a46dffbc7a2db27770aea2b3e40df5f451c3686`
-- `PROJECT_STATUS.md` — `2457854ba21b3f5145fd35430a4f9a9efc9767066393846f2c4c3fca65446bdc`
+- `config/project_state.json` — `e99f57e5dbea3d3049bdb626e4eb8ba781d963224dec1a3a8a3362e65b9380f6`
+- `PROJECT_STATUS.md` — `516d87276181f5e7907e1897ca925854abf18f31fd3388a385c6c1da7ce4a341`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -1412,6 +1412,51 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `evidence/generated/p10_3_wiring.json` — `ca89d42ac92a77f104f0b82e5de237738435d69b862e0e1260f6e8e7d3d49782`
 - `evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json` — `3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2`
 - `evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json` — `ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1`
+
+### `P10_4-CLOSE-001`
+
+- `evidence/generated/p10_4_p10_3_closeout.json` — `df043ad4e654b47048b303fdc1d6246019d70dad8e766f299109f0ed393773a1`
+
+### `P10_4-METRIC-001`
+
+- `evidence/generated/p10_4_counter_semantics.json` — `ad0eb1f5e32c58398d406ffdffaf38bf05f49b028048946150fecd2d492e69df`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json` — `b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json` — `44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b`
+
+### `P10_4-MODEL-001`
+
+- `evidence/generated/p10_4_half_duplex_performance.json` — `2d26fa172d60ec75ef9f4333a858d2976c76a9b1911dc3f42022a86f776cefb4`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json` — `b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json` — `44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b`
+
+### `P10_4-PERF-001`
+
+- `evidence/generated/p10_4_half_duplex_performance.json` — `2d26fa172d60ec75ef9f4333a858d2976c76a9b1911dc3f42022a86f776cefb4`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json` — `b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json` — `44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b`
+
+### `P10_4-PERF-002`
+
+- `evidence/generated/p10_4_half_duplex_performance.json` — `2d26fa172d60ec75ef9f4333a858d2976c76a9b1911dc3f42022a86f776cefb4`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json` — `b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json` — `44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b`
+
+### `P10_4-STREAM-001`
+
+- `evidence/generated/p10_4_streaming_64m.json` — `1fe74d5e48a8604a1f6cef74dabbdc21070138e737ae0180ff4c7ab5409cba2c`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json` — `b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json` — `44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b`
+
+### `P10_4-STREAM-002`
+
+- `evidence/generated/p10_4_streaming_64m.json` — `1fe74d5e48a8604a1f6cef74dabbdc21070138e737ae0180ff4c7ab5409cba2c`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json` — `b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99`
+- `evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json` — `44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b`
+
+### `P10_4-SAFE-001`
+
+- `evidence/generated/p10_4_shutdown.json` — `8c67127497310a8fbc0cde91ba701f4061569944e9ee0ce37d0bcb3a033f6a62`
+- `evidence/generated/p10_4_b0008_fail_closed_manifest.json` — `360af70732f893e5304632544f4fb1c58f4e4000e73077296ca558baf2ba0b76`
 
 ### `P10_3-INV-001`
 

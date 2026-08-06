@@ -1,52 +1,37 @@
 {
-  "schema_version": 1,
-  "test_id": "P10_4-TERMINAL-OFFLINE-CLOSURE",
-  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
-  "status": "FAIL_WITH_PRESERVED_EVIDENCE",
-  "hardware_campaign_status": "FAIL_CLOSED_PHYSICAL_DIRECTIONAL_BLOCKER",
-  "hardware_run_id": "p10_4_20260806T034503Z_6ff17d33_94506af9_2b2b37d4",
-  "hardware_evidence_checkpoint": "ad0cfadf2deca0445312879ed0a868600ec1b95e",
-  "p10_4_specific_intake": {
-    "status": "PASS",
-    "path": "evidence/generated/p10_4_repo_intake.json",
-    "sha256": "fe9c89eeeaab1c3cd8f76c6587eef56b768e7caf5c2d3c1e869f4687858715d6",
-    "checks": [
-      "p10_3_verify_existing",
-      "p10_2_verify_existing",
-      "p10_1r_verify_existing",
-      "p8c_safety_verify_existing",
-      "state_requirements_consistency"
-    ]
-  },
-  "additional_generic_offline_gate": {
-    "status": "FAIL",
-    "path": "evidence/generated/offline_gate_summary.json",
-    "sha256": "abeffc9ae714b0dd2644c702a9cecff1866cba9493b7e295dcbd294aa4558e87",
-    "markdown_path": "evidence/generated/offline_gate_summary.md",
-    "markdown_sha256": "7558665ebbc468031239cbbd8ad11aa7c019d0bf316e920f0ae822e910dce5e4",
-    "offline_real_build_process_ran": true,
-    "no_hardware_actions_executed": true,
-    "direct_failures": [
-      "m4_static_reference_checks",
-      "generate_plan_completion_audit",
-      "plan_completion_static"
-    ],
-    "root_failure": "M4 static checker requires literal RTL offset mirrors for 48 P10.2 snapshot, P10 first-fault forensic, and P10.4 counter/local-source registers; generated and documented offsets are present but the legacy literal-RTL predicate is false.",
-    "missing_literal_rtl_offset_count": 48,
-    "downstream_failures_are_derivative": true
-  },
+  "artifact_source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
   "disposition": {
-    "rtl_or_checker_modified": false,
-    "reason": "Any RTL or verification-source remediation after artifact freeze would require a new immutable bitstream/XSA/BSP/ELF bundle and fresh hardware acceptance. The hardware campaign had already reached the Goal terminal fail-closed condition on a current physical F2-to-R2 directional blocker.",
-    "new_hardware_run_authorized": false,
     "current_run_hardware_authorization": false,
-    "new_tx_started": false,
+    "new_hardware_run_started_during_closeout": false,
+    "new_tx_stopped": true,
+    "next_recommended_stage": "P10_4_REMEDIATION",
     "shutdown_fixed": "PASS",
-    "shutdown_rotating": "PASS"
+    "shutdown_rotating": "PASS",
+    "terminal_reason": "THREE_CURRENT_B0008_F2_TO_R2_FAILURES_AFTER_SHORT_RAW_QUALIFICATION"
+  },
+  "generic_offline_gate": {
+    "bytes": 104686,
+    "path": "evidence/generated/offline_gate_summary.json",
+    "sha256": "a0cb7b0b05915863730f2a8354eb20ca1f7860109e36e9c39e7f51f336219691",
+    "status": "PASS"
+  },
+  "hardware_campaign_status": "FAIL_CLOSED_PHYSICAL_DIRECTIONAL_BLOCKER",
+  "hardware_evidence_checkpoint": "6c0f074f233d94c5f42f494263eae40ec350d5be",
+  "latest_hardware_run_id": "p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4",
+  "latest_hardware_run_manifest": {
+    "bytes": 63875,
+    "file_count": 230,
+    "path": "evidence/hardware/p10_4/p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+    "sha256": "914e705f7ee591c0b2208825c242c32a121d5dac1d548283941abf0992764658",
+    "status": "PASS"
   },
   "preserved_scoped_status": {
-    "p10_3": "PASS",
-    "p10_4": "FAIL",
-    "p11": "NOT_STARTED"
-  }
+    "P10_3": "PASS",
+    "P10_4": "FAIL",
+    "P11": "NOT_STARTED"
+  },
+  "schema_version": 2,
+  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+  "status": "FAIL_WITH_PRESERVED_EVIDENCE",
+  "test_id": "P10_4-TERMINAL-OFFLINE-CLOSURE-B0008"
 }
