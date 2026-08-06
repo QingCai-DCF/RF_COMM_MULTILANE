@@ -1,6 +1,6 @@
 # Offline Gate Summary
 
-BOOTSTRAP_STATUS: PASS
+BOOTSTRAP_STATUS: FAIL
 NO_HARDWARE_ACTIONS_EXECUTED: true
 HARDWARE_ACCEPTANCE: PENDING_HW
 OFFLINE_GATE_HARDWARE_SCOPE: NO_NEW_HARDWARE_SCOPE_EVALUATED
@@ -43,7 +43,7 @@ test_canonical_state_validates (tests.test_p8a_consistency.P8AConsistencyTests.t
 test_duplicate_requirement_id_fails (tests.test_p8a_consistency.P8AConsistencyTests.test_duplicate_requirement_id_fails) ... ok
 test_generated_documents_are_byte_exact_lf (tests.test_p8a_consistency.P8AConsistencyTests.test_generated_documents_are_byte_exact_lf) ... ok
 test_generated_documents_are_deterministic (tests.test_p8a_consistency.P8AConsistencyTests.test_generated_documents_are_deterministic) ... ok
-test_latest_p10_1r_hardware_run_owns_last_hardware_fields (tests.test_p8a_consistency.P8AConsistencyTests.test_latest_p10_1r_hardware_run_owns_last_hardware_fields) ... ok
+test_latest_p10_4_hardware_run_owns_last_hardware_fields (tests.test_p8a_consistency.P8AConsistencyTests.test_latest_p10_4_hardware_run_owns_last_hardware_fields) ... ok
 test_p0_p7_reconciliation_passes_and_preserves_conflicts (tests.test_p8a_consistency.P8AConsistencyTests.test_p0_p7_reconciliation_passes_and_preserves_conflicts) ... ok
 test_p10_1r_blocker_hash_is_fail_closed (tests.test_p8a_consistency.P8AConsistencyTests.test_p10_1r_blocker_hash_is_fail_closed) ... ok
 test_p10_1r_partial_state_rejects_unknown_blocker_disposition (tests.test_p8a_consistency.P8AConsistencyTests.test_p10_1r_partial_state_rejects_unknown_blocker_disposition) ... ok
@@ -56,7 +56,7 @@ test_state_rejects_p7_regression (tests.test_p8a_consistency.P8AConsistencyTests
 test_state_requires_legacy_ab_l1_record (tests.test_p8a_consistency.P8AConsistencyTests.test_state_requires_legacy_ab_l1_record) ... ok
 
 ----------------------------------------------------------------------
-Ran 15 tests in 19.676s
+Ran 15 tests in 34.794s
 
 OK
 ```
@@ -136,8 +136,8 @@ M1_TFDU_MODEL_REFERENCE=PASS
 
 ```text
 REGISTER_MAP_SINGLE_SOURCE_CREATED=1
-REGISTER_MAP_SHA256=cfc2f097218a618b461299e54765af29aa19d380c6f974101011ddc46c0301ea
-REGISTER_MAP_VERSION=P10-2
+REGISTER_MAP_SHA256=06c2105e05cbad4dd780316cf44dd857b13a32dad584e2df2ab4a5b8bcfecb39
+REGISTER_MAP_VERSION=P10-4
 
 ```
 
@@ -261,7 +261,7 @@ M4_PS_DRIVER_TRACE=PASS
 
 ```
 
-## m4_static_reference_checks: PASS
+## m4_static_reference_checks: FAIL
 
 ```text
 M4_GENERATED_OFFSET_CONTROL=1
@@ -1227,6 +1227,33 @@ M4_RTL_OFFSET_P10_1_PHYSICAL_SYMBOL_ERROR_LANE0=1
 M4_GENERATED_OFFSET_P10_1_PHYSICAL_SYMBOL_ERROR_LANE1=1
 M4_DOC_OFFSET_P10_1_PHYSICAL_SYMBOL_ERROR_LANE1=1
 M4_RTL_OFFSET_P10_1_PHYSICAL_SYMBOL_ERROR_LANE1=1
+M4_GENERATED_OFFSET_P9_AUTO_MIGRATION_STATUS=1
+M4_DOC_OFFSET_P9_AUTO_MIGRATION_STATUS=1
+M4_RTL_OFFSET_P9_AUTO_MIGRATION_STATUS=1
+M4_GENERATED_OFFSET_P9_AUTO_MIGRATION_SEQUENCE=1
+M4_DOC_OFFSET_P9_AUTO_MIGRATION_SEQUENCE=1
+M4_RTL_OFFSET_P9_AUTO_MIGRATION_SEQUENCE=1
+M4_GENERATED_OFFSET_P9_AUTO_MIGRATION_WINDOW=1
+M4_DOC_OFFSET_P9_AUTO_MIGRATION_WINDOW=1
+M4_RTL_OFFSET_P9_AUTO_MIGRATION_WINDOW=1
+M4_GENERATED_OFFSET_P9_AUTO_MIGRATION_ATTEMPT_COUNT=1
+M4_DOC_OFFSET_P9_AUTO_MIGRATION_ATTEMPT_COUNT=1
+M4_RTL_OFFSET_P9_AUTO_MIGRATION_ATTEMPT_COUNT=1
+M4_GENERATED_OFFSET_P9_AUTO_MIGRATION_PHYSICAL_TX_COUNT=1
+M4_DOC_OFFSET_P9_AUTO_MIGRATION_PHYSICAL_TX_COUNT=1
+M4_RTL_OFFSET_P9_AUTO_MIGRATION_PHYSICAL_TX_COUNT=1
+M4_GENERATED_OFFSET_P9_AUTO_MIGRATION_TRIGGER_COUNT=1
+M4_DOC_OFFSET_P9_AUTO_MIGRATION_TRIGGER_COUNT=1
+M4_RTL_OFFSET_P9_AUTO_MIGRATION_TRIGGER_COUNT=1
+M4_GENERATED_OFFSET_P9_EFFECTIVE_LANE_UNAVAILABLE=1
+M4_DOC_OFFSET_P9_EFFECTIVE_LANE_UNAVAILABLE=1
+M4_RTL_OFFSET_P9_EFFECTIVE_LANE_UNAVAILABLE=1
+M4_GENERATED_OFFSET_P9_AUTO_MIGRATION_PREVIOUS_MIGRATION_COUNT=1
+M4_DOC_OFFSET_P9_AUTO_MIGRATION_PREVIOUS_MIGRATION_COUNT=1
+M4_RTL_OFFSET_P9_AUTO_MIGRATION_PREVIOUS_MIGRATION_COUNT=1
+M4_GENERATED_OFFSET_P9_AUTO_MIGRATION_TARGET_SCHEDULED_COUNT=1
+M4_DOC_OFFSET_P9_AUTO_MIGRATION_TARGET_SCHEDULED_COUNT=1
+M4_RTL_OFFSET_P9_AUTO_MIGRATION_TARGET_SCHEDULED_COUNT=1
 M4_GENERATED_OFFSET_P10_1_PERF_CAPS=1
 M4_DOC_OFFSET_P10_1_PERF_CAPS=1
 M4_RTL_OFFSET_P10_1_PERF_CAPS=1
@@ -1500,6 +1527,150 @@ M4_RTL_OFFSET_P10_1R_DECODER_CLEAR_CYCLES=1
 M4_GENERATED_OFFSET_P10_1R_ADMISSION_CONFIG_FLAGS=1
 M4_DOC_OFFSET_P10_1R_ADMISSION_CONFIG_FLAGS=1
 M4_RTL_OFFSET_P10_1R_ADMISSION_CONFIG_FLAGS=1
+M4_GENERATED_OFFSET_P10_2_SNAPSHOT_CONTROL=1
+M4_DOC_OFFSET_P10_2_SNAPSHOT_CONTROL=1
+M4_RTL_OFFSET_P10_2_SNAPSHOT_CONTROL=0
+M4_GENERATED_OFFSET_P10_2_SNAPSHOT_GENERATION=1
+M4_DOC_OFFSET_P10_2_SNAPSHOT_GENERATION=1
+M4_RTL_OFFSET_P10_2_SNAPSHOT_GENERATION=0
+M4_GENERATED_OFFSET_P10_2_SNAPSHOT_SCHEMA=1
+M4_DOC_OFFSET_P10_2_SNAPSHOT_SCHEMA=1
+M4_RTL_OFFSET_P10_2_SNAPSHOT_SCHEMA=0
+M4_GENERATED_OFFSET_P10_2_SNAPSHOT_DATA_BASE=1
+M4_DOC_OFFSET_P10_2_SNAPSHOT_DATA_BASE=1
+M4_RTL_OFFSET_P10_2_SNAPSHOT_DATA_BASE=0
+M4_GENERATED_OFFSET_P10_FF_CAPABILITIES=1
+M4_DOC_OFFSET_P10_FF_CAPABILITIES=1
+M4_RTL_OFFSET_P10_FF_CAPABILITIES=0
+M4_GENERATED_OFFSET_P10_FF_STATUS=1
+M4_DOC_OFFSET_P10_FF_STATUS=1
+M4_RTL_OFFSET_P10_FF_STATUS=0
+M4_GENERATED_OFFSET_P10_FF_FAULT_SEQUENCE=1
+M4_DOC_OFFSET_P10_FF_FAULT_SEQUENCE=1
+M4_RTL_OFFSET_P10_FF_FAULT_SEQUENCE=0
+M4_GENERATED_OFFSET_P10_FF_FAULT_TIMESTAMP_LOW=1
+M4_DOC_OFFSET_P10_FF_FAULT_TIMESTAMP_LOW=1
+M4_RTL_OFFSET_P10_FF_FAULT_TIMESTAMP_LOW=0
+M4_GENERATED_OFFSET_P10_FF_FAULT_TIMESTAMP_HIGH=1
+M4_DOC_OFFSET_P10_FF_FAULT_TIMESTAMP_HIGH=1
+M4_RTL_OFFSET_P10_FF_FAULT_TIMESTAMP_HIGH=0
+M4_GENERATED_OFFSET_P10_FF_FAULT_CAUSE=1
+M4_DOC_OFFSET_P10_FF_FAULT_CAUSE=1
+M4_RTL_OFFSET_P10_FF_FAULT_CAUSE=0
+M4_GENERATED_OFFSET_P10_FF_SNAPSHOT_WORDS=1
+M4_DOC_OFFSET_P10_FF_SNAPSHOT_WORDS=1
+M4_RTL_OFFSET_P10_FF_SNAPSHOT_WORDS=0
+M4_GENERATED_OFFSET_P10_FF_PRE_EVENT_COUNT=1
+M4_DOC_OFFSET_P10_FF_PRE_EVENT_COUNT=1
+M4_RTL_OFFSET_P10_FF_PRE_EVENT_COUNT=0
+M4_GENERATED_OFFSET_P10_FF_POST_EVENT_COUNT=1
+M4_DOC_OFFSET_P10_FF_POST_EVENT_COUNT=1
+M4_RTL_OFFSET_P10_FF_POST_EVENT_COUNT=0
+M4_GENERATED_OFFSET_P10_FF_TOTAL_EVENT_COUNT=1
+M4_DOC_OFFSET_P10_FF_TOTAL_EVENT_COUNT=1
+M4_RTL_OFFSET_P10_FF_TOTAL_EVENT_COUNT=0
+M4_GENERATED_OFFSET_P10_FF_EVENT_DEPTH=1
+M4_DOC_OFFSET_P10_FF_EVENT_DEPTH=1
+M4_RTL_OFFSET_P10_FF_EVENT_DEPTH=0
+M4_GENERATED_OFFSET_P10_FF_SNAPSHOT_INDEX=1
+M4_DOC_OFFSET_P10_FF_SNAPSHOT_INDEX=1
+M4_RTL_OFFSET_P10_FF_SNAPSHOT_INDEX=0
+M4_GENERATED_OFFSET_P10_FF_SNAPSHOT_DATA=1
+M4_DOC_OFFSET_P10_FF_SNAPSHOT_DATA=1
+M4_RTL_OFFSET_P10_FF_SNAPSHOT_DATA=0
+M4_GENERATED_OFFSET_P10_FF_EVENT_INDEX=1
+M4_DOC_OFFSET_P10_FF_EVENT_INDEX=1
+M4_RTL_OFFSET_P10_FF_EVENT_INDEX=0
+M4_GENERATED_OFFSET_P10_FF_EVENT_WORD_INDEX=1
+M4_DOC_OFFSET_P10_FF_EVENT_WORD_INDEX=1
+M4_RTL_OFFSET_P10_FF_EVENT_WORD_INDEX=0
+M4_GENERATED_OFFSET_P10_FF_EVENT_DATA=1
+M4_DOC_OFFSET_P10_FF_EVENT_DATA=1
+M4_RTL_OFFSET_P10_FF_EVENT_DATA=0
+M4_GENERATED_OFFSET_P10_FF_ARCHIVE_DIGEST0=1
+M4_DOC_OFFSET_P10_FF_ARCHIVE_DIGEST0=1
+M4_RTL_OFFSET_P10_FF_ARCHIVE_DIGEST0=0
+M4_GENERATED_OFFSET_P10_FF_ARCHIVE_DIGEST1=1
+M4_DOC_OFFSET_P10_FF_ARCHIVE_DIGEST1=1
+M4_RTL_OFFSET_P10_FF_ARCHIVE_DIGEST1=0
+M4_GENERATED_OFFSET_P10_FF_ARCHIVE_DIGEST2=1
+M4_DOC_OFFSET_P10_FF_ARCHIVE_DIGEST2=1
+M4_RTL_OFFSET_P10_FF_ARCHIVE_DIGEST2=0
+M4_GENERATED_OFFSET_P10_FF_ARCHIVE_DIGEST3=1
+M4_DOC_OFFSET_P10_FF_ARCHIVE_DIGEST3=1
+M4_RTL_OFFSET_P10_FF_ARCHIVE_DIGEST3=0
+M4_GENERATED_OFFSET_P10_FF_ARCHIVE_DIGEST4=1
+M4_DOC_OFFSET_P10_FF_ARCHIVE_DIGEST4=1
+M4_RTL_OFFSET_P10_FF_ARCHIVE_DIGEST4=0
+M4_GENERATED_OFFSET_P10_FF_ARCHIVE_DIGEST5=1
+M4_DOC_OFFSET_P10_FF_ARCHIVE_DIGEST5=1
+M4_RTL_OFFSET_P10_FF_ARCHIVE_DIGEST5=0
+M4_GENERATED_OFFSET_P10_FF_ARCHIVE_DIGEST6=1
+M4_DOC_OFFSET_P10_FF_ARCHIVE_DIGEST6=1
+M4_RTL_OFFSET_P10_FF_ARCHIVE_DIGEST6=0
+M4_GENERATED_OFFSET_P10_FF_ARCHIVE_DIGEST7=1
+M4_DOC_OFFSET_P10_FF_ARCHIVE_DIGEST7=1
+M4_RTL_OFFSET_P10_FF_ARCHIVE_DIGEST7=0
+M4_GENERATED_OFFSET_P10_FF_ARCHIVE_COMMIT=1
+M4_DOC_OFFSET_P10_FF_ARCHIVE_COMMIT=1
+M4_RTL_OFFSET_P10_FF_ARCHIVE_COMMIT=0
+M4_GENERATED_OFFSET_P10_FF_CLEAR_KEY=1
+M4_DOC_OFFSET_P10_FF_CLEAR_KEY=1
+M4_RTL_OFFSET_P10_FF_CLEAR_KEY=0
+M4_GENERATED_OFFSET_P10_FF_CLEAR_AUDIT=1
+M4_DOC_OFFSET_P10_FF_CLEAR_AUDIT=1
+M4_RTL_OFFSET_P10_FF_CLEAR_AUDIT=0
+M4_GENERATED_OFFSET_P10_FF_CHECKPOINT=1
+M4_DOC_OFFSET_P10_FF_CHECKPOINT=1
+M4_RTL_OFFSET_P10_FF_CHECKPOINT=0
+M4_GENERATED_OFFSET_P10_FF_READ_PROGRESS=1
+M4_DOC_OFFSET_P10_FF_READ_PROGRESS=1
+M4_RTL_OFFSET_P10_FF_READ_PROGRESS=0
+M4_GENERATED_OFFSET_P10_4_COUNTER_SCHEMA=1
+M4_DOC_OFFSET_P10_4_COUNTER_SCHEMA=1
+M4_RTL_OFFSET_P10_4_COUNTER_SCHEMA=0
+M4_GENERATED_OFFSET_P10_4_OUTSTANDING_UNACKED_LOW=1
+M4_DOC_OFFSET_P10_4_OUTSTANDING_UNACKED_LOW=1
+M4_RTL_OFFSET_P10_4_OUTSTANDING_UNACKED_LOW=0
+M4_GENERATED_OFFSET_P10_4_OUTSTANDING_UNACKED_HIGH=1
+M4_DOC_OFFSET_P10_4_OUTSTANDING_UNACKED_HIGH=1
+M4_RTL_OFFSET_P10_4_OUTSTANDING_UNACKED_HIGH=0
+M4_GENERATED_OFFSET_P10_4_TX_IDLE_DUE_TO_ACK_LOW=1
+M4_DOC_OFFSET_P10_4_TX_IDLE_DUE_TO_ACK_LOW=1
+M4_RTL_OFFSET_P10_4_TX_IDLE_DUE_TO_ACK_LOW=0
+M4_GENERATED_OFFSET_P10_4_TX_IDLE_DUE_TO_ACK_HIGH=1
+M4_DOC_OFFSET_P10_4_TX_IDLE_DUE_TO_ACK_HIGH=1
+M4_RTL_OFFSET_P10_4_TX_IDLE_DUE_TO_ACK_HIGH=0
+M4_GENERATED_OFFSET_P10_4_WINDOW_FULL_STALL_LOW=1
+M4_DOC_OFFSET_P10_4_WINDOW_FULL_STALL_LOW=1
+M4_RTL_OFFSET_P10_4_WINDOW_FULL_STALL_LOW=0
+M4_GENERATED_OFFSET_P10_4_WINDOW_FULL_STALL_HIGH=1
+M4_DOC_OFFSET_P10_4_WINDOW_FULL_STALL_HIGH=1
+M4_RTL_OFFSET_P10_4_WINDOW_FULL_STALL_HIGH=0
+M4_GENERATED_OFFSET_P10_4_RECEIVER_CREDIT_STALL_LOW=1
+M4_DOC_OFFSET_P10_4_RECEIVER_CREDIT_STALL_LOW=1
+M4_RTL_OFFSET_P10_4_RECEIVER_CREDIT_STALL_LOW=0
+M4_GENERATED_OFFSET_P10_4_RECEIVER_CREDIT_STALL_HIGH=1
+M4_DOC_OFFSET_P10_4_RECEIVER_CREDIT_STALL_HIGH=1
+M4_RTL_OFFSET_P10_4_RECEIVER_CREDIT_STALL_HIGH=0
+M4_GENERATED_OFFSET_P10_4_DIRECTION_TURNAROUND_IDLE_LOW=1
+M4_DOC_OFFSET_P10_4_DIRECTION_TURNAROUND_IDLE_LOW=1
+M4_RTL_OFFSET_P10_4_DIRECTION_TURNAROUND_IDLE_LOW=0
+M4_GENERATED_OFFSET_P10_4_DIRECTION_TURNAROUND_IDLE_HIGH=1
+M4_DOC_OFFSET_P10_4_DIRECTION_TURNAROUND_IDLE_HIGH=1
+M4_RTL_OFFSET_P10_4_DIRECTION_TURNAROUND_IDLE_HIGH=0
+M4_GENERATED_OFFSET_P10_4_LOCAL_SOURCE_TEST_CONTROL=1
+M4_DOC_OFFSET_P10_4_LOCAL_SOURCE_TEST_CONTROL=1
+M4_RTL_OFFSET_P10_4_LOCAL_SOURCE_TEST_CONTROL=0
+M4_GENERATED_OFFSET_P10_4_LOCAL_SOURCE_TEST_STATUS=1
+M4_DOC_OFFSET_P10_4_LOCAL_SOURCE_TEST_STATUS=1
+M4_RTL_OFFSET_P10_4_LOCAL_SOURCE_TEST_STATUS=0
+M4_GENERATED_OFFSET_P10_4_LOCAL_SOURCE_TEST_ACCEPT_COUNT=1
+M4_DOC_OFFSET_P10_4_LOCAL_SOURCE_TEST_ACCEPT_COUNT=1
+M4_RTL_OFFSET_P10_4_LOCAL_SOURCE_TEST_ACCEPT_COUNT=0
+M4_GENERATED_OFFSET_P10_4_LOCAL_SOURCE_TEST_REJECT_COUNT=1
+M4_DOC_OFFSET_P10_4_LOCAL_SOURCE_TEST_REJECT_COUNT=1
+M4_RTL_OFFSET_P10_4_LOCAL_SOURCE_TEST_REJECT_COUNT=0
 M4_REGISTER_BUS_PRESENT=1
 M4_P8D_REGISTER_BUS_PRESENT=1
 M4_COMMIT_READBACK_PRESENT=1
@@ -1539,7 +1710,7 @@ M4_TRACE_REFERENCE_PROFILE_READBACKS=1
 M4_TRACE_REFERENCE_STARTUP_CLEAR_ORDER=1
 M4_TRACE_REFERENCE_FINAL_COUNTERS=1
 M4_TRACE_REFERENCE_SHUTDOWN=1
-M4_STATIC=PASS
+M4_STATIC=FAIL
 
 ```
 
@@ -1698,15 +1869,15 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_tfdu_exact_duty_accountant.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/rtl/ir_tfdu_exact_duty_accountant.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_tfdu_exact_duty_accountant
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_tfdu_physical_module_safety.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/rtl/ir_tfdu_physical_module_safety.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_tfdu_physical_module_safety
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/tfdu_lane_phy.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/rtl/tfdu_lane_phy.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu_lane_phy
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_lane_phy_smoke.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_tfdu_lane_phy_smoke.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_lane_phy_smoke
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1740,9 +1911,9 @@ source xsim.dir/tb_tfdu_lane_phy_smoke_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_TFDU_LANE_PHY_SMOKE_PASS=1
-$finish called at time : 605 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 193
+$finish called at time : 605 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 193
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug  3 18:19:10 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug  6 12:57:45 2026...
 
 ```
 
@@ -1757,11 +1928,11 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/rtl/ir_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_tfdu_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_codec
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1791,9 +1962,9 @@ Time resolution is 1 ps
 run -all
 M2_4PPM_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_CODEC_PASS=1
-$finish called at time : 1685 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_4ppm_codec.sv" Line 217
+$finish called at time : 1685 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_tfdu_4ppm_codec.sv" Line 217
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug  3 18:19:15 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug  6 12:57:49 2026...
 
 ```
 
@@ -1808,9 +1979,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_frame_l1.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/rtl/ir_frame_l1.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_frame_l1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_lane0_frame_crc.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_lane0_frame_crc.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_lane0_frame_crc
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1839,9 +2010,9 @@ source xsim.dir/tb_lane0_frame_crc_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_LANE0_FRAME_CRC_PASS=1
-$finish called at time : 145 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_lane0_frame_crc.sv" Line 195
+$finish called at time : 145 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_lane0_frame_crc.sv" Line 195
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug  3 18:19:19 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug  6 12:57:54 2026...
 
 ```
 
@@ -1856,11 +2027,11 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/rtl/ir_4ppm_codec.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/models/tfdu6102_behavior_model.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/models/tfdu6102_behavior_model.sv" into library work
 INFO: [VRFC 10-311] analyzing module tfdu6102_behavior_model
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_4ppm_model_integration.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_tfdu_4ppm_model_integration.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_tfdu_4ppm_model_integration
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1891,9 +2062,9 @@ Time resolution is 1 ps
 run -all
 M2_4PPM_MODEL_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1
-$finish called at time : 11705 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_tfdu_4ppm_model_integration.sv" Line 213
+$finish called at time : 11705 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_tfdu_4ppm_model_integration.sv" Line 213
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug  3 18:19:23 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug  6 12:57:58 2026...
 
 ```
 
@@ -1908,9 +2079,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_arq_l2.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/rtl/ir_arq_l2.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_arq_l2
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_lane0_ack_only.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_lane0_ack_only.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_lane0_ack_only
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1939,9 +2110,9 @@ source xsim.dir/tb_lane0_ack_only_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_LANE0_ACK_ONLY_PASS=1
-$finish called at time : 425 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_lane0_ack_only.sv" Line 181
+$finish called at time : 425 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_lane0_ack_only.sv" Line 181
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug  3 18:19:28 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug  6 12:58:03 2026...
 
 ```
 
@@ -1956,9 +2127,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_axi_regs_new.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/rtl/ir_axi_regs_new.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_axi_regs_new
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_ir_axi_regs_new.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_ir_axi_regs_new.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_ir_axi_regs_new
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -1987,9 +2158,9 @@ source xsim.dir/tb_ir_axi_regs_new_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_IR_AXI_REGS_NEW_PASS=1
-$finish called at time : 266 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_ir_axi_regs_new.sv" Line 177
+$finish called at time : 266 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_ir_axi_regs_new.sv" Line 177
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug  3 18:19:33 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug  6 12:58:08 2026...
 
 ```
 
@@ -2004,9 +2175,9 @@ XELAB_PATH_ON_PATH=0
 XSIM_PATH_ON_PATH=0
 XILINX_VIVADO_2023_1_BIN=D:\Xilinx\Vivado\2023.1\bin
 XILINX_SIM_TOOLCHAIN_BAT_AVAILABLE=1
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/rtl/ir_multilane_scheduler.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/rtl/ir_multilane_scheduler.sv" into library work
 INFO: [VRFC 10-311] analyzing module ir_multilane_scheduler
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_ir_multilane_scheduler.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_ir_multilane_scheduler.sv" into library work
 INFO: [VRFC 10-311] analyzing module tb_ir_multilane_scheduler
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
@@ -2035,23 +2206,23 @@ source xsim.dir/tb_ir_multilane_scheduler_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 TB_IR_MULTILANE_SCHEDULER_PASS=1
-$finish called at time : 146 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_1R/sim/tb/tb_ir_multilane_scheduler.sv" Line 129
+$finish called at time : 146 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_4/sim/tb/tb_ir_multilane_scheduler.sv" Line 129
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug  3 18:19:37 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug  6 12:58:12 2026...
 
 ```
 
-## generate_plan_completion_audit: PASS
+## generate_plan_completion_audit: FAIL
 
 ```text
 PLAN_COMPLETION_AUDIT_GENERATED=1
-PLAN_COMPLETION_AUDIT_STATUS=PASS
-PLAN_COMPLETION_AUDIT_HARD_FAILS=0
+PLAN_COMPLETION_AUDIT_STATUS=FAIL
+PLAN_COMPLETION_AUDIT_HARD_FAILS=1
 NO_HARDWARE_ACTIONS_EXECUTED=1
 
 ```
 
-## plan_completion_static: PASS
+## plan_completion_static: FAIL
 
 ```text
 PLAN_MARKER_PROJECT_BOOTSTRAP_DONE=1
@@ -2070,9 +2241,9 @@ PLAN_MARKER_TFDU_SAFETY_DOC_CREATED=1
 PLAN_MARKER_NEW_RTL_SKELETON_CREATED=1
 PLAN_MARKER_REGISTER_MAP_SINGLE_SOURCE_CREATED=1
 PLAN_MARKER_NO_HARDWARE_ACTIONS_EXECUTED=1
-PLAN_OFFLINE_GATES_RAN_WITHOUT_HARD_FAIL=1
+PLAN_OFFLINE_GATES_RAN_WITHOUT_HARD_FAIL=0
 PLAN_OFFLINE_SUMMARY_NO_HARDWARE_TRUE=1
-PLAN_OFFLINE_RESULTS_NO_HARD_FAIL=1
+PLAN_OFFLINE_RESULTS_NO_HARD_FAIL=0
 PLAN_NO_HARDWARE_SCAN_PASS=1
 PLAN_GATE_PROJECT_INTEGRITY_PASS=1
 PLAN_GATE_P8A_UNIT_TESTS_PASS=1
@@ -2089,12 +2260,12 @@ PLAN_GATE_M2_STATIC_REFERENCE_CHECKS_PASS=1
 PLAN_GATE_M3_CRC_BAD_ACK_REFERENCE_PASS=1
 PLAN_GATE_M3_STATIC_REFERENCE_CHECKS_PASS=1
 PLAN_GATE_M4_PS_DRIVER_TRACE_PASS=1
-PLAN_GATE_M4_STATIC_REFERENCE_CHECKS_PASS=1
+PLAN_GATE_M4_STATIC_REFERENCE_CHECKS_PASS=0
 PLAN_GATE_SCHEDULER_STATIC_CHECKS_PASS=1
 PLAN_GATE_M5_STATIC_NONHARDWARE_BUILD_CHECKS_PASS=1
 PLAN_GATE_M6_STATIC_HARDWARE_PREP_CHECKS_PASS=1
 PLAN_GATE_M6_REFUSAL_RUNTIME_PASS=1
-PLAN_GATE_GENERATE_PLAN_COMPLETION_AUDIT_PASS=1
+PLAN_GATE_GENERATE_PLAN_COMPLETION_AUDIT_PASS=0
 PLAN_GATE_PS_DRIVER_C_COMPILE_PASS_OR_PENDING_TOOL=1
 PLAN_GATE_M5_VIVADO_NONHARDWARE_BUILD_PASS_OR_PENDING_TOOL=1
 PLAN_GATE_LANE_PHY_SIM_PASS_OR_PENDING_TOOL=1
@@ -2114,8 +2285,8 @@ PLAN_FORBIDDEN_CLAIM_ROTATION_PASS_ABSENT=1
 PLAN_FORBIDDEN_CLAIM_TWO_HOUR_SOAK_PASS_ABSENT=1
 PLAN_FORBIDDEN_CLAIM_EIGHT_LANE_PASS_ABSENT=1
 PLAN_FORBIDDEN_CLAIM_AB_L1_FIXED_ABSENT=1
-PLAN_AUDIT_STATUS_RECORDED=1
-PLAN_AUDIT_OFFLINE_STATUS_RECORDED=1
+PLAN_AUDIT_STATUS_RECORDED=0
+PLAN_AUDIT_OFFLINE_STATUS_RECORDED=0
 PLAN_AUDIT_P8A_BASELINE_RECORDED=1
 PLAN_AUDIT_SV_PORT_CONTRACT_RECORDED=1
 PLAN_AUDIT_M4_PS_DRIVER_TRACE_RECORDED=1
@@ -2133,6 +2304,6 @@ PLAN_AUDIT_IVERILOG_ABSENCE_RECORDED=1
 PLAN_AUDIT_VERILATOR_ABSENCE_RECORDED=1
 PLAN_AUDIT_VITIS_CROSS_GCC_RECORDED=1
 PLAN_AUDIT_PS_DRIVER_CROSS_COMPILE_RECORDED=1
-PLAN_COMPLETION_STATIC=PASS
+PLAN_COMPLETION_STATIC=FAIL
 
 ```

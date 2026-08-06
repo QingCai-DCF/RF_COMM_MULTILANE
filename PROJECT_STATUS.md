@@ -19,10 +19,10 @@ P10_1R_STATUS: PASS
 P11_OFFICIAL_STAGE_STATUS: NOT_STARTED
 P11_HARDWARE_READY: false
 CURRENT_PROGRAM_STAGE: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
-CURRENT_RUN_HARDWARE_AUTHORIZATION: true
-LAST_HARDWARE_AUTHORIZATION_CONSUMED: false
+CURRENT_RUN_HARDWARE_AUTHORIZATION: false
+LAST_HARDWARE_AUTHORIZATION_CONSUMED: true
 LAST_HARDWARE_STAGE: P10_4
-LAST_HARDWARE_RUN_ID: p10_4_20260805T144037Z_a32afe5b_6f915067_ace48b07
+LAST_HARDWARE_RUN_ID: p10_4_20260806T034503Z_6ff17d33_94506af9_2b2b37d4
 LAST_SHUTDOWN_FIXED: PASS
 LAST_SHUTDOWN_ROTATING: PASS
 ```
@@ -39,7 +39,7 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 | `P10_1_HARDWARE_PERFORMANCE_STREAMING_CROSSTALK_ACCEPTANCE` | `FAIL` |
 | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `PASS` |
 | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `PASS` |
-| `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `IN_PROGRESS` |
+| `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `FAIL` |
 | `P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET` | `PASS` |
 | `P1_OFFLINE_HARDENING` | `PASS` |
 | `P2_SIMULATION_BASELINE` | `PASS` |
@@ -104,8 +104,8 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - P9 annotated tag: `p9-z7010-2lane-pass`
 - P9 evidence checkpoint: `818d335c229d7b92223c279159aab84a5207ef92`
 - Closeout evidence: `evidence/generated/p9_post_checkpoint_closeout.json`
-- Current-run authorization: `true`
-- Last authorization consumed: `false`
+- Current-run authorization: `false`
+- Last authorization consumed: `true`
 - External TFDU duty measurement: `PENDING_EXTERNAL_MEASUREMENT`
 - Physical GLOBAL_PERMIT implementation: `PENDING_D17`
 - AB_L1 legacy/current P9 stationary: `BAD_DIR` / `PASS`
@@ -130,8 +130,8 @@ The P7 PASS is limited to the stationary two-lane application path on the curren
 - Closeout status: `PASS`
 - Closeout evidence: `evidence/generated/p10_closeout_summary.json`
 - Remote checkpoint evidence: `evidence/generated/p10_remote_push_summary.json`
-- Current-run authorization: `true`
-- Last authorization consumed: `false`
+- Current-run authorization: `false`
+- Last authorization consumed: `true`
 - Goodput audit: `PASS` (`CURRENT_FINAL_GOODPUT_FIELDS_NOT_SUITABLE_FOR_SCALING`)
 - Current final goodput eligible for 8-lane projection: `false`
 - P11 official stage: `NOT_STARTED`
