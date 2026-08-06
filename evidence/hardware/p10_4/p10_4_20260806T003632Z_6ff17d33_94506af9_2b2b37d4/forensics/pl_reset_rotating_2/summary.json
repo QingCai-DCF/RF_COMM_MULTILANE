@@ -1,0 +1,103 @@
+{
+  "archives": [
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4\\forensics\\pl_reset_rotating_2\\fixed.p10ff.bin",
+      "binary_sha256": "f6444e3ededae82ca3ceb056d81b5a207812582074b4ffd8c9545f1df6dc3815",
+      "digest_words_little_endian": [
+        "0x3E4E44F6",
+        "0x2CE8DADE",
+        "0x56B0CEA3",
+        "0x205A1BD8",
+        "0x20581278",
+        "0xD8FFB474",
+        "0x1D5F54C9",
+        "0x1538DCF6"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4\\forensics\\pl_reset_rotating_2\\fixed.p10ff.json",
+      "role": "fixed",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4\\forensics\\pl_reset_rotating_2\\fixed.p10ff.sha256",
+      "status": "FROZEN"
+    },
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4\\forensics\\pl_reset_rotating_2\\rotating.p10ff.bin",
+      "binary_sha256": "da6dec0ea73986846f10edd75ba29d780f0ea72b56cae786c852f503e966b286",
+      "digest_words_little_endian": [
+        "0x0EEC6DDA",
+        "0x848639A7",
+        "0xD7ED106F",
+        "0x789DA25B",
+        "0x2BA70E0F",
+        "0x86E7CA56",
+        "0x03F552C8",
+        "0x86B266E9"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4\\forensics\\pl_reset_rotating_2\\rotating.p10ff.json",
+      "role": "rotating",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4\\forensics\\pl_reset_rotating_2\\rotating.p10ff.sha256",
+      "status": "FROZEN"
+    }
+  ],
+  "capture_process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\scripts\\hw\\p10_3f_fault_forensics.tcl",
+      "capture",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4\\forensics\\pl_reset_rotating_2",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\config\\p10_4_current_run_hardware_authorization.json",
+      "p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4",
+      "0x50343446",
+      "0x50343452",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4\\forensics\\pl_reset_rotating_2\\capture.result.txt",
+      "NONE",
+      "NONE",
+      "0x0A000004",
+      "0xBCFECB39"
+    ],
+    "elapsed_seconds": 4.998297299956903,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_4/p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_reset_rotating_2/capture.stderr.log",
+    "stdout": "evidence/hardware/p10_4/p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_reset_rotating_2/capture.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 180
+  },
+  "commit_process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\scripts\\hw\\p10_3f_fault_forensics.tcl",
+      "commit",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4\\forensics\\pl_reset_rotating_2",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\config\\p10_4_current_run_hardware_authorization.json",
+      "p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4",
+      "0x50343446",
+      "0x50343452",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4\\forensics\\pl_reset_rotating_2\\commit.result.txt",
+      "f6444e3ededae82ca3ceb056d81b5a207812582074b4ffd8c9545f1df6dc3815",
+      "da6dec0ea73986846f10edd75ba29d780f0ea72b56cae786c852f503e966b286",
+      "0x0A000004",
+      "0xBCFECB39"
+    ],
+    "elapsed_seconds": 1.1998779999557883,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_4/p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_reset_rotating_2/commit.stderr.log",
+    "stdout": "evidence/hardware/p10_4/p10_4_20260806T003632Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_reset_rotating_2/commit.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 180
+  },
+  "errors": [],
+  "explicit_clear_executed": false,
+  "force_terminal_abort": false,
+  "frozen_roles": [
+    "fixed",
+    "rotating"
+  ],
+  "generated_at_utc": "2026-08-06T02:48:53+00:00",
+  "label": "pl_reset_rotating_2",
+  "schema_version": 1,
+  "status": "PASS"
+}
