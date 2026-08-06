@@ -26,7 +26,7 @@ P8D_LANE_STAT_FIELDS = {
 
 def p8d_rtl_consumes_register(name: str, offset: int, rtl: str) -> bool:
     """Confirm that the additive P8D front-end decodes the canonical register."""
-    if f"`IR_REG_{name}" in rtl:
+    if rtl_has_macro_case_item(name, rtl):
         return True
 
     # Per-lane statistics are deliberately decoded as one regular 8 x 5 array
@@ -51,6 +51,14 @@ def p8d_rtl_consumes_register(name: str, offset: int, rtl: str) -> bool:
     return offset == expected_offset and all(token in rtl for token in decoder_tokens)
 
 
+def rtl_has_macro_case_item(name: str, rtl: str) -> bool:
+    """Accept a generated macro only when it is a complete case item."""
+    macro_case = re.compile(
+        rf"(?m)^\s*`IR_REG_{re.escape(name)}\s*[:,]"
+    )
+    return macro_case.search(rtl) is not None
+
+
 def p9_rtl_consumes_register(name: str, offset: int, rtl: str) -> bool:
     """Confirm that the P9 peripheral decodes the canonical register offset.
 
@@ -59,10 +67,66 @@ def p9_rtl_consumes_register(name: str, offset: int, rtl: str) -> bool:
     audit.  Match a complete case label rather than accepting an offset that
     merely occurs in a comment, parameter, or unrelated expression.
     """
-    if f"`IR_REG_{name}" in rtl:
+    if rtl_has_macro_case_item(name, rtl):
         return True
     literal_case = re.compile(rf"(?im)^\s*12'h{offset:03x}\s*:")
     return literal_case.search(rtl) is not None
+
+
+def p10_2_rtl_consumes_register(name: str, offset: int, rtl: str) -> bool:
+    """Prove the P10.2 snapshot register or indexed window is decoded.
+
+    The control, generation, and schema words use complete literal case
+    labels.  The data-base register represents a 128-word indexed read window,
+    so prove the exact base/end bounds, index arithmetic, and declared depth
+    instead of looking for an isolated address token.
+    """
+    if name != "P10_2_SNAPSHOT_DATA_BASE":
+        return p9_rtl_consumes_register(name, offset, rtl)
+
+    compact = re.sub(r"\s+", "", rtl).lower()
+    decoder_tokens = (
+        "localparamintegerp10_2_snapshot_words=128;",
+        "reg_rd_addr>=12'hb0c",
+        "reg_rd_addr<=12'hd08",
+        "p10_2_snapshot_q[(reg_rd_addr-12'hb0c)>>2]",
+    )
+    expected_last_offset = 0xB0C + (128 - 1) * 4
+    return (
+        offset == 0xB0C
+        and expected_last_offset == 0xD08
+        and all(token in compact for token in decoder_tokens)
+    )
+
+
+def p10_4_rtl_consumes_register(
+    name: str,
+    offset: int,
+    endpoint_rtl: str,
+    performance_rtl: str,
+) -> bool:
+    """Prove ownership and endpoint routing for each P10.4 register.
+
+    Split performance counters are decoded by ``p10_1_perf_monitor`` and
+    forwarded through the endpoint's exact D84..DAC window.  Local-source
+    diagnostic registers are decoded directly in the endpoint.  This keeps the
+    proof tied to the actual owning RTL rather than the legacy P8 register
+    block while still rejecting a macro that is only declared or commented.
+    """
+    if 0xD84 <= offset <= 0xDAC:
+        compact_endpoint = re.sub(r"\s+", "", endpoint_rtl).lower()
+        route_tokens = (
+            "reg_rd_addr>=12'hd84",
+            "reg_rd_addr<=12'hdac",
+            "reg_rd_data=p10_1_reg_rd_data;",
+        )
+        return (
+            rtl_has_macro_case_item(name, performance_rtl)
+            and all(token in compact_endpoint for token in route_tokens)
+        )
+    if 0xDB0 <= offset <= 0xDBC:
+        return p9_rtl_consumes_register(name, offset, endpoint_rtl)
+    return False
 
 
 @dataclass
@@ -99,13 +163,13 @@ def main() -> int:
     p9_rtl = (ROOT / "rtl/p9_axi_dma_peripheral.sv").read_text(
         encoding="utf-8", errors="ignore"
     )
-    p10_1_rtl = "\n".join(
-        (ROOT / path).read_text(encoding="utf-8", errors="ignore")
-        for path in (
-            "rtl/p10_1_perf_monitor.sv",
-            "rtl/p10_axi_dma_endpoint_peripheral_bd.v",
-        )
+    p10_1_perf_rtl = (ROOT / "rtl/p10_1_perf_monitor.sv").read_text(
+        encoding="utf-8", errors="ignore"
     )
+    p10_1_integration_rtl = (ROOT / "rtl/p10_axi_dma_endpoint_peripheral_bd.v").read_text(
+        encoding="utf-8", errors="ignore"
+    )
+    p10_1_rtl = "\n".join((p10_1_perf_rtl, p10_1_integration_rtl))
     hdr = (ROOT / "config/register_map/generated/ir_regs.h").read_text(encoding="utf-8", errors="ignore")
     py = (ROOT / "config/register_map/generated/ir_regs.py").read_text(encoding="utf-8", errors="ignore")
     md = (ROOT / "docs/design/REGISTER_CONTRACT.md").read_text(encoding="utf-8", errors="ignore")
@@ -130,7 +194,7 @@ def main() -> int:
             # exact literal decoder.  Accept either implementation location,
             # but never a mere comment/offset occurrence.
             rtl_consumes_register = (
-                f"`IR_REG_{name}" in p10_1_rtl
+                rtl_has_macro_case_item(name, p10_1_rtl)
                 or p9_rtl_consumes_register(name, off, p9_rtl)
             )
         elif name.startswith("P10_1R_"):
@@ -139,6 +203,22 @@ def main() -> int:
             # literal case labels, so apply the same exact-label proof used
             # for the P9/P10.1 physical-counter windows.
             rtl_consumes_register = p9_rtl_consumes_register(name, off, p9_rtl)
+        elif name.startswith("P10_2_"):
+            # P10.2 lives in the endpoint peripheral.  Its 128-word snapshot
+            # payload is one indexed range rather than 128 duplicated case
+            # items, so use the range-aware proof for the canonical data base.
+            rtl_consumes_register = p10_2_rtl_consumes_register(name, off, p9_rtl)
+        elif name.startswith("P10_FF_"):
+            # The immutable first-fault forensic window is decoded directly
+            # by the endpoint peripheral using generated register macros.
+            rtl_consumes_register = p9_rtl_consumes_register(name, off, p9_rtl)
+        elif name.startswith("P10_4_"):
+            # P10.4 counter reads are owned by the performance monitor and
+            # forwarded by the endpoint; local-source diagnostics are owned
+            # directly by the endpoint.  Prove the correct path for each.
+            rtl_consumes_register = p10_4_rtl_consumes_register(
+                name, off, p9_rtl, p10_1_perf_rtl
+            )
         elif name.startswith("P8D_"):
             rtl_consumes_register = p8d_rtl_consumes_register(name, off, p8d_rtl)
         else:

@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_4-OFFLINE-VERIFIER-REMEDIATION",
+  "scope": "VERIFICATION_SOURCE_ONLY_NO_ARTIFACT_CHANGE",
+  "status": "PASS",
+  "timestamp_utc": "2026-08-06T06:21:47Z",
+  "base_checkpoint": "e40abc2086a63a899c481881c00494df32a7cccc",
+  "prior_failure": {
+    "status": "FAIL_PRESERVED_IN_GIT_HISTORY",
+    "closure_path": "evidence/generated/p10_4_terminal_offline_closure.json",
+    "closure_sha256": "49c59274667055d8bf8013a6f20f74c68480227db4c47405f4aab4b1f2c50ac6",
+    "offline_summary_path": "evidence/generated/offline_gate_summary.json",
+    "offline_summary_sha256": "abeffc9ae714b0dd2644c702a9cecff1866cba9493b7e295dcbd294aa4558e87",
+    "offline_summary_git_blob": "edd3d7b7f643f493c5f2947c68343bfbd5d610c8",
+    "offline_markdown_sha256": "7558665ebbc468031239cbbd8ad11aa7c019d0bf316e920f0ae822e910dce5e4",
+    "offline_markdown_git_blob": "b71b75dc57c015ed181a1697a1d35182e2ac7e09",
+    "false_negative_count": 48
+  },
+  "remediation": {
+    "checker_path": "scripts/check_m4_static.py",
+    "checker_sha256": "75f59b11f19bdd97974a90b5c89cef1a22d891bf0efd3410029b43a6d4fbeaf8",
+    "test_path": "tests/test_check_m4_static.py",
+    "test_sha256": "ba43c21f766884ef29fa5271fb33fe6089fd352968bed11ddc35b7204d0702df",
+    "register_groups": {
+      "p10_2_snapshot": 4,
+      "p10_first_fault_forensics": 29,
+      "p10_4_split_performance_counters": 11,
+      "p10_4_local_source_diagnostics": 4
+    },
+    "proof": "The checker now verifies each register in its owning RTL, including the exact P10.2 indexed range/depth and the P10.4 performance-monitor-to-endpoint forwarding range. It does not accept a generated declaration or an isolated address token as decoder evidence.",
+    "rtl_files_changed": [],
+    "constraints_changed": [],
+    "software_or_firmware_changed": [],
+    "register_map_changed": []
+  },
+  "verification": {
+    "targeted_checker": "PASS",
+    "targeted_unit_tests": {
+      "status": "PASS",
+      "tests_run": 4
+    },
+    "canonical_offline_gate": {
+      "status": "PASS",
+      "path": "evidence/generated/offline_gate_summary.json",
+      "sha256": "e5c4bb88d52cdb2b479de6e2603825f59753126f6a9922b8ddfc1ba00c0952cf",
+      "markdown_path": "evidence/generated/offline_gate_summary.md",
+      "markdown_sha256": "744783249f6708296c8eba76fbc73da87c46bff64c0e54dda593c555fd26fb27",
+      "result_count": 31,
+      "failed_result_count": 0,
+      "offline_cache_status": "BYPASS",
+      "offline_real_build_process_ran": true,
+      "no_hardware": true
+    },
+    "post_full_gate_delta_validation": {
+      "reason": "Code review tightened generated-macro recognition from any occurrence to a complete case item after the full gate. Canonical state and evidence metadata were then updated to record the remediation and terminal audit. No RTL, constraints, register map, software, firmware, or generated Vivado/XSIM build input changed.",
+      "verification_source_paths": [
+        "scripts/check_m4_static.py",
+        "tests/test_check_m4_static.py"
+      ],
+      "metadata_paths": [
+        "config/project_state.json",
+        "config/project_requirements.yaml",
+        "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+        "evidence/generated/p8a_consistency_summary.json",
+        "evidence/generated/p10_4_offline_verifier_remediation.json",
+        "evidence/generated/p10_4_offline_verifier_remediation.md",
+        "evidence/generated/p10_4_completion_audit.json",
+        "evidence/generated/p10_4_completion_audit.md"
+      ],
+      "affected_gate_reruns": {
+        "m4_static_reference_checks": "PASS",
+        "m4_checker_unit_tests": "PASS_4_OF_4",
+        "p8a_unit_tests": "PASS_15_OF_15",
+        "p8a_consistency": "PASS",
+        "no_hardware_calls": "PASS",
+        "project_status_generation_check": "PASS",
+        "requirement_traceability_generation_check": "PASS",
+        "plan_completion_static": "PASS"
+      },
+      "vivado_or_xsim_build_result_affected": false
+    },
+    "plan_completion_audit": {
+      "status": "PASS",
+      "path": "evidence/generated/plan_completion_audit.md",
+      "sha256": "c4009f48153e193130b9d849817a3f6d1f989ef4013ff8d116c2e5a3e0582b0c"
+    },
+    "vivado_nonhardware_build_summary": {
+      "status": "PASS",
+      "path": "evidence/generated/vivado/nonhardware_build_summary.json",
+      "sha256": "91ece2ba91c55bc45b8e6848cc7bc2f5fd7b4d19dc099095cf5163ff2f6c371f"
+    }
+  },
+  "frozen_p10_4_artifacts": {
+    "artifact_source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
+    "fixed_functional_bitstream_sha256": "94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b",
+    "rotating_functional_bitstream_sha256": "2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e",
+    "fixed_elf_sha256": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb",
+    "rotating_elf_sha256": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1",
+    "bytes_rehashed_unchanged": true,
+    "hardware_pass_inherited": false
+  },
+  "hardware_disposition": {
+    "p10_3_status": "PASS_PRESERVED",
+    "p10_4_status": "FAIL_CLOSED_PHYSICAL_DIRECTIONAL_BLOCKER",
+    "blocker_path": "evidence/generated/p10_4_f2_to_r2_directional_blocker.json",
+    "blocker_sha256": "da1f3a44aee2c7de066344030257196fd9168fc75c248db63305b0cb2e819810",
+    "current_run_hardware_authorization": false,
+    "hardware_actions_executed": false,
+    "new_tx_started": false,
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "p11_started": false
+  }
+}
