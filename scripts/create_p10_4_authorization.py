@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -39,7 +40,23 @@ def write_json(path: Path, value: Any) -> None:
                     encoding="utf-8", newline="\n")
 
 
-def main() -> int:
+def resolve_output(path: Path) -> Path:
+    candidate = path if path.is_absolute() else ROOT / path
+    candidate = candidate.resolve()
+    try:
+        candidate.relative_to(ROOT.resolve())
+    except ValueError as exc:
+        raise SystemExit(f"P10_4_AUTHORIZATION_REFUSED=output outside repository: {path}") from exc
+    return candidate
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--authorization", type=Path, default=AUTH)
+    parser.add_argument("--evidence-base", type=Path, default=GENERATED)
+    args = parser.parse_args(argv)
+    auth_path = resolve_output(args.authorization)
+    evidence_base = resolve_output(args.evidence_base)
     errors: list[str] = []
     if os.environ.get("NO_HARDWARE", "1") != "1" or os.environ.get(
         "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false"
@@ -111,6 +128,8 @@ def main() -> int:
             "rotating": f"AX7020-R/JTAG:{campaign.EXPECTED_ROTATING_SERIAL}",
         },
         "module_binding": campaign.MODULE_BINDING,
+        "pre_run_module_change": campaign.PRE_RUN_MODULE_CHANGE,
+        "hardware_configuration_inputs": campaign.hardware_configuration_inputs(),
         "maximum_lane_mask": 15, "maximum_single_formal_run_seconds": 1800,
         "maximum_aggregate_command_bytes": 128 << 20,
         "ethernet_allowed": False, "external_instrumentation_allowed": False,
@@ -130,17 +149,17 @@ def main() -> int:
         "external_instrumentation_used": False,
         "errors": errors, "created_at_utc": now.isoformat(),
     }
-    write_json(AUTH, payload)
+    write_json(auth_path, payload)
     evidence = {
         "schema_version": 1, "test_id": "P10_4-CURRENT-RUN-AUTHORIZATION",
         "status": payload["status"], "run_id": run_id,
-        "authorization": rel(AUTH), "authorization_sha256": sha256(AUTH),
+        "authorization": rel(auth_path), "authorization_sha256": sha256(auth_path),
         "artifact_freeze": rel(FREEZE), "artifact_freeze_sha256": sha256(FREEZE),
         "current_run_hardware_authorization": payload["current_run_hardware_authorization"],
         "hardware_actions_executed": False, "errors": errors,
     }
-    write_json(GENERATED.with_suffix(".json"), evidence)
-    GENERATED.with_suffix(".md").write_text(
+    write_json(evidence_base.with_suffix(".json"), evidence)
+    evidence_base.with_suffix(".md").write_text(
         "# P10.4 current-run authorization\n\n"
         f"- Status: `{payload['status']}`\n- Run ID: `{run_id}`\n"
         f"- Authorization SHA256: `{evidence['authorization_sha256']}`\n"

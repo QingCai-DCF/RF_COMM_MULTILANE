@@ -50,6 +50,11 @@ FREEZE = ROOT / "evidence/generated/p10_4_artifact_freeze.json"
 AUTH = ROOT / "config/p10_4_current_run_hardware_authorization.json"
 CONFIG = ROOT / "config/performance/p10_4_hardening.yaml"
 MODEL = ROOT / "evidence/generated/p10_4_model_reconciliation_offline.json"
+AS_WIRED = ROOT / "config/hardware/p10_3_actual_wiring.yaml"
+MODULE_INVENTORY = ROOT / "config/hardware/tfdu_module_inventory.yaml"
+F2_B0008_QUALIFICATION = (
+    ROOT / "evidence/generated/p10_4_lane2_b0008_raw_connectivity_retest.json"
+)
 STAGE_TCL = ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl"
 FORENSIC_TCL = ROOT / "scripts/hw/p10_3f_fault_forensics.tcl"
 HW_ROOT = ROOT / "evidence/hardware/p10_4"
@@ -62,6 +67,20 @@ MAX_AGGREGATE_BYTES = 128 << 20
 MODULE_BINDING = {
     "F0": "A0019", "F1": "B0012", "F2": "B0008", "F3": "B0020",
     "R0": "A0010", "R1": "A0017", "R2": "B0023", "R3": "B0025",
+}
+PRE_RUN_MODULE_CHANGE = {
+    "module": "F2",
+    "previous_small_board_id": "B0001",
+    "current_small_board_id": "B0008",
+    "performed_by": "user",
+    "completed_before_current_campaign": True,
+    "replacement_during_current_campaign": False,
+    "qualification_result": "BIDIRECTIONAL_RAW_PHYSICAL_PASS",
+}
+HARDWARE_CONFIGURATION_PATHS = {
+    "actual_wiring": AS_WIRED,
+    "module_inventory": MODULE_INVENTORY,
+    "f2_b0008_raw_qualification": F2_B0008_QUALIFICATION,
 }
 RUN_RE = re.compile(
     r"^p10_4_(?P<utc>[0-9]{8}T[0-9]{6}Z)_"
@@ -96,6 +115,13 @@ def utc_now() -> str:
 
 def metadata(path: Path) -> dict[str, Any]:
     return {"path": rel(path), "sha256": sha256(path), "bytes": path.stat().st_size}
+
+
+def hardware_configuration_inputs() -> dict[str, dict[str, Any]]:
+    return {
+        name: metadata(path)
+        for name, path in HARDWARE_CONFIGURATION_PATHS.items()
+    }
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -608,8 +634,23 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
         "connector_ack_quarantine",
     }:
         errors.append("offline input set mismatch")
-    if not file_matches_head(AUTH) or not file_matches_head(FREEZE):
+    if not file_matches_head(path) or not file_matches_head(FREEZE):
         errors.append("authorization and freeze must be exact committed HEAD inputs")
+    if auth.get("module_binding") != MODULE_BINDING:
+        errors.append("authorization module binding mismatch")
+    if auth.get("pre_run_module_change") != PRE_RUN_MODULE_CHANGE:
+        errors.append("authorization pre-run module change mismatch")
+    try:
+        current_hardware_inputs = hardware_configuration_inputs()
+    except OSError as exc:
+        errors.append(f"hardware configuration input read failed: {exc}")
+        current_hardware_inputs = {}
+    if auth.get("hardware_configuration_inputs") != current_hardware_inputs:
+        errors.append("authorization hardware configuration inputs mismatch")
+    for name, item in current_hardware_inputs.items():
+        candidate = (ROOT / item["path"]).resolve()
+        if not file_matches_head(candidate):
+            errors.append(f"hardware configuration input is not committed: {name}")
     artifacts: dict[str, Path] = {}
     for key, item in artifacts_by_key.items():
         try:
@@ -648,10 +689,10 @@ def initialize_run(run_root: Path, auth: Path, artifacts: dict[str, Path]) -> di
         (FREEZE, run_root / "artifacts/artifact_freeze.json"),
         (CONFIG, run_root / "artifacts/performance_config.yaml"),
         (MODEL, run_root / "artifacts/offline_model.json"),
-        (ROOT / "config/hardware/p10_3_actual_wiring.yaml",
-         run_root / "artifacts/as_wired.yaml"),
-        (ROOT / "config/hardware/tfdu_module_inventory.yaml",
-         run_root / "artifacts/module_inventory.yaml"),
+        (AS_WIRED, run_root / "artifacts/as_wired.yaml"),
+        (MODULE_INVENTORY, run_root / "artifacts/module_inventory.yaml"),
+        (F2_B0008_QUALIFICATION,
+         run_root / "artifacts/f2_b0008_raw_qualification.json"),
     )
     for source, destination in copies:
         shutil.copy2(source, destination)
@@ -1458,8 +1499,6 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if not errors else 3
     if not args.execute_hardware:
         errors.append("--execute-hardware is required")
-    if auth_path != AUTH.resolve():
-        errors.append("canonical P10.4 authorization path required")
     if os.environ.get("NO_HARDWARE") != "0" or os.environ.get(
         "CURRENT_RUN_HARDWARE_AUTHORIZATION", "false"
     ).lower() != "true":
@@ -1660,11 +1699,11 @@ def main(argv: list[str] | None = None) -> int:
         "result": rel(run_root / "final/orchestrator_result.json"),
         "evidence_consistency": consistency["status"],
     })
-    write_json(AUTH, consumed)
+    write_json(auth_path, consumed)
     write_pair(GENERATED / "p10_4_authorization", {
         "schema_version": 1, "test_id": "P10_4-AUTHORIZATION",
         "status": consumed["status"], "run_id": args.run_id,
-        "authorization": rel(AUTH), "current_run_hardware_authorization": False,
+        "authorization": rel(auth_path), "current_run_hardware_authorization": False,
         "consumed": True, "result": consumed["result"], "errors": [],
     }, "P10.4 current-run authorization")
     print(f"P10_4_HARDWARE={status}")

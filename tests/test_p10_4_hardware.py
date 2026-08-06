@@ -44,6 +44,25 @@ class P104PlanTests(unittest.TestCase):
             hashes["buffers8_batch16"]["half_duplex"],
         )
 
+    def test_b0008_current_hardware_binding_is_content_bound(self) -> None:
+        self.assertEqual(p10.MODULE_BINDING["F2"], "B0008")
+        self.assertEqual(
+            p10.PRE_RUN_MODULE_CHANGE["qualification_result"],
+            "BIDIRECTIONAL_RAW_PHYSICAL_PASS",
+        )
+        inputs = p10.hardware_configuration_inputs()
+        self.assertEqual(
+            set(inputs),
+            {"actual_wiring", "module_inventory", "f2_b0008_raw_qualification"},
+        )
+        for item in inputs.values():
+            self.assertRegex(item["sha256"], r"^[0-9a-f]{64}$")
+            self.assertGreater(item["bytes"], 0)
+        source = Path(p10.__file__).read_text(encoding="utf-8")
+        self.assertIn("file_matches_head(path)", source)
+        self.assertIn("write_json(auth_path, consumed)", source)
+        self.assertNotIn("canonical P10.4 authorization path required", source)
+
     def test_exact_streaming_counts(self) -> None:
         stream64 = [row for row in self.records("streaming_64m")
                     if row[0] == "P10FF_TOTAL"]
