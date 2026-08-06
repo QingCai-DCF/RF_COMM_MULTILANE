@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+  "test_id": "P10_4-XTALK-EVALUATOR-001",
+  "status": "PASS",
+  "classification": "HOST_EVALUATOR_FALSE_POSITIVE",
+  "generated_at_utc": "2026-08-06T00:34:25.4939802Z",
+  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "working_parent_commit": "064c9f8ae5aab72b7f3964f4c5c62a3e6e76b29d",
+  "source_run": {
+    "run_id": "p10_4_20260805T215824Z_6ff17d33_94506af9_2b2b37d4",
+    "campaign_status": "PARTIAL",
+    "artifact_source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
+    "fixed_functional_bitstream_sha256": "94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b",
+    "rotating_functional_bitstream_sha256": "2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e",
+    "fixed_elf_sha256": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb",
+    "rotating_elf_sha256": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1",
+    "stage_summary": {
+      "path": "evidence/hardware/p10_4/p10_4_20260805T215824Z_6ff17d33_94506af9_2b2b37d4/stages/echo_crosstalk_8x8/stage_summary.json",
+      "sha256": "1f0742826ebd1f455ef5058c95a750a94a1b6a51ca797a8a8c662fa7e67ba38d"
+    },
+    "final_summary": {
+      "path": "evidence/hardware/p10_4/p10_4_20260805T215824Z_6ff17d33_94506af9_2b2b37d4/final/p10_4_final_summary.json",
+      "sha256": "1c52d1fb5b5fd0745f48a24b36125bd39d41f9133397df27f14dee1cc40e8439"
+    },
+    "evidence_manifest": {
+      "path": "evidence/hardware/p10_4/p10_4_20260805T215824Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+      "sha256": "30481b19857f43d9c3b4c1d7b9ce01547caabc0785a81997d17b1e1fb277ae0b"
+    },
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "shutdown_records": 102,
+    "shutdown_failures": 0
+  },
+  "observed_evaluator_errors": [
+    "matrix_R2_frame30s_00000_4194304:lane3:other lane blanked",
+    "matrix_R2_frame30s_00001_1048576:lane3:other lane blanked",
+    "matrix_R2_frame30s_00002_1048576:lane3:other lane blanked",
+    "matrix_R2_frame30s_00003_1048576:lane3:other lane blanked"
+  ],
+  "direct_observations": [
+    {
+      "label": "matrix_R2_frame30s_00000_4194304",
+      "command": 13,
+      "direction": "R_TO_F",
+      "source_lane": 2,
+      "receiver_ack_transmitter_role": "fixed",
+      "connector": "J11",
+      "paired_lane": 3,
+      "paired_lane_blanked_raw": 1,
+      "paired_lane_accepted_remote": 0,
+      "paired_lane_crc_bad": 0
+    },
+    {
+      "label": "matrix_R2_frame30s_00001_1048576",
+      "command": 13,
+      "direction": "R_TO_F",
+      "source_lane": 2,
+      "receiver_ack_transmitter_role": "fixed",
+      "connector": "J11",
+      "paired_lane": 3,
+      "paired_lane_blanked_raw": 1,
+      "paired_lane_accepted_remote": 0,
+      "paired_lane_crc_bad": 0
+    },
+    {
+      "label": "matrix_R2_frame30s_00002_1048576",
+      "command": 13,
+      "direction": "R_TO_F",
+      "source_lane": 2,
+      "receiver_ack_transmitter_role": "fixed",
+      "connector": "J11",
+      "paired_lane": 3,
+      "paired_lane_blanked_raw": 1,
+      "paired_lane_accepted_remote": 0,
+      "paired_lane_crc_bad": 0
+    },
+    {
+      "label": "matrix_R2_frame30s_00003_1048576",
+      "command": 13,
+      "direction": "R_TO_F",
+      "source_lane": 2,
+      "receiver_ack_transmitter_role": "fixed",
+      "connector": "J11",
+      "paired_lane": 3,
+      "paired_lane_blanked_raw": 4,
+      "paired_lane_accepted_remote": 0,
+      "paired_lane_crc_bad": 0
+    }
+  ],
+  "source_run_hard_counters": {
+    "continuous_high_violation": 0,
+    "crc_bad": 0,
+    "cross_lane_accepted_data": 0,
+    "deadlock": 0,
+    "descriptor_leak": 0,
+    "double_completion": 0,
+    "duplicate_commit": 0,
+    "duty_violation": 0,
+    "partial_commit": 0,
+    "retry_exhausted": 0,
+    "same_module_accepted_data": 0,
+    "sha_mismatch": 0,
+    "stale_commit": 0,
+    "transport_timeout": 0
+  },
+  "root_cause": {
+    "evaluator_behavior": "The inherited P10.3 data-path evaluator rejected every disabled receiver lane with a nonzero blanked_raw count.",
+    "frozen_phy_behavior": "The P10.4 remediation intentionally quarantines the adjacent lane on J10 or J11 when the receiver emits an actual physical ACK on the selected lane.",
+    "why_the_error_is_false_positive": "All four rejected observations are command-13 R2-to-F2 frames where fixed is the ACK transmitter, lane3 is the J11 pair of lane2, and lane3 accepted_remote and crc_bad both remain zero."
+  },
+  "evaluator_fix_boundary": {
+    "allowed_stage": "echo_crosstalk_8x8",
+    "allowed_command": 13,
+    "allowed_lane_mask_shape": "ONE_HOT",
+    "allowed_role": "RECEIVER_ACK_TRANSMITTER_ONLY",
+    "allowed_lane": "SOURCE_LANE_XOR_1_ON_THE_SAME_CONNECTOR",
+    "raw_command_2_exempt": false,
+    "recovery_vectors_exempt": false,
+    "multi_lane_vectors_exempt": false,
+    "sender_paired_lane_exempt": false,
+    "other_receiver_lanes_exempt": false,
+    "crc_or_frame_acceptance_gate_waived": false,
+    "safety_gate_waived": false
+  },
+  "verification": {
+    "archived_stage_replay_after_fix": "PASS",
+    "archived_stage_replay_errors": [],
+    "expected_paired_ack_blanking_observation_count": 4,
+    "expected_paired_ack_blanking_total": 7,
+    "focused_unit_tests": "PASS",
+    "fresh_full_hardware_campaign_required": true,
+    "source_run_promoted_to_pass": false
+  },
+  "hardware_actions_executed_by_this_diagnosis": false,
+  "current_run_hardware_authorization": false
+}

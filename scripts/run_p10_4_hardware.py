@@ -807,6 +807,80 @@ def raw_errors(detail: dict[str, Any]) -> list[str]:
     return errors
 
 
+def connector_ack_quarantine_allowed_receiver_lanes(
+        stage: str, detail: dict[str, Any]) -> frozenset[int]:
+    """Return the exact receiver lane intentionally blanked by a physical ACK.
+
+    The P10.4 remediation pairs lanes 0/1 on J10 and lanes 2/3 on J11.  During
+    a one-lane command-13 frame window, the receiver transmits the ACK on the
+    selected lane.  That final physical ACK is also an intentional quarantine
+    source for the adjacent lane on the same connector.  Raw command-2 vectors,
+    recovery vectors, multi-lane traffic, and every other campaign stage retain
+    the historical zero-other-lane-blanking rule.
+    """
+    if stage != "echo_crosstalk_8x8" or detail.get("command") != 13 or \
+            detail.get("recovery_case") or \
+            int(detail.get("requested_bytes", 0)) <= 0:
+        return frozenset()
+    mask = int(detail.get("lane_mask", 0)) & 0xF
+    if mask <= 0 or mask & (mask - 1):
+        return frozenset()
+    source_lane = mask.bit_length() - 1
+    return frozenset({source_lane ^ 1})
+
+
+def connector_ack_quarantine_frame_audit(
+        stage: str, detail: dict[str, Any]
+        ) -> tuple[list[str], list[dict[str, Any]]]:
+    """Audit rather than hide the expected connector-pair ACK quarantine."""
+    allowed_receiver = connector_ack_quarantine_allowed_receiver_lanes(
+        stage, detail
+    )
+    if not allowed_receiver:
+        return [], []
+    errors: list[str] = []
+    observations: list[dict[str, Any]] = []
+    source_lane = (int(detail["lane_mask"]) & 0xF).bit_length() - 1
+    paired_lane = source_lane ^ 1
+    sender_role, receiver_role = base.path_roles(detail)
+    for role in (sender_role, receiver_role):
+        allowed = {source_lane}
+        if role == receiver_role:
+            allowed.add(paired_lane)
+        snapshot = detail[f"{role}_p10_2"]
+        for lane_index, lane in enumerate(snapshot.get("lanes", [])):
+            blanked = int(lane.get("blanked_raw", 0))
+            if blanked and lane_index not in allowed:
+                errors.append(
+                    f"{detail['label']}:{role}:unexpected lane{lane_index} blanked"
+                )
+        paired_blanked = int(
+            detail[f"{receiver_role}_p10_2"]["lanes"][paired_lane]["blanked_raw"]
+        )
+        if role == receiver_role and paired_blanked:
+            observations.append({
+                "label": detail["label"],
+                "command": 13,
+                "direction": int(detail["direction"]),
+                "source_lane": source_lane,
+                "paired_lane": paired_lane,
+                "connector": "J10" if source_lane < 2 else "J11",
+                "ack_transmitter_role": receiver_role,
+                "blanked_raw": paired_blanked,
+                "accepted_remote_on_paired_lane": int(
+                    detail[f"{receiver_role}_p10_2"]["lanes"][paired_lane][
+                        "accepted_remote"
+                    ]
+                ),
+                "crc_bad_on_paired_lane": int(
+                    detail[f"{receiver_role}_p10_2"]["lanes"][paired_lane][
+                        "crc_bad"
+                    ]
+                ),
+            })
+    return errors, observations
+
+
 def window_metrics(details: list[dict[str, Any]], label: str,
                    duration: int, direction: int, mask: int) -> dict[str, Any]:
     selected = [item for item in details if item.get("window") == label]
@@ -879,7 +953,12 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
         for detail in non_shutdown:
             if detail.get("command") == 13 and not detail.get("recovery_case"):
                 errors.extend(base.data_path_errors(
-                    detail, unavailable=int(detail.get("unavailable", 0))
+                    detail, unavailable=int(detail.get("unavailable", 0)),
+                    allowed_receiver_blanked_lanes=(
+                        connector_ack_quarantine_allowed_receiver_lanes(
+                            stage, detail
+                        )
+                    ),
                 ))
             errors.extend(raw_errors(detail))
         _, gpio_errors = base.load_ps_gpio(stage_dir)
@@ -1045,7 +1124,9 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
             errors.append("fresh 64MiB recovery object missing")
     elif stage == "echo_crosstalk_8x8":
         raw = [item for item in non_shutdown if item.get("command") == 2]
+        framed = [item for item in non_shutdown if item.get("command") == 13]
         cells: list[dict[str, Any]] = []
+        expected_paired_ack_blanking: list[dict[str, Any]] = []
         same_module_raw_echo = 0
         maximum_non_target_accepted = 0
         maximum_cross_lane_accepted = 0
@@ -1100,6 +1181,12 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
                         errors.append(
                             f"{detail['label']}:{role}: non-source lane{lane_index} blanked"
                         )
+        for detail in framed:
+            audit_errors, observations = connector_ack_quarantine_frame_audit(
+                stage, detail
+            )
+            errors.extend(audit_errors)
+            expected_paired_ack_blanking.extend(observations)
         windows = [window_metrics(
             non_shutdown, f"matrix_{side}{lane}_frame30s", 30,
             0 if side == "F" else 1, 1 << lane
@@ -1115,6 +1202,16 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
             "same_module_raw_echo_count": same_module_raw_echo,
             "same_module_accepted_data_or_control": maximum_non_target_accepted,
             "cross_lane_accepted_data_or_control": maximum_cross_lane_accepted,
+            "expected_paired_ack_blanking": expected_paired_ack_blanking,
+            "expected_paired_ack_blanking_observation_count": len(
+                expected_paired_ack_blanking
+            ),
+            "expected_paired_ack_blanking_total": sum(
+                item["blanked_raw"] for item in expected_paired_ack_blanking
+            ),
+            "paired_ack_blanking_policy": (
+                "ONLY_RECEIVER_ACK_TRANSMITTER_ADJACENT_LANE_ON_SAME_CONNECTOR"
+            ),
         })
     elif stage == "two_plus_two":
         if markers.get("P10_4_TWO_PLUS_TWO_RESULT") != "FAIL_WITH_NONBLOCKING_EVIDENCE" or \

@@ -1566,8 +1566,16 @@ def ack_loss_recovery_errors(detail: dict[str, Any]) -> tuple[list[str], dict[st
 
 def data_path_errors(detail: dict[str, Any], *, unavailable: int = 0,
                      injected: bool = False,
-                     require_all_selected: bool = True) -> list[str]:
-    """Gate lane use from direct PL snapshots, not the requested mask alone."""
+                     require_all_selected: bool = True,
+                     allowed_receiver_blanked_lanes: frozenset[int] = frozenset()
+                     ) -> list[str]:
+    """Gate lane use from direct PL snapshots, not the requested mask alone.
+
+    ``allowed_receiver_blanked_lanes`` is empty by default so every historical
+    P10.3 caller retains the strict other-lane-blanking gate.  A later campaign
+    may name an exact receiver-side lane when its frozen PHY intentionally
+    quarantines that lane from an actual local physical transmit event.
+    """
     errors: list[str] = []
     if detail.get("command") not in (3, 13) or detail.get("recovery_case"):
         return errors
@@ -1622,7 +1630,9 @@ def data_path_errors(detail: dict[str, Any], *, unavailable: int = 0,
         elif not injected or bit != unavailable:
             if scheduled or scheduled_bytes or accepted or physical_tx:
                 errors.append(f"{detail['label']}:lane{lane}:disabled lane activity")
-        if not mask & bit and receiver_snap["lanes"][lane]["blanked_raw"]:
+        if not mask & bit and \
+                receiver_snap["lanes"][lane]["blanked_raw"] and \
+                lane not in allowed_receiver_blanked_lanes:
             errors.append(f"{detail['label']}:lane{lane}:other lane blanked")
     if not any_selected_progress:
         errors.append(f"{detail['label']}:no healthy selected-lane progress")

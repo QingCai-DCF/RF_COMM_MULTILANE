@@ -280,6 +280,76 @@ class P104PlanTests(unittest.TestCase):
         self.assertEqual([], replay["errors"])
         self.assertEqual("PASS", replay["status"])
 
+    def test_ack_pair_quarantine_is_narrow_and_raw_vectors_are_not_exempt(self) -> None:
+        detail = {
+            "command": 13,
+            "direction": 1,
+            "lane_mask": 4,
+            "requested_bytes": 1 << 20,
+            "recovery_case": False,
+        }
+        self.assertEqual(
+            frozenset({3}),
+            p10.connector_ack_quarantine_allowed_receiver_lanes(
+                "echo_crosstalk_8x8", detail
+            ),
+        )
+        for mutation in (
+            {"command": 2},
+            {"direction": 0, "lane_mask": 12},
+            {"requested_bytes": 0},
+            {"recovery_case": True},
+        ):
+            candidate = {**detail, **mutation}
+            self.assertEqual(
+                frozenset(),
+                p10.connector_ack_quarantine_allowed_receiver_lanes(
+                    "echo_crosstalk_8x8", candidate
+                ),
+            )
+        self.assertEqual(
+            frozenset(),
+            p10.connector_ack_quarantine_allowed_receiver_lanes(
+                "baseline_smoke", detail
+            ),
+        )
+
+    def test_ack_quarantine_matrix_partial_replays_as_evaluator_pass(self) -> None:
+        run_root = ROOT / (
+            "evidence/hardware/p10_4/"
+            "p10_4_20260805T215824Z_6ff17d33_94506af9_2b2b37d4"
+        )
+        stage_dir = run_root / "stages/echo_crosstalk_8x8"
+        archived = json.loads(
+            (stage_dir / "stage_summary.json").read_text(encoding="utf-8")
+        )
+        forensic_summary = json.loads(
+            (run_root / "forensics/echo_crosstalk_8x8/summary.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        with mock.patch.object(p10, "write_json"):
+            replay = p10.evaluate_stage(
+                "echo_crosstalk_8x8",
+                stage_dir,
+                archived["process"],
+                forensic_summary,
+                (stage_dir / "immutable.plan").read_text(encoding="ascii"),
+            )
+        self.assertEqual([], replay["errors"])
+        self.assertEqual("PASS", replay["status"])
+        semantics = replay["semantics"]
+        self.assertEqual(4, semantics["expected_paired_ack_blanking_observation_count"])
+        self.assertEqual(7, semantics["expected_paired_ack_blanking_total"])
+        self.assertTrue(all(
+            item["source_lane"] == 2 and item["paired_lane"] == 3 and
+            item["connector"] == "J11" and
+            item["ack_transmitter_role"] == "fixed" and
+            item["accepted_remote_on_paired_lane"] == 0 and
+            item["crc_bad_on_paired_lane"] == 0
+            for item in semantics["expected_paired_ack_blanking"]
+        ))
+
     def test_run_manifest_verifier_rejects_tamper_and_extra_files(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
             run_root = Path(temporary)
