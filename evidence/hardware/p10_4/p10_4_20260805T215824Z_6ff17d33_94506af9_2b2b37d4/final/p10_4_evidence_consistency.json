@@ -1,0 +1,97 @@
+{
+  "artifact_source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b"
+    },
+    {
+      "bytes": 1311117,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02"
+    },
+    {
+      "bytes": 1970234,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc"
+    },
+    {
+      "bytes": 573820,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e"
+    },
+    {
+      "bytes": 1318909,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6"
+    },
+    {
+      "bytes": 1970389,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec"
+    },
+    {
+      "bytes": 574364,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1"
+    }
+  ],
+  "authorization_sha256": "e8d3ac41c15168dee7033f8b767354c14194e615141cf101cae94d992ec6d31b",
+  "complete_generated_summary_set": true,
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "hardware_actions_executed": true,
+  "raw_run_root": "evidence/hardware/p10_4/p10_4_20260805T215824Z_6ff17d33_94506af9_2b2b37d4",
+  "run_id": "p10_4_20260805T215824Z_6ff17d33_94506af9_2b2b37d4",
+  "schema_version": 1,
+  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+  "status": "PASS",
+  "test_id": "P10_4-EVIDENCE-CONSISTENCY"
+}

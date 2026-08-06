@@ -1,13 +1,11 @@
 {
-  "artifact_freeze": "evidence/generated/p10_4_artifact_freeze.json",
-  "artifact_freeze_sha256": "f8f09b71563e837c435c06e8cfd8ab1d06f59b755ac855d388ae5c30b2894c47",
   "authorization": "config/p10_4_current_run_hardware_authorization.json",
-  "authorization_sha256": "e8d3ac41c15168dee7033f8b767354c14194e615141cf101cae94d992ec6d31b",
-  "current_run_hardware_authorization": true,
+  "consumed": true,
+  "current_run_hardware_authorization": false,
   "errors": [],
-  "hardware_actions_executed": false,
+  "result": "evidence/hardware/p10_4/p10_4_20260805T215824Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json",
   "run_id": "p10_4_20260805T215824Z_6ff17d33_94506af9_2b2b37d4",
   "schema_version": 1,
-  "status": "READY_FOR_EXACT_CURRENT_RUN",
-  "test_id": "P10_4-CURRENT-RUN-AUTHORIZATION"
+  "status": "CONSUMED_AFTER_P10_4_PARTIAL",
+  "test_id": "P10_4-AUTHORIZATION"
 }
