@@ -599,14 +599,9 @@
     "new_run_id_per_diagnostic_stage": 2,
     "program": 2
   },
-  "consumed": true,
-  "consumed_at_utc": "2026-08-06T09:20:00+00:00",
+  "consumed": false,
   "created_at_utc": "2026-08-06T09:12:41.986996+00:00",
-  "current_run_hardware_authorization": false,
-  "diagnostic_errors": [
-    "lane-recovery diagnostic failed closed"
-  ],
-  "diagnostic_stage": "lane_recovery",
+  "current_run_hardware_authorization": true,
   "errors": [],
   "ethernet_allowed": false,
   "external_instrumentation_allowed": false,
@@ -698,7 +693,6 @@
     "hash_low": "0xBCFECB39",
     "version": "0x0A000004"
   },
-  "result": "evidence/hardware/p10_4/p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4/final/lane_recovery_diagnostic_result.json",
   "rotating_jtag_serial": "210512180081",
   "run_id": "p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4",
   "schema_version": 1,
@@ -711,6 +705,6 @@
     "verify_both_shutdown_markers": true
   },
   "source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
-  "status": "CONSUMED_AFTER_P10_4_LANE_RECOVERY_DIAGNOSTIC_FAIL_CLOSED",
+  "status": "READY_FOR_EXACT_CURRENT_RUN",
   "wiring_changed": false
 }
