@@ -35,23 +35,26 @@ SCOPE = (
     "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT/"
     "LANE2_RAW_CONNECTIVITY_RETEST"
 )
-AUTH = ROOT / "config/p10_4_lane2_raw_retest_current_run_authorization.json"
+AUTH = ROOT / "config/p10_4_lane2_b0008_raw_retest_current_run_authorization.json"
 BLOCKER = ROOT / "evidence/generated/p10_4_f2_to_r2_directional_blocker.json"
+PREVIOUS_RESULT = ROOT / "evidence/generated/p10_4_lane2_raw_connectivity_retest.json"
 HW_ROOT = ROOT / "evidence/hardware/p10_4_raw_connectivity"
-GENERATED = ROOT / "evidence/generated/p10_4_lane2_raw_connectivity_retest"
+GENERATED = ROOT / "evidence/generated/p10_4_lane2_b0008_raw_connectivity_retest"
 REPORTS = ROOT / "reports"
 RUN_RE = re.compile(
-    r"^p10_4_l2raw_[0-9]{8}T[0-9]{6}Z_[0-9a-f]{8}_"
+    r"^p10_4_l2b0008raw_[0-9]{8}T[0-9]{6}Z_[0-9a-f]{8}_"
     r"[0-9a-f]{8}_[0-9a-f]{8}$"
 )
-AUTHORIZATION_ID = "P10_4-LANE2-RAW-RETEST-CURRENT-RUN-IMMUTABLE"
-USER_STATEMENT = "重新测试一下F2-R2 连通性"
+AUTHORIZATION_ID = "P10_4-LANE2-B0008-RAW-RETEST-CURRENT-RUN-IMMUTABLE"
+USER_STATEMENT = "我已将F2换为新的B0008，重新测试连通性"
 TRIGGER = (
-    "The user explicitly requested a fresh F2/R2 connectivity retest after "
-    "the prior P10.4 F2-to-R2 directional blocker."
+    "The user reported replacing F2 B0001 with new B0008 and explicitly "
+    "requested a fresh F2/R2 connectivity retest."
 )
 LANE = 2
 LANE_MASK = 0x4
+FIXED_MODULE_ID = "B0008"
+ROTATING_MODULE_ID = "B0023"
 DIRECTIONS = ("f2_to_r2", "r2_to_f2")
 STAGE_TIMEOUT_SECONDS = 300
 MAXIMUM_ACTIVE_RUNTIME_SECONDS = 600
@@ -77,8 +80,8 @@ def configure_raw_helpers() -> None:
     """Bind the proven raw evaluator to the P10.4 artifact identity."""
     raw.configure_lane(LANE)
     raw.AUTH = AUTH
-    raw.PREVIOUS_BLOCKER = BLOCKER
-    raw.OUTPUT_STEM = "p10_4_lane2_raw_connectivity_retest"
+    raw.PREVIOUS_BLOCKER = PREVIOUS_RESULT
+    raw.OUTPUT_STEM = "p10_4_lane2_b0008_raw_connectivity_retest"
     raw.SCOPE = SCOPE
     raw.TCL_STAGE = TCL_STAGE
     raw.TITLE = "F2/R2 bidirectional raw-connectivity retest"
@@ -89,6 +92,8 @@ def configure_raw_helpers() -> None:
     raw.STAGE_TIMEOUT_SECONDS = STAGE_TIMEOUT_SECONDS
     raw.MAXIMUM_ACTIVE_RUNTIME_SECONDS = MAXIMUM_ACTIVE_RUNTIME_SECONDS
     raw.MAXIMUM_WRAPPER_RUNTIME_SECONDS = MAXIMUM_WRAPPER_RUNTIME_SECONDS
+    raw.FIXED_ID = FIXED_MODULE_ID
+    raw.ROTATING_ID = ROTATING_MODULE_ID
 
     # The raw parser and safety checks are shared with P10.3, but build and
     # register identities must be the exact frozen P10.4 values.
@@ -103,6 +108,9 @@ def configure_raw_helpers() -> None:
         expected_role[role]["firmware"] = p104.EXPECTED_BUILD[role]
         expected_role[role]["build"] = p104.EXPECTED_BUILD[role]
     raw.p103.EXPECTED_ROLE = expected_role
+    expected_modules = deepcopy(raw.p103.EXPECTED_MODULE_BINDING)
+    expected_modules["F2"]["small_board_id"] = FIXED_MODULE_ID
+    raw.p103.EXPECTED_MODULE_BINDING = expected_modules
 
 
 def auth_input_paths() -> tuple[Path, ...]:
@@ -110,6 +118,7 @@ def auth_input_paths() -> tuple[Path, ...]:
         p104.GOAL,
         p104.FREEZE,
         BLOCKER,
+        PREVIOUS_RESULT,
         ROOT / "PROJECT_CONSTRAINTS.txt",
         ROOT / "AGENTS.md",
         ROOT / "config/register_map/ir_axi_regs.yaml",
@@ -195,8 +204,8 @@ def validate_static_inputs() -> tuple[dict[str, Any], dict[str, Path], list[str]
         wiring = base.load_yaml(base.WIRING)
         inventory = base.load_yaml(base.INVENTORY)
         modules = inventory.get("p10_3_current_installation", {}).get("modules", {})
-        if modules.get("F2", {}).get("small_board_id") != "B0001" or \
-                modules.get("R2", {}).get("small_board_id") != "B0023":
+        if modules.get("F2", {}).get("small_board_id") != FIXED_MODULE_ID or \
+                modules.get("R2", {}).get("small_board_id") != ROTATING_MODULE_ID:
             errors.append("F2/R2 module identity mismatch")
         if wiring.get("lane_pairs", {}).get("lane2") != "F2-R2":
             errors.append("lane2 wiring pair mismatch")
@@ -221,7 +230,7 @@ def expected_run_id(freeze: dict[str, Any]) -> str:
     entries = {p104.artifact_key(item): item for item in freeze["artifacts"]}
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     return (
-        f"p10_4_l2raw_{stamp}_{freeze['source_commit'][:8]}_"
+        f"p10_4_l2b0008raw_{stamp}_{freeze['source_commit'][:8]}_"
         f"{entries['fixed:functional_bitstream']['sha256'][:8]}_"
         f"{entries['rotating:functional_bitstream']['sha256'][:8]}"
     )
@@ -239,9 +248,9 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
         "authorization_source_statement": USER_STATEMENT,
         "user_authorization_received_on": "2026-08-06",
         "campaign_standing_authorization": (
-            "The current user request authorizes exactly one bounded F2/R2 "
-            "bidirectional RAW retest; it does not reactivate the terminated "
-            "P10.4 campaign or authorize stress traffic."
+            "The current user request authorizes exactly one bounded F2=B0008/R2=B0023 "
+            "bidirectional RAW retest after the user-completed F2 replacement; it "
+            "does not reactivate the terminated P10.4 campaign or authorize stress traffic."
         ),
         "authorization_interpretation": (
             "One immutable run ID; F2-to-R2 and R2-to-F2; receive-only startup "
@@ -251,7 +260,19 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
             "status": "FAIL_CLOSED",
             "blocker": p104.rel(BLOCKER),
             "blocker_sha256": p104.sha256(BLOCKER),
+            "latest_directional_retest": p104.rel(PREVIOUS_RESULT),
+            "latest_directional_retest_sha256": p104.sha256(PREVIOUS_RESULT),
             "not_overwritten_by_this_retest": True,
+        },
+        "replacement": {
+            "logical_module": "F2",
+            "position": "AX7020-F/J11-A",
+            "removed_small_board_id": "B0001",
+            "installed_small_board_id": FIXED_MODULE_ID,
+            "source": "Direct user statement on 2026-08-06",
+            "identity_independently_verified": False,
+            "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
+            "codex_physical_action": False,
         },
         "pulse_exposure": {
             "per_direction_requested_pulses": 1088,
@@ -275,6 +296,13 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
     raw.validate_static_inputs = validate_static_inputs
     raw.expected_run_id = expected_run_id
     record, artifacts, errors = raw.validate_authorization(path, run_id)
+    # The reused P10.3 validator contains the historical R2 B0015->B0023
+    # lane2 replacement check.  This P10.4 wrapper supersedes only that one
+    # provenance check with the current F2 B0001->B0008 replacement below.
+    errors = [
+        item for item in errors
+        if item != "authorization replacement binding mismatch"
+    ]
     if record.get("authorization_source_statement") != USER_STATEMENT:
         errors.append("current user authorization statement mismatch")
     if record.get("authorization_source") != "direct_current_user_request":
@@ -282,6 +310,12 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
     if record.get("pulse_exposure", {}).get(
             "aggregate_requested_high_time_us_per_direction") != 136.0:
         errors.append("bounded pulse exposure mismatch")
+    replacement = record.get("replacement", {})
+    if replacement.get("logical_module") != "F2" or \
+            replacement.get("removed_small_board_id") != "B0001" or \
+            replacement.get("installed_small_board_id") != FIXED_MODULE_ID or \
+            replacement.get("identity_independently_verified") is not False:
+        errors.append("current F2 replacement binding mismatch")
     return record, artifacts, errors
 
 
@@ -345,12 +379,12 @@ def render_report(summary: dict[str, Any]) -> str:
                     f"{result.get('tx_high_max_cycles', '-')} |"
                 )
     return "\n".join([
-        "# P10.4 F2/R2 RAW connectivity retest",
+        "# P10.4 F2=B0008/R2=B0023 RAW connectivity retest",
         "",
         f"- Result: `{summary['status']}`",
         f"- Run ID: `{summary['run_id']}`",
         "- Evidence class: `RAW_PHYSICAL_ONLY`",
-        "- Pair: `F2=B0001` ↔ `R2=B0023`",
+        f"- Pair: `F2={FIXED_MODULE_ID}` ↔ `R2={ROTATING_MODULE_ID}`",
         "- Lane mask: `0x4`",
         "- Traffic: receive-only startup, then exactly 64 and 1024 raw pulses per direction",
         "",
@@ -385,7 +419,7 @@ def execute(run_id: str, auth_path: Path) -> int:
     ps7 = p104.initialize_run(run_root, auth_path, artifacts)
     base.write_text(
         run_root / "authorization/RAW_SCOPE_ATTESTATION.txt",
-        "PAIR=F2:B0001,R2:B0023\nLANE_MASK=0x4\n"
+        f"PAIR=F2:{FIXED_MODULE_ID},R2:{ROTATING_MODULE_ID}\nLANE_MASK=0x4\n"
         "DIRECTIONS=F2_TO_R2,R2_TO_F2\nFRAMED_TRAFFIC=false\n"
         "ETHERNET=false\nMOVEMENT=false\nROTATION=false\nREALIGNMENT=false\n"
         "REWIRING=false\nMODULE_REPLACEMENT=false\nEXTERNAL_INSTRUMENTATION=false\n",
@@ -481,7 +515,8 @@ def execute(run_id: str, auth_path: Path) -> int:
         "artifact_freeze_sha256": record["artifact_freeze_sha256"],
         "artifacts": record["artifacts"],
         "board_binding": record["board_binding"],
-        "module_binding": {"F2": "B0001", "R2": "B0023"},
+        "module_binding": {"F2": FIXED_MODULE_ID, "R2": ROTATING_MODULE_ID},
+        "pre_run_module_replacement": record["replacement"],
         "lane": 2,
         "lane_pair": "F2-R2",
         "maximum_lane_mask_authorized": "0x4",

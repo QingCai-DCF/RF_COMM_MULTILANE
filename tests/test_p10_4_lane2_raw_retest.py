@@ -35,7 +35,21 @@ class P104Lane2RawRetestTests(unittest.TestCase):
         freeze = runner.p104.load_json(runner.p104.FREEZE)
         value = runner.expected_run_id(freeze)
         self.assertRegex(value, runner.RUN_RE)
+        self.assertIn("l2b0008raw", value)
         self.assertIn(freeze["source_commit"][:8], value)
+
+    def test_current_replacement_binding(self) -> None:
+        self.assertEqual(runner.FIXED_MODULE_ID, "B0008")
+        self.assertEqual(runner.ROTATING_MODULE_ID, "B0023")
+        self.assertEqual(
+            runner.raw.p103.EXPECTED_MODULE_BINDING["F2"]["small_board_id"],
+            "B0008",
+        )
+        self.assertNotEqual(runner.AUTH.name, "p10_4_lane2_raw_retest_current_run_authorization.json")
+        self.assertNotEqual(
+            runner.GENERATED.name,
+            "p10_4_lane2_raw_connectivity_retest",
+        )
 
     def test_scope_is_raw_only(self) -> None:
         source = Path(runner.__file__).read_text(encoding="utf-8")
