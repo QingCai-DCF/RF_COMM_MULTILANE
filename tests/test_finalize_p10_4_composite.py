@@ -72,6 +72,13 @@ class FinalizeP104CompositeTests(unittest.TestCase):
         self.assertFalse(final["TWO_PLUS_TWO_TX_EXECUTED"])
         self.assertEqual([], final["FAIL"])
 
+    def test_final_summary_keys_are_case_insensitively_unique(self):
+        final = self.payloads["final"]
+        folded = [key.casefold() for key in final]
+        self.assertEqual(len(folded), len(set(folded)))
+        self.assertFalse(final["CURRENT_RUN_HARDWARE_AUTHORIZATION"])
+        self.assertTrue(final["HARDWARE_ACTIONS_EXECUTED"])
+
 
 if __name__ == "__main__":
     unittest.main()

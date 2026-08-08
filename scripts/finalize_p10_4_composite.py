@@ -608,6 +608,11 @@ def build_payloads(data: dict[str, Any]) -> dict[str, Any]:
         "p11_or_product_scope_promoted": False,
         "errors": [],
     }
+    # The P10.4 Goal's final record uses the uppercase operator-facing names.
+    # Remove the lowercase common aliases so case-insensitive JSON consumers
+    # (notably PowerShell ConvertFrom-Json) can parse the evidence unambiguously.
+    final.pop("current_run_hardware_authorization")
+    final.pop("hardware_actions_executed")
 
     shutdown = {
         **common,
