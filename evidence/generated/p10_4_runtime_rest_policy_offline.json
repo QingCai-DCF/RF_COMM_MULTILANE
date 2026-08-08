@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_4-RUNTIME-REST-POLICY-OFFLINE",
+  "status": "PASS",
+  "scope": "P10_4 host-side runtime and cooldown enforcement tooling",
+  "prepared_from_commit": "798cd5c87faa35762dbe5768e932b4f466fd654f",
+  "branch": "p10.4/b0019-f2-r2-remediation",
+  "policy": {
+    "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
+    "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6",
+    "maximum_continuous_runtime_seconds": 1800,
+    "minimum_cooldown_ratio": 0.5
+  },
+  "implementation": {
+    "path": "scripts/p10_tfdu_runtime_guard.py",
+    "sha256": "0eec20de8c1a9367ecb45a24fd1b2675da42aedd9f5f0e182334aaaf087d23dc"
+  },
+  "raw_retest_runner": {
+    "path": "scripts/run_p10_4_lane2_raw_retest.py",
+    "sha256": "6d4f13106a8614940d3b2a755cd20ab17d12ff4ddcd5cd54d9e961cb030136bd",
+    "b0019_profile": true,
+    "stage_timeout_seconds": 300,
+    "hardware_executed_during_offline_validation": false
+  },
+  "focused_tests": {
+    "command": "python -m unittest tests.test_p10_tfdu_runtime_guard tests.test_p10_4_lane2_raw_retest -v",
+    "tests_run": 10,
+    "failures": 0,
+    "errors": 0,
+    "status": "PASS"
+  },
+  "complete_offline_gate": {
+    "command": "NO_HARDWARE=1 CURRENT_RUN_HARDWARE_AUTHORIZATION=false python scripts/run_offline_gates.py",
+    "status": "PASS",
+    "summary_path": "evidence/generated/offline_gate_summary.json",
+    "summary_sha256": "ce5d044c01fba774dd5ef320e29f722e59bf71b4487dc1f76650823e72752eb4"
+  },
+  "hardware_status": "NOT_EXECUTED",
+  "current_run_hardware_authorization": false,
+  "limitations": [
+    "Offline validation does not prove B0019/R2 physical connectivity.",
+    "The prospective runtime/rest requirements remain PENDING until current hardware evidence is collected.",
+    "This host-only change does not alter the frozen P10.4 bitstream, XSA, BSP, or ELF bundle."
+  ]
+}

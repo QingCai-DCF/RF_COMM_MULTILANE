@@ -1,0 +1,81 @@
+import tempfile
+import unittest
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+import sys
+
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from p10_tfdu_runtime_guard import RuntimeRestGuard, load_policy
+
+
+class FakeTime:
+    def __init__(self) -> None:
+        self.monotonic = 100.0
+        self.utc = datetime(2026, 8, 8, tzinfo=timezone.utc)
+
+    def clock(self) -> float:
+        return self.monotonic
+
+    def utc_clock(self) -> datetime:
+        return self.utc
+
+    def sleep(self, seconds: float) -> None:
+        self.monotonic += seconds
+        self.utc += timedelta(seconds=seconds)
+
+
+class RuntimeRestGuardTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.policy = load_policy(ROOT / "config/safety/p10_tfdu_runtime_rest_policy.yaml")
+        self.temp = tempfile.TemporaryDirectory()
+        self.fake = FakeTime()
+        self.guard = RuntimeRestGuard(
+            self.policy,
+            Path(self.temp.name) / "ledger.json",
+            ("F0", "F1", "F2", "F3", "R0", "R1", "R2", "R3"),
+            clock=self.fake.clock,
+            sleeper=self.fake.sleep,
+            utc_clock=self.fake.utc_clock,
+        )
+
+    def tearDown(self) -> None:
+        self.temp.cleanup()
+
+    def test_half_runtime_cooldown_is_enforced(self) -> None:
+        self.guard.begin_stage("raw_forward", 300)
+        self.fake.sleep(12.345)
+        entry = self.guard.finish_stage(shutdown_verified=True)
+        self.assertEqual(entry["required_cooldown_seconds"], 6.173)
+        with self.assertRaisesRegex(RuntimeError, "cooldown"):
+            self.guard.begin_stage("raw_reverse", 300)
+        self.guard.wait_for_cooldown()
+        self.guard.begin_stage("raw_reverse", 300)
+
+    def test_stage_over_30_minutes_is_rejected_before_tx(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "exceeds"):
+            self.guard.begin_stage("unsafe", 1800.001)
+
+    def test_missing_shutdown_fails_closed(self) -> None:
+        self.guard.begin_stage("stage", 300)
+        self.fake.sleep(1)
+        with self.assertRaisesRegex(RuntimeError, "shutdown-after"):
+            self.guard.finish_stage(shutdown_verified=False)
+        with self.assertRaisesRegex(RuntimeError, "fail-closed"):
+            self.guard.begin_stage("later", 300)
+
+    def test_public_ledger_has_no_process_local_clock_fields(self) -> None:
+        self.guard.begin_stage("stage", 300)
+        self.fake.sleep(2)
+        self.guard.finish_stage(shutdown_verified=True)
+        self.guard.wait_for_cooldown()
+        ledger = self.guard.public_ledger()
+        self.assertEqual(ledger["status"], "PASS")
+        self.assertNotIn("_shutdown_monotonic", ledger["stages"][0])
+
+
+if __name__ == "__main__":
+    unittest.main()

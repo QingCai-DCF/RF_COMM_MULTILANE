@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 258
+REQUIREMENT_COUNT: 260
 PASS: 229
-PENDING: 21
+PENDING: 23
 FAIL: 8
 WAIVED: 0
 ```
@@ -224,6 +224,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_2-HWPREP-001` | `PASS` | P10_3_FAIL_CLOSED_RUNNER | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-001` | `evidence/generated/p10_2_hardware_dry_run.json` | The P10.3 command validator fails closed on missing authorization, old F1, mask>0xF, Ethernet, movement and two-hour requests. |
 | `P10_2-HWPREP-002` | `PASS` | P10_3_EVIDENCE_SCHEMA | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-002` | `evidence/generated/p10_2_p10_3_readiness.json` | P10.3 has machine-readable stage and 8x8 evidence templates without granting hardware authority. |
 | `P10_3-WIRE-001` | `PASS` | P10_3_AX7020_STATIONARY_4LANE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-WIRE-001` | `evidence/generated/p10_3_wiring.json` | The actual stationary four-lane wiring shall be frozen and hash-bound before hardware execution. |
+| `P10_4-SAFE-RUNTIME-001` | `PENDING` | P10_4_TFDU_RUNTIME_REST_POLICY | `P10_4_RUNTIME_COOLDOWN_REMEDIATION` | `P10_4-SAFE-RUNTIME-001` | — | Every hardware stage using any installed TFDU small board shall have a continuous runtime of no more than 1800 seconds, measured conservatively from immediately before the TX-capable stage invocation through verified dual-board shutdown-after. |
+| `P10_4-SAFE-COOLDOWN-001` | `PENDING` | P10_4_TFDU_RUNTIME_REST_POLICY | `P10_4_RUNTIME_COOLDOWN_REMEDIATION` | `P10_4-SAFE-COOLDOWN-001` | — | After every hardware stage, all installed TFDU small boards shall remain in verified dual-board shutdown for at least one half of that stage's measured runtime before any later transmission starts. |
 | `P10_4-CLOSE-001` | `PASS` | P10_4_P10_3_IMMUTABLE_CLOSEOUT | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-CLOSE-001` | `evidence/generated/p10_4_p10_3_closeout.json` | P10.3 evidence, pass tag, closeout tag, and stationary four-lane scoped PASS shall remain immutable and directly rechecked before P10.4. |
 | `P10_4-METRIC-001` | `PASS` | P10_4_DIRECT_PERFORMANCE_COUNTERS | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-METRIC-001` | `evidence/generated/p10_4_counter_semantics.json` | ACK-related performance attribution shall use separate direct counters for outstanding occupancy, ACK-caused TX idle, full-window stall, receiver-credit stall, and direction-turnaround idle. |
 | `P10_4-MODEL-001` | `PASS` | P10_4_MODEL_MEASURED_RECONCILIATION | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-MODEL-001` | `evidence/generated/p10_4_half_duplex_performance.json` | PHY raw, frame payload, RFAP useful, application-commit, and host-orchestrated rates shall remain distinct and current hardware measurements shall reconcile to the airtime model. |

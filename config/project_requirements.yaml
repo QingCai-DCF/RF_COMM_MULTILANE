@@ -4362,6 +4362,36 @@ requirements:
   artifact_hash: ca89d42ac92a77f104f0b82e5de237738435d69b862e0e1260f6e8e7d3d49782
   hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
     external electrical/duty measurement and product-final acceptance remain pending.
+- requirement_id: P10_4-SAFE-RUNTIME-001
+  requirement_text: Every hardware stage using any installed TFDU small board shall have a continuous runtime of no more than
+    1800 seconds, measured conservatively from immediately before the TX-capable stage invocation through verified dual-board
+    shutdown-after.
+  profile: P10_4_TFDU_RUNTIME_REST_POLICY
+  verification_method: The fail-closed host guard shall reject any planned stage above 1800 seconds and record measured monotonic
+    runtime plus verified shutdown-after for every executed stage; hardware evidence must show no limit violation.
+  verification_stage: P10_4_RUNTIME_COOLDOWN_REMEDIATION
+  verification_scope: P10_4_AND_SUBSEQUENT_CURRENT_HARDWARE_RUNS
+  test_id: P10_4-SAFE-RUNTIME-001
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: This prospective user safety constraint applies to every later TX-capable P10 stage and cannot be inherited
+    from earlier evidence.
+- requirement_id: P10_4-SAFE-COOLDOWN-001
+  requirement_text: After every hardware stage, all installed TFDU small boards shall remain in verified dual-board shutdown
+    for at least one half of that stage's measured runtime before any later transmission starts.
+  profile: P10_4_TFDU_RUNTIME_REST_POLICY
+  verification_method: The fail-closed host guard shall block the next TX-capable stage until monotonic elapsed cooldown is at
+    least one half of the prior measured stage runtime, rounded up to one millisecond, and shall preserve a per-stage ledger.
+  verification_stage: P10_4_RUNTIME_COOLDOWN_REMEDIATION
+  verification_scope: P10_4_AND_SUBSEQUENT_CURRENT_HARDWARE_RUNS
+  test_id: P10_4-SAFE-COOLDOWN-001
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+  hardware_followup: Missing shutdown-after or incomplete cooldown must fail closed and prohibit subsequent transmission.
 - requirement_id: P10_4-CLOSE-001
   requirement_text: P10.3 evidence, pass tag, closeout tag, and stationary four-lane scoped PASS shall remain immutable and
     directly rechecked before P10.4.

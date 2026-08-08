@@ -27,6 +27,7 @@ from typing import Any
 import run_p10_3_ax7020_4lane_hardware as base
 import run_p10_3_lane2_raw_retest as raw
 import run_p10_4_hardware as p104
+from p10_tfdu_runtime_guard import RuntimeRestGuard, load_policy
 
 
 ROOT = p104.ROOT
@@ -55,11 +56,73 @@ LANE = 2
 LANE_MASK = 0x4
 FIXED_MODULE_ID = "B0008"
 ROTATING_MODULE_ID = "B0023"
+REMOVED_MODULE_ID = "B0001"
+USER_AUTHORIZATION_DATE = "2026-08-06"
+OUTPUT_STEM = "p10_4_lane2_b0008_raw_connectivity_retest"
+RUN_PREFIX = "p10_4_l2b0008raw_"
+REPORT_TITLE = "P10.4 F2=B0008/R2=B0023 RAW connectivity retest"
 DIRECTIONS = ("f2_to_r2", "r2_to_f2")
 STAGE_TIMEOUT_SECONDS = 300
 MAXIMUM_ACTIVE_RUNTIME_SECONDS = 600
 MAXIMUM_WRAPPER_RUNTIME_SECONDS = 900
 TCL_STAGE = "P10_4-BASELINE_SMOKE"
+RUNTIME_POLICY = ROOT / "config/safety/p10_tfdu_runtime_rest_policy.yaml"
+ALL_MODULES = ("F0", "F1", "F2", "F3", "R0", "R1", "R2", "R3")
+
+
+RETEST_PROFILES: dict[str, dict[str, Any]] = {
+    "b0008": {
+        "branch": "p10.4/autonomous-4lane-hardening",
+        "auth": "config/p10_4_lane2_b0008_raw_retest_current_run_authorization.json",
+        "generated": "evidence/generated/p10_4_lane2_b0008_raw_connectivity_retest",
+        "authorization_id": "P10_4-LANE2-B0008-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
+        "user_statement": "我已将F2换为新的B0008，重新测试连通性",
+        "trigger": "The user reported replacing F2 B0001 with new B0008 and explicitly requested a fresh F2/R2 connectivity retest.",
+        "fixed_module_id": "B0008",
+        "removed_module_id": "B0001",
+        "authorization_date": "2026-08-06",
+        "output_stem": "p10_4_lane2_b0008_raw_connectivity_retest",
+        "run_prefix": "p10_4_l2b0008raw_",
+    },
+    "b0019": {
+        "branch": "p10.4/b0019-f2-r2-remediation",
+        "auth": "config/p10_4_lane2_b0019_raw_retest_current_run_authorization.json",
+        "generated": "evidence/generated/p10_4_lane2_b0019_raw_connectivity_retest",
+        "authorization_id": "P10_4-LANE2-B0019-RAW-RETEST-CURRENT-RUN-IMMUTABLE",
+        "user_statement": "新增约束：任何一个小板都不能连续运行超过30分钟，每个环节运行结束后需要至少休息一半运行时间再启动发射；我已经将b0008更换为新的b0019，请你重新测试F2-R2通断，若已经恢复，请继续P10目标",
+        "trigger": "The user reported replacing F2 B0008 with new B0019, mandated a 30-minute runtime limit and half-runtime cooldown, and requested a fresh F2/R2 retest followed by conditional P10.4 continuation.",
+        "fixed_module_id": "B0019",
+        "removed_module_id": "B0008",
+        "authorization_date": "2026-08-08",
+        "output_stem": "p10_4_lane2_b0019_raw_connectivity_retest",
+        "run_prefix": "p10_4_l2b0019raw_",
+    },
+}
+
+
+def configure_retest_profile(name: str) -> None:
+    profile = RETEST_PROFILES[name]
+    global BRANCH, AUTH, GENERATED, AUTHORIZATION_ID, USER_STATEMENT, TRIGGER
+    global FIXED_MODULE_ID, REMOVED_MODULE_ID, USER_AUTHORIZATION_DATE
+    global OUTPUT_STEM, RUN_PREFIX, RUN_RE, REPORT_TITLE
+    BRANCH = str(profile["branch"])
+    AUTH = ROOT / str(profile["auth"])
+    GENERATED = ROOT / str(profile["generated"])
+    AUTHORIZATION_ID = str(profile["authorization_id"])
+    USER_STATEMENT = str(profile["user_statement"])
+    TRIGGER = str(profile["trigger"])
+    FIXED_MODULE_ID = str(profile["fixed_module_id"])
+    REMOVED_MODULE_ID = str(profile["removed_module_id"])
+    USER_AUTHORIZATION_DATE = str(profile["authorization_date"])
+    OUTPUT_STEM = str(profile["output_stem"])
+    RUN_PREFIX = str(profile["run_prefix"])
+    RUN_RE = re.compile(
+        rf"^{re.escape(RUN_PREFIX)}[0-9]{{8}}T[0-9]{{6}}Z_[0-9a-f]{{8}}_"
+        r"[0-9a-f]{8}_[0-9a-f]{8}$"
+    )
+    REPORT_TITLE = (
+        f"P10.4 F2={FIXED_MODULE_ID}/R2={ROTATING_MODULE_ID} RAW connectivity retest"
+    )
 
 
 def utc_now() -> str:
@@ -81,7 +144,7 @@ def configure_raw_helpers() -> None:
     raw.configure_lane(LANE)
     raw.AUTH = AUTH
     raw.PREVIOUS_BLOCKER = PREVIOUS_RESULT
-    raw.OUTPUT_STEM = "p10_4_lane2_b0008_raw_connectivity_retest"
+    raw.OUTPUT_STEM = OUTPUT_STEM
     raw.SCOPE = SCOPE
     raw.TCL_STAGE = TCL_STAGE
     raw.TITLE = "F2/R2 bidirectional raw-connectivity retest"
@@ -121,6 +184,7 @@ def auth_input_paths() -> tuple[Path, ...]:
         PREVIOUS_RESULT,
         ROOT / "PROJECT_CONSTRAINTS.txt",
         ROOT / "AGENTS.md",
+        RUNTIME_POLICY,
         ROOT / "config/register_map/ir_axi_regs.yaml",
         base.WIRING,
         base.INVENTORY,
@@ -230,7 +294,7 @@ def expected_run_id(freeze: dict[str, Any]) -> str:
     entries = {p104.artifact_key(item): item for item in freeze["artifacts"]}
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     return (
-        f"p10_4_l2b0008raw_{stamp}_{freeze['source_commit'][:8]}_"
+        f"{RUN_PREFIX}{stamp}_{freeze['source_commit'][:8]}_"
         f"{entries['fixed:functional_bitstream']['sha256'][:8]}_"
         f"{entries['rotating:functional_bitstream']['sha256'][:8]}"
     )
@@ -246,11 +310,11 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
     record.update({
         "authorization_source": "direct_current_user_request",
         "authorization_source_statement": USER_STATEMENT,
-        "user_authorization_received_on": "2026-08-06",
+        "user_authorization_received_on": USER_AUTHORIZATION_DATE,
         "campaign_standing_authorization": (
-            "The current user request authorizes exactly one bounded F2=B0008/R2=B0023 "
+            f"The current user request authorizes exactly one bounded F2={FIXED_MODULE_ID}/R2={ROTATING_MODULE_ID} "
             "bidirectional RAW retest after the user-completed F2 replacement; it "
-            "does not reactivate the terminated P10.4 campaign or authorize stress traffic."
+            "also conditionally authorizes later P10.4 continuation only if this retest passes."
         ),
         "authorization_interpretation": (
             "One immutable run ID; F2-to-R2 and R2-to-F2; receive-only startup "
@@ -267,9 +331,9 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
         "replacement": {
             "logical_module": "F2",
             "position": "AX7020-F/J11-A",
-            "removed_small_board_id": "B0001",
+            "removed_small_board_id": REMOVED_MODULE_ID,
             "installed_small_board_id": FIXED_MODULE_ID,
-            "source": "Direct user statement on 2026-08-06",
+            "source": f"Direct user statement on {USER_AUTHORIZATION_DATE}",
             "identity_independently_verified": False,
             "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
             "codex_physical_action": False,
@@ -282,6 +346,14 @@ def prepare_authorization(run_id: str | None) -> dict[str, Any]:
             "aggregate_requested_high_time_us_per_direction": 136.0,
             "spacing_cycles": 1024,
             "nominal_pulse_duty_percent": 0.78125,
+        },
+        "runtime_rest_policy": {
+            "path": p104.rel(RUNTIME_POLICY),
+            "sha256": p104.sha256(RUNTIME_POLICY),
+            "policy_id": load_policy(RUNTIME_POLICY)["policy_id"],
+            "maximum_continuous_runtime_seconds": 1800,
+            "minimum_cooldown_ratio": 0.5,
+            "conservative_modules": list(ALL_MODULES),
         },
     })
     base.write_json(AUTH, record)
@@ -297,8 +369,8 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
     raw.expected_run_id = expected_run_id
     record, artifacts, errors = raw.validate_authorization(path, run_id)
     # The reused P10.3 validator contains the historical R2 B0015->B0023
-    # lane2 replacement check.  This P10.4 wrapper supersedes only that one
-    # provenance check with the current F2 B0001->B0008 replacement below.
+    # lane2 replacement check. This P10.4 wrapper supersedes only that one
+    # provenance check with the selected current F2 replacement below.
     errors = [
         item for item in errors
         if item != "authorization replacement binding mismatch"
@@ -312,10 +384,15 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
         errors.append("bounded pulse exposure mismatch")
     replacement = record.get("replacement", {})
     if replacement.get("logical_module") != "F2" or \
-            replacement.get("removed_small_board_id") != "B0001" or \
+            replacement.get("removed_small_board_id") != REMOVED_MODULE_ID or \
             replacement.get("installed_small_board_id") != FIXED_MODULE_ID or \
             replacement.get("identity_independently_verified") is not False:
         errors.append("current F2 replacement binding mismatch")
+    policy = record.get("runtime_rest_policy", {})
+    if policy.get("sha256") != p104.sha256(RUNTIME_POLICY) or \
+            policy.get("maximum_continuous_runtime_seconds") != 1800 or \
+            policy.get("minimum_cooldown_ratio") != 0.5:
+        errors.append("runtime/rest policy binding mismatch")
     return record, artifacts, errors
 
 
@@ -379,7 +456,7 @@ def render_report(summary: dict[str, Any]) -> str:
                     f"{result.get('tx_high_max_cycles', '-')} |"
                 )
     return "\n".join([
-        "# P10.4 F2=B0008/R2=B0023 RAW connectivity retest",
+        f"# {REPORT_TITLE}",
         "",
         f"- Result: `{summary['status']}`",
         f"- Run ID: `{summary['run_id']}`",
@@ -417,6 +494,11 @@ def execute(run_id: str, auth_path: Path) -> int:
         return 3
 
     ps7 = p104.initialize_run(run_root, auth_path, artifacts)
+    runtime_guard = RuntimeRestGuard(
+        load_policy(RUNTIME_POLICY),
+        run_root / "runtime_rest/runtime_rest_ledger.json",
+        ALL_MODULES,
+    )
     base.write_text(
         run_root / "authorization/RAW_SCOPE_ATTESTATION.txt",
         f"PAIR=F2:{FIXED_MODULE_ID},R2:{ROTATING_MODULE_ID}\nLANE_MASK=0x4\n"
@@ -446,6 +528,7 @@ def execute(run_id: str, auth_path: Path) -> int:
         if initial.get("status") != "PASS":
             raise RuntimeError("initial dual shutdown unconfirmed")
         for name in DIRECTIONS:
+            runtime_guard.wait_for_cooldown()
             before = p104.guarded_shutdown(
                 run_root, auth_path, artifacts, f"{name}_before", env
             )
@@ -454,6 +537,7 @@ def execute(run_id: str, auth_path: Path) -> int:
                 raise RuntimeError(f"{name}: shutdown-before unconfirmed")
             direction: dict[str, Any] | None = None
             stage_exception: BaseException | None = None
+            runtime_guard.begin_stage(name, STAGE_TIMEOUT_SECONDS)
             try:
                 direction = invoke_direction(
                     name, run_root, auth_path, artifacts, ps7, env
@@ -466,8 +550,16 @@ def execute(run_id: str, auth_path: Path) -> int:
                     run_root, auth_path, artifacts, f"{name}_after", env
                 )
                 shutdowns.append(after)
+                try:
+                    runtime_guard.finish_stage(
+                        shutdown_verified=after.get("status") == "PASS"
+                    )
+                except BaseException as exc:
+                    if stage_exception is None:
+                        stage_exception = exc
             if after.get("status") != "PASS":
                 raise RuntimeError(f"{name}: shutdown-after unconfirmed")
+            runtime_guard.wait_for_cooldown()
             if stage_exception is not None:
                 if isinstance(stage_exception, KeyboardInterrupt):
                     raise KeyboardInterrupt from stage_exception
@@ -502,7 +594,16 @@ def execute(run_id: str, auth_path: Path) -> int:
     directions_pass = len(direction_results) == 2 and all(
         item.get("status") == "PASS" for item in direction_results
     )
-    status = "PASS" if all_shutdown and directions_pass and not campaign_errors else "FAIL"
+    runtime_ledger = runtime_guard.public_ledger()
+    runtime_policy_pass = (
+        runtime_ledger.get("status") == "PASS"
+        and len(runtime_ledger.get("stages", [])) == len(direction_results)
+    )
+    status = (
+        "PASS"
+        if all_shutdown and directions_pass and runtime_policy_pass and not campaign_errors
+        else "FAIL"
+    )
     summary: dict[str, Any] = {
         "schema_version": 1,
         "test_id": "P10_4-HW-LANE2-RAW-CONNECTIVITY-RETEST",
@@ -523,6 +624,9 @@ def execute(run_id: str, auth_path: Path) -> int:
         "maximum_lane_mask_used": "0x4" if direction_results else "0x0",
         "directions": direction_results,
         "pulse_exposure": record["pulse_exposure"],
+        "runtime_rest_policy": record["runtime_rest_policy"],
+        "runtime_rest_ledger": runtime_ledger,
+        "runtime_rest_policy_status": "PASS" if runtime_policy_pass else "FAIL",
         "hardware_actions_executed": hardware_actions,
         "current_run_hardware_authorization": False,
         "authorization_consumed": True,
@@ -598,13 +702,16 @@ def execute(run_id: str, auth_path: Path) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--profile", choices=tuple(RETEST_PROFILES), default="b0008")
     parser.add_argument("--prepare-authorization", action="store_true")
     parser.add_argument("--run-id")
-    parser.add_argument("--authorization", type=Path, default=AUTH)
+    parser.add_argument("--authorization", type=Path)
     parser.add_argument("--validate-only", action="store_true")
     parser.add_argument("--execute-hardware", action="store_true")
     args = parser.parse_args(argv)
+    configure_retest_profile(args.profile)
     configure_raw_helpers()
+    authorization = args.authorization.resolve() if args.authorization else AUTH.resolve()
     if args.prepare_authorization:
         try:
             record = prepare_authorization(args.run_id)
@@ -619,7 +726,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.run_id:
         print("P10_4_LANE2_RAW_RUNNER_REFUSED=RUN_ID_REQUIRED", file=sys.stderr)
         return 3
-    record, _, errors = validate_authorization(args.authorization.resolve(), args.run_id)
+    record, _, errors = validate_authorization(authorization, args.run_id)
     if args.validate_only:
         print(json.dumps({"status": "PASS" if not errors else "FAIL", "errors": errors},
                          indent=2, ensure_ascii=False))
@@ -632,7 +739,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"status": "FAIL_PRECONDITION", "errors": errors},
                          indent=2, ensure_ascii=False), file=sys.stderr)
         return 3
-    return execute(args.run_id, args.authorization.resolve())
+    return execute(args.run_id, authorization)
 
 
 if __name__ == "__main__":

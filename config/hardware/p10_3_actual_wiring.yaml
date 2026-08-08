@@ -1,9 +1,9 @@
 schema_version: 1
 record_id: "P10_3_AX7020_STATIONARY_4LANE_ACTUAL_AS_WIRED"
-status: "USER_DECLARED_PHYSICAL_WIRING_COMPLETE_PENDING_ELECTRONIC_INTAKE"
-recorded_at_local: "2026-08-06"
+status: "USER_DECLARED_PHYSICAL_WIRING_COMPLETE_F2_B0019_PENDING_ELECTRONIC_INTAKE"
+recorded_at_local: "2026-08-08"
 scope: "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE"
-user_source: "Current Codex task: explicit installed F0..F3/R0..R3 topology; on 2026-08-06 the user reported replacing F2 B0001 with new B0008; earlier replacements and old-F1 quarantine remain historical/current safety boundaries"
+user_source: "Current Codex task: explicit installed F0..F3/R0..R3 topology; on 2026-08-08 the user reported replacing F2 B0008 with new B0019; earlier replacements and old-F1 quarantine remain historical/current safety boundaries"
 goal:
   external_path: "C:/Users/user/Downloads/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md"
   external_sha256: "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
@@ -25,7 +25,7 @@ lane_pairs:
 module_positions:
   F0: {endpoint: fixed, connector: J10, position: A, lane: 0, small_board_id: "A0019"}
   F1: {endpoint: fixed, connector: J10, position: B, lane: 1, small_board_id: "B0012"}
-  F2: {endpoint: fixed, connector: J11, position: A, lane: 2, small_board_id: "B0008"}
+  F2: {endpoint: fixed, connector: J11, position: A, lane: 2, small_board_id: "B0019"}
   F3: {endpoint: fixed, connector: J11, position: B, lane: 3, small_board_id: "B0020"}
   R0: {endpoint: rotating, connector: J10, position: A, lane: 0, small_board_id: "A0010"}
   R1: {endpoint: rotating, connector: J10, position: B, lane: 1, small_board_id: "A0017"}
@@ -62,9 +62,9 @@ power_and_ground:
 physical_state_declaration:
   P10_3_PHYSICAL_WIRING_COMPLETED: true
   modules_installed: [F0, F1, F2, F3, R0, R1, R2, R3]
-  pre_run_user_module_replacements: ["R2 B0015 replaced by B0023", "F3 B0004 replaced by B0020", "R3 B0017 replaced by B0025", "F2 B0001 replaced by B0008"]
-  latest_pre_run_user_module_replacement: "F2 B0001 replaced by B0008"
-  replacement_source: "Direct user statements on 2026-08-04 and 2026-08-06; identities not independently read by Codex"
+  pre_run_user_module_replacements: ["R2 B0015 replaced by B0023", "F3 B0004 replaced by B0020", "R3 B0017 replaced by B0025", "F2 B0001 replaced by B0008", "F2 B0008 replaced by B0019"]
+  latest_pre_run_user_module_replacement: "F2 B0008 replaced by B0019"
+  replacement_source: "Direct user statements on 2026-08-04, 2026-08-06, and 2026-08-08; identities not independently read by Codex"
   replacement_power_state: "NOT_STATED_BY_USER; NOT_CLAIMED"
   codex_physical_action_for_replacement: false
   old_f1_quarantined: true
@@ -88,3 +88,6 @@ safety_boundaries:
   rewiring: false
   two_hour_test: false
   p11: false
+  maximum_continuous_module_runtime_seconds: 1800
+  minimum_interstage_cooldown_ratio: 0.5
+  runtime_rest_policy: "config/safety/p10_tfdu_runtime_rest_policy.yaml"

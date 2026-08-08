@@ -6,7 +6,7 @@ This record binds the user's current P10.3 installation to the frozen P10.2 inde
 |---|---|---|---:|---:|---:|---:|
 | F0 | AX7020-F / J10-A | A0019 | J10-30 / T12 | J10-32 / T11 | J10-34 / B19 | J10-36 / C20 |
 | F1 | AX7020-F / J10-B | B0012 | J10-22 / V17 | J10-24 / T14 | J10-26 / U13 | J10-28 / V12 |
-| F2 | AX7020-F / J11-A | B0001 | J11-30 / G17 | J11-32 / H16 | J11-34 / H15 | J11-36 / K14 |
+| F2 | AX7020-F / J11-A | B0019 | J11-30 / G17 | J11-32 / H16 | J11-34 / H15 | J11-36 / K14 |
 | F3 | AX7020-F / J11-B | B0020 | J11-22 / L16 | J11-24 / M17 | J11-26 / D19 | J11-28 / E18 |
 | R0 | AX7020-R / J10-A | A0010 | J10-30 / T12 | J10-32 / T11 | J10-34 / B19 | J10-36 / C20 |
 | R1 | AX7020-R / J10-B | A0017 | J10-22 / V17 | J10-24 / T14 | J10-26 / U13 | J10-28 / V12 |
@@ -30,3 +30,5 @@ The fresh bounded run `p10_3_raw_20260804T122719Z_d4eef729_3d8cd207_a8459eef` te
 The user then reported replacing R3=`B0017` with R3=`B0025` at AX7020-R/J11-B and requested a quick raw-only lane3 retest. Codex did not perform the replacement and does not claim its power state. Prior evidence involving B0017 remains immutable and is not relabeled for B0025.
 
 Run `p10_3_raw_20260804T124121Z_d4eef729_3d8cd207_a8459eef` passed raw connectivity for the current F3=`B0020` / R3=`B0025` pair in both directions at 64/64 and 1024/1024 events, with verified shutdown on both boards. The result is limited to `RAW_PHYSICAL_ONLY`.
+
+On 2026-08-08 the user reported replacing F2=`B0008` with F2=`B0019` at AX7020-F/J11-A. Codex did not perform the replacement and does not claim its power state. All B0008 evidence remains immutable and is not relabeled for B0019. The current B0019/R2=`B0023` pair is pending a fresh, shutdown-bounded bidirectional raw retest. The same user instruction adds a prospective maximum continuous module runtime of 1800 seconds and requires a verified-shutdown cooldown of at least half the preceding stage runtime before any later transmission; the machine-readable policy is `config/safety/p10_tfdu_runtime_rest_policy.yaml`.

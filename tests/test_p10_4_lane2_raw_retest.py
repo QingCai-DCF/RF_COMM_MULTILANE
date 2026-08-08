@@ -12,6 +12,7 @@ import run_p10_4_lane2_raw_retest as runner
 
 class P104Lane2RawRetestTests(unittest.TestCase):
     def setUp(self) -> None:
+        runner.configure_retest_profile("b0008")
         runner.configure_raw_helpers()
 
     def test_exact_two_direction_plan(self) -> None:
@@ -57,6 +58,19 @@ class P104Lane2RawRetestTests(unittest.TestCase):
         self.assertIn('LANE_MASK = 0x4', source)
         self.assertIn('TCL_STAGE = "P10_4-BASELINE_SMOKE"', source)
         self.assertNotIn("P10FF_WINDOW", source)
+
+    def test_b0019_profile_is_independent_and_policy_bound(self) -> None:
+        runner.configure_retest_profile("b0019")
+        runner.configure_raw_helpers()
+        self.assertEqual(runner.BRANCH, "p10.4/b0019-f2-r2-remediation")
+        self.assertEqual(runner.FIXED_MODULE_ID, "B0019")
+        self.assertEqual(runner.REMOVED_MODULE_ID, "B0008")
+        self.assertIn("l2b0019raw", runner.expected_run_id(runner.p104.load_json(runner.p104.FREEZE)))
+        self.assertEqual(
+            runner.raw.p103.EXPECTED_MODULE_BINDING["F2"]["small_board_id"],
+            "B0019",
+        )
+        self.assertTrue(runner.RUNTIME_POLICY.is_file())
 
 
 if __name__ == "__main__":
