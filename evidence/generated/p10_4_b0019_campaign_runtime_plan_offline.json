@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_4-B0019-CAMPAIGN-RUNTIME-PLAN-OFFLINE",
+  "status": "PASS",
+  "scope": "B0019-qualified P10.4 host execution plan and runtime/rest enforcement",
+  "branch": "p10.4/b0019-f2-r2-remediation",
+  "current_f2_module": "B0019",
+  "current_r2_module": "B0023",
+  "raw_qualification": {
+    "path": "evidence/generated/p10_4_lane2_b0019_raw_connectivity_retest.json",
+    "sha256": "edab403a4663bf866c819c158b7db0937a7a5fbfee6e6aff5eea9615a818dad1",
+    "status": "PASS",
+    "evidence_class": "RAW_PHYSICAL_ONLY"
+  },
+  "host_inputs": {
+    "campaign_runner": {
+      "path": "scripts/run_p10_4_hardware.py",
+      "sha256": "320213552c7c27b1e520df4c401a96e90aeee7fc32f83360709aab81188d99f7"
+    },
+    "authorization_builder": {
+      "path": "scripts/create_p10_4_authorization.py",
+      "sha256": "fef8a33d577371d74abc002fd3bf232cd95e5fd923fb892648e70f917f6e2e77"
+    },
+    "runtime_rest_guard": {
+      "path": "scripts/p10_tfdu_runtime_guard.py",
+      "sha256": "0eec20de8c1a9367ecb45a24fd1b2675da42aedd9f5f0e182334aaaf087d23dc"
+    },
+    "runtime_rest_policy": {
+      "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
+      "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
+    }
+  },
+  "execution_contract": {
+    "stage_count": 54,
+    "maximum_stage_process_timeout_seconds": 1200,
+    "maximum_continuous_module_runtime_seconds": 1800,
+    "minimum_interstage_cooldown_ratio": 0.5,
+    "streaming_64m_segments": 2,
+    "streaming_64m_total_runs_per_direction": 10,
+    "mixed_formal_segments_seconds": [900, 900],
+    "mixed_formal_total_active_seconds": 1800,
+    "shutdown_and_cooldown_between_mixed_segments": true,
+    "all_eight_modules_conservatively_charged_per_stage": true
+  },
+  "focused_tests": {
+    "tests_run": 26,
+    "failures": 0,
+    "errors": 0,
+    "status": "PASS"
+  },
+  "complete_offline_gate": {
+    "status": "PASS",
+    "summary_path": "evidence/generated/offline_gate_summary.json",
+    "summary_sha256": "59c9e950a24826907b372a2fa674e0a9eb41c7f38c59491b422e3cab0da3b852"
+  },
+  "frozen_hardware_artifacts_changed": false,
+  "hardware_actions_during_this_offline_gate": false,
+  "current_run_hardware_authorization": false,
+  "limitations": [
+    "The two 900-second mixed segments preserve 1800 seconds of active mixed traffic but are not a continuous 1800-second exposure.",
+    "The inter-segment shutdown and cooldown are required by the newer user safety constraint.",
+    "No old P10.4 hardware result is promoted for B0019; the current campaign requires fresh evidence."
+  ]
+}

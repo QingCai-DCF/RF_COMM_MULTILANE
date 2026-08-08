@@ -30,6 +30,7 @@ from typing import Any
 import run_p10_3_ax7020_4lane_hardware as base
 import run_p10_3f_full_hardware as legacy
 import run_p10_3f_staircase_hardware as forensic
+from p10_tfdu_runtime_guard import RuntimeRestGuard, load_policy
 from p10_hardware_runtime import (
     EXPECTED_FIXED_SERIAL,
     EXPECTED_ROTATING_SERIAL,
@@ -52,9 +53,10 @@ CONFIG = ROOT / "config/performance/p10_4_hardening.yaml"
 MODEL = ROOT / "evidence/generated/p10_4_model_reconciliation_offline.json"
 AS_WIRED = ROOT / "config/hardware/p10_3_actual_wiring.yaml"
 MODULE_INVENTORY = ROOT / "config/hardware/tfdu_module_inventory.yaml"
-F2_B0008_QUALIFICATION = (
-    ROOT / "evidence/generated/p10_4_lane2_b0008_raw_connectivity_retest.json"
+F2_B0019_QUALIFICATION = (
+    ROOT / "evidence/generated/p10_4_lane2_b0019_raw_connectivity_retest.json"
 )
+RUNTIME_REST_POLICY = ROOT / "config/safety/p10_tfdu_runtime_rest_policy.yaml"
 STAGE_TCL = ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl"
 FORENSIC_TCL = ROOT / "scripts/hw/p10_3f_fault_forensics.tcl"
 HW_ROOT = ROOT / "evidence/hardware/p10_4"
@@ -65,22 +67,31 @@ REGISTER_MAP_HASH_LOW = 0xBCFECB39
 INTERNAL_OBJECT_BYTES = 262_144
 MAX_AGGREGATE_BYTES = 128 << 20
 MODULE_BINDING = {
-    "F0": "A0019", "F1": "B0012", "F2": "B0008", "F3": "B0020",
+    "F0": "A0019", "F1": "B0012", "F2": "B0019", "F3": "B0020",
     "R0": "A0010", "R1": "A0017", "R2": "B0023", "R3": "B0025",
 }
 PRE_RUN_MODULE_CHANGE = {
     "module": "F2",
-    "previous_small_board_id": "B0001",
-    "current_small_board_id": "B0008",
+    "previous_small_board_id": "B0008",
+    "current_small_board_id": "B0019",
     "performed_by": "user",
     "completed_before_current_campaign": True,
     "replacement_during_current_campaign": False,
     "qualification_result": "BIDIRECTIONAL_RAW_PHYSICAL_PASS",
+    "qualification_run_id": (
+        "p10_4_l2b0019raw_20260808T084408Z_6ff17d33_94506af9_2b2b37d4"
+    ),
 }
 HARDWARE_CONFIGURATION_PATHS = {
     "actual_wiring": AS_WIRED,
     "module_inventory": MODULE_INVENTORY,
-    "f2_b0008_raw_qualification": F2_B0008_QUALIFICATION,
+    "f2_b0019_raw_qualification": F2_B0019_QUALIFICATION,
+    "runtime_rest_policy": RUNTIME_REST_POLICY,
+}
+HOST_RUNTIME_PATHS = {
+    "campaign_runner": Path(__file__).resolve(),
+    "authorization_builder": ROOT / "scripts/create_p10_4_authorization.py",
+    "runtime_rest_guard": ROOT / "scripts/p10_tfdu_runtime_guard.py",
 }
 RUN_RE = re.compile(
     r"^p10_4_(?P<utc>[0-9]{8}T[0-9]{6}Z)_"
@@ -95,6 +106,7 @@ SHUTDOWN_POLICY = {
     "clear_frozen_capture_before_shutdown_program": False,
 }
 NONBLOCKING_STAGES = {"streaming_128m", "two_plus_two"}
+ALL_MODULES = tuple(MODULE_BINDING)
 
 
 def sha256(path: Path) -> str:
@@ -122,6 +134,10 @@ def hardware_configuration_inputs() -> dict[str, dict[str, Any]]:
         name: metadata(path)
         for name, path in HARDWARE_CONFIGURATION_PATHS.items()
     }
+
+
+def host_runtime_inputs() -> dict[str, dict[str, Any]]:
+    return {name: metadata(path) for name, path in HOST_RUNTIME_PATHS.items()}
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -243,7 +259,7 @@ def stage_order() -> tuple[str, ...]:
     stages = [
         "preflight", "counter_local_source", "counter_semantics",
         "baseline_smoke", "tuning", "half_duplex", "streaming_64m",
-        "streaming_128m", "lane_recovery", "degrade", "direction_switch",
+        "streaming_64m_b", "streaming_128m", "lane_recovery", "degrade", "direction_switch",
         "ps_reset_fixed", "ps_reset_rotating",
     ]
     for role in ("fixed", "rotating"):
@@ -257,7 +273,7 @@ def stage_order() -> tuple[str, ...]:
     stages.extend((
         "duplicate_fault", "duplicate_recovery", "stale_fault",
         "stale_recovery", "echo_crosstalk_8x8", "two_plus_two",
-        "mixed_30min",
+        "mixed_15min_a", "mixed_15min_b",
     ))
     return tuple(stages)
 
@@ -280,7 +296,7 @@ def tcl_stage(stage: str) -> str:
         return "P10_4-TUNING"
     if stage == "half_duplex":
         return "P10_4-HALF_DUPLEX"
-    if stage == "streaming_64m":
+    if stage in {"streaming_64m", "streaming_64m_b"}:
         return "P10_4-STREAMING_64M"
     if stage == "streaming_128m":
         return "P10_4-STREAMING_128M"
@@ -299,25 +315,25 @@ def tcl_stage(stage: str) -> str:
         return "P10_4-ECHO_CROSSTALK"
     if stage == "two_plus_two":
         return "P10_4-TWO_PLUS_TWO"
-    if stage == "mixed_30min":
+    if stage in {"mixed_15min_a", "mixed_15min_b"}:
         return "P10_4-MIXED_FORMAL"
     raise ValueError(stage)
 
 
 def stage_timeout(stage: str) -> int:
-    if stage == "streaming_64m":
-        return 3_600
+    if stage in {"streaming_64m", "streaming_64m_b"}:
+        return 1_200
     if stage == "streaming_128m":
-        return 2_400
+        return 1_200
     if stage == "lane_recovery":
-        return 1_800
+        return 1_200
     if stage in {"direction_switch", "tuning", "half_duplex",
                  "echo_crosstalk_8x8"}:
         return 1_200
     if stage.startswith("ps_reset_"):
-        return 2_400
-    if stage == "mixed_30min":
-        return 2_100
+        return 1_200
+    if stage in {"mixed_15min_a", "mixed_15min_b"}:
+        return 1_200
     return 900
 
 
@@ -378,9 +394,11 @@ def build_plans(selected: dict[str, Any] | None = None) -> dict[str, str]:
         "P10FF_WINDOW sustained_300s_r2f 300 1 15",
     ]
     plans["streaming_64m"] = [header]
+    plans["streaming_64m_b"] = [header]
     for direction, side in ((0, "f2r"), (1, "r2f")):
         for index in range(1, 11):
-            plans["streaming_64m"].append(total_line(
+            target_stage = "streaming_64m" if index <= 5 else "streaming_64m_b"
+            plans[target_stage].append(total_line(
                 f"stream64_{side}_{index:02d}", 64 << 20, direction, 15, 0, ids
             ))
     plans["streaming_128m"] = [header]
@@ -477,7 +495,39 @@ def build_plans(selected: dict[str, Any] | None = None) -> dict[str, str]:
             ))
     plans["echo_crosstalk_8x8"] = matrix
     plans["two_plus_two"] = ["P104_TWO_PLUS_TWO_PROBE two_plus_two 300"]
-    plans["mixed_30min"] = [header, "P104_MIXED_FORMAL mixed_30min 1800"]
+    plans["mixed_15min_a"] = [
+        header,
+        "P10FF_WINDOW mixed_15min_a_warmup_f2r 30 0 15",
+        "P10FF_WINDOW mixed_15min_a_warmup_r2f 30 1 15",
+        "P10FF_WINDOW mixed_15min_a_half_f2r 420 0 15",
+        "P10FF_WINDOW mixed_15min_a_half_r2f 420 1 15",
+    ]
+    mixed_b = [
+        header,
+        "P10FF_WINDOW mixed_15min_b_warmup_f2r 30 0 15",
+        "P10FF_WINDOW mixed_15min_b_warmup_r2f 30 1 15",
+    ]
+    for cycle in range(5):
+        for direction in (0, 1):
+            mixed_b.append(
+                f"P10FF_WINDOW mixed_15min_b_switch_{cycle:02d}_d{direction} "
+                f"30 {direction} 15"
+            )
+    masks = (14, 15, 13, 15, 11, 15, 7, 15, 3, 15, 5, 15, 10, 15, 1, 15)
+    for index, mask in enumerate(masks):
+        seconds = 19 if index < 12 else 18
+        mixed_b.append(
+            f"P10FF_WINDOW mixed_15min_b_degrade_{index:02d}_mask{mask:X} "
+            f"{seconds} {index & 1} {mask}"
+        )
+    for index in range(8):
+        direction = index & 1
+        lane_mask = 3 if direction == 0 else 12
+        mixed_b.append(
+            f"P10FF_WINDOW mixed_15min_b_2plus2_fallback_{index:02d} "
+            f"30 {direction} {lane_mask}"
+        )
+    plans["mixed_15min_b"] = mixed_b
     return {name: "\n".join(lines) + "\n" for name, lines in plans.items()}
 
 
@@ -509,6 +559,8 @@ def validate_plans() -> list[str]:
         if tuple(plans) != STAGES:
             errors.append(f"{config['name']}: stage order mismatch")
         for stage, plan in plans.items():
+            if stage_timeout(stage) > 1800:
+                errors.append(f"{config['name']}:{stage}: timeout exceeds 1800 seconds")
             try:
                 plan.encode("ascii")
             except UnicodeEncodeError:
@@ -543,6 +595,15 @@ def validate_plans() -> list[str]:
                         errors.append(
                             f"{config['name']}:{stage}: lane mask exceeds 0xF"
                         )
+            if stage in {"mixed_15min_a", "mixed_15min_b"}:
+                durations = [
+                    int(line.split()[2]) for line in plan.splitlines()
+                    if line.startswith("P10FF_WINDOW ")
+                ]
+                if sum(durations) != 900:
+                    errors.append(
+                        f"{config['name']}:{stage}: scheduled duration is not 900 seconds"
+                    )
     return errors
 
 
@@ -587,6 +648,8 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
         "rotating_jtag_serial": EXPECTED_ROTATING_SERIAL,
         "maximum_lane_mask": 15,
         "maximum_single_formal_run_seconds": 1800,
+        "maximum_continuous_module_runtime_seconds": 1800,
+        "minimum_interstage_cooldown_ratio": 0.5,
         "ethernet_allowed": False,
         "external_instrumentation_allowed": False,
         "movement_rotation_realignment_rewiring_or_module_replacement_allowed": False,
@@ -651,6 +714,42 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
         candidate = (ROOT / item["path"]).resolve()
         if not file_matches_head(candidate):
             errors.append(f"hardware configuration input is not committed: {name}")
+    try:
+        current_host_inputs = host_runtime_inputs()
+    except OSError as exc:
+        errors.append(f"host runtime input read failed: {exc}")
+        current_host_inputs = {}
+    if auth.get("host_runtime_inputs") != current_host_inputs:
+        errors.append("authorization host runtime inputs mismatch")
+    for name, item in current_host_inputs.items():
+        candidate = (ROOT / item["path"]).resolve()
+        if not file_matches_head(candidate):
+            errors.append(f"host runtime input is not committed: {name}")
+    policy = load_policy(RUNTIME_REST_POLICY)
+    expected_runtime_policy = {
+        "path": rel(RUNTIME_REST_POLICY),
+        "sha256": sha256(RUNTIME_REST_POLICY),
+        "policy_id": policy["policy_id"],
+        "maximum_continuous_runtime_seconds": 1800,
+        "minimum_cooldown_ratio": 0.5,
+        "conservative_modules": list(ALL_MODULES),
+    }
+    if auth.get("runtime_rest_policy") != expected_runtime_policy:
+        errors.append("authorization runtime/rest policy mismatch")
+    if auth.get("stage_runtime_limits_seconds") != {
+            stage: stage_timeout(stage) for stage in STAGES}:
+        errors.append("authorization stage runtime limits mismatch")
+    try:
+        qualification = load_json(F2_B0019_QUALIFICATION)
+        if qualification.get("status") != "PASS" or \
+                qualification.get("evidence_class") != "RAW_PHYSICAL_ONLY" or \
+                qualification.get("module_binding") != {"F2": "B0019", "R2": "B0023"} or \
+                qualification.get("runtime_rest_policy_status") != "PASS" or \
+                qualification.get("SHUTDOWN_FIXED") != "PASS" or \
+                qualification.get("SHUTDOWN_ROTATING") != "PASS":
+            errors.append("current F2=B0019/R2=B0023 raw qualification mismatch")
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        errors.append(f"current B0019 raw qualification unreadable: {exc}")
     artifacts: dict[str, Path] = {}
     for key, item in artifacts_by_key.items():
         try:
@@ -680,7 +779,7 @@ def initialize_run(run_root: Path, auth: Path, artifacts: dict[str, Path]) -> di
         "half_duplex_performance", "streaming_64m", "streaming_128m",
         "degraded_modes", "direction_switch", "reset_recovery",
         "echo_crosstalk_8x8", "two_plus_two", "mixed_30min", "shutdown",
-        "stages", "forensics", "raw_logs", "final",
+        "runtime_rest", "stages", "forensics", "raw_logs", "final",
     ):
         (run_root / name).mkdir(parents=True, exist_ok=False)
     copies = (
@@ -691,8 +790,10 @@ def initialize_run(run_root: Path, auth: Path, artifacts: dict[str, Path]) -> di
         (MODEL, run_root / "artifacts/offline_model.json"),
         (AS_WIRED, run_root / "artifacts/as_wired.yaml"),
         (MODULE_INVENTORY, run_root / "artifacts/module_inventory.yaml"),
-        (F2_B0008_QUALIFICATION,
-         run_root / "artifacts/f2_b0008_raw_qualification.json"),
+        (F2_B0019_QUALIFICATION,
+         run_root / "artifacts/f2_b0019_raw_qualification.json"),
+        (RUNTIME_REST_POLICY,
+         run_root / "artifacts/runtime_rest_policy.yaml"),
     )
     for source, destination in copies:
         shutil.copy2(source, destination)
@@ -1105,13 +1206,14 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
             errors.append(f"measured/model reconciliation failed: {exc}")
         semantics["windows"] = windows
         semantics["model_reconciliation"] = "DIRECT_COMMITTED_BYTES_VS_FROZEN_MODEL"
-    elif stage == "streaming_64m":
+    elif stage in {"streaming_64m", "streaming_64m_b"}:
+        index_range = range(1, 6) if stage == "streaming_64m" else range(6, 11)
         labels = {f"stream64_{side}_{index:02d}"
-                  for side in ("f2r", "r2f") for index in range(1, 11)}
+                  for side in ("f2r", "r2f") for index in index_range}
         observed = {item.get("window") for item in non_shutdown
                     if item.get("requested_bytes") == 64 << 20}
         if observed != labels:
-            errors.append("exact 10x64MiB per direction set mismatch")
+            errors.append("exact segmented 5x64MiB per direction set mismatch")
         semantics["completed"] = sorted(observed)
     elif stage == "streaming_128m":
         labels = {f"stream128_{side}_{index:02d}"
@@ -1269,19 +1371,43 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
             "f_to_r_bps": 0, "r_to_f_bps": 0,
             "final_4plus4_full_duplex_pass": False,
         })
-    elif stage == "mixed_30min":
-        elapsed = int(markers.get("P10_4_MIXED_ELAPSED_MS", "0"))
-        if markers.get("P10_4_MIXED_RESULT") != "PASS" or \
-                elapsed not in range(1_800_000, 1_800_501):
-            errors.append("mixed formal exact duration/result mismatch")
-        half = [
-            window_metrics(non_shutdown, "mixed_30min_half_f2r", 420, 0, 15),
-            window_metrics(non_shutdown, "mixed_30min_half_r2f", 420, 1, 15),
+    elif stage in {"mixed_15min_a", "mixed_15min_b"}:
+        specifications = [
+            (fields[1], int(fields[2]), int(fields[3]), int(fields[4]))
+            for fields in (line.split() for line in plan.splitlines())
+            if fields and fields[0] == "P10FF_WINDOW"
         ]
-        if any(item["application_goodput_bps"] < 8_000_000 for item in half):
+        windows = [
+            window_metrics(non_shutdown, label, duration, direction, mask)
+            for label, duration, direction, mask in specifications
+        ]
+        scheduled = sum(item[1] for item in specifications)
+        if scheduled != 900 or any(not item["commands"] for item in windows):
+            errors.append("mixed formal segment is not an observed exact 900 seconds")
+        mandatory_half = [
+            item for item in windows
+            if item["label"] in {
+                "mixed_15min_a_half_f2r", "mixed_15min_a_half_r2f"
+            }
+        ]
+        if stage == "mixed_15min_a" and (
+                len(mandatory_half) != 2 or any(
+                    item["application_goodput_bps"] < 8_000_000
+                    for item in mandatory_half
+                )):
             errors.append("mixed formal half-duplex window below 8 Mbit/s")
-        semantics.update({"elapsed_ms": elapsed, "mandatory_half_duplex": half,
-                          "two_plus_two": markers.get("P10_4_MIXED_TWO_PLUS_TWO")})
+        semantics.update({
+            "scheduled_active_seconds": scheduled,
+            "segment": "A" if stage.endswith("_a") else "B",
+            "windows": windows,
+            "mandatory_half_duplex": mandatory_half,
+            "segmented_for_runtime_rest_policy": True,
+            "full_shutdown_required_between_segments": True,
+            "two_plus_two": (
+                "UNSUPPORTED_NONBLOCKING_ALTERNATING_TWO_LANE_FALLBACK"
+                if stage.endswith("_b") else "NOT_IN_THIS_SEGMENT"
+            ),
+        })
 
     payload = {
         "schema_version": 1, "test_id": f"P10_4-{stage.upper()}",
@@ -1422,7 +1548,7 @@ def publish_evidence(summary: dict[str, Any], run_root: Path,
         "baseline_smoke": (["baseline_smoke"], False),
         "performance_tuning": (["tuning"], False),
         "half_duplex_performance": (["half_duplex"], False),
-        "streaming_64m": (["streaming_64m"], False),
+        "streaming_64m": (["streaming_64m", "streaming_64m_b"], False),
         "streaming_128m": (["streaming_128m"], True),
         "degraded_modes": (["lane_recovery", "degrade"], False),
         "direction_switch": (["direction_switch"], False),
@@ -1432,7 +1558,7 @@ def publish_evidence(summary: dict[str, Any], run_root: Path,
                          "stale_recovery"}], False),
         "echo_crosstalk": (["echo_crosstalk_8x8"], False),
         "two_plus_two": (["two_plus_two"], True),
-        "mixed_30min": (["mixed_30min"], False),
+        "mixed_30min": (["mixed_15min_a", "mixed_15min_b"], False),
     }
     payloads = {}
     for name, (stages, nonblocking) in groups.items():
@@ -1517,6 +1643,11 @@ def main(argv: list[str] | None = None) -> int:
         "RF_COMM_P10_HW_AUTH": "P10_4_IMMUTABLE_AUTHORIZED",
     }
     ps7 = initialize_run(run_root, auth_path, artifacts)
+    runtime_guard = RuntimeRestGuard(
+        load_policy(RUNTIME_REST_POLICY),
+        run_root / "runtime_rest/runtime_rest_ledger.json",
+        ALL_MODULES,
+    )
     server_proc = None
     stage_results: list[dict[str, Any]] = []
     shutdown_results: list[dict[str, Any]] = []
@@ -1525,6 +1656,7 @@ def main(argv: list[str] | None = None) -> int:
     selected = baseline_config()
     hardware_actions = False
     active_stage: str | None = None
+    runtime_stage_active = False
     archived = True
     try:
         server_proc, server = start_hw_server(run_root / "raw_logs")
@@ -1537,6 +1669,7 @@ def main(argv: list[str] | None = None) -> int:
         if initial.get("status") != "PASS":
             raise RuntimeError("initial dual shutdown unconfirmed")
         for stage in STAGES:
+            runtime_guard.wait_for_cooldown()
             active_stage = stage
             archived = False
             before = guarded_shutdown(run_root, auth_path, artifacts, f"{stage}_before", env)
@@ -1555,6 +1688,8 @@ def main(argv: list[str] | None = None) -> int:
                 raise RuntimeError(
                     f"{stage}: selected immutable plan authorization mismatch"
                 )
+            runtime_guard.begin_stage(stage, stage_timeout(stage))
+            runtime_stage_active = True
             process, stage_dir = invoke_stage(
                 stage, plans[stage], run_root, auth_path, artifacts, ps7, env
             )
@@ -1569,7 +1704,13 @@ def main(argv: list[str] | None = None) -> int:
                 raise RuntimeError(f"{stage}: forensic archive failed")
             after = guarded_shutdown(run_root, auth_path, artifacts, f"{stage}_after", env)
             shutdown_results.append(after)
+            runtime_record = runtime_guard.finish_stage(
+                shutdown_verified=after.get("status") == "PASS"
+            )
+            runtime_stage_active = False
+            runtime_guard.wait_for_cooldown()
             result = evaluate_stage(stage, stage_dir, process, archive, plans[stage])
+            result["runtime_rest"] = dict(runtime_record)
             result["shutdown_before_status"] = before.get("status")
             result["shutdown_after_status"] = after.get("status")
             stage_results.append(result)
@@ -1607,6 +1748,15 @@ def main(argv: list[str] | None = None) -> int:
         shutdown_results.append(emergency)
         if emergency.get("status") != "PASS":
             campaign_errors.append("finally dual shutdown unconfirmed")
+        if runtime_stage_active:
+            try:
+                runtime_guard.finish_stage(
+                    shutdown_verified=emergency.get("status") == "PASS"
+                )
+                runtime_stage_active = False
+                runtime_guard.wait_for_cooldown()
+            except BaseException as exc:
+                campaign_errors.append(f"runtime/rest finalization failed: {exc}")
         if server_proc is not None:
             try:
                 terminate_tree(server_proc)
@@ -1625,9 +1775,15 @@ def main(argv: list[str] | None = None) -> int:
                             if by_stage.get(stage, {}).get("status") != "PASS"]
     counters = zero_counter_summary(stage_results)
     hard_zero = all(value == 0 for value in counters.values())
+    runtime_ledger = runtime_guard.public_ledger()
+    runtime_policy_pass = (
+        runtime_ledger.get("status") == "PASS"
+        and len(runtime_ledger.get("stages", [])) == len(stage_results)
+    )
     half_windows = by_stage.get("half_duplex", {}).get("semantics", {}).get("windows", [])
     half_by_direction = {int(item["direction"]): item for item in half_windows}
-    if mandatory_pass and all_shutdown and hard_zero and not campaign_errors:
+    if mandatory_pass and all_shutdown and hard_zero and runtime_policy_pass \
+            and not campaign_errors:
         status = "PASS_WITH_NONBLOCKING_LIMITS" if nonblocking_failures else "PASS"
     elif all_shutdown and any(item.get("application_goodput_bps", 0) >= 8_000_000
                               for item in half_windows):
@@ -1647,6 +1803,8 @@ def main(argv: list[str] | None = None) -> int:
         "wiring_changed": False, "module_replaced": False,
         "external_instrumentation_used": False, "maximum_lane_mask": 15,
         "maximum_single_formal_run_seconds": 1800,
+        "maximum_continuous_module_runtime_seconds": 1800,
+        "minimum_interstage_cooldown_ratio": 0.5,
         "board_binding": {
             "fixed": f"AX7020-F/JTAG:{EXPECTED_FIXED_SERIAL}",
             "rotating": f"AX7020-R/JTAG:{EXPECTED_ROTATING_SERIAL}",
@@ -1665,6 +1823,14 @@ def main(argv: list[str] | None = None) -> int:
             "R_TO_F": half_by_direction.get(1, {}).get("application_goodput_bps", 0) >= 9_600_000,
         },
         "counters": counters, "stages": stage_results,
+        "runtime_rest_policy": authorization["runtime_rest_policy"],
+        "runtime_rest_policy_status": "PASS" if runtime_policy_pass else "FAIL",
+        "runtime_rest_ledger": runtime_ledger,
+        "mixed_formal_active_seconds": 1800,
+        "mixed_formal_segmentation": (
+            "two 900-second TX-capable segments with verified shutdown and "
+            "at least half-runtime cooldown between segments"
+        ),
         "forensics": forensic_results, "shutdowns": shutdown_results,
         "SHUTDOWN_FIXED": "PASS" if all_shutdown else "FAIL",
         "SHUTDOWN_ROTATING": "PASS" if all_shutdown else "FAIL",

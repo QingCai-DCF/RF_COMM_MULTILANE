@@ -110,10 +110,18 @@ def main(argv: list[str] | None = None) -> int:
         "authorized": not errors, "consumed": False,
         "current_run_hardware_authorization": not errors,
         "no_hardware": False if not errors else True,
-        "authorization_source": "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md",
+        "authorization_source": [
+            "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md",
+            "direct current user instruction dated 2026-08-08",
+        ],
         "authorization_source_semantics": (
             "Submitting the Goal explicitly authorizes all listed P10.4 hardware operations; "
-            "there are zero user HOLD points."
+            "the current user instruction authorizes the B0019 retest and conditional P10 "
+            "continuation while adding the 1800-second limit and half-runtime cooldown."
+        ),
+        "current_user_statement": (
+            "新增约束：任何一个小板都不能连续运行超过30分钟，每个环节运行结束后需要至少休息一半运行时间再启动发射；"
+            "我已经将b0008更换为新的b0019，请你重新测试F2-R2通断，若已经恢复，请继续P10目标"
         ),
         "goal_sha256": campaign.GOAL_SHA256,
         "artifact_freeze": rel(FREEZE), "artifact_freeze_sha256": sha256(FREEZE),
@@ -130,17 +138,33 @@ def main(argv: list[str] | None = None) -> int:
         "module_binding": campaign.MODULE_BINDING,
         "pre_run_module_change": campaign.PRE_RUN_MODULE_CHANGE,
         "hardware_configuration_inputs": campaign.hardware_configuration_inputs(),
+        "host_runtime_inputs": campaign.host_runtime_inputs(),
         "maximum_lane_mask": 15, "maximum_single_formal_run_seconds": 1800,
+        "maximum_continuous_module_runtime_seconds": 1800,
+        "minimum_interstage_cooldown_ratio": 0.5,
         "maximum_aggregate_command_bytes": 128 << 20,
         "ethernet_allowed": False, "external_instrumentation_allowed": False,
         "movement_rotation_realignment_rewiring_or_module_replacement_allowed": False,
         "allowed_stages": list(campaign.STAGES),
+        "stage_runtime_limits_seconds": {
+            stage: campaign.stage_timeout(stage) for stage in campaign.STAGES
+        },
         "baseline_plan_sha256": plan_hashes,
         "allowed_selected_configs": campaign.candidate_configs(),
         "allowed_plan_sha256": campaign.allowed_plan_sha256(),
         "bounded_retry_policy": {"hw_server_connect": 3, "program": 2,
                                  "new_run_id_per_diagnostic_stage": 2},
         "register_map": {"version": "0x0A000004", "hash_low": "0xBCFECB39"},
+        "runtime_rest_policy": {
+            "path": campaign.rel(campaign.RUNTIME_REST_POLICY),
+            "sha256": campaign.sha256(campaign.RUNTIME_REST_POLICY),
+            "policy_id": campaign.load_policy(
+                campaign.RUNTIME_REST_POLICY
+            )["policy_id"],
+            "maximum_continuous_runtime_seconds": 1800,
+            "minimum_cooldown_ratio": 0.5,
+            "conservative_modules": list(campaign.ALL_MODULES),
+        },
         "shutdown_policy": campaign.SHUTDOWN_POLICY,
         "offline_inputs": freeze.get("offline_inputs", {}),
         "artifacts": freeze.get("artifacts", []),

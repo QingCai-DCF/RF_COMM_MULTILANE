@@ -28,7 +28,7 @@ class P104PlanTests(unittest.TestCase):
     def test_stage_order_and_lint(self) -> None:
         self.assertEqual(tuple(self.plans), p10.STAGES)
         self.assertEqual(p10.validate_plans(), [])
-        self.assertEqual(len(p10.STAGES), 52)
+        self.assertEqual(len(p10.STAGES), 54)
         self.assertEqual(
             self.records("counter_local_source")[0][:2],
             ["CASE", "counter_local_source_endpoint_shutdown"],
@@ -44,8 +44,8 @@ class P104PlanTests(unittest.TestCase):
             hashes["buffers8_batch16"]["half_duplex"],
         )
 
-    def test_b0008_current_hardware_binding_is_content_bound(self) -> None:
-        self.assertEqual(p10.MODULE_BINDING["F2"], "B0008")
+    def test_b0019_current_hardware_binding_is_content_bound(self) -> None:
+        self.assertEqual(p10.MODULE_BINDING["F2"], "B0019")
         self.assertEqual(
             p10.PRE_RUN_MODULE_CHANGE["qualification_result"],
             "BIDIRECTIONAL_RAW_PHYSICAL_PASS",
@@ -53,7 +53,10 @@ class P104PlanTests(unittest.TestCase):
         inputs = p10.hardware_configuration_inputs()
         self.assertEqual(
             set(inputs),
-            {"actual_wiring", "module_inventory", "f2_b0008_raw_qualification"},
+            {
+                "actual_wiring", "module_inventory",
+                "f2_b0019_raw_qualification", "runtime_rest_policy",
+            },
         )
         for item in inputs.values():
             self.assertRegex(item["sha256"], r"^[0-9a-f]{64}$")
@@ -64,8 +67,10 @@ class P104PlanTests(unittest.TestCase):
         self.assertNotIn("canonical P10.4 authorization path required", source)
 
     def test_exact_streaming_counts(self) -> None:
-        stream64 = [row for row in self.records("streaming_64m")
-                    if row[0] == "P10FF_TOTAL"]
+        stream64 = [
+            row for stage in ("streaming_64m", "streaming_64m_b")
+            for row in self.records(stage) if row[0] == "P10FF_TOTAL"
+        ]
         stream128 = [row for row in self.records("streaming_128m")
                      if row[0] == "P10FF_TOTAL"]
         self.assertEqual(len(stream64), 20)
@@ -102,8 +107,13 @@ class P104PlanTests(unittest.TestCase):
                     self.assertLessEqual(int(row[5], 0), 0xF, stage)
                 elif row[0] in {"P10FF_TOTAL", "P10FF_WINDOW"}:
                     self.assertLessEqual(int(row[4], 0), 0xF, stage)
-        self.assertEqual(self.records("mixed_30min")[-1],
-                         ["P104_MIXED_FORMAL", "mixed_30min", "1800"])
+        for stage in ("mixed_15min_a", "mixed_15min_b"):
+            windows = [row for row in self.records(stage)
+                       if row[0] == "P10FF_WINDOW"]
+            self.assertEqual(sum(int(row[2]) for row in windows), 900)
+            self.assertLessEqual(p10.stage_timeout(stage), 1200)
+        self.assertTrue(all(p10.stage_timeout(stage) <= 1200
+                            for stage in p10.STAGES))
         self.assertEqual(self.records("two_plus_two"),
                          [["P104_TWO_PLUS_TWO_PROBE", "two_plus_two", "300"]])
         self.assertIn("two_plus_two", p10.NONBLOCKING_STAGES)
@@ -114,6 +124,8 @@ class P104PlanTests(unittest.TestCase):
         )
         self.assertIn("measured_model_ratio", source)
         self.assertIn("measured_airtime_ceiling_ratio", source)
+        self.assertIn("runtime_guard.wait_for_cooldown()", source)
+        self.assertIn("runtime_guard.begin_stage", source)
 
     def test_tuning_is_bounded_and_safety_parameters_are_immutable(self) -> None:
         candidates = p10.candidate_configs()
