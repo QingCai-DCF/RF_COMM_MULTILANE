@@ -1,0 +1,103 @@
+{
+  "archives": [
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4\\forensics\\stale_fault\\fixed.p10ff.bin",
+      "binary_sha256": "0fc87b39b1dfce4cf2d3dde0b2616efc893fef75294d00c2d246a46ad4e44277",
+      "digest_words_little_endian": [
+        "0x397BC80F",
+        "0x4CCEDFB1",
+        "0xE0DDD3F2",
+        "0xFC6E61B2",
+        "0x75EF3F89",
+        "0xC2004D29",
+        "0x6AA446D2",
+        "0x7742E4D4"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4\\forensics\\stale_fault\\fixed.p10ff.json",
+      "role": "fixed",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4\\forensics\\stale_fault\\fixed.p10ff.sha256",
+      "status": "FROZEN"
+    },
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4\\forensics\\stale_fault\\rotating.p10ff.bin",
+      "binary_sha256": "49534785bf6e4747f480a83bdd49017cb7a720f94f310fc41cb3e3e0f7405803",
+      "digest_words_little_endian": [
+        "0x85475349",
+        "0x47476EBF",
+        "0x3BA880F4",
+        "0x7C0149DD",
+        "0xF920A7B7",
+        "0xC40F314F",
+        "0xE0E3B31C",
+        "0x035840F7"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4\\forensics\\stale_fault\\rotating.p10ff.json",
+      "role": "rotating",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4\\forensics\\stale_fault\\rotating.p10ff.sha256",
+      "status": "FROZEN"
+    }
+  ],
+  "capture_process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\scripts\\hw\\p10_3f_fault_forensics.tcl",
+      "capture",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4\\forensics\\stale_fault",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\config\\p10_4_resume_current_run_hardware_authorization.json",
+      "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "0x50343446",
+      "0x50343452",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4\\forensics\\stale_fault\\capture.result.txt",
+      "NONE",
+      "NONE",
+      "0x0A000004",
+      "0xBCFECB39"
+    ],
+    "elapsed_seconds": 8.127988199936226,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/forensics/stale_fault/capture.stderr.log",
+    "stdout": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/forensics/stale_fault/capture.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 180
+  },
+  "commit_process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\scripts\\hw\\p10_3f_fault_forensics.tcl",
+      "commit",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4\\forensics\\stale_fault",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\config\\p10_4_resume_current_run_hardware_authorization.json",
+      "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "0x50343446",
+      "0x50343452",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_4\\evidence\\hardware\\p10_4\\p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4\\forensics\\stale_fault\\commit.result.txt",
+      "0fc87b39b1dfce4cf2d3dde0b2616efc893fef75294d00c2d246a46ad4e44277",
+      "49534785bf6e4747f480a83bdd49017cb7a720f94f310fc41cb3e3e0f7405803",
+      "0x0A000004",
+      "0xBCFECB39"
+    ],
+    "elapsed_seconds": 2.8716423001606017,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/forensics/stale_fault/commit.stderr.log",
+    "stdout": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/forensics/stale_fault/commit.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 180
+  },
+  "errors": [],
+  "explicit_clear_executed": false,
+  "force_terminal_abort": false,
+  "frozen_roles": [
+    "fixed",
+    "rotating"
+  ],
+  "generated_at_utc": "2026-08-08T16:36:32+00:00",
+  "label": "stale_fault",
+  "schema_version": 1,
+  "status": "PASS"
+}

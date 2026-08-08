@@ -140,12 +140,14 @@
     "pl_reset_rotating_1",
     "pl_recovery_rotating_1"
   ],
-  "consumed": false,
+  "consumed": true,
+  "consumed_at_utc": "2026-08-08T17:44:23+00:00",
   "created_at_utc": "2026-08-08T16:20:49.654621+00:00",
-  "current_run_hardware_authorization": true,
+  "current_run_hardware_authorization": false,
   "current_user_statement": "继续",
   "errors": [],
   "ethernet_allowed": false,
+  "evidence_manifest": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
   "external_instrumentation_allowed": false,
   "external_instrumentation_used": false,
   "fixed_jtag_serial": "210249855178",
@@ -257,6 +259,7 @@
     "hash_low": "0xBCFECB39",
     "version": "0x0A000004"
   },
+  "result": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json",
   "resume_host_inputs": {
     "authorization_builder": {
       "bytes": 10213,
@@ -376,6 +379,6 @@
     "stale_recovery": 900,
     "two_plus_two": 900
   },
-  "status": "READY_FOR_EXACT_RESUME_RUN",
+  "status": "CONSUMED_AFTER_P10_4_RESUME_PASS_WITH_NONBLOCKING_LIMITS",
   "wiring_changed": false
 }

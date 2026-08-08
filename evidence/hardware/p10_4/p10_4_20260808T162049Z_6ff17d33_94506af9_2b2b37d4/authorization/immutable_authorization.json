@@ -1,0 +1,381 @@
+{
+  "artifact_freeze": "evidence/generated/p10_4_artifact_freeze.json",
+  "artifact_freeze_sha256": "f8f09b71563e837c435c06e8cfd8ab1d06f59b755ac855d388ae5c30b2894c47",
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b"
+    },
+    {
+      "bytes": 1311117,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02"
+    },
+    {
+      "bytes": 1970234,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc"
+    },
+    {
+      "bytes": 573820,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e"
+    },
+    {
+      "bytes": 1318909,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6"
+    },
+    {
+      "bytes": 1970389,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec"
+    },
+    {
+      "bytes": 574364,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1"
+    }
+  ],
+  "authorization_id": "P10_4-RESUME-CURRENT-RUN-IMMUTABLE",
+  "authorization_parent_commit": "5da414ba385b750caede64826f2b1e1ee39073d0",
+  "authorization_source": [
+    "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md",
+    "direct user continuation instruction dated 2026-08-08",
+    "campaign-level standing authorization already recorded for P10.4"
+  ],
+  "authorization_source_semantics": "The user authorized all P10.4 operations and instructed Codex to continue. This run reexecutes the interrupted stage and every exact remaining stage after a verified emergency shutdown and half-runtime cooldown.",
+  "authorized": true,
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "completed_parent_stages": [
+    "preflight",
+    "counter_local_source",
+    "counter_semantics",
+    "baseline_smoke",
+    "tuning",
+    "half_duplex",
+    "streaming_64m",
+    "streaming_64m_b",
+    "streaming_128m",
+    "lane_recovery",
+    "degrade",
+    "direction_switch",
+    "ps_reset_fixed",
+    "ps_reset_rotating",
+    "dma_reset_fixed_1",
+    "dma_recovery_fixed_1",
+    "dma_reset_fixed_2",
+    "dma_recovery_fixed_2",
+    "dma_reset_fixed_3",
+    "dma_recovery_fixed_3",
+    "dma_reset_fixed_4",
+    "dma_recovery_fixed_4",
+    "dma_reset_fixed_5",
+    "dma_recovery_fixed_5",
+    "dma_reset_rotating_1",
+    "dma_recovery_rotating_1",
+    "dma_reset_rotating_2",
+    "dma_recovery_rotating_2",
+    "dma_reset_rotating_3",
+    "dma_recovery_rotating_3",
+    "dma_reset_rotating_4",
+    "dma_recovery_rotating_4",
+    "dma_reset_rotating_5",
+    "dma_recovery_rotating_5",
+    "pl_reset_fixed_1",
+    "pl_recovery_fixed_1",
+    "pl_reset_fixed_2",
+    "pl_recovery_fixed_2",
+    "pl_reset_fixed_3",
+    "pl_recovery_fixed_3",
+    "pl_reset_rotating_1",
+    "pl_recovery_rotating_1"
+  ],
+  "consumed": false,
+  "created_at_utc": "2026-08-08T16:20:49.654621+00:00",
+  "current_run_hardware_authorization": true,
+  "current_user_statement": "继续",
+  "errors": [],
+  "ethernet_allowed": false,
+  "external_instrumentation_allowed": false,
+  "external_instrumentation_used": false,
+  "fixed_jtag_serial": "210249855178",
+  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "hardware_configuration_inputs": {
+    "actual_wiring": {
+      "bytes": 5507,
+      "path": "config/hardware/p10_3_actual_wiring.yaml",
+      "sha256": "c761fcd5f86a3b2d54a85cad93496019d3c92f828c454dce15f3d73b80773848"
+    },
+    "f2_b0019_raw_qualification": {
+      "bytes": 76759,
+      "path": "evidence/generated/p10_4_lane2_b0019_raw_connectivity_retest.json",
+      "sha256": "edab403a4663bf866c819c158b7db0937a7a5fbfee6e6aff5eea9615a818dad1"
+    },
+    "module_inventory": {
+      "bytes": 28143,
+      "path": "config/hardware/tfdu_module_inventory.yaml",
+      "sha256": "f4a85f370acee9c2a3536265202afc4ec4cc9e109a262e6c1fd5f04cc1eb26d4"
+    },
+    "runtime_rest_policy": {
+      "bytes": 1417,
+      "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
+      "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
+    }
+  },
+  "hardware_moved": false,
+  "interrupted_stage": "pl_reset_rotating_2",
+  "maximum_aggregate_command_bytes": 134217728,
+  "maximum_continuous_module_runtime_seconds": 1800,
+  "maximum_lane_mask": 15,
+  "maximum_single_formal_run_seconds": 1800,
+  "minimum_interstage_cooldown_ratio": 0.5,
+  "module_binding": {
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0019",
+    "F3": "B0020",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0023",
+    "R3": "B0025"
+  },
+  "module_replaced": false,
+  "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
+  "network_used": false,
+  "no_hardware": false,
+  "offline_inputs": {
+    "connector_ack_quarantine": {
+      "bytes": 1994,
+      "path": "config/p10_4_connector_ack_rx_quarantine.yaml",
+      "sha256": "7960cce667954063b92bed69fcf228e39561c4c5b0043bc182887e244e9763e2"
+    },
+    "crc_bad_diagnosis": {
+      "bytes": 4310,
+      "path": "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json",
+      "sha256": "ae082a2f1c0a6d09bf5cbeaba1010582560df1cd7defac489c35ca34712c5e48"
+    },
+    "crc_bad_remediation": {
+      "bytes": 2552,
+      "path": "evidence/generated/p10_4_crc_bad_remediation.json",
+      "sha256": "9e077056b5f468c14a57304850451ebeea1c5da9c249df6cdfe8e69109fef9a4"
+    },
+    "goal": {
+      "bytes": 25208,
+      "path": "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md",
+      "sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f"
+    },
+    "performance_config": {
+      "bytes": 3485,
+      "path": "config/performance/p10_4_hardening.yaml",
+      "sha256": "a49a7950a0e214357ca10cfe1a4943d7cd897447f1a06ec1ec032884203c0e99"
+    },
+    "performance_model": {
+      "bytes": 6837,
+      "path": "evidence/generated/p10_4_model_reconciliation_offline.json",
+      "sha256": "f33d5403365d8050695c25ad82891aa4e77c03db7a4cf551914c51ddddb49988"
+    },
+    "register_map": {
+      "bytes": 70012,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "06c2105e05cbad4dd780316cf44dd857b13a32dad584e2df2ab4a5b8bcfecb39"
+    }
+  },
+  "parent_checkpoint": {
+    "bytes": 104565,
+    "path": "evidence/generated/p10_4_interrupted_parent_checkpoint.json",
+    "sha256": "abf33fc26344d6c43b814d12d666a92c2a1299a67bf16bd827e31cf7e1263270"
+  },
+  "parent_completed_stage_count": 42,
+  "parent_evidence_commit": "5da414ba385b750caede64826f2b1e1ee39073d0",
+  "parent_run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+  "parent_run_manifest": {
+    "bytes": 1453382,
+    "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+    "sha256": "020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97"
+  },
+  "pre_run_module_change": {
+    "completed_before_current_campaign": true,
+    "current_small_board_id": "B0019",
+    "module": "F2",
+    "performed_by": "user",
+    "previous_small_board_id": "B0008",
+    "qualification_result": "BIDIRECTIONAL_RAW_PHYSICAL_PASS",
+    "qualification_run_id": "p10_4_l2b0019raw_20260808T084408Z_6ff17d33_94506af9_2b2b37d4",
+    "replacement_during_current_campaign": false
+  },
+  "register_map": {
+    "hash_low": "0xBCFECB39",
+    "version": "0x0A000004"
+  },
+  "resume_host_inputs": {
+    "authorization_builder": {
+      "bytes": 10213,
+      "path": "scripts/create_p10_4_resume_authorization.py",
+      "sha256": "3b067578442a96c4c5d179dcb844d350da6cf953ef61ccdfda16989fb528931f"
+    },
+    "campaign_library": {
+      "bytes": 86156,
+      "path": "scripts/run_p10_4_hardware.py",
+      "sha256": "320213552c7c27b1e520df4c401a96e90aeee7fc32f83360709aab81188d99f7"
+    },
+    "parent_checkpoint": {
+      "bytes": 104565,
+      "path": "evidence/generated/p10_4_interrupted_parent_checkpoint.json",
+      "sha256": "abf33fc26344d6c43b814d12d666a92c2a1299a67bf16bd827e31cf7e1263270"
+    },
+    "parent_finalizer": {
+      "bytes": 18540,
+      "path": "scripts/finalize_p10_4_interrupted_run.py",
+      "sha256": "fd9c3d56990f0896c04a1da52907a98c5dc142dafec3e25a96b62b72c6a88c58"
+    },
+    "resume_runner": {
+      "bytes": 27276,
+      "path": "scripts/run_p10_4_resume_hardware.py",
+      "sha256": "d857478d7306b1f94e47115605a372cb375bd097eff2fdfb8a9b749370c9154c"
+    },
+    "runtime_rest_guard": {
+      "bytes": 7889,
+      "path": "scripts/p10_tfdu_runtime_guard.py",
+      "sha256": "0eec20de8c1a9367ecb45a24fd1b2675da42aedd9f5f0e182334aaaf087d23dc"
+    }
+  },
+  "resume_plan_sha256": {
+    "duplicate_fault": "e1fbf3d0e22f49c83ada85d106e1590c1d13fb2a915a9531c19411033df9ce9a",
+    "duplicate_recovery": "45a49fb0616537a2acdb8b16e52d2582f3d24e5ab792a26093cdacacb4a6243f",
+    "echo_crosstalk_8x8": "d5deb9a4846efa1b5775070e2ef98a0360c72c74198d6de0be0048aefe411c0a",
+    "mixed_15min_a": "c5ed141b41c27fac0e3948d02173251bbec7864c09bd82e79ef767bdf0c8d12a",
+    "mixed_15min_b": "bc5f6a40fa11917b7006c4f94f148f11b5d776591d8988126947bba33e2fd291",
+    "pl_recovery_rotating_2": "543e96459ed526cff0768753889fad33e43805d9233d26cbf3d625aae186bf13",
+    "pl_recovery_rotating_3": "0b36f83ce3d0a5c7c9be5b1bd0bea99535fc292d05bdf3f851584df605cb9d20",
+    "pl_reset_rotating_2": "deeda339b5a6fdafdb9db9e7fa95abfd8d4a95958f9d7d6657c6c16278725873",
+    "pl_reset_rotating_3": "ff19caf428b80e2dcc042a04193e7c778784fc01116b34579eaff4debd280f32",
+    "stale_fault": "fdec397f4eabfb7c030592ed63adf4836bdfe098db4fabf055b9e8364ed4df0a",
+    "stale_recovery": "34d1d0885b7ce39f384a0dc79b3548b0cab0da8fe723c84689652ecdf33aa40b",
+    "two_plus_two": "d062abfb9f4a98627a88d73cacdbee4e05a7d16d3dc0a478676c5d33567057ec"
+  },
+  "resume_stages": [
+    "pl_reset_rotating_2",
+    "pl_recovery_rotating_2",
+    "pl_reset_rotating_3",
+    "pl_recovery_rotating_3",
+    "duplicate_fault",
+    "duplicate_recovery",
+    "stale_fault",
+    "stale_recovery",
+    "echo_crosstalk_8x8",
+    "two_plus_two",
+    "mixed_15min_a",
+    "mixed_15min_b"
+  ],
+  "retry_override": {
+    "formal_run_max_seconds_unchanged": 1800,
+    "new_run_id_limit": null,
+    "user_statement": "不设上限"
+  },
+  "rotating_jtag_serial": "210512180081",
+  "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+  "runtime_rest_policy": {
+    "conservative_modules": [
+      "F0",
+      "F1",
+      "F2",
+      "F3",
+      "R0",
+      "R1",
+      "R2",
+      "R3"
+    ],
+    "maximum_continuous_runtime_seconds": 1800,
+    "minimum_cooldown_ratio": 0.5,
+    "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
+    "policy_id": "P10_TFDU_RUNTIME_REST_2026_08_08",
+    "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
+  },
+  "schema_version": 1,
+  "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT_RESUME_SUFFIX",
+  "selected_config": {
+    "ack_threshold": 32,
+    "buffer_count": 4,
+    "cache_batching": 1,
+    "descriptor_batch": 32,
+    "descriptor_bytes": 65536,
+    "name": "buffers4_batch32",
+    "object_bytes": 262144,
+    "outstanding": 32,
+    "ring_depth": 32
+  },
+  "shutdown_policy": {
+    "archive_before_independent_shutdown": true,
+    "clear_frozen_capture_before_shutdown_program": false,
+    "shutdown_before_every_stage": true,
+    "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
+    "verify_both_shutdown_markers": true
+  },
+  "source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
+  "stage_runtime_limits_seconds": {
+    "duplicate_fault": 900,
+    "duplicate_recovery": 900,
+    "echo_crosstalk_8x8": 1200,
+    "mixed_15min_a": 1200,
+    "mixed_15min_b": 1200,
+    "pl_recovery_rotating_2": 900,
+    "pl_recovery_rotating_3": 900,
+    "pl_reset_rotating_2": 900,
+    "pl_reset_rotating_3": 900,
+    "stale_fault": 900,
+    "stale_recovery": 900,
+    "two_plus_two": 900
+  },
+  "status": "READY_FOR_EXACT_RESUME_RUN",
+  "wiring_changed": false
+}
