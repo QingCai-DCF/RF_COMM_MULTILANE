@@ -1,6 +1,6 @@
 # P10.4 current-run authorization
 
-- Status: `CONSUMED_AFTER_P10_4_PARTIAL`
-- test_id: `P10_4-AUTHORIZATION`
-- run_id: `p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4`
-- current_run_hardware_authorization: `False`
+- Status: `READY_FOR_EXACT_CURRENT_RUN`
+- Run ID: `p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4`
+- Authorization SHA256: `2464639a66affb1b800bb767fadea38c6adddeb70c296069cfc55845dbcb305d`
+- Hardware actions executed: `false`
