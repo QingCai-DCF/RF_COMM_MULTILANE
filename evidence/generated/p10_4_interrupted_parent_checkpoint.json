@@ -1,0 +1,2522 @@
+{
+  "SHUTDOWN_FIXED": "PASS",
+  "SHUTDOWN_ROTATING": "PASS",
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b"
+    },
+    {
+      "bytes": 1311117,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02"
+    },
+    {
+      "bytes": 1970234,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc"
+    },
+    {
+      "bytes": 573820,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e"
+    },
+    {
+      "bytes": 1318909,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6"
+    },
+    {
+      "bytes": 1970389,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec"
+    },
+    {
+      "bytes": 574364,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1"
+    }
+  ],
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "completed_stage_count": 42,
+  "completed_stage_records": [
+    {
+      "forensic_summary": {
+        "bytes": 3472,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/preflight/summary.json",
+        "sha256": "4afa49fb9ad35a1da060506290423d6725140fad8126a2fae1c498937a72e734"
+      },
+      "plan": {
+        "bytes": 636,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/preflight/immutable.plan",
+        "sha256": "337a69c2f23aa8513ac64a1de3d4419f006121cfdb60508578768d7fccc91010"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 28.024359,
+        "cooldown_completed_utc": "2026-08-08T10:30:31.532+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 56.047016,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 28.024,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T10:30:03.507+00:00",
+        "stage": "preflight",
+        "start_utc": "2026-08-08T10:29:07.460+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/preflight_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/preflight_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "preflight",
+      "status": "PASS",
+      "summary": {
+        "bytes": 136523,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/preflight/stage_summary.json",
+        "sha256": "05762c9d4dee65b00b5e8357771814be55a4efb6c64f602ed6a804acf298b61d"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3593,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/counter_local_source/summary.json",
+        "sha256": "756bae8633f855c42e8c1503aac51bf288f4429b7dde182f036aee5d7bc8d25d"
+      },
+      "plan": {
+        "bytes": 176,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/counter_local_source/immutable.plan",
+        "sha256": "3229a7ec203d9be0854dfea7e518862c1f034d1cad2a109c4330b026b1b2a229"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 21.883501,
+        "cooldown_completed_utc": "2026-08-08T10:31:58.148+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 43.764384,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 21.883,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T10:31:36.264+00:00",
+        "stage": "counter_local_source",
+        "start_utc": "2026-08-08T10:30:52.500+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/counter_local_source_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/counter_local_source_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "counter_local_source",
+      "status": "PASS",
+      "summary": {
+        "bytes": 27987,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/counter_local_source/stage_summary.json",
+        "sha256": "00d4e8134eb010f4d62bc77f98f1cb7ff725fed636460e16143f19bdf475d3f7"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3559,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/counter_semantics/summary.json",
+        "sha256": "7d3764865498e82afaacafce31cc1f6c3b797c9e24e4fb198b1350ed45d8464e"
+      },
+      "plan": {
+        "bytes": 135,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/counter_semantics/immutable.plan",
+        "sha256": "8697fd508f3705220f95ac63f96889728b9789ffc9cbc136e1487b9e29e9e5d6"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 54.656563,
+        "cooldown_completed_utc": "2026-08-08T10:35:01.563+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 109.311696,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 54.656,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T10:34:06.907+00:00",
+        "stage": "counter_semantics",
+        "start_utc": "2026-08-08T10:32:17.595+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/counter_semantics_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/counter_semantics_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "counter_semantics",
+      "status": "PASS",
+      "summary": {
+        "bytes": 573254,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/counter_semantics/stage_summary.json",
+        "sha256": "846de4b4f745dda55073872db4fc29a3c4e632d24126032d96e24bf4d150cc9c"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3527,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/baseline_smoke/summary.json",
+        "sha256": "39f847b1257ac74996972354b8342e56665dd38af3bcf5301cb671fb05a11c52"
+      },
+      "plan": {
+        "bytes": 1862,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/baseline_smoke/immutable.plan",
+        "sha256": "f3e44a2d35eda2c60b386625d9f1f805fb73032216c3db3427bc4c2bdd5b2309"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 34.687533,
+        "cooldown_completed_utc": "2026-08-08T10:37:05.998+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 69.372199,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 34.687,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T10:36:31.311+00:00",
+        "stage": "baseline_smoke",
+        "start_utc": "2026-08-08T10:35:21.939+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/baseline_smoke_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/baseline_smoke_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "baseline_smoke",
+      "status": "PASS",
+      "summary": {
+        "bytes": 385550,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/baseline_smoke/stage_summary.json",
+        "sha256": "2dba3f969d0a744c5e4715008c9a80d226f0c6f31e808da006b9fab206386fe7"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3439,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/tuning/summary.json",
+        "sha256": "d4811e50388aa53349a1d960b3314ebf4cbbd3e086d5d5ef23b754940f2c39cf"
+      },
+      "plan": {
+        "bytes": 901,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/tuning/immutable.plan",
+        "sha256": "4b562ca79ec8b158a36d516887ef9fb67393d34804557b280de93efdd69ba1bf"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 203.28943,
+        "cooldown_completed_utc": "2026-08-08T10:47:36.109+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 406.577523,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 1200.0,
+        "required_cooldown_seconds": 203.289,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T10:44:12.820+00:00",
+        "stage": "tuning",
+        "start_utc": "2026-08-08T10:37:26.242+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/tuning_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/tuning_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "tuning",
+      "status": "PASS",
+      "summary": {
+        "bytes": 3245380,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/tuning/stage_summary.json",
+        "sha256": "5c8f6e03d177a718773c4de895fdc9964ff4f9182abb34efbb2a81177f27070f"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3492,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/half_duplex/summary.json",
+        "sha256": "45405d5c2f313ff8f6d65869a269bfff2908401c94fd1f74b359b89200884c85"
+      },
+      "plan": {
+        "bytes": 140,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/half_duplex/immutable.plan",
+        "sha256": "a1b7e4989e37721470b65fe920cc6c628b4610cf8070a39123d9fb4ee957c29a"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 321.261141,
+        "cooldown_completed_utc": "2026-08-08T11:04:00.853+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 642.521609,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 1200.0,
+        "required_cooldown_seconds": 321.261,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T10:58:39.592+00:00",
+        "stage": "half_duplex",
+        "start_utc": "2026-08-08T10:47:57.070+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/half_duplex_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/half_duplex_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "half_duplex",
+      "status": "PASS",
+      "summary": {
+        "bytes": 1601521,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/half_duplex/stage_summary.json",
+        "sha256": "9c82a79c85fb2ed35b3ad241822044a0b7f43c43ca5d55267e59ace2b66488d5"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3516,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/streaming_64m/summary.json",
+        "sha256": "3922c99f72bd243a45c8c15efc92ba84dcbaa8f7bcf966baa3f7741c6cb32083"
+      },
+      "plan": {
+        "bytes": 608,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_64m/immutable.plan",
+        "sha256": "021bdaec632ecc487afe0d59da058b381f422434a3ba11671fec861fec2ccc55"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 316.253302,
+        "cooldown_completed_utc": "2026-08-08T11:20:10.716+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 632.505301,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 1200.0,
+        "required_cooldown_seconds": 316.253,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T11:14:54.462+00:00",
+        "stage": "streaming_64m",
+        "start_utc": "2026-08-08T11:04:21.957+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_64m_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_64m_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "streaming_64m",
+      "status": "PASS",
+      "summary": {
+        "bytes": 351788,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_64m/stage_summary.json",
+        "sha256": "697b1eb3972ec38d213ed35fc25ac6d604583b34e2a8ba245fe814bb33b89d09"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3538,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/streaming_64m_b/summary.json",
+        "sha256": "bdf4ebeb3cd7039a03ab8e919cddd3d2dbcff418587556099b1717589ab543d4"
+      },
+      "plan": {
+        "bytes": 608,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_64m_b/immutable.plan",
+        "sha256": "4cad0adc5bdeb2ce86567ac6186936319c75c18c1a088bf49104102b29ef7043"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 320.264364,
+        "cooldown_completed_utc": "2026-08-08T11:36:23.284+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 640.527969,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 1200.0,
+        "required_cooldown_seconds": 320.264,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T11:31:03.020+00:00",
+        "stage": "streaming_64m_b",
+        "start_utc": "2026-08-08T11:20:22.492+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_64m_b_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_64m_b_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "streaming_64m_b",
+      "status": "PASS",
+      "summary": {
+        "bytes": 351808,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_64m_b/stage_summary.json",
+        "sha256": "d2e98b5083a2442e97cae2329a589433bd73ad7fd5978063433befd478755ceb"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3526,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/streaming_128m/summary.json",
+        "sha256": "b4c4d692cb8c15290fda10170a08d6158599af16740b14a047221e9a8237e3cc"
+      },
+      "plan": {
+        "bytes": 400,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_128m/immutable.plan",
+        "sha256": "b55ae8054aee3d955f33f9c15fe78cd601b935fe79919d584c887ad21ab0e495"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 372.874235,
+        "cooldown_completed_utc": "2026-08-08T11:55:22.814+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 745.746703,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 1200.0,
+        "required_cooldown_seconds": 372.874,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T11:49:09.940+00:00",
+        "stage": "streaming_128m",
+        "start_utc": "2026-08-08T11:36:44.193+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_128m_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_128m_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "streaming_128m",
+      "status": "PASS",
+      "summary": {
+        "bytes": 222718,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_128m/stage_summary.json",
+        "sha256": "a18d04e09f24e7daa8133cbfe692a7a18d2ea496152aa619e5ffeaaffed73621"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3515,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/lane_recovery/summary.json",
+        "sha256": "a9b52c9fa4b042411c27d9720339898275e390380ee8e3dd30451936d17832c6"
+      },
+      "plan": {
+        "bytes": 498,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/lane_recovery/immutable.plan",
+        "sha256": "9cbadb28099ef1afb3683966025b78e5472cfc99e999c5dbd33c1e59816d7594"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 299.597237,
+        "cooldown_completed_utc": "2026-08-08T12:10:41.195+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 599.192394,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 1200.0,
+        "required_cooldown_seconds": 299.597,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T12:05:41.598+00:00",
+        "stage": "lane_recovery",
+        "start_utc": "2026-08-08T11:55:42.405+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/lane_recovery_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/lane_recovery_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "lane_recovery",
+      "status": "PASS",
+      "summary": {
+        "bytes": 286256,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/lane_recovery/stage_summary.json",
+        "sha256": "57934dddaabf833b06f57e0473e9b4a89ddbc6bbcb52daaeaf35abf9f50df309"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3450,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/degrade/summary.json",
+        "sha256": "0f124d19ee1b917ea027de1746b469cb1a60f5d2866387ad2cd66028ac62b9b5"
+      },
+      "plan": {
+        "bytes": 662,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/degrade/immutable.plan",
+        "sha256": "aade5a3b82a1de4041bb514fb603ac46fff4c655b27ad0da86f8fc3b5f4a0f82"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 102.58625,
+        "cooldown_completed_utc": "2026-08-08T12:16:10.040+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 205.171591,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 102.586,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T12:14:27.454+00:00",
+        "stage": "degrade",
+        "start_utc": "2026-08-08T12:11:02.282+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/degrade_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/degrade_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "degrade",
+      "status": "PASS",
+      "summary": {
+        "bytes": 1286895,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/degrade/stage_summary.json",
+        "sha256": "e3fe96316b59f40dc124c72ca3dc426117198d2dfb38444f14a6ebc7fa93d30c"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3549,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/direction_switch/summary.json",
+        "sha256": "b05e547acbad31d71505e9e1ddb829ed27045dd2b0bca227caffde6ea7ad3104"
+      },
+      "plan": {
+        "bytes": 758,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/direction_switch/immutable.plan",
+        "sha256": "fe9baaacefeec3c67299fef74f0e953e0d2c2026d8e3b3399c02ea624b74d730"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 320.037299,
+        "cooldown_completed_utc": "2026-08-08T12:32:30.111+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 640.072002,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 1200.0,
+        "required_cooldown_seconds": 320.037,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T12:27:10.073+00:00",
+        "stage": "direction_switch",
+        "start_utc": "2026-08-08T12:16:30.001+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/direction_switch_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/direction_switch_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "direction_switch",
+      "status": "PASS",
+      "summary": {
+        "bytes": 5423504,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/direction_switch/stage_summary.json",
+        "sha256": "3833055fc877c34fdf285eeb439fb42aee337276bdd0ee195bfbf4eeaad020cf"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3526,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/ps_reset_fixed/summary.json",
+        "sha256": "95a859bbae0df7b6961a4a4f135580b2f69bcc9a86a714b0bee228fe001ac368"
+      },
+      "plan": {
+        "bytes": 673,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/ps_reset_fixed/immutable.plan",
+        "sha256": "e40daa7ee63e944cdd153ef9b85d201ecaeeb68ba5d2569ab50463deb8ad9141"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 176.544266,
+        "cooldown_completed_utc": "2026-08-08T12:41:40.189+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 353.086144,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 1200.0,
+        "required_cooldown_seconds": 176.544,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T12:38:43.645+00:00",
+        "stage": "ps_reset_fixed",
+        "start_utc": "2026-08-08T12:32:50.558+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/ps_reset_fixed_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/ps_reset_fixed_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "ps_reset_fixed",
+      "status": "PASS",
+      "summary": {
+        "bytes": 292814,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/ps_reset_fixed/stage_summary.json",
+        "sha256": "dff6ddd30099b57b75463e707f8de9f552d17d5c633207c698617f153a08a88f"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3560,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/ps_reset_rotating/summary.json",
+        "sha256": "b4f987f739099919b0d89a2206b78a8067061a2ed5303300c1c4bf8f37936f17"
+      },
+      "plan": {
+        "bytes": 718,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/ps_reset_rotating/immutable.plan",
+        "sha256": "aad5dc0896d5a43a9e3fdb5565a16b807db9a47c15eda05fd84f422840c5b3ba"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 175.594103,
+        "cooldown_completed_utc": "2026-08-08T12:50:38.798+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 351.187192,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 1200.0,
+        "required_cooldown_seconds": 175.594,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T12:47:43.204+00:00",
+        "stage": "ps_reset_rotating",
+        "start_utc": "2026-08-08T12:41:52.017+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/ps_reset_rotating_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/ps_reset_rotating_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "ps_reset_rotating",
+      "status": "PASS",
+      "summary": {
+        "bytes": 292825,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/ps_reset_rotating/stage_summary.json",
+        "sha256": "25499522c2fecf044eed9f0298c1699cf69e685a6e24b4817bb9b1ca7c641e5f"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 4999,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_reset_fixed_1/summary.json",
+        "sha256": "a1d6d39c578f8160690a33d01f5b9efad881600059391142c3bf2dfef18fcf55"
+      },
+      "plan": {
+        "bytes": 191,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_1/immutable.plan",
+        "sha256": "3f0769395d486828afdc30e8d96c027c42867e440371a9ed7b5899c05533b0fc"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 28.636132,
+        "cooldown_completed_utc": "2026-08-08T12:52:25.068+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 57.270312,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 28.636,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T12:51:56.432+00:00",
+        "stage": "dma_reset_fixed_1",
+        "start_utc": "2026-08-08T12:50:59.161+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_1_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_1_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_reset_fixed_1",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42778,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_1/stage_summary.json",
+        "sha256": "fa5ad483a5176349140534a68dedb5c205d9f1529f4492ee3a64125c0c5d831c"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3593,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_recovery_fixed_1/summary.json",
+        "sha256": "458fa25428745dd436823bd3890b0093273e7f9d08001eba86b6f760df612b5c"
+      },
+      "plan": {
+        "bytes": 123,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_1/immutable.plan",
+        "sha256": "4643f1748a240c987b8f9889f989115126692ff91eccc4eafee7abd9c88399a8"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 52.17437,
+        "cooldown_completed_utc": "2026-08-08T12:55:22.175+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 104.346651,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 52.174,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T12:54:30.001+00:00",
+        "stage": "dma_recovery_fixed_1",
+        "start_utc": "2026-08-08T12:52:45.654+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_1_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_1_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_recovery_fixed_1",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60116,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_1/stage_summary.json",
+        "sha256": "97538d270efebf4a2c93e08ef114b06b246625c260bb493cb4e85af5a87128c3"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 5000,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_reset_fixed_2/summary.json",
+        "sha256": "e20a4a42ad3d04ef9c2cb69727fde60119fc9d24fe5ba58243f4296350ab5d78"
+      },
+      "plan": {
+        "bytes": 191,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_2/immutable.plan",
+        "sha256": "eece3f17425ea12da82e9a92d49571847c1eeeb574f953122b9d0821383206af"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 30.004236,
+        "cooldown_completed_utc": "2026-08-08T12:57:08.968+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 60.007771,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 30.004,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T12:56:38.963+00:00",
+        "stage": "dma_reset_fixed_2",
+        "start_utc": "2026-08-08T12:55:38.955+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_2_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_2_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_reset_fixed_2",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42775,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_2/stage_summary.json",
+        "sha256": "089d14650e084b720808475cd86e7a494a66f70716944583539ef8936fda1120"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3592,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_recovery_fixed_2/summary.json",
+        "sha256": "2e96cb94becaf36ad11653f429a1fc38662f748e659caa15838847525e5d9547"
+      },
+      "plan": {
+        "bytes": 123,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_2/immutable.plan",
+        "sha256": "003fb0c731d3f8168306d2fe2d51651dccf9c5fe5423ecc523e2d6e60cb16fdb"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 52.384548,
+        "cooldown_completed_utc": "2026-08-08T13:00:05.489+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 104.766903,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 52.384,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T12:59:13.105+00:00",
+        "stage": "dma_recovery_fixed_2",
+        "start_utc": "2026-08-08T12:57:28.338+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_2_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_2_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_recovery_fixed_2",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60121,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_2/stage_summary.json",
+        "sha256": "30b51176a3e3f751ef69f735989b31235965175ce26c708d6a49e7f7164679ba"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 4999,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_reset_fixed_3/summary.json",
+        "sha256": "a1af68c00ae35e7f4915c4c4957b1c71b90be56af5bce399d31a7cce2cd93eb5"
+      },
+      "plan": {
+        "bytes": 191,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_3/immutable.plan",
+        "sha256": "616648e81b97e9f52be9ef81d39384fa73152763b24bcf021462d6fc3fc2c1d5"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 29.637356,
+        "cooldown_completed_utc": "2026-08-08T13:01:54.690+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 59.272087,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 29.637,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:01:25.053+00:00",
+        "stage": "dma_reset_fixed_3",
+        "start_utc": "2026-08-08T13:00:25.781+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_3_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_3_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_reset_fixed_3",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42778,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_3/stage_summary.json",
+        "sha256": "297ef6387c43b1ca34476be09c2adc66e472d3caa2db85d5dd76dacf4e7eb398"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3592,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_recovery_fixed_3/summary.json",
+        "sha256": "60c3638cdba87b9a4d8876fc33d9052f0cd1dfa7f1669b142b38bd4331ae13ba"
+      },
+      "plan": {
+        "bytes": 123,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_3/immutable.plan",
+        "sha256": "cf72ccbabf6abf0ad122c2c9bcc0384012e9119936c1c6807d2ae4f0b7918d2a"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 52.361487,
+        "cooldown_completed_utc": "2026-08-08T13:04:51.799+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 104.72023,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 52.361,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:03:59.437+00:00",
+        "stage": "dma_recovery_fixed_3",
+        "start_utc": "2026-08-08T13:02:14.717+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_3_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_3_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_recovery_fixed_3",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60116,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_3/stage_summary.json",
+        "sha256": "1b50587c1733c353980069baf09349c3cf0e3d3cb7d3df99f1418f6be5e1b972"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 4999,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_reset_fixed_4/summary.json",
+        "sha256": "6395c213f4298f006e67144a4b30d109cfe500e908d463109216aa040e840b71"
+      },
+      "plan": {
+        "bytes": 191,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_4/immutable.plan",
+        "sha256": "b2bece6ed24d13e201f8bc563e13e85cb90fe471c59a7e302e6ea588d78da73c"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 27.153425,
+        "cooldown_completed_utc": "2026-08-08T13:06:34.059+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 54.304181,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 27.153,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:06:06.906+00:00",
+        "stage": "dma_reset_fixed_4",
+        "start_utc": "2026-08-08T13:05:12.602+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_4_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_4_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_reset_fixed_4",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42775,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_4/stage_summary.json",
+        "sha256": "f13388e502b5c167bc2c6fbf1eac07a7d030f7d217db3102e2228f030fe881bf"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3593,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_recovery_fixed_4/summary.json",
+        "sha256": "148983194029e894d3fc82cf8c35c832a2c780cd81abbac4ae3dc0f8e22000de"
+      },
+      "plan": {
+        "bytes": 123,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_4/immutable.plan",
+        "sha256": "8c29518de9db28328e38a5ed27b1142c4b047ee6cc5cf389b88883e3a229982b"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 54.801181,
+        "cooldown_completed_utc": "2026-08-08T13:09:39.057+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 109.600006,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 54.801,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:08:44.256+00:00",
+        "stage": "dma_recovery_fixed_4",
+        "start_utc": "2026-08-08T13:06:54.656+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_4_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_4_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_recovery_fixed_4",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60113,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_4/stage_summary.json",
+        "sha256": "a985bec98f0e310e51a26b5651d941f5c3475593ce93656f67635e124df4c473"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 4998,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_reset_fixed_5/summary.json",
+        "sha256": "0c5dd6b9ec335a2a90b7a10efb05919d441bb1aeb043aa6d0ce20a96c39f4ae0"
+      },
+      "plan": {
+        "bytes": 191,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_5/immutable.plan",
+        "sha256": "f91feb8ffc67344eeaed751de6994b8f4eb4f90aa5d5ffbe1c12c390483d7131"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 28.290337,
+        "cooldown_completed_utc": "2026-08-08T13:11:24.085+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 56.578947,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 28.29,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:10:55.795+00:00",
+        "stage": "dma_reset_fixed_5",
+        "start_utc": "2026-08-08T13:09:59.216+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_5_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_5_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_reset_fixed_5",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42777,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_5/stage_summary.json",
+        "sha256": "4e049fe71a15ddd48c067f435201e7fa3e7a5e851fac319d7d88d3809807ec90"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3593,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_recovery_fixed_5/summary.json",
+        "sha256": "d2ad807ed205eb3b25e4b2395ab59a24a1f753bcb9b1c727877e5d24fe23fefe"
+      },
+      "plan": {
+        "bytes": 123,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_5/immutable.plan",
+        "sha256": "9cb6ed00a2fbb2e1896dff21a24f6d7416a3b4659de91e0a4339798518745bb5"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 52.881376,
+        "cooldown_completed_utc": "2026-08-08T13:14:22.433+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 105.760018,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 52.881,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:13:29.552+00:00",
+        "stage": "dma_recovery_fixed_5",
+        "start_utc": "2026-08-08T13:11:43.792+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_5_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_5_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_recovery_fixed_5",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60121,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_5/stage_summary.json",
+        "sha256": "e69dae752e979527934e1a68c5ab35b8837380288bd92076076cfc28ffb6d71a"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 5044,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_reset_rotating_1/summary.json",
+        "sha256": "f6981dfd94c14161f7bebf91e78a7d710a8c025d91805e9f7d6c01f160e3dfcb"
+      },
+      "plan": {
+        "bytes": 194,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_1/immutable.plan",
+        "sha256": "e61498e5931e6b439d1288335cf6ce4a7c77955328e7954e4873d9c47d6787b6"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 28.719177,
+        "cooldown_completed_utc": "2026-08-08T13:16:08.791+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 57.437386,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 28.719,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:15:40.072+00:00",
+        "stage": "dma_reset_rotating_1",
+        "start_utc": "2026-08-08T13:14:42.635+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_1_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_1_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_reset_rotating_1",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42860,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_1/stage_summary.json",
+        "sha256": "74c14bbe8b7c4913dd6c8cb56b4149cbce687f3cc797ceb76d9acf961a81945d"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3626,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_recovery_rotating_1/summary.json",
+        "sha256": "2eb64249d0a06f604f65e9e79019edae8c3951687038add955b44eba1370b1a8"
+      },
+      "plan": {
+        "bytes": 126,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_1/immutable.plan",
+        "sha256": "3bda0105ce666d782829d1b0c0890b621f7c3111ea4897ca0c1d199996869e4d"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 52.308136,
+        "cooldown_completed_utc": "2026-08-08T13:19:06.493+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 104.615309,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 52.308,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:18:14.185+00:00",
+        "stage": "dma_recovery_rotating_1",
+        "start_utc": "2026-08-08T13:16:29.570+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_1_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_1_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_recovery_rotating_1",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60151,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_1/stage_summary.json",
+        "sha256": "986099f4c3ae067cc29ac63953ad4edf3014c3330c1d814377324233a13f01e4"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 5045,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_reset_rotating_2/summary.json",
+        "sha256": "3c972a389b70821c10878d0e496756605b861b49a885b8947507deb4d66e967e"
+      },
+      "plan": {
+        "bytes": 194,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_2/immutable.plan",
+        "sha256": "15e8d7f303fbac14afb750bf70fb7b2f0232ee9cc9c1b299ee410eceeabb5761"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 24.811337,
+        "cooldown_completed_utc": "2026-08-08T13:20:41.728+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 49.620655,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 24.811,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:20:16.917+00:00",
+        "stage": "dma_reset_rotating_2",
+        "start_utc": "2026-08-08T13:19:27.296+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_2_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_2_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_reset_rotating_2",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42862,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_2/stage_summary.json",
+        "sha256": "755eb3739bee89a821b136a7312f3ef6022f4ed62d6b672e5863291d964ec5ab"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3625,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_recovery_rotating_2/summary.json",
+        "sha256": "8a6672021c52d8738de7f190593e60d4c22ae8aaff925036fa52d8a559636d4a"
+      },
+      "plan": {
+        "bytes": 126,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_2/immutable.plan",
+        "sha256": "50a3d99edb9cd7ebaea82f0d83bab9b37cdc970bcd004081405cf17543e3c979"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 51.754323,
+        "cooldown_completed_utc": "2026-08-08T13:23:35.868+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 103.506016,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 51.754,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:22:44.114+00:00",
+        "stage": "dma_recovery_rotating_2",
+        "start_utc": "2026-08-08T13:21:00.608+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_2_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_2_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_recovery_rotating_2",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60145,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_2/stage_summary.json",
+        "sha256": "2aa3fde5cad8a0167c2efa9f3e62eae1e6e52bd7031d732b309df0e7a6bb10c4"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 5043,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_reset_rotating_3/summary.json",
+        "sha256": "8d5aecb523a8ff5f137b4cef23dfb8f39d84df2bbf9bc5615952341116d2f3b6"
+      },
+      "plan": {
+        "bytes": 194,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_3/immutable.plan",
+        "sha256": "b41e0d4781e1dd86bb023ae696f01d27eff96f8c5d3f82c0f73f806e45f08255"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 29.086142,
+        "cooldown_completed_utc": "2026-08-08T13:25:23.326+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 58.17104,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 29.086,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:24:54.239+00:00",
+        "stage": "dma_reset_rotating_3",
+        "start_utc": "2026-08-08T13:23:56.068+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_3_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_3_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_reset_rotating_3",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42862,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_3/stage_summary.json",
+        "sha256": "c1af611b84c76bc949e3ba82223e74740ccf0f901ab160fc06476e7c8738b84d"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3625,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_recovery_rotating_3/summary.json",
+        "sha256": "d73a040197898febcdd27f3979f71ae555741bcbba9011435684a7b6112ca1c8"
+      },
+      "plan": {
+        "bytes": 126,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_3/immutable.plan",
+        "sha256": "523d6d75bf8680874cb5a2b19069f2c459e25611969f9cabba4cf256928b5f75"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 52.749493,
+        "cooldown_completed_utc": "2026-08-08T13:28:21.144+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 105.496157,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 52.749,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:27:28.395+00:00",
+        "stage": "dma_recovery_rotating_3",
+        "start_utc": "2026-08-08T13:25:42.899+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_3_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_3_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_recovery_rotating_3",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60149,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_3/stage_summary.json",
+        "sha256": "e5c0b76c157b99a18b8caf3bf93b7163a5aa740ddffa58cc21dfecbe10a16252"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 5043,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_reset_rotating_4/summary.json",
+        "sha256": "57a25c390f15c8ed129b97653d7f03119bccc80b225d7527efb3a8a4232e4410"
+      },
+      "plan": {
+        "bytes": 194,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_4/immutable.plan",
+        "sha256": "f11d8fec821faa4a73c75f29e84f02d6c98b4b1b305bcec8bb6b5234236f62c4"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 28.09906,
+        "cooldown_completed_utc": "2026-08-08T13:30:05.637+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 56.196897,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 28.099,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:29:37.538+00:00",
+        "stage": "dma_reset_rotating_4",
+        "start_utc": "2026-08-08T13:28:41.341+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_4_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_4_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_reset_rotating_4",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42861,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_4/stage_summary.json",
+        "sha256": "33dd15264f8208846165f3324b05bbf339001fe858dc31e66d9249b11172e5ec"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3626,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_recovery_rotating_4/summary.json",
+        "sha256": "d4fbee64e1f0e955f07cd094c179917f708d8c209638c96e0b75f2076b087e00"
+      },
+      "plan": {
+        "bytes": 126,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_4/immutable.plan",
+        "sha256": "01250f9687459cb9915ed97fb5f4ef11f83ad90eaa9c3251a3b775d5f70c4c59"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 52.466123,
+        "cooldown_completed_utc": "2026-08-08T13:33:03.669+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 104.931642,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 52.466,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:32:11.203+00:00",
+        "stage": "dma_recovery_rotating_4",
+        "start_utc": "2026-08-08T13:30:26.271+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_4_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_4_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_recovery_rotating_4",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60146,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_4/stage_summary.json",
+        "sha256": "eda8cb9d19a0f27891eb51d8fb12a37bba43d20f9cea11d4c55fb5140c6b7025"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 5043,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_reset_rotating_5/summary.json",
+        "sha256": "905a5ae3e78453641a0e1395d6ef41aa0cb47e7011002fb5d5cfadfe60d515f7"
+      },
+      "plan": {
+        "bytes": 194,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_5/immutable.plan",
+        "sha256": "143dd2c8403860d43825dd13ac00320d904ccf5bf9ca3d8b6a2afe529c4c0665"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 26.907058,
+        "cooldown_completed_utc": "2026-08-08T13:34:38.536+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 53.813699,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 26.907,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:34:11.629+00:00",
+        "stage": "dma_reset_rotating_5",
+        "start_utc": "2026-08-08T13:33:17.815+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_5_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_5_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_reset_rotating_5",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42861,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_5/stage_summary.json",
+        "sha256": "53b0bcb3de5ce390b3976cead04cfaf9fd6e17a35ebf1b2a69b9eb7d971352db"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3624,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/dma_recovery_rotating_5/summary.json",
+        "sha256": "1e70af4ad1f1536d18b3ab87b25a6de8d40fdf8519fae1a63d3169cd94f7311c"
+      },
+      "plan": {
+        "bytes": 126,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_5/immutable.plan",
+        "sha256": "d93966664dfcd27a99858dcf18cb92d5d323cda3521a2faa5e93dacc82c4110d"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 53.597557,
+        "cooldown_completed_utc": "2026-08-08T13:37:39.600+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 107.192749,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 53.597,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:36:46.003+00:00",
+        "stage": "dma_recovery_rotating_5",
+        "start_utc": "2026-08-08T13:34:58.810+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_5_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_5_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "dma_recovery_rotating_5",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60131,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_5/stage_summary.json",
+        "sha256": "74b7e75fe03b6d4ee4caf834f148294547ce9d7902b51c42c27489f9c3f87934"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 4984,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_reset_fixed_1/summary.json",
+        "sha256": "88cafe59a9d19450b29e1ec82c60d3fb2653ce7d656a2c01f347ee1507f09c14"
+      },
+      "plan": {
+        "bytes": 192,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_fixed_1/immutable.plan",
+        "sha256": "9e2b250046be89635a1a23d94dc385c70b1203388fcec397896e9cf4eb17adcd"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 29.051255,
+        "cooldown_completed_utc": "2026-08-08T13:39:27.604+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 58.100126,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 29.051,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:38:58.553+00:00",
+        "stage": "pl_reset_fixed_1",
+        "start_utc": "2026-08-08T13:38:00.453+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_1_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_1_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "pl_reset_fixed_1",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42580,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_fixed_1/stage_summary.json",
+        "sha256": "2d50796bf2775d06e090fc3caef4723c2138affde1ceb6530e5b0bece7ebc4f9"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3582,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_recovery_fixed_1/summary.json",
+        "sha256": "818f5ffadbe8ff0c510f9718a4588d9cd250b9baf4c68d3e9b9b41dccd3e3bb4"
+      },
+      "plan": {
+        "bytes": 122,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_fixed_1/immutable.plan",
+        "sha256": "448821b0331e6d4ed365ba156777a38331764609a824e58da943a24ecff64d04"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 54.887339,
+        "cooldown_completed_utc": "2026-08-08T13:42:34.150+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 109.773873,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 54.887,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:41:39.263+00:00",
+        "stage": "pl_recovery_fixed_1",
+        "start_utc": "2026-08-08T13:39:49.489+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_1_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_1_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "pl_recovery_fixed_1",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60086,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_fixed_1/stage_summary.json",
+        "sha256": "4dc1a9b90eb2eba538931410fbd4ef9c434165dbad97ce8116915cae5fe84640"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 4983,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_reset_fixed_2/summary.json",
+        "sha256": "69765014a9a883335df0919fb7528109377a72abce94a1118c0b932d4acb362c"
+      },
+      "plan": {
+        "bytes": 192,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_fixed_2/immutable.plan",
+        "sha256": "882c32a145f78d1ee64b22f630436c2889c4daa02e40dcbed13b6500555326cb"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 27.389506,
+        "cooldown_completed_utc": "2026-08-08T13:44:17.245+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 54.776968,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 27.389,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:43:49.855+00:00",
+        "stage": "pl_reset_fixed_2",
+        "start_utc": "2026-08-08T13:42:55.078+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_2_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_2_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "pl_reset_fixed_2",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42578,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_fixed_2/stage_summary.json",
+        "sha256": "943f9d8beac30b05415708e9242c01574825ca9108428c1919e9c66b57c071cc"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3582,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_recovery_fixed_2/summary.json",
+        "sha256": "da524f0b243fdbdd0eb61b01351053c4c27508ae72a4cb2fa71df7ff42b4ff03"
+      },
+      "plan": {
+        "bytes": 122,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_fixed_2/immutable.plan",
+        "sha256": "39716995d80dcf699e24b314d6f8ed631531fb1d8d5c431830f925fb2cb82342"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 51.177187,
+        "cooldown_completed_utc": "2026-08-08T13:47:09.349+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 102.352245,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 51.177,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:46:18.172+00:00",
+        "stage": "pl_recovery_fixed_2",
+        "start_utc": "2026-08-08T13:44:35.820+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_2_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_2_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "pl_recovery_fixed_2",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60093,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_fixed_2/stage_summary.json",
+        "sha256": "45f9e07b33437ec09cfe39e7c42b583a582f0dd84a76c1432eb3a25cc5d0b335"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 4984,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_reset_fixed_3/summary.json",
+        "sha256": "2d1fef73b6cadf4aea62c3603bb3bb1f13145071f4a2d9aeeb9b605581b9b634"
+      },
+      "plan": {
+        "bytes": 192,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_fixed_3/immutable.plan",
+        "sha256": "ccbdc5a85ea67a91f9bbd12b53ee7c9b294ec9594d7245bf69b0b08d11d8d421"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 28.743235,
+        "cooldown_completed_utc": "2026-08-08T13:48:55.954+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 57.484361,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 28.743,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:48:27.211+00:00",
+        "stage": "pl_reset_fixed_3",
+        "start_utc": "2026-08-08T13:47:29.726+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_3_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_3_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "pl_reset_fixed_3",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42575,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_fixed_3/stage_summary.json",
+        "sha256": "6b904d1de0dd2514ccf0a57c2a240665e64ca0c4c68b12d082e6f16c377b2b2a"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3581,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_recovery_fixed_3/summary.json",
+        "sha256": "0a4e36302462dcf1e4ed3d48fb778c17af1acef03c950070572bc90aa3a00768"
+      },
+      "plan": {
+        "bytes": 122,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_fixed_3/immutable.plan",
+        "sha256": "a940719691e27c0b8810ac12514afccb4b3f5e8e9bbbd5c52133fc5237916c11"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 53.061513,
+        "cooldown_completed_utc": "2026-08-08T13:51:55.523+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 106.121234,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 53.061,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:51:02.461+00:00",
+        "stage": "pl_recovery_fixed_3",
+        "start_utc": "2026-08-08T13:49:16.340+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_3_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_3_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "pl_recovery_fixed_3",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60079,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_fixed_3/stage_summary.json",
+        "sha256": "f08034c5f536a033fae52e0c2865e79ee8e1c7a6ddd3dc68910a2ec5c422043f"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 5030,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_reset_rotating_1/summary.json",
+        "sha256": "4a64a96f272dc6687b68782891857db99d9a3288ee22dd74c670c28a19c27ad0"
+      },
+      "plan": {
+        "bytes": 195,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_rotating_1/immutable.plan",
+        "sha256": "04e0df7647f97a928a38b1781b62c0dea7cec97cdbe6aa0a629fb90daa5f2787"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 29.807517,
+        "cooldown_completed_utc": "2026-08-08T13:53:44.210+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 59.612183,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 29.807,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:53:14.402+00:00",
+        "stage": "pl_reset_rotating_1",
+        "start_utc": "2026-08-08T13:52:14.790+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_rotating_1_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_rotating_1_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "pl_reset_rotating_1",
+      "status": "PASS",
+      "summary": {
+        "bytes": 42719,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_rotating_1/stage_summary.json",
+        "sha256": "224aaa230d65e90cd2f4427e0862b18bbb892619a302b34a2dd5b23be8ffa736"
+      }
+    },
+    {
+      "forensic_summary": {
+        "bytes": 3614,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/forensics/pl_recovery_rotating_1/summary.json",
+        "sha256": "91689ed1ac12a426bb67c51dc4823a2bc491c751de03c84527adfa43d4ccc732"
+      },
+      "plan": {
+        "bytes": 125,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_rotating_1/immutable.plan",
+        "sha256": "27e705e07fb41ee60d8e05a7266cde34c498670e5ef9525bf3a57851ff9dc740"
+      },
+      "runtime_rest": {
+        "actual_cooldown_seconds": 51.111586,
+        "cooldown_completed_utc": "2026-08-08T13:56:34.990+00:00",
+        "cooldown_status": "PASS",
+        "measured_runtime_seconds": 102.221273,
+        "modules": [
+          "F0",
+          "F1",
+          "F2",
+          "F3",
+          "R0",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "planned_runtime_seconds": 900.0,
+        "required_cooldown_seconds": 51.111,
+        "runtime_limit_status": "PASS",
+        "shutdown_verified": true,
+        "shutdown_verified_utc": "2026-08-08T13:55:43.878+00:00",
+        "stage": "pl_recovery_rotating_1",
+        "start_utc": "2026-08-08T13:54:01.657+00:00",
+        "status": "PASS"
+      },
+      "shutdown_after": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_rotating_1_after/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_rotating_1_before/attempt_1.result.txt",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+      },
+      "stage": "pl_recovery_rotating_1",
+      "status": "PASS",
+      "summary": {
+        "bytes": 60121,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_rotating_1/stage_summary.json",
+        "sha256": "aa9afe18cf81aa950034f17b16bc964def0700bd5aa21dcaea37a2d957978096"
+      }
+    }
+  ],
+  "completed_stages": [
+    "preflight",
+    "counter_local_source",
+    "counter_semantics",
+    "baseline_smoke",
+    "tuning",
+    "half_duplex",
+    "streaming_64m",
+    "streaming_64m_b",
+    "streaming_128m",
+    "lane_recovery",
+    "degrade",
+    "direction_switch",
+    "ps_reset_fixed",
+    "ps_reset_rotating",
+    "dma_reset_fixed_1",
+    "dma_recovery_fixed_1",
+    "dma_reset_fixed_2",
+    "dma_recovery_fixed_2",
+    "dma_reset_fixed_3",
+    "dma_recovery_fixed_3",
+    "dma_reset_fixed_4",
+    "dma_recovery_fixed_4",
+    "dma_reset_fixed_5",
+    "dma_recovery_fixed_5",
+    "dma_reset_rotating_1",
+    "dma_recovery_rotating_1",
+    "dma_reset_rotating_2",
+    "dma_recovery_rotating_2",
+    "dma_reset_rotating_3",
+    "dma_recovery_rotating_3",
+    "dma_reset_rotating_4",
+    "dma_recovery_rotating_4",
+    "dma_reset_rotating_5",
+    "dma_recovery_rotating_5",
+    "pl_reset_fixed_1",
+    "pl_recovery_fixed_1",
+    "pl_reset_fixed_2",
+    "pl_recovery_fixed_2",
+    "pl_reset_fixed_3",
+    "pl_recovery_fixed_3",
+    "pl_reset_rotating_1",
+    "pl_recovery_rotating_1"
+  ],
+  "consumed_parent_authorization": {
+    "bytes": 51542,
+    "path": "config/p10_4_current_run_hardware_authorization.json",
+    "sha256": "6f2a7182c458b33b8dd165641838fb995d577d7ecdb2a244f51dcb8ba3645b26"
+  },
+  "cooldown_status": "PASS",
+  "errors": [],
+  "external_instrumentation_used": false,
+  "generated_at_utc": "2026-08-08T14:20:15+00:00",
+  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "hardware_moved": false,
+  "immutable_parent_authorization": {
+    "bytes": 51193,
+    "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/authorization/immutable_authorization.json",
+    "sha256": "2464639a66affb1b800bb767fadea38c6adddeb70c296069cfc55845dbcb305d"
+  },
+  "interrupted_stage": "pl_reset_rotating_2",
+  "interruption": {
+    "actual_cooldown_seconds": 894.384805,
+    "conservative_modules": [
+      "F0",
+      "F1",
+      "F2",
+      "F3",
+      "R0",
+      "R1",
+      "R2",
+      "R3"
+    ],
+    "cooldown_completed_utc": "2026-08-08T14:19:43.418937+00:00",
+    "cooldown_status": "PASS",
+    "emergency_shutdown": {
+      "bytes": 1699,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/interrupted_pl_reset_rotating_2_emergency/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    "emergency_shutdown_markers": {
+      "P10_DUAL_SHUTDOWN_RESULT": "PASS",
+      "P10_SHUTDOWN_FIXED": "PASS",
+      "P10_SHUTDOWN_FIXED_ACTIVE_TX_MASK": "0",
+      "P10_SHUTDOWN_FIXED_AUXILIARY_DAP_COUNT": "1",
+      "P10_SHUTDOWN_FIXED_ENDPOINT_ARMED": "0",
+      "P10_SHUTDOWN_FIXED_ENUM_DEVICE_0": "arm_dap_0|PART=arm_dap|NAME=arm_dap_0|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477",
+      "P10_SHUTDOWN_FIXED_ENUM_DEVICE_1": "xc7z020_1|PART=xc7z020|NAME=xc7z020_1|IDCODE=00100011011100100111000010010011|NORMALIZED=23727093",
+      "P10_SHUTDOWN_FIXED_EXACT_FPGA_MATCH_COUNT": "1",
+      "P10_SHUTDOWN_FIXED_HW_OBJECT_COUNT": "2",
+      "P10_SHUTDOWN_FIXED_MODE_HIGH": "1",
+      "P10_SHUTDOWN_FIXED_SD_REQUEST_ACTIVE": "1",
+      "P10_SHUTDOWN_FIXED_SERIAL": "210249855178",
+      "P10_SHUTDOWN_FIXED_TARGET": "localhost:3121/xilinx_tcf/Digilent/210249855178",
+      "P10_SHUTDOWN_FIXED_TXD_OUTPUT_INTENT": "0",
+      "P10_SHUTDOWN_FIXED_UNEXPECTED_HW_OBJECT_COUNT": "0",
+      "P10_SHUTDOWN_ROTATING": "PASS",
+      "P10_SHUTDOWN_ROTATING_ACTIVE_TX_MASK": "0",
+      "P10_SHUTDOWN_ROTATING_AUXILIARY_DAP_COUNT": "1",
+      "P10_SHUTDOWN_ROTATING_ENDPOINT_ARMED": "0",
+      "P10_SHUTDOWN_ROTATING_ENUM_DEVICE_0": "arm_dap_0_1|PART=arm_dap|NAME=arm_dap_0_1|IDCODE=01001011101000000000010001110111|NORMALIZED=4BA00477",
+      "P10_SHUTDOWN_ROTATING_ENUM_DEVICE_1": "xc7z020_1_1|PART=xc7z020|NAME=xc7z020_1_1|IDCODE=00100011011100100111000010010011|NORMALIZED=23727093",
+      "P10_SHUTDOWN_ROTATING_EXACT_FPGA_MATCH_COUNT": "1",
+      "P10_SHUTDOWN_ROTATING_HW_OBJECT_COUNT": "2",
+      "P10_SHUTDOWN_ROTATING_MODE_HIGH": "1",
+      "P10_SHUTDOWN_ROTATING_SD_REQUEST_ACTIVE": "1",
+      "P10_SHUTDOWN_ROTATING_SERIAL": "210512180081",
+      "P10_SHUTDOWN_ROTATING_TARGET": "localhost:3121/xilinx_tcf/Digilent/210512180081",
+      "P10_SHUTDOWN_ROTATING_TXD_OUTPUT_INTENT": "0",
+      "P10_SHUTDOWN_ROTATING_UNEXPECTED_HW_OBJECT_COUNT": "0",
+      "SHUTDOWN_EXIT": "0",
+      "SHUTDOWN_FIXED": "PASS",
+      "SHUTDOWN_ROTATING": "PASS",
+      "TFDU_SHUTDOWN_PROGRAMMED": "1"
+    },
+    "immutable_plan": {
+      "bytes": 195,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_rotating_2/immutable.plan",
+      "sha256": "deeda339b5a6fdafdb9db9e7fa95abfd8d4a95958f9d7d6657c6c16278725873"
+    },
+    "measured_runtime_seconds": 479.068472,
+    "no_tx_claim_from_marker_absence": false,
+    "paired_launch_reached": false,
+    "partial_stdout": {
+      "bytes": 896,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_rotating_2/xsdb.stdout.log",
+      "sha256": "1217e1b50bab94ad259c67f6ca977f0510d2ed5f05e2c6533e5743787dfa1866"
+    },
+    "reexecution_required": true,
+    "required_cooldown_seconds": 239.535,
+    "runtime_limit_seconds": 1800,
+    "runtime_limit_status": "PASS",
+    "runtime_start_basis": "shutdown-before result file mtime (earlier than plan materialization)",
+    "service_ready_reached": false,
+    "shutdown_before": {
+      "bytes": 1699,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_rotating_2_before/attempt_1.result.txt",
+      "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065"
+    },
+    "shutdown_verified_utc": "2026-08-08T14:04:49.034132+00:00",
+    "stage": "pl_reset_rotating_2",
+    "stage_result": "ABSENT_INTERRUPTED_REEXECUTION_REQUIRED",
+    "start_utc": "2026-08-08T13:56:49.965660+00:00",
+    "status": "PASS"
+  },
+  "module_binding": {
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0019",
+    "F3": "B0020",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0023",
+    "R3": "B0025"
+  },
+  "module_replaced_during_run": false,
+  "network_used": false,
+  "p10_4_acceptance_promoted": false,
+  "parent_manifest_file_count": 5285,
+  "parent_manifest_verified": true,
+  "parent_run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+  "parent_run_manifest": {
+    "bytes": 1453382,
+    "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+    "sha256": "020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97"
+  },
+  "parent_run_outcome": "INTERRUPTED_FAIL_CLOSED_RESUMABLE",
+  "parent_runtime_ledger_raw": {
+    "bytes": 28475,
+    "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/runtime_rest/runtime_rest_ledger.json",
+    "sha256": "320156d8bd6d505a528733efd19888af118da04948e6152d80a8f1e0b7623b50"
+  },
+  "remaining_stages": [
+    "pl_reset_rotating_2",
+    "pl_recovery_rotating_2",
+    "pl_reset_rotating_3",
+    "pl_recovery_rotating_3",
+    "duplicate_fault",
+    "duplicate_recovery",
+    "stale_fault",
+    "stale_recovery",
+    "echo_crosstalk_8x8",
+    "two_plus_two",
+    "mixed_15min_a",
+    "mixed_15min_b"
+  ],
+  "resume_requires_new_current_run_authorization": true,
+  "schema_version": 1,
+  "selected_config": {
+    "ack_threshold": 32,
+    "buffer_count": 4,
+    "cache_batching": 1,
+    "descriptor_batch": 32,
+    "descriptor_bytes": 65536,
+    "name": "buffers4_batch32",
+    "object_bytes": 262144,
+    "outstanding": 32,
+    "ring_depth": 32
+  },
+  "source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
+  "status": "PASS",
+  "test_id": "P10_4-INTERRUPTED-PARENT-CHECKPOINT",
+  "wiring_changed": false
+}

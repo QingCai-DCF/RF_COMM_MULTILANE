@@ -618,12 +618,14 @@
     "new_run_id_per_diagnostic_stage": 2,
     "program": 2
   },
-  "consumed": false,
+  "consumed": true,
+  "consumed_at_utc": "2026-08-08T14:20:15+00:00",
   "created_at_utc": "2026-08-08T10:27:48.006035+00:00",
-  "current_run_hardware_authorization": true,
+  "current_run_hardware_authorization": false,
   "current_user_statement": "新增约束：任何一个小板都不能连续运行超过30分钟，每个环节运行结束后需要至少休息一半运行时间再启动发射；我已经将b0008更换为新的b0019，请你重新测试F2-R2通断，若已经恢复，请继续P10目标",
   "errors": [],
   "ethernet_allowed": false,
+  "evidence_manifest": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
   "external_instrumentation_allowed": false,
   "external_instrumentation_used": false,
   "fixed_jtag_serial": "210249855178",
@@ -738,6 +740,7 @@
     "hash_low": "0xBCFECB39",
     "version": "0x0A000004"
   },
+  "result": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json",
   "rotating_jtag_serial": "210512180081",
   "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
   "runtime_rest_policy": {
@@ -823,6 +826,6 @@
     "tuning": 1200,
     "two_plus_two": 900
   },
-  "status": "READY_FOR_EXACT_CURRENT_RUN",
+  "status": "CONSUMED_AFTER_P10_4_INTERRUPTED_FAIL_CLOSED_RESUMABLE",
   "wiring_changed": false
 }
