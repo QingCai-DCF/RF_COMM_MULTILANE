@@ -853,6 +853,7 @@ def update_state(payloads: dict[str, Any], manifest: dict[str, Any],
     state["p10_4_acceptance"] = {
         "status": "PASS_WITH_NONBLOCKING_LIMITS",
         "scope": SCOPE,
+        "run_id": SUFFIX_RUN,
         "campaign_disposition": "CLOSED_WITH_TRUTHFUL_2PLUS2_CAPABILITY_LIMIT",
         "goal_sha256": GOAL_SHA256,
         "source_commit": SOURCE_COMMIT,
