@@ -104,9 +104,8 @@
   },
   "branch": "p10.4/b0019-f2-r2-remediation",
   "campaign_standing_authorization": "The current user request authorizes exactly one bounded F2=B0019/R2=B0023 bidirectional RAW retest after the user-completed F2 replacement; it also conditionally authorizes later P10.4 continuation only if this retest passes.",
-  "consumed": true,
-  "consumed_at_utc": "2026-08-08T08:47:56+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "current_run_hardware_authorization": true,
   "diagnostic_runner_parent_commit": "0515af6ab1fbd57a8c511ca55848d959109df8d0",
   "diagnostic_trigger": "The user reported replacing F2 B0008 with new B0019, mandated a 30-minute runtime limit and half-runtime cooldown, and requested a fresh F2/R2 retest followed by conditional P10.4 continuation.",
   "evidence_retention": {
@@ -128,7 +127,7 @@
   },
   "generated_at_utc": "2026-08-08T08:44:08+00:00",
   "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
-  "hardware_actions_executed": true,
+  "hardware_actions_executed": false,
   "inputs": {
     "AGENTS.md": {
       "bytes": 9946,
@@ -318,7 +317,6 @@
     "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
     "source": "Direct user statement on 2026-08-08"
   },
-  "result": "evidence/generated/p10_4_lane2_b0019_raw_connectivity_retest.json",
   "retry_override": {
     "campaign_wide_unlimited_override": false,
     "goal_diagnostic_limit_previously_exhausted": true,
@@ -328,7 +326,6 @@
   },
   "rewiring_by_codex": false,
   "rotation": false,
-  "run_evidence": "evidence/hardware/p10_4_raw_connectivity/p10_4_l2b0019raw_20260808T084408Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json",
   "run_id": "p10_4_l2b0019raw_20260808T084408Z_6ff17d33_94506af9_2b2b37d4",
   "runtime_limits": {
     "active_functional_total_seconds": 600,
@@ -365,7 +362,7 @@
     "on_timeout": true,
     "verify_both": true
   },
-  "status": "CONSUMED_AFTER_P10_4_LANE2_RAW_RETEST_PASS",
+  "status": "AUTHORIZED",
   "stimulus": {
     "commands": [
       "receive_only_5000ms",
