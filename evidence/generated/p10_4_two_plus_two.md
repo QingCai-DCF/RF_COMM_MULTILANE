@@ -2,10 +2,9 @@
 
 - Status: `FAIL_NONBLOCKING`
 - test_id: `P10_4-TWO_PLUS_TWO`
-- run_id: `p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4`
+- run_id: `p10_4_composite_5da414ba_f53d9825`
+- composite_run_id: `p10_4_composite_5da414ba_f53d9825`
 - artifact_source_commit: `6ff17d33a0ea111fbd796899c49decbfa339e2c1`
-- hardware_actions_executed: `True`
-- current_run_hardware_authorization: `False`
 
 ## Errors
 

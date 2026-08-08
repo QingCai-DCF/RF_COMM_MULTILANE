@@ -1,10 +1,7 @@
 # P10.4 completion audit
 
-- Status: `FAIL_CLOSED`
-- P10.3 scoped PASS preserved: `true`
-- P10.4 result: `FAIL`
-- Requirements: `8 PASS / 3 FAIL / 5 PENDING`
-- Half-duplex >=8 Mbit/s: `PASS` in both 300-second directions
-- 64 MiB / 128 MiB streaming: `PASS / PASS_NONBLOCKING`
-- Lane recovery / 8x8 matrix: `FAIL / FAIL`
-- Direction switch, reset recovery, 2+2 and mixed formal: not executed after fail-closed.
+- Status: `PASS_WITH_NONBLOCKING_LIMITS`
+- test_id: `P10_4-COMPLETION-AUDIT-COMPOSITE`
+- run_id: `p10_4_composite_5da414ba_f53d9825`
+- composite_run_id: `p10_4_composite_5da414ba_f53d9825`
+- artifact_source_commit: `6ff17d33a0ea111fbd796899c49decbfa339e2c1`

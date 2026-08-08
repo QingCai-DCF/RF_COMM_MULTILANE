@@ -1,0 +1,49 @@
+{
+  "b0019_qualification": {
+    "bytes": 76759,
+    "path": "evidence/generated/p10_4_lane2_b0019_raw_connectivity_retest.json",
+    "sha256": "edab403a4663bf866c819c158b7db0937a7a5fbfee6e6aff5eea9615a818dad1"
+  },
+  "components": [
+    {
+      "checkpoint": "5da414ba385b750caede64826f2b1e1ee39073d0",
+      "manifest": {
+        "bytes": 1453382,
+        "file_count": 5285,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+        "sha256": "020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97",
+        "status": "PASS"
+      },
+      "result": {
+        "bytes": 5973,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json",
+        "sha256": "f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46"
+      },
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4"
+    },
+    {
+      "checkpoint": "f53d98252dfa85d73f35d49ebf5dc01323bcb4e7",
+      "manifest": {
+        "bytes": 901632,
+        "file_count": 3147,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
+        "sha256": "55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f",
+        "status": "PASS"
+      },
+      "result": {
+        "bytes": 12318261,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json",
+        "sha256": "f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea"
+      },
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4"
+    }
+  ],
+  "composite_run_id": "p10_4_composite_5da414ba_f53d9825",
+  "parent_checkpoint": {
+    "bytes": 104565,
+    "path": "evidence/generated/p10_4_interrupted_parent_checkpoint.json",
+    "sha256": "abf33fc26344d6c43b814d12d666a92c2a1299a67bf16bd827e31cf7e1263270"
+  },
+  "schema_version": 1,
+  "status": "PASS"
+}

@@ -1,37 +1,118 @@
 {
   "artifact_source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
-  "disposition": {
-    "current_run_hardware_authorization": false,
-    "new_hardware_run_started_during_closeout": false,
-    "new_tx_stopped": true,
-    "next_recommended_stage": "P10_4_REMEDIATION",
-    "shutdown_fixed": "PASS",
-    "shutdown_rotating": "PASS",
-    "terminal_reason": "THREE_CURRENT_B0008_F2_TO_R2_FAILURES_AFTER_SHORT_RAW_QUALIFICATION"
-  },
-  "generic_offline_gate": {
-    "bytes": 104686,
-    "path": "evidence/generated/offline_gate_summary.json",
-    "sha256": "a0cb7b0b05915863730f2a8354eb20ca1f7860109e36e9c39e7f51f336219691",
-    "status": "PASS"
-  },
-  "hardware_campaign_status": "FAIL_CLOSED_PHYSICAL_DIRECTIONAL_BLOCKER",
-  "hardware_evidence_checkpoint": "6c0f074f233d94c5f42f494263eae40ec350d5be",
-  "latest_hardware_run_id": "p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4",
-  "latest_hardware_run_manifest": {
-    "bytes": 63875,
-    "file_count": 230,
-    "path": "evidence/hardware/p10_4/p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json",
-    "sha256": "914e705f7ee591c0b2208825c242c32a121d5dac1d548283941abf0992764658",
-    "status": "PASS"
-  },
-  "preserved_scoped_status": {
-    "P10_3": "PASS",
-    "P10_4": "FAIL",
-    "P11": "NOT_STARTED"
-  },
-  "schema_version": 2,
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b"
+    },
+    {
+      "bytes": 1311117,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02"
+    },
+    {
+      "bytes": 1970234,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc"
+    },
+    {
+      "bytes": 573820,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e"
+    },
+    {
+      "bytes": 1318909,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6"
+    },
+    {
+      "bytes": 1970389,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec"
+    },
+    {
+      "bytes": 574364,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1"
+    }
+  ],
+  "component_evidence_checkpoints": [
+    "5da414ba385b750caede64826f2b1e1ee39073d0",
+    "f53d98252dfa85d73f35d49ebf5dc01323bcb4e7"
+  ],
+  "component_run_ids": [
+    "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+    "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4"
+  ],
+  "composite_run_id": "p10_4_composite_5da414ba_f53d9825",
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "hardware_actions_executed": true,
+  "hardware_actions_executed_during_finalization": false,
+  "hardware_campaign_status": "PASS_WITH_NONBLOCKING_LIMITS",
+  "hardware_evidence_checkpoint": "f53d98252dfa85d73f35d49ebf5dc01323bcb4e7",
+  "next_recommended_stage": "P11_OFFLINE_PREPARATION",
+  "p10_3_status": "PASS",
+  "p11_status": "NOT_STARTED",
+  "run_id": "p10_4_composite_5da414ba_f53d9825",
+  "schema_version": 3,
   "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
-  "status": "FAIL_WITH_PRESERVED_EVIDENCE",
-  "test_id": "P10_4-TERMINAL-OFFLINE-CLOSURE-B0008"
+  "scope_not_promoted_to": [
+    "P11",
+    "8x32",
+    "600rpm",
+    "Ethernet",
+    "product-final"
+  ],
+  "shutdown_fixed": "PASS",
+  "shutdown_rotating": "PASS",
+  "status": "PASS_WITH_NONBLOCKING_LIMITS",
+  "test_id": "P10_4-TERMINAL-OFFLINE-CLOSURE-COMPOSITE"
 }

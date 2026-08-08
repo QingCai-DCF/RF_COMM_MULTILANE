@@ -348,12 +348,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: e99f57e5dbea3d3049bdb626e4eb8ba781d963224dec1a3a8a3362e65b9380f6
-    bytes: 56262
+    sha256: ca494559cf1e3947e9c328559318b6596d4a6fbc05167ce9e6dc97481394327e
+    bytes: 57305
   - path: PROJECT_STATUS.md
-    sha256: 516d87276181f5e7907e1897ca925854abf18f31fd3388a385c6c1da7ce4a341
-    bytes: 10161
-  artifact_hash: 516d87276181f5e7907e1897ca925854abf18f31fd3388a385c6c1da7ce4a341
+    sha256: bfdc23c847a760add47d99868f4ab1856e8fd1c6deb4df2f21a172b51ac2cdb0
+    bytes: 10141
+  artifact_hash: bfdc23c847a760add47d99868f4ab1856e8fd1c6deb4df2f21a172b51ac2cdb0
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -367,8 +367,8 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: e99f57e5dbea3d3049bdb626e4eb8ba781d963224dec1a3a8a3362e65b9380f6
-    bytes: 56262
+    sha256: ca494559cf1e3947e9c328559318b6596d4a6fbc05167ce9e6dc97481394327e
+    bytes: 57305
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -398,14 +398,14 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: e99f57e5dbea3d3049bdb626e4eb8ba781d963224dec1a3a8a3362e65b9380f6
-    bytes: 56262
+    sha256: ca494559cf1e3947e9c328559318b6596d4a6fbc05167ce9e6dc97481394327e
+    bytes: 57305
   - path: PROJECT_STATUS.md
-    sha256: 516d87276181f5e7907e1897ca925854abf18f31fd3388a385c6c1da7ce4a341
-    bytes: 10161
+    sha256: bfdc23c847a760add47d99868f4ab1856e8fd1c6deb4df2f21a172b51ac2cdb0
+    bytes: 10141
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 516d87276181f5e7907e1897ca925854abf18f31fd3388a385c6c1da7ce4a341
+  artifact_hash: bfdc23c847a760add47d99868f4ab1856e8fd1c6deb4df2f21a172b51ac2cdb0
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -4372,26 +4372,65 @@ requirements:
   verification_stage: P10_4_RUNTIME_COOLDOWN_REMEDIATION
   verification_scope: P10_4_AND_SUBSEQUENT_CURRENT_HARDWARE_RUNS
   test_id: P10_4-SAFE-RUNTIME-001
-  evidence_path: null
-  status: PENDING
+  evidence_path: evidence/generated/p10_4_runtime_rest_compliance.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: This prospective user safety constraint applies to every later TX-capable P10 stage and cannot be inherited
-    from earlier evidence.
+  artifact_hashes:
+  - path: evidence/generated/p10_4_runtime_rest_compliance.json
+    sha256: 63df26722f09c27445e4ecb7427fd334a49d8fddba2ae519b426baf596f0be77
+    bytes: 44151
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
+  artifact_hash: 63df26722f09c27445e4ecb7427fd334a49d8fddba2ae519b426baf596f0be77
 - requirement_id: P10_4-SAFE-COOLDOWN-001
   requirement_text: After every hardware stage, all installed TFDU small boards shall remain in verified dual-board shutdown
     for at least one half of that stage's measured runtime before any later transmission starts.
   profile: P10_4_TFDU_RUNTIME_REST_POLICY
-  verification_method: The fail-closed host guard shall block the next TX-capable stage until monotonic elapsed cooldown is at
-    least one half of the prior measured stage runtime, rounded up to one millisecond, and shall preserve a per-stage ledger.
+  verification_method: The fail-closed host guard shall block the next TX-capable stage until monotonic elapsed cooldown is
+    at least one half of the prior measured stage runtime, rounded up to one millisecond, and shall preserve a per-stage ledger.
   verification_stage: P10_4_RUNTIME_COOLDOWN_REMEDIATION
   verification_scope: P10_4_AND_SUBSEQUENT_CURRENT_HARDWARE_RUNS
   test_id: P10_4-SAFE-COOLDOWN-001
-  evidence_path: null
-  status: PENDING
+  evidence_path: evidence/generated/p10_4_runtime_rest_compliance.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: Missing shutdown-after or incomplete cooldown must fail closed and prohibit subsequent transmission.
+  artifact_hashes:
+  - path: evidence/generated/p10_4_runtime_rest_compliance.json
+    sha256: 63df26722f09c27445e4ecb7427fd334a49d8fddba2ae519b426baf596f0be77
+    bytes: 44151
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
+  artifact_hash: 63df26722f09c27445e4ecb7427fd334a49d8fddba2ae519b426baf596f0be77
 - requirement_id: P10_4-CLOSE-001
   requirement_text: P10.3 evidence, pass tag, closeout tag, and stationary four-lane scoped PASS shall remain immutable and
     directly rechecked before P10.4.
@@ -4408,9 +4447,24 @@ requirements:
   - path: evidence/generated/p10_4_p10_3_closeout.json
     sha256: df043ad4e654b47048b303fdc1d6246019d70dad8e766f299109f0ed393773a1
     bytes: 678
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
   artifact_hash: df043ad4e654b47048b303fdc1d6246019d70dad8e766f299109f0ed393773a1
-  hardware_followup: P10.4 is terminal FAIL_CLOSED on the current B0008 F2-to-R2 path. This scoped result does not promote
-    P11, 8x32, 600 rpm, Ethernet/SPI, external electrical/duty acceptance, or product-final acceptance.
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
 - requirement_id: P10_4-METRIC-001
   requirement_text: ACK-related performance attribution shall use separate direct counters for outstanding occupancy, ACK-caused
     TX idle, full-window stall, receiver-credit stall, and direction-turnaround idle.
@@ -4425,17 +4479,26 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_4_counter_semantics.json
-    sha256: ad0eb1f5e32c58398d406ffdffaf38bf05f49b028048946150fecd2d492e69df
-    bytes: 691233
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json
-    sha256: b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99
-    bytes: 8223522
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
-    sha256: 44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b
-    bytes: 575551
-  artifact_hash: ad0eb1f5e32c58398d406ffdffaf38bf05f49b028048946150fecd2d492e69df
-  hardware_followup: P10.4 is terminal FAIL_CLOSED on the current B0008 F2-to-R2 path. This scoped result does not promote
-    P11, 8x32, 600 rpm, Ethernet/SPI, external electrical/duty acceptance, or product-final acceptance.
+    sha256: 99cbd2bd9f075d506e3ee51303ef89b58443cfd57fe596b127ccaee6a4532e65
+    bytes: 695108
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  artifact_hash: 99cbd2bd9f075d506e3ee51303ef89b58443cfd57fe596b127ccaee6a4532e65
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
 - requirement_id: P10_4-MODEL-001
   requirement_text: PHY raw, frame payload, RFAP useful, application-commit, and host-orchestrated rates shall remain distinct
     and current hardware measurements shall reconcile to the airtime model.
@@ -4449,17 +4512,26 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_4_half_duplex_performance.json
-    sha256: 2d26fa172d60ec75ef9f4333a858d2976c76a9b1911dc3f42022a86f776cefb4
-    bytes: 1835964
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json
-    sha256: b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99
-    bytes: 8223522
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
-    sha256: 44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b
-    bytes: 575551
-  artifact_hash: 2d26fa172d60ec75ef9f4333a858d2976c76a9b1911dc3f42022a86f776cefb4
-  hardware_followup: P10.4 is terminal FAIL_CLOSED on the current B0008 F2-to-R2 path. This scoped result does not promote
-    P11, 8x32, 600 rpm, Ethernet/SPI, external electrical/duty acceptance, or product-final acceptance.
+    sha256: 7d1a082f10de49fbb2001b3b15d5a9fa6613eb3bb1bb77e50bed3ab2ee0bec4f
+    bytes: 1837927
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  artifact_hash: 7d1a082f10de49fbb2001b3b15d5a9fa6613eb3bb1bb77e50bed3ab2ee0bec4f
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
 - requirement_id: P10_4-PERF-001
   requirement_text: The current four-lane stationary artifact shall sustain at least 8.0 Mbit/s integrity-verified application
     goodput from fixed to rotating for 300 seconds.
@@ -4474,17 +4546,26 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_4_half_duplex_performance.json
-    sha256: 2d26fa172d60ec75ef9f4333a858d2976c76a9b1911dc3f42022a86f776cefb4
-    bytes: 1835964
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json
-    sha256: b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99
-    bytes: 8223522
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
-    sha256: 44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b
-    bytes: 575551
-  artifact_hash: 2d26fa172d60ec75ef9f4333a858d2976c76a9b1911dc3f42022a86f776cefb4
-  hardware_followup: P10.4 is terminal FAIL_CLOSED on the current B0008 F2-to-R2 path. This scoped result does not promote
-    P11, 8x32, 600 rpm, Ethernet/SPI, external electrical/duty acceptance, or product-final acceptance.
+    sha256: 7d1a082f10de49fbb2001b3b15d5a9fa6613eb3bb1bb77e50bed3ab2ee0bec4f
+    bytes: 1837927
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  artifact_hash: 7d1a082f10de49fbb2001b3b15d5a9fa6613eb3bb1bb77e50bed3ab2ee0bec4f
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
 - requirement_id: P10_4-PERF-002
   requirement_text: The current four-lane stationary artifact shall sustain at least 8.0 Mbit/s integrity-verified application
     goodput from rotating to fixed for 300 seconds.
@@ -4499,17 +4580,26 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_4_half_duplex_performance.json
-    sha256: 2d26fa172d60ec75ef9f4333a858d2976c76a9b1911dc3f42022a86f776cefb4
-    bytes: 1835964
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json
-    sha256: b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99
-    bytes: 8223522
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
-    sha256: 44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b
-    bytes: 575551
-  artifact_hash: 2d26fa172d60ec75ef9f4333a858d2976c76a9b1911dc3f42022a86f776cefb4
-  hardware_followup: P10.4 is terminal FAIL_CLOSED on the current B0008 F2-to-R2 path. This scoped result does not promote
-    P11, 8x32, 600 rpm, Ethernet/SPI, external electrical/duty acceptance, or product-final acceptance.
+    sha256: 7d1a082f10de49fbb2001b3b15d5a9fa6613eb3bb1bb77e50bed3ab2ee0bec4f
+    bytes: 1837927
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  artifact_hash: 7d1a082f10de49fbb2001b3b15d5a9fa6613eb3bb1bb77e50bed3ab2ee0bec4f
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
 - requirement_id: P10_4-PERF-003
   requirement_text: Both stationary half-duplex directions should reach the nonblocking 9.0 Mbit/s performance-margin target
     without weakening safety or integrity constraints.
@@ -4524,17 +4614,26 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_4_half_duplex_performance.json
-    sha256: 2d26fa172d60ec75ef9f4333a858d2976c76a9b1911dc3f42022a86f776cefb4
-    bytes: 1835964
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json
-    sha256: b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99
-    bytes: 8223522
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
-    sha256: 44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b
-    bytes: 575551
-  artifact_hash: 2d26fa172d60ec75ef9f4333a858d2976c76a9b1911dc3f42022a86f776cefb4
-  hardware_followup: P10.4 is terminal FAIL_CLOSED on the current B0008 F2-to-R2 path. This scoped result does not promote
-    P11, 8x32, 600 rpm, Ethernet/SPI, external electrical/duty acceptance, or product-final acceptance.
+    sha256: 7d1a082f10de49fbb2001b3b15d5a9fa6613eb3bb1bb77e50bed3ab2ee0bec4f
+    bytes: 1837927
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  artifact_hash: 7d1a082f10de49fbb2001b3b15d5a9fa6613eb3bb1bb77e50bed3ab2ee0bec4f
+  hardware_followup: The nonblocking 9.0 Mbit/s margin was not met in either direction. The direct >=8.0 Mbit/s mandatory
+    result remains PASS without weakening safety.
 - requirement_id: P10_4-STREAM-001
   requirement_text: Fixed to rotating shall complete ten independent 64 MiB board-autonomous objects with CRC32, SHA256, atomic
     commit, and exact descriptor accounting.
@@ -4548,17 +4647,26 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_4_streaming_64m.json
-    sha256: 1fe74d5e48a8604a1f6cef74dabbdc21070138e737ae0180ff4c7ab5409cba2c
-    bytes: 776512
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json
-    sha256: b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99
-    bytes: 8223522
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
-    sha256: 44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b
-    bytes: 575551
-  artifact_hash: 1fe74d5e48a8604a1f6cef74dabbdc21070138e737ae0180ff4c7ab5409cba2c
-  hardware_followup: P10.4 is terminal FAIL_CLOSED on the current B0008 F2-to-R2 path. This scoped result does not promote
-    P11, 8x32, 600 rpm, Ethernet/SPI, external electrical/duty acceptance, or product-final acceptance.
+    sha256: cb469037e1d8e1d6edce3c66ec32289d6dc2eca015d50950cdd3b5ae549802e2
+    bytes: 811327
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  artifact_hash: cb469037e1d8e1d6edce3c66ec32289d6dc2eca015d50950cdd3b5ae549802e2
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
 - requirement_id: P10_4-STREAM-002
   requirement_text: Rotating to fixed shall complete ten independent 64 MiB board-autonomous objects with CRC32, SHA256, atomic
     commit, and exact descriptor accounting.
@@ -4572,17 +4680,26 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_4_streaming_64m.json
-    sha256: 1fe74d5e48a8604a1f6cef74dabbdc21070138e737ae0180ff4c7ab5409cba2c
-    bytes: 776512
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/orchestrator_result.json
-    sha256: b92ae438872b9f03ebe45786f746fceef0a3147c3289b8b8b1829cbf4443cb99
-    bytes: 8223522
-  - path: evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
-    sha256: 44ca217320c016228570063bc89dd01e2ba73a8392bbc1e36bc452d23556ed4b
-    bytes: 575551
-  artifact_hash: 1fe74d5e48a8604a1f6cef74dabbdc21070138e737ae0180ff4c7ab5409cba2c
-  hardware_followup: P10.4 is terminal FAIL_CLOSED on the current B0008 F2-to-R2 path. This scoped result does not promote
-    P11, 8x32, 600 rpm, Ethernet/SPI, external electrical/duty acceptance, or product-final acceptance.
+    sha256: cb469037e1d8e1d6edce3c66ec32289d6dc2eca015d50950cdd3b5ae549802e2
+    bytes: 811327
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  artifact_hash: cb469037e1d8e1d6edce3c66ec32289d6dc2eca015d50950cdd3b5ae549802e2
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
 - requirement_id: P10_4-DEG-001
   requirement_text: Every required degraded lane mask shall retain healthy-lane progress and recover to at least 90 percent
     of the full-mask baseline without duplicate or stale commit.
@@ -4593,21 +4710,30 @@ requirements:
   verification_scope: P10_4_CURRENT_HARDWARE
   test_id: P10_4-DEG-001
   evidence_path: evidence/generated/p10_4_degraded_modes.json
-  status: FAIL
+  status: PASS
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_4_degraded_modes.json
-    sha256: 58ff8e0c30d58ae3697f478f7c962107b7839e445f12d010cf2ce9d5f04c2ea5
-    bytes: 201331
-  - path: evidence/hardware/p10_4/p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4/final/lane_recovery_diagnostic_result.json
-    sha256: e9b6c5670c4b25f17876cc4c535dd836305b827d79cbe8be30863c4ab992e46a
-    bytes: 40709
-  - path: evidence/hardware/p10_4/p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
-    sha256: d7370dd6c2e163dd90da5467bd28e372b5e821803fe4f482ba519cf3e613655c
-    bytes: 12832
-  artifact_hash: 58ff8e0c30d58ae3697f478f7c962107b7839e445f12d010cf2ce9d5f04c2ea5
-  hardware_followup: P10.4 is terminal FAIL_CLOSED on the current B0008 F2-to-R2 path. This scoped result does not promote
-    P11, 8x32, 600 rpm, Ethernet/SPI, external electrical/duty acceptance, or product-final acceptance.
+    sha256: 1074b2bfea648162cd19442b808a16447b6fda95e4ad3e653108e603abb19aa2
+    bytes: 1806721
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  artifact_hash: 1074b2bfea648162cd19442b808a16447b6fda95e4ad3e653108e603abb19aa2
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
 - requirement_id: P10_4-DIR-001
   requirement_text: Ten 30-second fixed-to-rotating and 30-second rotating-to-fixed direction cycles shall complete without
     session reconstruction, leak, cross-lane acceptance, or deadlock.
@@ -4618,11 +4744,30 @@ requirements:
   verification_scope: P10_4_CURRENT_HARDWARE
   test_id: P10_4-DIR-001
   evidence_path: evidence/generated/p10_4_direction_switch.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: Not executed after the mandatory current F2-to-R2 fail-closed trigger; requires a new immutable remediation
-    bundle and new current-run evidence.
+  artifact_hashes:
+  - path: evidence/generated/p10_4_direction_switch.json
+    sha256: d1d56de74ae0ef3635a74a19f0eab1abdca3fc369125a1f760a42eff9b685bdc
+    bytes: 6211186
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
+  artifact_hash: d1d56de74ae0ef3635a74a19f0eab1abdca3fc369125a1f760a42eff9b685bdc
 - requirement_id: P10_4-RESET-001
   requirement_text: The campaign shall complete the exact fixed/rotating PS, DMA, and role-selected PL reset counts and a
     fresh 64 MiB integrity object after every injected reset or protocol fault.
@@ -4633,11 +4778,30 @@ requirements:
   verification_scope: P10_4_CURRENT_HARDWARE
   test_id: P10_4-RESET-001
   evidence_path: evidence/generated/p10_4_reset_recovery.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: Not executed after the mandatory current F2-to-R2 fail-closed trigger; requires a new immutable remediation
-    bundle and new current-run evidence.
+  artifact_hashes:
+  - path: evidence/generated/p10_4_reset_recovery.json
+    sha256: 47fc8e4b5a04adc53709727cfdcc82642e5454890049096d8378cdac2314bd92
+    bytes: 2835150
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
+  artifact_hash: 47fc8e4b5a04adc53709727cfdcc82642e5454890049096d8378cdac2314bd92
 - requirement_id: P10_4-XTALK-001
   requirement_text: All eight physical TX directions shall pass 64-pulse, 1024-pulse, and 30-second one-lane frame vectors
     with zero non-target CRC-valid acceptance.
@@ -4648,21 +4812,30 @@ requirements:
   verification_scope: P10_4_CURRENT_HARDWARE_DIGITAL_ONLY
   test_id: P10_4-XTALK-001
   evidence_path: evidence/generated/p10_4_echo_crosstalk.json
-  status: FAIL
+  status: PASS
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_4_echo_crosstalk.json
-    sha256: 16e5d857770b43c9d79a5242d5074d10e074cbb3e578e9e3452019d43ce747c3
-    bytes: 4707
-  - path: evidence/hardware/p10_4/p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4/final/echo_crosstalk_8x8_diagnostic_result.json
-    sha256: 3724c971709763d05745dec647f95dc38de9d080c8163d56c29193dee624ca4d
-    bytes: 771642
-  - path: evidence/hardware/p10_4/p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
-    sha256: 914e705f7ee591c0b2208825c242c32a121d5dac1d548283941abf0992764658
-    bytes: 63875
-  artifact_hash: 16e5d857770b43c9d79a5242d5074d10e074cbb3e578e9e3452019d43ce747c3
-  hardware_followup: P10.4 is terminal FAIL_CLOSED on the current B0008 F2-to-R2 path. This scoped result does not promote
-    P11, 8x32, 600 rpm, Ethernet/SPI, external electrical/duty acceptance, or product-final acceptance.
+    sha256: d2ad560cdb608c4edac62ee1d50b3cdce500c1e214b0ddf8b156a032e178fd10
+    bytes: 1266857
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  artifact_hash: d2ad560cdb608c4edac62ee1d50b3cdce500c1e214b0ddf8b156a032e178fd10
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
 - requirement_id: P10_4-XTALK-002
   requirement_text: An actual physical ACK shall quarantine the adjacent RX parser on the same two-module AX7020 connector
     for the complete existing post-TX guard, while ordinary peer-lane DATA TX and the other connector remain independently
@@ -4674,12 +4847,31 @@ requirements:
   verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
   verification_scope: P10_4_CURRENT_HARDWARE
   test_id: P10_4-XTALK-002
-  evidence_path: evidence/generated/p10_4_crc_bad_remediation.json
-  status: PENDING
+  evidence_path: evidence/generated/p10_4_crc_remediation_hardware_closure.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: Not executed after the mandatory current F2-to-R2 fail-closed trigger; requires a new immutable remediation
-    bundle and new current-run evidence.
+  artifact_hashes:
+  - path: evidence/generated/p10_4_crc_remediation_hardware_closure.json
+    sha256: d7621f192f3ef505d6d5f88cab3df1a355f21cd04f63d73137df1ea199087790
+    bytes: 4859
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
+  artifact_hash: d7621f192f3ef505d6d5f88cab3df1a355f21cd04f63d73137df1ea199087790
 - requirement_id: P10_4-FD-001
   requirement_text: A direct 300-second 2+2 simultaneous opposite-direction experiment shall be executed or rejected with
     current-artifact capability evidence without claiming final full duplex.
@@ -4689,12 +4881,32 @@ requirements:
   verification_stage: P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT
   verification_scope: P10_4_CURRENT_HARDWARE_NONBLOCKING
   test_id: P10_4-FD-001
-  evidence_path: evidence/generated/p10_4_two_plus_two.json
-  status: PENDING
+  evidence_path: evidence/generated/p10_4_two_plus_two_requirement_closure.json
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: Not executed after the mandatory current F2-to-R2 fail-closed trigger; requires a new immutable remediation
-    bundle and new current-run evidence.
+  artifact_hashes:
+  - path: evidence/generated/p10_4_two_plus_two_requirement_closure.json
+    sha256: 631a91126cd11c488b4914efe1877f18bb00d119603478405737f1e450451305
+    bytes: 5026
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  hardware_followup: Requirement PASS means the bounded direct capability determination was completed. The experiment result
+    remains FAIL_WITH_EVIDENCE because the frozen artifact has one bundle-wide direction; no simultaneous-opposite-direction
+    TX was executed.
+  artifact_hash: 631a91126cd11c488b4914efe1877f18bb00d119603478405737f1e450451305
 - requirement_id: P10_4-SOAK-001
   requirement_text: The exact 1800-second mixed stationary campaign shall preserve integrity, descriptor, protocol, liveness,
     echo-admission, and TFDU safety invariants.
@@ -4705,11 +4917,30 @@ requirements:
   verification_scope: P10_4_CURRENT_HARDWARE
   test_id: P10_4-SOAK-001
   evidence_path: evidence/generated/p10_4_mixed_30min.json
-  status: PENDING
+  status: PASS
   waiver: null
-  artifact_hashes: []
-  hardware_followup: Not executed after the mandatory current F2-to-R2 fail-closed trigger; requires a new immutable remediation
-    bundle and new current-run evidence.
+  artifact_hashes:
+  - path: evidence/generated/p10_4_mixed_30min.json
+    sha256: 03c4743e6169ce3f6a1ccf0c1519fc28b35a0978b892d3640a38dfb3eea6c939
+    bytes: 10369843
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
+  artifact_hash: 03c4743e6169ce3f6a1ccf0c1519fc28b35a0978b892d3640a38dfb3eea6c939
 - requirement_id: P10_4-SAFE-001
   requirement_text: Every stage and every exit path shall leave both serial-bound AX7020 endpoints in independently programmed
     and verified full shutdown.
@@ -4724,14 +4955,26 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: evidence/generated/p10_4_shutdown.json
-    sha256: 8c67127497310a8fbc0cde91ba701f4061569944e9ee0ce37d0bcb3a033f6a62
-    bytes: 1856
-  - path: evidence/generated/p10_4_b0008_fail_closed_manifest.json
-    sha256: 360af70732f893e5304632544f4fb1c58f4e4000e73077296ca558baf2ba0b76
-    bytes: 6618
-  artifact_hash: 8c67127497310a8fbc0cde91ba701f4061569944e9ee0ce37d0bcb3a033f6a62
-  hardware_followup: P10.4 is terminal FAIL_CLOSED on the current B0008 F2-to-R2 path. This scoped result does not promote
-    P11, 8x32, 600 rpm, Ethernet/SPI, external electrical/duty acceptance, or product-final acceptance.
+    sha256: 0f86c9700209c81f376ff6be5832a5be773500e1a80d8aeacb541125b9a9dab6
+    bytes: 5314
+  - path: evidence/generated/p10_4_composite_manifest.json
+    sha256: f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266
+    bytes: 10472
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json
+    sha256: f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46
+    bytes: 5973
+  - path: evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 020e6f2c689717eb68ddd99215bed49c984660bf75fa7dc4924b9f00c1f08c97
+    bytes: 1453382
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json
+    sha256: f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea
+    bytes: 12318261
+  - path: evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/run_evidence_sha256_manifest.json
+    sha256: 55abec8ddb009effb77d851a7642b3bfecde720a2b94edbfe29654aebb6b744f
+    bytes: 901632
+  artifact_hash: 0f86c9700209c81f376ff6be5832a5be773500e1a80d8aeacb541125b9a9dab6
+  hardware_followup: P10.4 closed PASS_WITH_NONBLOCKING_LIMITS on the immutable B0019 bundle. This does not promote P11, 8x32,
+    600 rpm, Ethernet/SPI, external electrical/duty, rotation, or product-final acceptance.
 - requirement_id: P10_3-INV-001
   requirement_text: All eight active TFDU modules shall have unique IDs, endpoints, positions, and lane assignments.
   profile: P10_3_EIGHT_MODULE_INVENTORY

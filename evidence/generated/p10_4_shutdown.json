@@ -1,56 +1,123 @@
 {
   "SHUTDOWN_FIXED": "PASS",
   "SHUTDOWN_ROTATING": "PASS",
+  "all_stage_shutdown_after_verified": true,
+  "all_stage_shutdown_before_verified": true,
   "artifact_source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b"
+    },
+    {
+      "bytes": 1311117,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02"
+    },
+    {
+      "bytes": 1970234,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc"
+    },
+    {
+      "bytes": 573820,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e"
+    },
+    {
+      "bytes": 1318909,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6"
+    },
+    {
+      "bytes": 1970389,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec"
+    },
+    {
+      "bytes": 574364,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1"
+    }
+  ],
+  "component_evidence_checkpoints": [
+    "5da414ba385b750caede64826f2b1e1ee39073d0",
+    "f53d98252dfa85d73f35d49ebf5dc01323bcb4e7"
+  ],
+  "component_results": [
+    {
+      "bytes": 5973,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/final/interrupted_orchestrator_result.json",
+      "sha256": "f06b50784853b7e69b68f2b262a5913c04d45c8a87d205f06724c2b78f054c46"
+    },
+    {
+      "bytes": 12318261,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/final/resume_orchestrator_result.json",
+      "sha256": "f3c2bdbce3a7d2237c6f39cbf067f80ef7d8483548660f808b8a48d256ec9bea"
+    }
+  ],
+  "component_run_ids": [
+    "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+    "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4"
+  ],
+  "composite_run_id": "p10_4_composite_5da414ba_f53d9825",
   "current_run_hardware_authorization": false,
   "errors": [],
   "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
-  "latest_run_id": "p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4",
-  "latest_shutdown_marker_contract": {
-    "SHUTDOWN_EXIT": 0,
-    "TFDU_SHUTDOWN_PROGRAMMED": true,
-    "active_tx_mask": 0,
-    "endpoint_armed": 0,
-    "sd_request_active": 1,
-    "txd_output_intent": 0
-  },
+  "hardware_actions_executed": true,
   "new_tx_permitted_by_this_record": false,
-  "runs": [
-    {
-      "all_recorded_shutdowns_verified": true,
-      "label": "qualification",
-      "run_id": "p10_4_l2b0008raw_20260806T072322Z_6ff17d33_94506af9_2b2b37d4",
-      "shutdown_fixed": "PASS",
-      "shutdown_record_count": 7,
-      "shutdown_rotating": "PASS"
-    },
-    {
-      "all_recorded_shutdowns_verified": true,
-      "label": "full_campaign",
-      "run_id": "p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4",
-      "shutdown_fixed": "PASS",
-      "shutdown_record_count": 20,
-      "shutdown_rotating": "PASS"
-    },
-    {
-      "all_recorded_shutdowns_verified": true,
-      "label": "isolated_lane_recovery",
-      "run_id": "p10_4_20260806T091241Z_6ff17d33_94506af9_2b2b37d4",
-      "shutdown_fixed": "PASS",
-      "shutdown_record_count": 4,
-      "shutdown_rotating": "PASS"
-    },
-    {
-      "all_recorded_shutdowns_verified": true,
-      "label": "isolated_echo_crosstalk",
-      "run_id": "p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4",
-      "shutdown_fixed": "PASS",
-      "shutdown_record_count": 4,
-      "shutdown_rotating": "PASS"
-    }
-  ],
-  "schema_version": 2,
+  "parent_emergency_shutdown_verified": true,
+  "run_id": "p10_4_composite_5da414ba_f53d9825",
+  "schema_version": 3,
   "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+  "stage_count": 54,
   "status": "PASS",
+  "suffix_terminal_shutdown_verified": true,
   "test_id": "P10_4-SAFE-001"
 }

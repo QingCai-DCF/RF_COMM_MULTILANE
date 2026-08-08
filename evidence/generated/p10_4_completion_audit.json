@@ -1,264 +1,1660 @@
 {
   "artifact_source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
-  "board_binding": {
-    "fixed": "AX7020-F/JTAG:210249855178",
-    "rotating": "AX7020-R/JTAG:210512180081"
-  },
-  "direct_achievements": {
-    "baseline_smoke": "PASS",
-    "counter_semantics": "PASS",
-    "half_duplex_300s": {
-      "F_TO_R_application_goodput_bps": 8388608.0,
-      "F_TO_R_committed_bytes": 314572800,
-      "R_TO_F_application_goodput_bps": 8416570.026666667,
-      "R_TO_F_committed_bytes": 315621376,
-      "eight_mbps_retention": "PASS_BOTH_DIRECTIONS",
-      "nine_mbps_margin": "FAIL_NONBLOCKING_BOTH_DIRECTIONS"
-    },
-    "p10_3_baseline_recheck": "PASS",
-    "selected_config": {
-      "ack_threshold": 32,
-      "buffer_count": 2,
-      "cache_batching": 1,
-      "descriptor_batch": 16,
-      "descriptor_bytes": 65536,
-      "name": "buffers2_batch16",
-      "object_bytes": 262144,
-      "outstanding": 32,
-      "ring_depth": 32
-    },
-    "streaming_128m": "PASS_3_OF_3_EACH_DIRECTION_NONBLOCKING",
-    "streaming_64m": "PASS_10_OF_10_EACH_DIRECTION"
-  },
-  "executed_full_campaign_stages": [
+  "artifacts": [
     {
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/preflight/stage_summary.json",
-      "status": "PASS",
-      "test_id": "P10_4-PREFLIGHT"
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762"
     },
     {
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/counter_local_source/stage_summary.json",
-      "status": "PASS",
-      "test_id": "P10_4-COUNTER_LOCAL_SOURCE"
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b"
     },
     {
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/counter_semantics/stage_summary.json",
-      "status": "PASS",
-      "test_id": "P10_4-COUNTER_SEMANTICS"
+      "bytes": 1311117,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02"
     },
     {
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/baseline_smoke/stage_summary.json",
-      "status": "PASS",
-      "test_id": "P10_4-BASELINE_SMOKE"
+      "bytes": 1970234,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc"
     },
     {
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/tuning/stage_summary.json",
-      "status": "PASS",
-      "test_id": "P10_4-TUNING"
+      "bytes": 573820,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb"
     },
     {
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/half_duplex/stage_summary.json",
-      "status": "PASS",
-      "test_id": "P10_4-HALF_DUPLEX"
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36"
     },
     {
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_64m/stage_summary.json",
-      "status": "PASS",
-      "test_id": "P10_4-STREAMING_64M"
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e"
     },
     {
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_128m/stage_summary.json",
-      "status": "PASS",
-      "test_id": "P10_4-STREAMING_128M"
+      "bytes": 1318909,
+      "kind": "xsa",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6"
     },
     {
-      "evidence_path": "evidence/hardware/p10_4/p10_4_20260806T074331Z_6ff17d33_94506af9_2b2b37d4/stages/lane_recovery/stage_summary.json",
-      "status": "FAIL",
-      "test_id": "P10_4-LANE_RECOVERY"
+      "bytes": 1970389,
+      "kind": "bsp",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec"
+    },
+    {
+      "bytes": 574364,
+      "kind": "elf",
+      "path": "artifacts/p10_4/6ff17d33a0ea111fbd796899c49decbfa339e2c1/a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1"
     }
   ],
-  "goal_result_fields": {
-    "P10_4_2PLUS2_EXPERIMENT": "PARTIAL_NOT_EXECUTED_AFTER_FAIL_CLOSED",
-    "P10_4_CORE_ROBUSTNESS": "FAIL",
-    "P10_4_EXTERNAL_ELECTRICAL": "PENDING_NOT_IN_SCOPE",
-    "P10_4_HALF_DUPLEX_8MBPS_RETENTION": "PASS",
-    "P10_4_MARGIN_TARGET_9MBPS": "FAIL_NONBLOCKING",
-    "P10_4_STRETCH_9P6MBPS": "FAIL_NONBLOCKING"
-  },
-  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
-  "hardware_evidence_checkpoint": "6c0f074f233d94c5f42f494263eae40ec350d5be",
-  "module_binding": {
-    "F0": "A0019",
-    "F1": "B0012",
-    "F2": "B0008",
-    "F3": "B0020",
-    "R0": "A0010",
-    "R1": "A0017",
-    "R2": "B0023",
-    "R3": "B0025"
-  },
-  "not_executed_after_fail_closed": [
-    "remaining lane recovery vectors",
-    "remaining 8x8 matrix vectors",
-    "direction switch loop",
-    "reset recovery",
-    "2+2 experiment",
-    "1800-second mixed formal"
+  "component_evidence_checkpoints": [
+    "5da414ba385b750caede64826f2b1e1ee39073d0",
+    "f53d98252dfa85d73f35d49ebf5dc01323bcb4e7"
   ],
-  "preserved_scoped_status": {
-    "P10_3": "PASS",
-    "P10_4": "FAIL",
-    "P11": "NOT_STARTED"
+  "component_run_ids": [
+    "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+    "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4"
+  ],
+  "composite_run_id": "p10_4_composite_5da414ba_f53d9825",
+  "counters": {
+    "continuous_high_violation": 0,
+    "crc_bad": 0,
+    "cross_lane_accepted_data": 0,
+    "deadlock": 0,
+    "descriptor_leak": 0,
+    "double_completion": 0,
+    "duplicate_commit": 0,
+    "duty_violation": 0,
+    "partial_commit": 0,
+    "retry_exhausted": 0,
+    "same_module_accepted_data": 0,
+    "sha_mismatch": 0,
+    "stale_commit": 0,
+    "transport_timeout": 0
   },
+  "current_b0019_raw_qualification": {
+    "bytes": 76759,
+    "path": "evidence/generated/p10_4_lane2_b0019_raw_connectivity_retest.json",
+    "sha256": "edab403a4663bf866c819c158b7db0937a7a5fbfee6e6aff5eea9615a818dad1"
+  },
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "goal_sha256": "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f",
+  "group_statuses": {
+    "baseline_smoke": "PASS",
+    "counter_semantics": "PASS",
+    "degraded_modes": "PASS",
+    "direction_switch": "PASS",
+    "echo_crosstalk": "PASS",
+    "half_duplex_performance": "PASS",
+    "mixed_30min": "PASS",
+    "performance_tuning": "PASS",
+    "reset_recovery": "PASS",
+    "safe_boot": "PASS",
+    "streaming_128m": "PASS",
+    "streaming_64m": "PASS",
+    "two_plus_two": "FAIL_NONBLOCKING"
+  },
+  "hardware_actions_executed": true,
+  "historical_b0008_blocker_preserved": {
+    "bytes": 9860,
+    "path": "evidence/generated/p10_4_f2_to_r2_directional_blocker.json",
+    "sha256": "6a7ca37156b46d3aee60fa005750f401a8ead0a9c3d08ea4f65452c1461e704f"
+  },
+  "mandatory_stage_count": 52,
+  "mandatory_stage_failures": [],
+  "nonblocking_stage_results": {
+    "streaming_128m": "PASS",
+    "two_plus_two": "FAIL_WITH_EVIDENCE"
+  },
+  "p10_3_scoped_pass_preserved": true,
+  "p11_started": false,
   "requirement_counts": {
-    "FAIL": 3,
-    "PASS": 8,
-    "PENDING": 5,
-    "TOTAL": 16
+    "FAIL_NONBLOCKING": 1,
+    "PASS": 17,
+    "PENDING": 0,
+    "TOTAL": 18
   },
   "requirement_disposition": [
     {
+      "evidence_path": "evidence/generated/p10_4_runtime_rest_compliance.json",
+      "requirement_id": "P10_4-SAFE-RUNTIME-001",
+      "status": "PASS"
+    },
+    {
+      "evidence_path": "evidence/generated/p10_4_runtime_rest_compliance.json",
+      "requirement_id": "P10_4-SAFE-COOLDOWN-001",
+      "status": "PASS"
+    },
+    {
       "evidence_path": "evidence/generated/p10_4_p10_3_closeout.json",
-      "reason": "P10.3 immutable closeout rechecked",
       "requirement_id": "P10_4-CLOSE-001",
       "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_counter_semantics.json",
-      "reason": "direct counter semantics and local-source injection passed",
       "requirement_id": "P10_4-METRIC-001",
       "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_half_duplex_performance.json",
-      "reason": "both 300-second windows reconciled to the frozen airtime model",
       "requirement_id": "P10_4-MODEL-001",
       "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_half_duplex_performance.json",
-      "reason": "F-to-R 300-second goodput was 8,388,608 bit/s",
       "requirement_id": "P10_4-PERF-001",
       "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_half_duplex_performance.json",
-      "reason": "R-to-F 300-second goodput was 8,416,570.026666667 bit/s",
       "requirement_id": "P10_4-PERF-002",
       "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_half_duplex_performance.json",
-      "reason": "both directions were below the nonblocking 9 Mbit/s target",
       "requirement_id": "P10_4-PERF-003",
       "status": "FAIL"
     },
     {
       "evidence_path": "evidence/generated/p10_4_streaming_64m.json",
-      "reason": "ten exact 64 MiB F-to-R objects passed",
       "requirement_id": "P10_4-STREAM-001",
       "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_streaming_64m.json",
-      "reason": "ten exact 64 MiB R-to-F objects passed",
       "requirement_id": "P10_4-STREAM-002",
       "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_degraded_modes.json",
-      "reason": "lane recovery failed repeatedly on current F2-to-R2 path",
       "requirement_id": "P10_4-DEG-001",
-      "status": "FAIL"
+      "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_direction_switch.json",
-      "reason": "not executed after fail-closed trigger",
       "requirement_id": "P10_4-DIR-001",
-      "status": "PENDING"
+      "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_reset_recovery.json",
-      "reason": "not executed after fail-closed trigger",
       "requirement_id": "P10_4-RESET-001",
-      "status": "PENDING"
+      "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_echo_crosstalk.json",
-      "reason": "8x8 matrix stopped at F2 raw64: 64 TX / 0 remote RX",
       "requirement_id": "P10_4-XTALK-001",
-      "status": "FAIL"
+      "status": "PASS"
     },
     {
-      "evidence_path": "evidence/generated/p10_4_crc_bad_remediation.json",
-      "reason": "required current-hardware masks/formal coverage not completed",
+      "evidence_path": "evidence/generated/p10_4_crc_remediation_hardware_closure.json",
       "requirement_id": "P10_4-XTALK-002",
-      "status": "PENDING"
+      "status": "PASS"
     },
     {
-      "evidence_path": "evidence/generated/p10_4_two_plus_two.json",
-      "reason": "2+2 experiment not executed after fail-closed trigger",
+      "evidence_path": "evidence/generated/p10_4_two_plus_two_requirement_closure.json",
       "requirement_id": "P10_4-FD-001",
-      "status": "PENDING"
+      "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_mixed_30min.json",
-      "reason": "1800-second mixed formal not executed after fail-closed trigger",
       "requirement_id": "P10_4-SOAK-001",
-      "status": "PENDING"
+      "status": "PASS"
     },
     {
       "evidence_path": "evidence/generated/p10_4_shutdown.json",
-      "reason": "all four current-B0008 runs ended with verified dual shutdown",
       "requirement_id": "P10_4-SAFE-001",
       "status": "PASS"
     }
   ],
-  "safety_and_shutdown": {
-    "current_run_hardware_authorization": false,
-    "integrity_and_safety_counters": {
-      "continuous_high_violation": 0,
-      "crc_bad": 0,
-      "cross_lane_accepted_data": 0,
-      "deadlock": 0,
-      "descriptor_leak": 0,
-      "double_completion": 0,
-      "duplicate_commit": 0,
-      "duty_violation": 0,
-      "partial_commit": 0,
-      "retry_exhausted": 0,
-      "same_module_accepted_data": 0,
-      "sha_mismatch": 0,
-      "stale_commit": 0,
-      "transport_timeout": 0
-    },
-    "shutdown_fixed": "PASS",
-    "shutdown_rotating": "PASS"
-  },
-  "schema_version": 2,
+  "run_id": "p10_4_composite_5da414ba_f53d9825",
+  "runtime_rest_status": "PASS",
+  "schema_version": 3,
   "scope": "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
-  "scope_controls": {
-    "external_instrumentation_used": false,
-    "hardware_moved": false,
-    "module_replaced_during_campaign_runs": false,
-    "network_used": false,
-    "p11_started": false,
-    "rotation_or_realignment_executed": false,
-    "wiring_changed": false
-  },
-  "status": "FAIL_CLOSED",
-  "terminal_blocker": {
-    "classification": "CURRENT_DIRECT_RAW_PHYSICAL_DIRECTIONAL_PATH_FAILURE",
-    "path": "evidence/generated/p10_4_f2_to_r2_directional_blocker.json",
-    "reproduction_count_after_short_qualification": 3,
-    "terminal_measurement": {
-      "direction": "F2_TO_R2",
-      "evidence_class": "RAW_PHYSICAL_ONLY",
-      "receiver_raw_rx": 0,
-      "requested_raw_pulses": 64,
-      "sender_physical_tx": 64
+  "shutdown_fixed": "PASS",
+  "shutdown_rotating": "PASS",
+  "stage_count": 54,
+  "stage_sources": [
+    {
+      "bytes": 136523,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/preflight/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "05762c9d4dee65b00b5e8357771814be55a4efb6c64f602ed6a804acf298b61d",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/preflight_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "preflight",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/preflight_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "preflight",
+        "status": "PASS"
+      },
+      "stage": "preflight",
+      "status": "PASS"
+    },
+    {
+      "bytes": 27987,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/counter_local_source/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "00d4e8134eb010f4d62bc77f98f1cb7ff725fed636460e16143f19bdf475d3f7",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/counter_local_source_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "counter_local_source",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/counter_local_source_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "counter_local_source",
+        "status": "PASS"
+      },
+      "stage": "counter_local_source",
+      "status": "PASS"
+    },
+    {
+      "bytes": 573254,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/counter_semantics/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "846de4b4f745dda55073872db4fc29a3c4e632d24126032d96e24bf4d150cc9c",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/counter_semantics_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "counter_semantics",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/counter_semantics_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "counter_semantics",
+        "status": "PASS"
+      },
+      "stage": "counter_semantics",
+      "status": "PASS"
+    },
+    {
+      "bytes": 385550,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/baseline_smoke/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "2dba3f969d0a744c5e4715008c9a80d226f0c6f31e808da006b9fab206386fe7",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/baseline_smoke_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "baseline_smoke",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/baseline_smoke_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "baseline_smoke",
+        "status": "PASS"
+      },
+      "stage": "baseline_smoke",
+      "status": "PASS"
+    },
+    {
+      "bytes": 3245380,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/tuning/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "5c8f6e03d177a718773c4de895fdc9964ff4f9182abb34efbb2a81177f27070f",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/tuning_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "tuning",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/tuning_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "tuning",
+        "status": "PASS"
+      },
+      "stage": "tuning",
+      "status": "PASS"
+    },
+    {
+      "bytes": 1601521,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/half_duplex/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "9c82a79c85fb2ed35b3ad241822044a0b7f43c43ca5d55267e59ace2b66488d5",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/half_duplex_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "half_duplex",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/half_duplex_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "half_duplex",
+        "status": "PASS"
+      },
+      "stage": "half_duplex",
+      "status": "PASS"
+    },
+    {
+      "bytes": 351788,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_64m/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "697b1eb3972ec38d213ed35fc25ac6d604583b34e2a8ba245fe814bb33b89d09",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_64m_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "streaming_64m",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_64m_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "streaming_64m",
+        "status": "PASS"
+      },
+      "stage": "streaming_64m",
+      "status": "PASS"
+    },
+    {
+      "bytes": 351808,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_64m_b/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "d2e98b5083a2442e97cae2329a589433bd73ad7fd5978063433befd478755ceb",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_64m_b_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "streaming_64m_b",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_64m_b_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "streaming_64m_b",
+        "status": "PASS"
+      },
+      "stage": "streaming_64m_b",
+      "status": "PASS"
+    },
+    {
+      "bytes": 222718,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/streaming_128m/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "a18d04e09f24e7daa8133cbfe692a7a18d2ea496152aa619e5ffeaaffed73621",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_128m_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "streaming_128m",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/streaming_128m_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "streaming_128m",
+        "status": "PASS"
+      },
+      "stage": "streaming_128m",
+      "status": "PASS"
+    },
+    {
+      "bytes": 286256,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/lane_recovery/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "57934dddaabf833b06f57e0473e9b4a89ddbc6bbcb52daaeaf35abf9f50df309",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/lane_recovery_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "lane_recovery",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/lane_recovery_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "lane_recovery",
+        "status": "PASS"
+      },
+      "stage": "lane_recovery",
+      "status": "PASS"
+    },
+    {
+      "bytes": 1286895,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/degrade/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "e3fe96316b59f40dc124c72ca3dc426117198d2dfb38444f14a6ebc7fa93d30c",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/degrade_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "degrade",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/degrade_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "degrade",
+        "status": "PASS"
+      },
+      "stage": "degrade",
+      "status": "PASS"
+    },
+    {
+      "bytes": 5423504,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/direction_switch/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "3833055fc877c34fdf285eeb439fb42aee337276bdd0ee195bfbf4eeaad020cf",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/direction_switch_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "direction_switch",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/direction_switch_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "direction_switch",
+        "status": "PASS"
+      },
+      "stage": "direction_switch",
+      "status": "PASS"
+    },
+    {
+      "bytes": 292814,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/ps_reset_fixed/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "dff6ddd30099b57b75463e707f8de9f552d17d5c633207c698617f153a08a88f",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/ps_reset_fixed_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "ps_reset_fixed",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/ps_reset_fixed_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "ps_reset_fixed",
+        "status": "PASS"
+      },
+      "stage": "ps_reset_fixed",
+      "status": "PASS"
+    },
+    {
+      "bytes": 292825,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/ps_reset_rotating/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "25499522c2fecf044eed9f0298c1699cf69e685a6e24b4817bb9b1ca7c641e5f",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/ps_reset_rotating_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "ps_reset_rotating",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/ps_reset_rotating_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "ps_reset_rotating",
+        "status": "PASS"
+      },
+      "stage": "ps_reset_rotating",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42778,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_1/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "fa5ad483a5176349140534a68dedb5c205d9f1529f4492ee3a64125c0c5d831c",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_1_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_fixed_1",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_1_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_fixed_1",
+        "status": "PASS"
+      },
+      "stage": "dma_reset_fixed_1",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60116,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_1/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "97538d270efebf4a2c93e08ef114b06b246625c260bb493cb4e85af5a87128c3",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_1_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_fixed_1",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_1_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_fixed_1",
+        "status": "PASS"
+      },
+      "stage": "dma_recovery_fixed_1",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42775,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_2/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "089d14650e084b720808475cd86e7a494a66f70716944583539ef8936fda1120",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_2_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_fixed_2",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_2_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_fixed_2",
+        "status": "PASS"
+      },
+      "stage": "dma_reset_fixed_2",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60121,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_2/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "30b51176a3e3f751ef69f735989b31235965175ce26c708d6a49e7f7164679ba",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_2_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_fixed_2",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_2_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_fixed_2",
+        "status": "PASS"
+      },
+      "stage": "dma_recovery_fixed_2",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42778,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_3/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "297ef6387c43b1ca34476be09c2adc66e472d3caa2db85d5dd76dacf4e7eb398",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_3_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_fixed_3",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_3_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_fixed_3",
+        "status": "PASS"
+      },
+      "stage": "dma_reset_fixed_3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60116,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_3/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "1b50587c1733c353980069baf09349c3cf0e3d3cb7d3df99f1418f6be5e1b972",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_3_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_fixed_3",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_3_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_fixed_3",
+        "status": "PASS"
+      },
+      "stage": "dma_recovery_fixed_3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42775,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_4/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "f13388e502b5c167bc2c6fbf1eac07a7d030f7d217db3102e2228f030fe881bf",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_4_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_fixed_4",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_4_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_fixed_4",
+        "status": "PASS"
+      },
+      "stage": "dma_reset_fixed_4",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60113,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_4/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "a985bec98f0e310e51a26b5651d941f5c3475593ce93656f67635e124df4c473",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_4_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_fixed_4",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_4_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_fixed_4",
+        "status": "PASS"
+      },
+      "stage": "dma_recovery_fixed_4",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42777,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_fixed_5/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "4e049fe71a15ddd48c067f435201e7fa3e7a5e851fac319d7d88d3809807ec90",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_5_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_fixed_5",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_fixed_5_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_fixed_5",
+        "status": "PASS"
+      },
+      "stage": "dma_reset_fixed_5",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60121,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_fixed_5/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "e69dae752e979527934e1a68c5ab35b8837380288bd92076076cfc28ffb6d71a",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_5_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_fixed_5",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_fixed_5_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_fixed_5",
+        "status": "PASS"
+      },
+      "stage": "dma_recovery_fixed_5",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42860,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_1/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "74c14bbe8b7c4913dd6c8cb56b4149cbce687f3cc797ceb76d9acf961a81945d",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_1_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_rotating_1",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_1_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_rotating_1",
+        "status": "PASS"
+      },
+      "stage": "dma_reset_rotating_1",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60151,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_1/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "986099f4c3ae067cc29ac63953ad4edf3014c3330c1d814377324233a13f01e4",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_1_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_rotating_1",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_1_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_rotating_1",
+        "status": "PASS"
+      },
+      "stage": "dma_recovery_rotating_1",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42862,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_2/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "755eb3739bee89a821b136a7312f3ef6022f4ed62d6b672e5863291d964ec5ab",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_2_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_rotating_2",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_2_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_rotating_2",
+        "status": "PASS"
+      },
+      "stage": "dma_reset_rotating_2",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60145,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_2/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "2aa3fde5cad8a0167c2efa9f3e62eae1e6e52bd7031d732b309df0e7a6bb10c4",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_2_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_rotating_2",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_2_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_rotating_2",
+        "status": "PASS"
+      },
+      "stage": "dma_recovery_rotating_2",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42862,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_3/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "c1af611b84c76bc949e3ba82223e74740ccf0f901ab160fc06476e7c8738b84d",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_3_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_rotating_3",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_3_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_rotating_3",
+        "status": "PASS"
+      },
+      "stage": "dma_reset_rotating_3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60149,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_3/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "e5c0b76c157b99a18b8caf3bf93b7163a5aa740ddffa58cc21dfecbe10a16252",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_3_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_rotating_3",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_3_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_rotating_3",
+        "status": "PASS"
+      },
+      "stage": "dma_recovery_rotating_3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42861,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_4/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "33dd15264f8208846165f3324b05bbf339001fe858dc31e66d9249b11172e5ec",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_4_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_rotating_4",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_4_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_rotating_4",
+        "status": "PASS"
+      },
+      "stage": "dma_reset_rotating_4",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60146,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_4/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "eda8cb9d19a0f27891eb51d8fb12a37bba43d20f9cea11d4c55fb5140c6b7025",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_4_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_rotating_4",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_4_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_rotating_4",
+        "status": "PASS"
+      },
+      "stage": "dma_recovery_rotating_4",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42861,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_reset_rotating_5/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "53b0bcb3de5ce390b3976cead04cfaf9fd6e17a35ebf1b2a69b9eb7d971352db",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_5_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_rotating_5",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_reset_rotating_5_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_reset_rotating_5",
+        "status": "PASS"
+      },
+      "stage": "dma_reset_rotating_5",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60131,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/dma_recovery_rotating_5/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "74b7e75fe03b6d4ee4caf834f148294547ce9d7902b51c42c27489f9c3f87934",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_5_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_rotating_5",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/dma_recovery_rotating_5_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "dma_recovery_rotating_5",
+        "status": "PASS"
+      },
+      "stage": "dma_recovery_rotating_5",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42580,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_fixed_1/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "2d50796bf2775d06e090fc3caef4723c2138affde1ceb6530e5b0bece7ebc4f9",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_1_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_fixed_1",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_1_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_fixed_1",
+        "status": "PASS"
+      },
+      "stage": "pl_reset_fixed_1",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60086,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_fixed_1/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "4dc1a9b90eb2eba538931410fbd4ef9c434165dbad97ce8116915cae5fe84640",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_1_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_fixed_1",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_1_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_fixed_1",
+        "status": "PASS"
+      },
+      "stage": "pl_recovery_fixed_1",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42578,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_fixed_2/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "943f9d8beac30b05415708e9242c01574825ca9108428c1919e9c66b57c071cc",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_2_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_fixed_2",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_2_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_fixed_2",
+        "status": "PASS"
+      },
+      "stage": "pl_reset_fixed_2",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60093,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_fixed_2/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "45f9e07b33437ec09cfe39e7c42b583a582f0dd84a76c1432eb3a25cc5d0b335",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_2_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_fixed_2",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_2_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_fixed_2",
+        "status": "PASS"
+      },
+      "stage": "pl_recovery_fixed_2",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42575,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_fixed_3/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "6b904d1de0dd2514ccf0a57c2a240665e64ca0c4c68b12d082e6f16c377b2b2a",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_3_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_fixed_3",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_fixed_3_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_fixed_3",
+        "status": "PASS"
+      },
+      "stage": "pl_reset_fixed_3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60079,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_fixed_3/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "f08034c5f536a033fae52e0c2865e79ee8e1c7a6ddd3dc68910a2ec5c422043f",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_3_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_fixed_3",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_fixed_3_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_fixed_3",
+        "status": "PASS"
+      },
+      "stage": "pl_recovery_fixed_3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42719,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_rotating_1/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "224aaa230d65e90cd2f4427e0862b18bbb892619a302b34a2dd5b23be8ffa736",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_rotating_1_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_rotating_1",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_rotating_1_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_rotating_1",
+        "status": "PASS"
+      },
+      "stage": "pl_reset_rotating_1",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60121,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_rotating_1/stage_summary.json",
+      "run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "aa9afe18cf81aa950034f17b16bc964def0700bd5aa21dcaea37a2d957978096",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_rotating_1_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_rotating_1",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_rotating_1_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_rotating_1",
+        "status": "PASS"
+      },
+      "stage": "pl_recovery_rotating_1",
+      "status": "PASS"
+    },
+    {
+      "bytes": 43491,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_rotating_2/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "142f37577e7188500c62e62ce7a88955bd91f64d66df19757f6e841033fdd4c0",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_rotating_2_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_rotating_2",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_rotating_2_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_rotating_2",
+        "status": "PASS"
+      },
+      "stage": "pl_reset_rotating_2",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60889,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_rotating_2/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "7bd472486426aad9d78bbf223c7313422c5140b34c7df0e990fd83ea5eb33da1",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_rotating_2_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_rotating_2",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_rotating_2_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_rotating_2",
+        "status": "PASS"
+      },
+      "stage": "pl_recovery_rotating_2",
+      "status": "PASS"
+    },
+    {
+      "bytes": 43488,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/pl_reset_rotating_3/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "f9cc43f654d1c7c245837e79abc61cc71e8f30a9ae57b537d3782dc08ffd2919",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_rotating_3_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_rotating_3",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_reset_rotating_3_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_reset_rotating_3",
+        "status": "PASS"
+      },
+      "stage": "pl_reset_rotating_3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60894,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/pl_recovery_rotating_3/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "640d3d84c3ac9e181c2d64a44b8d65f2e14d496e899fa93d3b68da0ab2e4498d",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_rotating_3_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_rotating_3",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/pl_recovery_rotating_3_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "pl_recovery_rotating_3",
+        "status": "PASS"
+      },
+      "stage": "pl_recovery_rotating_3",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42477,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/duplicate_fault/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "e576a87269c2637c417562e749363dec3f4b4b9d5e5e7b67e850217ab5d39a9c",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/duplicate_fault_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "duplicate_fault",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/duplicate_fault_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "duplicate_fault",
+        "status": "PASS"
+      },
+      "stage": "duplicate_fault",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60830,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/duplicate_recovery/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "f71d951d588e75095f840a79e0582ad8ce1a3f0bb9372b4b1ec18ea8c2e3ccab",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/duplicate_recovery_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "duplicate_recovery",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/duplicate_recovery_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "duplicate_recovery",
+        "status": "PASS"
+      },
+      "stage": "duplicate_recovery",
+      "status": "PASS"
+    },
+    {
+      "bytes": 42324,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/stale_fault/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "9dc16b5843949079e1f6415e8417db07365c5b58f6314650f49f47840252ab4e",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/stale_fault_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "stale_fault",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/stale_fault_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "stale_fault",
+        "status": "PASS"
+      },
+      "stage": "stale_fault",
+      "status": "PASS"
+    },
+    {
+      "bytes": 60693,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/stale_recovery/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "d9406634a67527b6447acc7938e3b5c41241336d1d9258f7c942b92a4b3b7a2c",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/stale_recovery_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "stale_recovery",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/stale_recovery_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "stale_recovery",
+        "status": "PASS"
+      },
+      "stage": "stale_recovery",
+      "status": "PASS"
+    },
+    {
+      "bytes": 1100559,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/echo_crosstalk_8x8/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "ccaed1b1f654691cf5d594c5f3f2ee282e3484cad58a1af691f76cde339c0c99",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/echo_crosstalk_8x8_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "echo_crosstalk_8x8",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/echo_crosstalk_8x8_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "echo_crosstalk_8x8",
+        "status": "PASS"
+      },
+      "stage": "echo_crosstalk_8x8",
+      "status": "PASS"
+    },
+    {
+      "bytes": 28440,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/two_plus_two/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "52d44499d66a73db1565a357863ca6cb6dceae411214eecffc3da6fc03964127",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/two_plus_two_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "two_plus_two",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/two_plus_two_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "two_plus_two",
+        "status": "PASS"
+      },
+      "stage": "two_plus_two",
+      "status": "FAIL"
+    },
+    {
+      "bytes": 2278829,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/mixed_15min_a/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "d4b436b36491123763942b5ee6ae75228d466b68dba4c37cd26f0adecd7cf957",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/mixed_15min_a_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "mixed_15min_a",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/mixed_15min_a_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "mixed_15min_a",
+        "status": "PASS"
+      },
+      "stage": "mixed_15min_a",
+      "status": "PASS"
+    },
+    {
+      "bytes": 6780181,
+      "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/stages/mixed_15min_b/stage_summary.json",
+      "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+      "sha256": "07522039bfc6e883f1d1e14e71fe804e978ff7973a04b9bed4620247c5e5ae2a",
+      "shutdown_after": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/mixed_15min_b_after/attempt_1.result.txt",
+        "phase": "after",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "mixed_15min_b",
+        "status": "PASS"
+      },
+      "shutdown_before": {
+        "bytes": 1699,
+        "marker_count": 33,
+        "path": "evidence/hardware/p10_4/p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4/shutdown/mixed_15min_b_before/attempt_1.result.txt",
+        "phase": "before",
+        "sha256": "e9cae8f81d93ea6a36e424ae37379b433920658e2cc0c6206f996d7c20d3f065",
+        "stage": "mixed_15min_b",
+        "status": "PASS"
+      },
+      "stage": "mixed_15min_b",
+      "status": "PASS"
     }
-  },
-  "terminal_run_id": "p10_4_20260806T092551Z_6ff17d33_94506af9_2b2b37d4",
-  "test_id": "P10_4-COMPLETION-AUDIT-B0008"
+  ],
+  "status": "PASS_WITH_NONBLOCKING_LIMITS",
+  "test_id": "P10_4-COMPLETION-AUDIT-COMPOSITE"
 }

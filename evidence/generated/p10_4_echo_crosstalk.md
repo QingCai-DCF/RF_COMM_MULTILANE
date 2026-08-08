@@ -1,7 +1,7 @@
-# P10.4 digital echo/crosstalk result
+# P10.4 echo_crosstalk
 
-- Status: `FAIL`
-- F0/R0/F1/R1 raw64, raw1024 and 30-second frame windows completed.
-- F2-to-R2 raw64: `64 TX / 0 remote RX`.
-- Same-module and cross-lane accepted data/control: `0 / 0`.
-- Remaining vectors were not executed after fail-closed.
+- Status: `PASS`
+- test_id: `P10_4-ECHO_CROSSTALK`
+- run_id: `p10_4_composite_5da414ba_f53d9825`
+- composite_run_id: `p10_4_composite_5da414ba_f53d9825`
+- artifact_source_commit: `6ff17d33a0ea111fbd796899c49decbfa339e2c1`
