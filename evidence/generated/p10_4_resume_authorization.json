@@ -1,0 +1,31 @@
+{
+  "authorization": "config/p10_4_resume_current_run_hardware_authorization.json",
+  "authorization_sha256": "15142c340e25af3eaff6804edac1477578f1bbf6dcf6ab8710acabe85d4f9d76",
+  "current_run_hardware_authorization": true,
+  "errors": [],
+  "hardware_actions_executed": false,
+  "parent_checkpoint": {
+    "bytes": 104565,
+    "path": "evidence/generated/p10_4_interrupted_parent_checkpoint.json",
+    "sha256": "abf33fc26344d6c43b814d12d666a92c2a1299a67bf16bd827e31cf7e1263270"
+  },
+  "parent_run_id": "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+  "resume_stages": [
+    "pl_reset_rotating_2",
+    "pl_recovery_rotating_2",
+    "pl_reset_rotating_3",
+    "pl_recovery_rotating_3",
+    "duplicate_fault",
+    "duplicate_recovery",
+    "stale_fault",
+    "stale_recovery",
+    "echo_crosstalk_8x8",
+    "two_plus_two",
+    "mixed_15min_a",
+    "mixed_15min_b"
+  ],
+  "run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
+  "schema_version": 1,
+  "status": "READY_FOR_EXACT_RESUME_RUN",
+  "test_id": "P10_4-RESUME-CURRENT-RUN-AUTHORIZATION"
+}
