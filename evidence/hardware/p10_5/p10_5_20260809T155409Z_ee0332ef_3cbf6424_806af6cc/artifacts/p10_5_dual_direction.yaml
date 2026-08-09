@@ -1,0 +1,70 @@
+schema_version: 1
+scope: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+protocol_capability_version: 1
+capability_name: CAP_SIMULTANEOUS_BIDIRECTIONAL_V1
+operating_modes:
+  legacy_bundle_half_duplex: 0
+  split_lane_simultaneous_bidirectional: 1
+default_operating_mode: LEGACY_BUNDLE_HALF_DUPLEX
+lane_count: 4
+active_lane_mask: '0xF'
+f_to_r_lane_mask: '0x3'
+r_to_f_lane_mask: '0xC'
+role_epoch_width: 16
+direction_id_width: 1
+per_direction:
+  sequence_width: 16
+  outstanding: 32
+  sack_window: 32
+  rx_reorder_window: 32
+  retry_limit: 7
+  ack_threshold: 8
+  ack_max_delay_cycles: 64000
+  receiver_credit: 32
+  tx_ring_depth: 32
+  rx_ring_depth: 32
+  object_queue_depth: 4
+  stream_queue_depth: 4
+runtime:
+  autonomous_dual_stream_command: 15
+  result_schema_version: 1
+  maximum_stream_bytes: '0x70000000'
+  internal_object_bytes: 262144
+  descriptor_bytes: 65536
+  ring_depth: 32
+  buffer_count: 4
+  descriptor_batch: 8
+  initial_launch_barrier: HOST_RELEASE_AFTER_BOTH_ENDPOINTS_PRIMED
+  host_launch_release_mask: '0x80000000'
+  launch_barrier_timeout_ms: 60000
+control:
+  queue_depth: 8
+  priority_policy: SAFETY_THEN_CONTROL_THEN_RETRY_THEN_NEW_DATA
+  piggyback_enable: true
+  control_only_ack_fallback: true
+  starvation_limit_cycles: 64000
+wire:
+  legacy_data_magic: '0xA531'
+  vnext_data_magic: '0xA535'
+  legacy_ack_magic: '0xAD32'
+  vnext_ack_magic: '0xAD35'
+  legacy_data_header_bytes: 24
+  vnext_data_header_bytes: 40
+  legacy_ack_header_bytes: 20
+  vnext_ack_header_bytes: 22
+performance_targets:
+  lane_raw_bps: 4000000
+  raw_bps_per_direction: 8000000
+  application_goodput_bps_per_direction: 4000000
+  stretch_goodput_bps_per_direction: 4800000
+formal_runtime_seconds: 1800
+minimum_interstage_cooldown_ratio: 0.5
+maximum_lane_mask: '0xF'
+immutable_safety:
+  single_global_permit_per_endpoint: true
+  maximum_continuous_txd_high_us: 1
+  exact_rolling_duty_target_fraction: 0.18
+  exact_rolling_duty_hard_limit: '<0.20'
+  startup_us: 500
+  module_tx_rx_exclusion: true
+  final_tx_kill_unchanged: true
