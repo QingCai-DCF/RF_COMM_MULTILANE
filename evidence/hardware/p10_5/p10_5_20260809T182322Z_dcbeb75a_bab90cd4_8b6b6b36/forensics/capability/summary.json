@@ -1,0 +1,103 @@
+{
+  "archives": [
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36\\forensics\\capability\\fixed.p10ff.bin",
+      "binary_sha256": "f0816e476b9c0487dd6abb635cf53b6326f66844c5808f14e66304994e963ac9",
+      "digest_words_little_endian": [
+        "0x476E81F0",
+        "0x87049C6B",
+        "0x63BB6ADD",
+        "0x633BF55C",
+        "0x4468F626",
+        "0x148F80C5",
+        "0x990463E6",
+        "0xC93A964E"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36\\forensics\\capability\\fixed.p10ff.json",
+      "role": "fixed",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36\\forensics\\capability\\fixed.p10ff.sha256",
+      "status": "FROZEN"
+    },
+    {
+      "binary": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36\\forensics\\capability\\rotating.p10ff.bin",
+      "binary_sha256": "d6aaeaaf6fc03356cf1ae67fccf2a18dcd47f3ac78b440dc53401fc2d86cd3d7",
+      "digest_words_little_endian": [
+        "0xAFEAAAD6",
+        "0x5633C06F",
+        "0x7FE61ACF",
+        "0x8DA1F2CC",
+        "0xACF347CD",
+        "0xDC40B478",
+        "0xC21F4053",
+        "0xD7D36CD8"
+      ],
+      "json": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36\\forensics\\capability\\rotating.p10ff.json",
+      "role": "rotating",
+      "sha256_file": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36\\forensics\\capability\\rotating.p10ff.sha256",
+      "status": "FROZEN"
+    }
+  ],
+  "capture_process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\scripts\\hw\\p10_3f_fault_forensics.tcl",
+      "capture",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36\\forensics\\capability",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\config\\p10_5_current_run_hardware_authorization.json",
+      "p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36",
+      "0x50353546",
+      "0x50353552",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36\\forensics\\capability\\capture.result.txt",
+      "NONE",
+      "NONE",
+      "0x0A000005",
+      "0xA16281D1"
+    ],
+    "elapsed_seconds": 4.868643100140616,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_5/p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36/forensics/capability/capture.stderr.log",
+    "stdout": "evidence/hardware/p10_5/p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36/forensics/capability/capture.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 180
+  },
+  "commit_process": {
+    "command": [
+      "D:\\Xilinx\\Vitis\\2023.1\\bin\\xsdb.bat",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\scripts\\hw\\p10_3f_fault_forensics.tcl",
+      "commit",
+      "tcp:localhost:3121",
+      "210249855178",
+      "210512180081",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36\\forensics\\capability",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\config\\p10_5_current_run_hardware_authorization.json",
+      "p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36",
+      "0x50353546",
+      "0x50353552",
+      "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36\\forensics\\capability\\commit.result.txt",
+      "f0816e476b9c0487dd6abb635cf53b6326f66844c5808f14e66304994e963ac9",
+      "d6aaeaaf6fc03356cf1ae67fccf2a18dcd47f3ac78b440dc53401fc2d86cd3d7",
+      "0x0A000005",
+      "0xA16281D1"
+    ],
+    "elapsed_seconds": 2.791624099947512,
+    "returncode": 0,
+    "stderr": "evidence/hardware/p10_5/p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36/forensics/capability/commit.stderr.log",
+    "stdout": "evidence/hardware/p10_5/p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36/forensics/capability/commit.stdout.log",
+    "timed_out": false,
+    "timeout_seconds": 180
+  },
+  "errors": [],
+  "explicit_clear_executed": false,
+  "force_terminal_abort": false,
+  "frozen_roles": [
+    "fixed",
+    "rotating"
+  ],
+  "generated_at_utc": "2026-08-09T18:26:47+00:00",
+  "label": "capability",
+  "schema_version": 1,
+  "status": "PASS"
+}
