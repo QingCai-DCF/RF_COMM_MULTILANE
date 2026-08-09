@@ -1,0 +1,164 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xvlog.bat -sv -i C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl -i C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\sim\tb C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_seq_math_pkg.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_health_weighted_scheduler.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_selective_repeat_tx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_selective_repeat_rx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_ack_aggregator.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_data_plane_top.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_tfdu_exact_duty_accountant.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_tfdu_physical_module_safety.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\tfdu_lane_phy.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_4ppm_codec.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p9_rate_4ppm_rx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p9_4ppm_frame_tx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p9_4ppm_frame_rx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_1r_rx_admission.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_4_connector_ack_rx_quarantine.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p9_optical_transport_core.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\sim\tb\tb_p10_5_dual_direction.sv
+STDOUT_BEGIN
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_seq_math_pkg.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_health_weighted_scheduler.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_health_weighted_scheduler
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_selective_repeat_tx.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_selective_repeat_tx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_selective_repeat_rx.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_selective_repeat_rx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_ack_aggregator.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_ack_aggregator
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_data_plane_top.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_data_plane_top
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_tfdu_exact_duty_accountant.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_tfdu_exact_duty_accountant
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_tfdu_physical_module_safety.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_tfdu_physical_module_safety
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/tfdu_lane_phy.sv" into library work
+INFO: [VRFC 10-311] analyzing module tfdu_lane_phy
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p9_rate_4ppm_rx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_rate_4ppm_rx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p9_4ppm_frame_tx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_4ppm_frame_tx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p9_4ppm_frame_rx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_4ppm_frame_rx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_1r_rx_admission.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_1r_rx_admission
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_4_connector_ack_rx_quarantine.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_4_connector_ack_rx_quarantine
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p9_optical_transport_core.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_optical_transport_core
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_p10_5_dual_direction.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_p10_5_dual_direction
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xelab.bat tb_p10_5_dual_direction -debug typical -s tb_p10_5_bidirectional_dma_snapshot
+STDOUT_BEGIN
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_p10_5_dual_direction -debug typical -s tb_p10_5_bidirectional_dma_snapshot 
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-3645] port 'raw_busy_o' remains unconnected for this instance [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_p10_5_dual_direction.sv:146]
+WARNING: [VRFC 10-3645] port 'raw_busy_o' remains unconnected for this instance [C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_p10_5_dual_direction.sv:203]
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package work.ir_seq_math_pkg
+Compiling module work.ir_selective_repeat_tx(SACK_BITS...
+Compiling module work.ir_health_weighted_scheduler(LAN...
+Compiling module work.ir_selective_repeat_rx(WINDOW_SI...
+Compiling module work.ir_ack_aggregator(SACK_BITS=32,M...
+Compiling module work.ir_data_plane_top(LANE_COUNT=4,W...
+Compiling module work.p10_4_connector_ack_rx_quarantin...
+Compiling module work.p9_4ppm_frame_tx(LANE_COUNT=4,P1...
+Compiling module work.ir_tfdu_exact_duty_accountant_de...
+Compiling module work.ir_tfdu_physical_module_safety_d...
+Compiling module work.tfdu_lane_phy(CLEAR_STICKY_INVAL...
+Compiling module work.p10_1r_rx_admission
+Compiling module work.ir_4ppm_codec(CNT_CHIP_MAX=31,DE...
+Compiling module work.ir_4ppm_codec(CNT_CHIP_MAX=15,DE...
+Compiling module work.ir_4ppm_codec(DETECT_START_CYCLE...
+Compiling module work.p9_rate_4ppm_rx
+Compiling module work.p9_4ppm_frame_rx(LANE_COUNT=4)
+Compiling module work.p9_optical_transport_core(LANE_C...
+Compiling module work.p9_optical_transport_core(LANE_C...
+Compiling module work.tb_p10_5_dual_direction
+Built simulation snapshot tb_p10_5_bidirectional_dma_snapshot
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_p10_5_bidirectional_dma_snapshot -runall
+STDOUT_BEGIN
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_p10_5_bidirectional_dma_snapshot/xsim_script.tcl
+# xsim {tb_p10_5_bidirectional_dma_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P10_5_WAIT watchdog=50000 active=1/1 complete=1/0/1/0 bytes=800/0/800/0 outstanding=4/4 phase=0/0 piggy=0/0 fallback=0/0
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0010 sched=0011 duty_empty=1110 schedule=1110 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=0010001000100010
+P10_5_FIXED_RX admission=1111 raw=0/0/0/0 preamble=0/0/1/0 good=0 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=1000 sched=1100 duty_empty=1011 schedule=1011 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=0010001000100010
+P10_5_ROT_RX admission=1111 raw=0/0/0/0 preamble=1/0/0/0 good=0 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=100000 active=1/1 complete=1/0/1/0 bytes=800/0/800/0 outstanding=4/4 phase=0/0 piggy=0/0 fallback=0/0
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0011 duty_empty=1100 schedule=1100 busy=0011 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=0010001001000100
+P10_5_FIXED_RX admission=1100 raw=0/0/1089/1090 preamble=0/0/2/1 good=0 bad=0 crc=0 symbol=0 pulses=1000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0000 sched=1100 duty_empty=0011 schedule=0011 busy=1100 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=0010001001000100
+P10_5_ROT_RX admission=0011 raw=1090/1094/0/0 preamble=2/1/0/0 good=0 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=150000 active=1/1 complete=1/0/1/0 bytes=800/492/800/492 outstanding=4/4 phase=1/1 piggy=1/1 fallback=0/0
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0000 sched=0011 duty_empty=1100 schedule=1111 busy=0001 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=32 reset=0 abort=0 state=0100010001000100
+P10_5_FIXED_RX admission=1110 raw=0/0/2037/1519 preamble=0/0/3/2 good=3 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=3 ready=0000 sched=1100 duty_empty=0011 schedule=1111 busy=0100 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=32 reset=0 abort=0 state=0100010001000100
+P10_5_ROT_RX admission=1011 raw=2033/1527/0/0 preamble=3/2/0/0 good=3 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=200000 active=1/1 complete=1/1/1/1 bytes=800/800/800/800 outstanding=1/1 phase=0/0 piggy=1/1 fallback=1/1
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0011 sched=0011 duty_empty=1100 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=31 reset=0 abort=0 state=1001010010011001
+P10_5_FIXED_RX admission=1111 raw=0/0/2230/1621 preamble=0/0/3/3 good=4 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=3 ready=1100 sched=1100 duty_empty=0011 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=31 reset=0 abort=0 state=1001010010011001
+P10_5_ROT_RX admission=1111 raw=2230/1630/0/0 preamble=3/3/0/0 good=4 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=50000 active=1/1 complete=1/0/1/0 bytes=600/0/800/0 outstanding=0/4 phase=0/0 piggy=1/1 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0011 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/0/0 live=0 credit=32 reset=0 abort=1 state=1001001000100010
+P10_5_FIXED_RX admission=1111 raw=0/0/3311/2596 preamble=0/0/5/4 good=4 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0000 sched=1100 duty_empty=0011 schedule=1111 busy=1100 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=0010001001000100
+P10_5_ROT_RX admission=0011 raw=2333/1630/0/0 preamble=4/3/0/0 good=4 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=100000 active=1/1 complete=1/0/1/0 bytes=600/492/800/0 outstanding=0/1 phase=0/0 piggy=1/1 fallback=3/2
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0011 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/0/0 live=0 credit=32 reset=0 abort=1 state=1001001000100010
+P10_5_FIXED_RX admission=1111 raw=0/0/4255/3142 preamble=0/0/6/5 good=7 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=3 ready=0000 sched=1100 duty_empty=0011 schedule=1111 busy=0100 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=31 reset=0 abort=0 state=1001010010011001
+P10_5_ROT_RX admission=1011 raw=2435/1630/0/0 preamble=5/3/0/0 good=4 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=150000 active=1/1 complete=1/1/1/0 bytes=600/800/800/0 outstanding=0/1 phase=0/0 piggy=1/1 fallback=3/2
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0011 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/0/0 live=0 credit=32 reset=0 abort=1 state=1001001000100010
+P10_5_FIXED_RX admission=1111 raw=0/0/4561/3142 preamble=0/0/6/5 good=8 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=3 ready=1100 sched=1100 duty_empty=0011 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=31 reset=0 abort=0 state=1001010010011001
+P10_5_ROT_RX admission=1111 raw=2435/1630/0/0 preamble=5/3/0/0 good=4 bad=0 crc=0 symbol=0 pulses=0000
+TB_P10_5_DUAL_DIRECTION_L2=PASS
+TB_P10_5_ACK_PIGGYBACK=PASS
+TB_P10_5_CONTROL_ONLY_ACK=PASS
+TB_P10_5_BIDIRECTIONAL_DMA=PASS
+TB_P10_5_ROLE_EPOCH_STALE=PASS
+TB_P10_5_DIRECTION_ABORT_ISOLATION=PASS
+TB_P10_5_DUAL_DIRECTION_FAULTS=PASS
+TB_P10_5_DUAL_ENDPOINT_INTEGRATION=PASS
+TB_P10_5_DUAL_DIRECTION=PASS piggy=1/1 fallback=4/2 simultaneous=17683
+$finish called at time : 7915859145 ps : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_p10_5_dual_direction.sv" Line 650
+run: Time (s): cpu = 00:00:00 ; elapsed = 00:00:31 . Memory (MB): peak = 211.066 ; gain = 0.000
+exit
+INFO: xsimkernel Simulation Memory Usage: 17692 KB (Peak: 17692 KB), Simulation CPU Usage: 30108 ms
+INFO: [Common 17-206] Exiting xsim at Sun Aug  9 21:00:17 2026...
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+RETURN_CODE=0
