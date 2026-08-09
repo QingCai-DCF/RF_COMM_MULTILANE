@@ -1273,8 +1273,17 @@ static int p10_5_clear_direction_errors(void) {
   return P9_RUNTIME_OK;
 }
 
-static uint32_t p10_5_direction_session(uint32_t base, uint32_t direction) {
-  return direction == 0U ? base : base ^ UINT32_C(0x80000000);
+static uint32_t p10_5_object_direction_session(uint32_t base,
+                                               uint32_t direction,
+                                               uint32_t object_id) {
+  /* Multiplication by an odd value plus a constant is a permutation modulo
+   * 2^31.  Therefore distinct object IDs cannot alias within the maximum
+   * P10.5 stream; bit 31 remains reserved for direction separation. */
+  uint32_t epoch = ((base & UINT32_C(0x7fffffff)) +
+                    ((object_id & UINT32_C(0x7fffffff)) *
+                     UINT32_C(0x9e3779b1))) &
+                   UINT32_C(0x7fffffff);
+  return epoch | (direction != 0U ? UINT32_C(0x80000000) : 0U);
 }
 
 static uint32_t p10_5_direction_path(uint32_t base, uint32_t direction) {
@@ -1310,7 +1319,8 @@ static int p10_5_program_dual_object_context(volatile p9_mailbox_t *m,
                   (local_direction << 16));
   p9_pl_write(IR_REG_P9_LANE_WEIGHTS, m->lane_weights);
   p9_pl_write(IR_REG_P9_SESSION_EPOCH,
-              p10_5_direction_session(m->session_epoch, local_direction));
+              p10_5_object_direction_session(
+                  m->session_epoch, local_direction, m->object_id));
   p9_pl_write(IR_REG_P9_PATH_EPOCH,
               p10_5_direction_path(m->path_epoch, local_direction));
   p9_pl_write(IR_REG_P9_OBJECT_ID, m->object_id);
@@ -1321,9 +1331,11 @@ static int p10_5_program_dual_object_context(volatile p9_mailbox_t *m,
               local_drop_data | (local_drop_ack << 8) |
                   (unavailable << 16));
   p9_pl_write(IR_REG_P10_5_TX_SESSION,
-              p10_5_direction_session(m->session_epoch, local_direction));
+              p10_5_object_direction_session(
+                  m->session_epoch, local_direction, m->object_id));
   p9_pl_write(IR_REG_P10_5_RX_SESSION,
-              p10_5_direction_session(m->session_epoch, remote_direction));
+              p10_5_object_direction_session(
+                  m->session_epoch, remote_direction, m->object_id));
   p9_pl_write(IR_REG_P10_5_TX_PATH,
               p10_5_direction_path(m->path_epoch, local_direction));
   p9_pl_write(IR_REG_P10_5_RX_PATH,
@@ -1419,7 +1431,8 @@ static void p10_5_select_payload_direction(volatile p9_mailbox_t *m,
   *saved_session = m->session_epoch;
   *saved_path = m->path_epoch;
   m->direction = direction;
-  m->session_epoch = p10_5_direction_session(*saved_session, direction);
+  m->session_epoch = p10_5_object_direction_session(
+      *saved_session, direction, m->object_id);
   m->path_epoch = p10_5_direction_path(*saved_path, direction);
 }
 

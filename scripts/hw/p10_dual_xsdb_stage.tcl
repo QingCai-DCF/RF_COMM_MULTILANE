@@ -823,17 +823,19 @@ proc p10_wait_p10_5_pair_primed {d sequence} {
   set total_bytes [dict get $d size]
   set object_count [expr {($total_bytes + 262143) / 262144}]
   set initial_slots [expr {$object_count < 4 ? $object_count : 4}]
-  set expected_held 0
+  set expected_held_total 0
   for {set index 0} {$index < $initial_slots} {incr index} {
     set remaining [expr {$total_bytes - $index * 262144}]
     set current [expr {$remaining < 262144 ? $remaining : 262144}]
-    incr expected_held [expr {($current + 65535) / 65536}]
+    incr expected_held_total [expr {($current + 65535) / 65536}]
   }
+  set first_bytes [expr {$total_bytes < 262144 ? $total_bytes : 262144}]
+  set expected_first_held [expr {($first_bytes + 65535) / 65536}]
   foreach role {fixed rotating} {
     foreach field {main_state result_state result_status result_sequence
                    pl_status phy role_status role_error local_tx local_rx
                    role_epoch context_status barrier_waited rx_prestarted
-                   tx_held tx_released prestart_context submitted_low
+                   tx_held tx_released prestart_context tx_held_total submitted_low
                    submitted_high} {
       set last($role,$field) 0
     }
@@ -860,12 +862,13 @@ proc p10_wait_p10_5_pair_primed {d sequence} {
       set tx_held [p10_read32 $role 0x00020774]
       set tx_released [p10_read32 $role 0x00020778]
       set prestart_context [p10_read32 $role 0x0002077C]
+      set tx_held_total [p10_read32 $role 0x00020780]
       set submitted_low [p10_read32 $role 0x000204C0]
       set submitted_high [p10_read32 $role 0x000204C4]
       foreach field {main_state result_state result_status result_sequence
                      pl_status phy role_status role_error local_tx local_rx
                      role_epoch context_status barrier_waited rx_prestarted
-                     tx_held tx_released prestart_context submitted_low
+                     tx_held tx_released prestart_context tx_held_total submitted_low
                      submitted_high} {
         set last($role,$field) [set $field]
       }
@@ -890,8 +893,9 @@ proc p10_wait_p10_5_pair_primed {d sequence} {
           ($context_status & 0x8F) == 0x09 &&
           $prestart_context == $context_status &&
           $barrier_waited == 1 && $rx_prestarted == 1 &&
-          $tx_held == $expected_held && $tx_released == 0 &&
-          $submitted_high == 0 && $submitted_low == $tx_held} {
+          $tx_held == $expected_first_held &&
+          $tx_held_total == $expected_held_total && $tx_released == 0 &&
+          $submitted_high == 0 && $submitted_low == $tx_held_total} {
         incr ready_count
       }
     }
@@ -901,19 +905,19 @@ proc p10_wait_p10_5_pair_primed {d sequence} {
     }
     after 1
   }
-  error [format "P10.5 pair did not prime before release: wait_ms=%d expected_held=%d fixed(main=0x%08X,result=0x%08X,status=0x%08X,pl=0x%08X,phy=0x%08X,role=0x%08X,epoch=0x%08X,context=0x%08X,barrier=%d,rx_prestarted=%d,held=%d,released=%d,submitted=%d:%d) rotating(main=0x%08X,result=0x%08X,status=0x%08X,pl=0x%08X,phy=0x%08X,role=0x%08X,epoch=0x%08X,context=0x%08X,barrier=%d,rx_prestarted=%d,held=%d,released=%d,submitted=%d:%d)" \
-      $bounded $expected_held $last(fixed,main_state) $last(fixed,result_state) \
+  error [format "P10.5 pair did not prime before release: wait_ms=%d expected_first_held=%d expected_total_held=%d fixed(main=0x%08X,result=0x%08X,status=0x%08X,pl=0x%08X,phy=0x%08X,role=0x%08X,epoch=0x%08X,context=0x%08X,barrier=%d,rx_prestarted=%d,held=%d,total_held=%d,released=%d,submitted=%d:%d) rotating(main=0x%08X,result=0x%08X,status=0x%08X,pl=0x%08X,phy=0x%08X,role=0x%08X,epoch=0x%08X,context=0x%08X,barrier=%d,rx_prestarted=%d,held=%d,total_held=%d,released=%d,submitted=%d:%d)" \
+      $bounded $expected_first_held $expected_held_total $last(fixed,main_state) $last(fixed,result_state) \
       $last(fixed,result_status) $last(fixed,pl_status) $last(fixed,phy) \
       $last(fixed,role_status) $last(fixed,role_epoch) \
       $last(fixed,context_status) $last(fixed,barrier_waited) \
-      $last(fixed,rx_prestarted) $last(fixed,tx_held) \
+      $last(fixed,rx_prestarted) $last(fixed,tx_held) $last(fixed,tx_held_total) \
       $last(fixed,tx_released) $last(fixed,submitted_high) \
       $last(fixed,submitted_low) $last(rotating,main_state) \
       $last(rotating,result_state) $last(rotating,result_status) \
       $last(rotating,pl_status) $last(rotating,phy) \
       $last(rotating,role_status) $last(rotating,role_epoch) \
       $last(rotating,context_status) $last(rotating,barrier_waited) \
-      $last(rotating,rx_prestarted) $last(rotating,tx_held) \
+      $last(rotating,rx_prestarted) $last(rotating,tx_held) $last(rotating,tx_held_total) \
       $last(rotating,tx_released) $last(rotating,submitted_high) \
       $last(rotating,submitted_low)]
 }

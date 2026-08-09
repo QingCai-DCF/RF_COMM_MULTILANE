@@ -2,7 +2,7 @@
 package p10_5_dual_direction_pkg;
   localparam logic [31:0] P10_5_CAPABILITY_VERSION = 32'h0000_0001;
   localparam logic [31:0] P10_5_CAPABILITY_WORD = 32'h5035_021F;
-  localparam logic [31:0] P10_5_CONFIG_HASH_LOW = 32'h91B48BE3;
+  localparam logic [31:0] P10_5_CONFIG_HASH_LOW = 32'h1C1FEADC;
   localparam int P10_5_LANE_COUNT = 4;
   localparam logic [3:0] P10_5_ACTIVE_LANE_MASK = 4'hF;
   localparam logic [3:0] P10_5_F_TO_R_LANE_MASK = 4'h3;

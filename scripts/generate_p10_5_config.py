@@ -61,7 +61,10 @@ def render(data: dict[str, Any]) -> dict[str, str]:
     if runtime["initial_launch_barrier"] != \
             "RX_ACTIVE_TX_DESCRIPTORS_HELD_UNTIL_HOST_RELEASE" or \
             as_int(runtime["host_launch_release_mask"]) != 0x80000000 or \
-            as_int(runtime["launch_barrier_timeout_ms"]) != 60000:
+            as_int(runtime["launch_barrier_timeout_ms"]) != 60000 or \
+            as_int(runtime["inter_object_rx_lead_us"]) != 5000 or \
+            runtime["object_session_policy"] != \
+            "DIRECTION_BIT_PLUS_OBJECT_DERIVED_EPOCH":
         raise ValueError("P10.5 autonomous runtime launch barrier is not fail closed")
 
     sv = f"""// Generated from config/p10_5_dual_direction.yaml; do not edit.
@@ -114,6 +117,7 @@ endpackage
 #define P10_5_RUNTIME_DESCRIPTOR_BATCH UINT32_C({as_int(runtime['descriptor_batch'])})
 #define P10_5_HOST_LAUNCH_RELEASE_MASK UINT32_C(0x{as_int(runtime['host_launch_release_mask']):08X})
 #define P10_5_LAUNCH_BARRIER_TIMEOUT_MS UINT32_C({as_int(runtime['launch_barrier_timeout_ms'])})
+#define P10_5_INTER_OBJECT_RX_LEAD_US UINT32_C({as_int(runtime['inter_object_rx_lead_us'])})
 """
     py = f'''# Generated from config/p10_5_dual_direction.yaml; do not edit.
 P10_5_CAPABILITY_VERSION = 1
@@ -144,6 +148,8 @@ RUNTIME_DESCRIPTOR_BATCH = {as_int(runtime['descriptor_batch'])}
 INITIAL_LAUNCH_BARRIER = "{runtime['initial_launch_barrier']}"
 HOST_LAUNCH_RELEASE_MASK = 0x{as_int(runtime['host_launch_release_mask']):08X}
 LAUNCH_BARRIER_TIMEOUT_MS = {as_int(runtime['launch_barrier_timeout_ms'])}
+INTER_OBJECT_RX_LEAD_US = {as_int(runtime['inter_object_rx_lead_us'])}
+OBJECT_SESSION_POLICY = "{runtime['object_session_policy']}"
 
 def validate_masks(active, f_to_r, r_to_f, require_both=True):
     known = (1 << LANE_COUNT) - 1
@@ -184,6 +190,8 @@ def validate_masks(active, f_to_r, r_to_f, require_both=True):
             "initial_launch_barrier": runtime["initial_launch_barrier"],
             "host_launch_release_mask": as_int(runtime["host_launch_release_mask"]),
             "launch_barrier_timeout_ms": as_int(runtime["launch_barrier_timeout_ms"]),
+            "inter_object_rx_lead_us": as_int(runtime["inter_object_rx_lead_us"]),
+            "object_session_policy": runtime["object_session_policy"],
         },
     }
     doc = f"""# P10.5 Dual-Direction Capability
@@ -198,7 +206,8 @@ def validate_masks(active, f_to_r, r_to_f, require_both=True):
 - Per-direction selective-repeat/SACK: `{per['outstanding']}` / `{per['sack_window']}`
 - ACK: CRC-protected DATA piggyback with bounded control-only fallback
 - Autonomous runtime: mailbox command `{runtime['autonomous_dual_stream_command']}`, simultaneous MM2S/S2MM, up to `0x{as_int(runtime['maximum_stream_bytes']):08X}` bytes per direction
-- Initial launch: both endpoints activate RX with every initial TX descriptor CPU-held, publish `PRIMED`, then release both TX queues with mailbox mask `0x{as_int(runtime['host_launch_release_mask']):08X}` within `{runtime['launch_barrier_timeout_ms']}` ms
+- Initial launch: both endpoints activate RX with every initial TX descriptor CPU-held, publish `PRIMED`, then release only both object-0 TX chains with mailbox mask `0x{as_int(runtime['host_launch_release_mask']):08X}` within `{runtime['launch_barrier_timeout_ms']}` ms
+- Object boundaries: every object keeps its TX descriptors CPU-held until its local RX context is active; objects after the paired first launch apply a `{runtime['inter_object_rx_lead_us']}`-us receiver-lead interval and use a direction-separated, object-derived session epoch before releasing only that object's TX chain
 - Safety: one active-high `GLOBAL_PERMIT` per endpoint; no direction or lane permit was added
 - Compatibility: legacy half-duplex remains the reset/default mode
 """

@@ -177,7 +177,9 @@ class P10_5HardwareTests(unittest.TestCase):
         self.assertIn("($role_status & 0x1F) == 0x1B", source)
         self.assertNotIn("($role_status & 0x0F) == 0x07", source)
         self.assertIn("($context_status & 0x8F) == 0x09", source)
-        self.assertIn("$submitted_low == $tx_held", source)
+        self.assertIn("set tx_held_total [p10_read32 $role 0x00020780]", source)
+        self.assertIn("$submitted_low == $tx_held_total", source)
+        self.assertIn("$tx_held == $expected_first_held", source)
         self.assertNotIn("P10_5_PAIRED_LAUNCH_SKEW_US", source)
 
     def test_all_hardware_tcl_guards_admit_p10_5_marker(self) -> None:

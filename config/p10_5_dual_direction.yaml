@@ -37,6 +37,8 @@ runtime:
   initial_launch_barrier: RX_ACTIVE_TX_DESCRIPTORS_HELD_UNTIL_HOST_RELEASE
   host_launch_release_mask: '0x80000000'
   launch_barrier_timeout_ms: 60000
+  inter_object_rx_lead_us: 5000
+  object_session_policy: DIRECTION_BIT_PLUS_OBJECT_DERIVED_EPOCH
 control:
   queue_depth: 8
   priority_policy: SAFETY_THEN_CONTROL_THEN_RETRY_THEN_NEW_DATA

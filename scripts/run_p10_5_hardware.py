@@ -67,6 +67,7 @@ FLAG_DMA_BACKPRESSURE = 1 << 30
 FLAG_STALE_ROLE = 1 << 31
 HOST_LAUNCH_RELEASE_MASK = 1 << 31
 LAUNCH_BARRIER_TIMEOUT_MS = 60_000
+INTER_OBJECT_RX_LEAD_US = 5_000
 MODULE_BINDING = {
     "F0": "A0019", "F1": "B0012", "F2": "B0019", "F3": "B0020",
     "R0": "A0010", "R1": "A0017", "R2": "B0023", "R3": "B0025",
@@ -684,6 +685,10 @@ def parse_p105_result(path: Path, role: str) -> dict[str, Any]:
         "launch_tx_descriptors_held": words[221],
         "launch_tx_descriptors_released": words[222],
         "launch_prestart_context_status": words[223],
+        "initial_tx_descriptors_held_total": words[224],
+        "inter_object_rx_lead_us": words[225],
+        "deferred_tx_objects_released": words[226],
+        "unique_object_sessions_programmed": words[227],
     }
 
 
@@ -720,6 +725,13 @@ def result_errors(label: str, case: P105Case, result: dict[str, Any]) -> list[st
             result["launch_tx_descriptors_released"] ==
                 result["launch_tx_descriptors_held"] and
             (result["launch_prestart_context_status"] & 0x8F) == 0x09,
+        "multi-object RX-first release":
+            result["initial_tx_descriptors_held_total"] >=
+                result["launch_tx_descriptors_held"] and
+            result["inter_object_rx_lead_us"] == INTER_OBJECT_RX_LEAD_US and
+            result["deferred_tx_objects_released"] >= 1 and
+            result["unique_object_sessions_programmed"] >=
+                result["deferred_tx_objects_released"],
     }
     errors += [f"{label}:{role}: {name}" for name, passed in checks.items() if not passed]
     for name in ("partial_commit", "duplicate_commit", "stale_commit",
@@ -733,6 +745,12 @@ def result_errors(label: str, case: P105Case, result: dict[str, Any]) -> list[st
     if stale_role != (result["role_epoch_reject"] > 0):
         errors.append(f"{label}:{role}: stale role-epoch rejection mismatch")
     abort = bool(case.flags & FLAG_ABORT_DIRECTION)
+    if not abort and not case.duration_ms:
+        expected_objects = math.ceil(case.size / INTERNAL_OBJECT_BYTES)
+        if result["objects_completed"] != expected_objects or \
+                result["deferred_tx_objects_released"] != expected_objects or \
+                result["unique_object_sessions_programmed"] != expected_objects:
+            errors.append(f"{label}:{role}: multi-object boundary accounting mismatch")
     if not abort:
         if result["application_committed"] <= 0 or \
                 result["application_committed_local"] <= 0 or \

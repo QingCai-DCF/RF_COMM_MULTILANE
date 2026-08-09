@@ -34,6 +34,21 @@ later produced exactly 18 rotating retries/timeouts. The runner correctly
 failed closed and preserved both shutdown markers. Reversing host write order
 would only move this failure to the other direction.
 
+The later immutable run
+`p10_5_20260809T230540Z_ec4dc468_f7fe756b_f3a5718e` proved that the paired
+first-object launch was clean but exposed the same race at an internal object
+boundary. Both endpoints committed four 256-KiB objects with matching
+CRC32/SHA256 and clean DMA/safety/shutdown evidence. Rotating had zero retry
+or timeout. Fixed recorded exactly 255 retries and 255 retransmission
+timeouts, while rotating admitted exactly the required 4248 unique F-to-R
+DATA frames. The 255 extra fixed attempts were not admitted while the peer's
+next receive object was closed. Firmware had released all four initial TX
+chains at the first host barrier and refilled later chains without deferral,
+so queued MM2S data could reach a newly opened local object before the peer
+had opened the matching receive context. This failed run remains immutable;
+it is the direct evidence for extending RX-first/TX-deferred sequencing to
+every internal object.
+
 ## New invariant
 
 Command 15 now has a two-phase first-object launch:
@@ -56,15 +71,22 @@ Command 15 now has a two-phase first-object launch:
 6. Only then does the host set bit 31 of the mailbox `protocol_fault_flags`
    word on both endpoints. Firmware masks this host-only bit from every PL
    protocol-fault register write.
-7. Each endpoint records release evidence and submits its complete initial TX
-   descriptor queue in ordinal order. Both peer RX objects were already
-   active before either write, so host/JTAG release skew cannot discard the
-   first DATA window. Firmware then publishes `P10_1_RUNTIME_RUNNING`.
+7. Each endpoint records release evidence and submits only object 0's TX
+   descriptor chain. Both peer RX objects were already active before either
+   write, so host/JTAG release skew cannot discard the first DATA window.
+   Firmware then publishes `P10_1_RUNTIME_RUNNING`.
+8. Every later object remains autonomous. Firmware programs an object-derived,
+   direction-separated session epoch, starts the local RX/TX context while
+   that object's TX descriptors remain CPU-owned, applies the configured
+   5000-us receiver-lead interval, rechecks the live dual context, and only
+   then submits that one object's TX chain. The next object may transfer while
+   the CPU verifies the previous object, but a future object's DATA is never
+   prequeued into MM2S.
 
 Failure to observe release within 60000 ms enters the existing fail-closed
 stream error path, which immediately shuts down and verifies the endpoint.
-Subsequent objects keep the existing pipelined behavior and do not add a
-per-object optical handshake.
+Subsequent objects preserve pipelining without a host or optical per-object
+handshake; the receiver lead is a bounded local firmware interval.
 
 ## Evidence contract
 
@@ -78,15 +100,23 @@ The append-only runtime result tail records:
 - `p10_5_launch_tx_descriptors_released`;
 - `p10_5_launch_prestart_context_status`.
 
+Words 224..227 additionally record:
+
+- total initial TX descriptors held while all initial RX chains are queued;
+- the configured inter-object receiver-lead interval;
+- the number of deferred object TX chains actually released;
+- the number of unique object sessions programmed.
+
 Every command-15 hardware PASS requires both endpoint result records to show
 one barrier wait, one release, a bounded nonzero wait time, an active dual RX
-context before release, a nonzero held count, exact held/released equality at
-completion, and zero transport timeouts. XSDB additionally verifies that
+context before release, a nonzero first-object held count, exact first-object
+held/released equality at completion, exact normal-run object/session/release
+counts, and zero transport timeouts. XSDB additionally verifies that
 `START_OBJECT` is active on both endpoints, that no TX descriptor has been
-released, that the RX-submitted count equals the held-TX count, and records
-`P10_5_PAIR_PRIMED` plus paired release-write skew. Old artifacts and all
-failed runs remain immutable and do not inherit any result from the repaired
-bundle.
+released, and that the RX-submitted count equals the separately recorded total
+initial TX-held count; it records `P10_5_PAIR_PRIMED` plus paired release-write
+skew. Old artifacts and all failed runs remain immutable and do not inherit
+any result from the repaired bundle.
 
 The live `P10_5_ROLE_STATUS` gate at this point is `0x1B` under mask `0x1F`:
 mode active, role epoch valid, object active, and dual-direction active, with

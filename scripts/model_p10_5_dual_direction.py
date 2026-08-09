@@ -456,6 +456,35 @@ def role_reset_model() -> dict[str, Any]:
             "final_r_to_f": f"0x{active[2]:X}"}
 
 
+def object_boundary_model() -> dict[str, Any]:
+    def session(base: int, direction: int, object_id: int) -> int:
+        epoch = ((base & 0x7FFF_FFFF) +
+                 (object_id & 0x7FFF_FFFF) * 0x9E37_79B1) & 0x7FFF_FFFF
+        return epoch | (0x8000_0000 if direction else 0)
+
+    maximum_objects = (CFG.MAX_STREAM_BYTES + CFG.INTERNAL_OBJECT_BYTES - 1) // \
+        CFG.INTERNAL_OBJECT_BYTES
+    base = 0x5035_0001
+    f_to_r = [session(base, 0, object_id) for object_id in range(maximum_objects)]
+    r_to_f = [session(base, 1, object_id) for object_id in range(maximum_objects)]
+    if len(set(f_to_r)) != maximum_objects or len(set(r_to_f)) != maximum_objects:
+        raise AssertionError("object-derived session collision in maximum stream")
+    if set(f_to_r) & set(r_to_f):
+        raise AssertionError("direction-separated object sessions overlap")
+    if CFG.INTER_OBJECT_RX_LEAD_US <= 0:
+        raise AssertionError("inter-object RX lead must be positive")
+    return {
+        "maximum_stream_objects": maximum_objects,
+        "unique_f_to_r_sessions": len(set(f_to_r)),
+        "unique_r_to_f_sessions": len(set(r_to_f)),
+        "cross_direction_session_overlap": 0,
+        "inter_object_rx_lead_us": CFG.INTER_OBJECT_RX_LEAD_US,
+        "tx_release_policy": "ONE_OBJECT_AFTER_LOCAL_RX_ACTIVE",
+        "host_per_object_actions": 0,
+        "optical_ready_round_trips": 0,
+    }
+
+
 def airtime_model() -> dict[str, Any]:
     clock_hz = 64_000_000
     payload_bytes = 247
@@ -469,7 +498,12 @@ def airtime_model() -> dict[str, Any]:
     frame_cycles = frame_symbols * cycles_per_symbol
     total_cycles = frame_cycles + guard_cycles
     per_lane_bps = payload_bytes * 8 * clock_hz / total_cycles
-    per_direction_bps = 2 * per_lane_bps
+    wire_limited_per_direction_bps = 2 * per_lane_bps
+    object_payload_bits = CFG.INTERNAL_OBJECT_BYTES * 8
+    per_direction_bps = object_payload_bits / (
+        object_payload_bits / wire_limited_per_direction_bps +
+        CFG.INTER_OBJECT_RX_LEAD_US / 1_000_000
+    )
     maximum_intersections = 2_000 - guard_cycles // cycles_per_symbol + 1
     maximum_window_high = maximum_intersections * pulse_high_cycles
     target_high = int(clock_hz * 0.001 * 0.18)
@@ -485,7 +519,12 @@ def airtime_model() -> dict[str, Any]:
         "vnext_data_header_bytes": header_bytes, "frame_symbols": frame_symbols,
         "frame_cycles": frame_cycles, "guard_cycles": guard_cycles,
         "per_lane_application_bps": round(per_lane_bps),
+        "wire_limited_per_direction_application_bps": round(
+            wire_limited_per_direction_bps
+        ),
         "per_direction_application_bps": round(per_direction_bps),
+        "inter_object_rx_lead_us": CFG.INTER_OBJECT_RX_LEAD_US,
+        "internal_object_bytes": CFG.INTERNAL_OBJECT_BYTES,
         "target_bps": CFG.TARGET_GOODPUT_BPS,
         "hard_target": "PASS",
         "stretch_4p8mbps": "PASS" if per_direction_bps >= 4_800_000 else "FAIL_NONBLOCKING",
@@ -507,6 +546,7 @@ def main() -> int:
     ack = ack_control_model()
     dma = dma_model()
     roles = role_reset_model()
+    object_boundaries = object_boundary_model()
     airtime = airtime_model()
     summary = {
         "schema_version": 1,
@@ -522,7 +562,8 @@ def main() -> int:
         "event_minima": {"protocol": PROTOCOL_EVENTS, "ack_control": ACK_EVENTS,
                          "dma_backpressure": DMA_EVENTS, "role_reset": ROLE_EVENTS},
         "masks": masks, "protocol": protocol, "ack_control": ack,
-        "dma": dma, "role_reset": roles, "airtime": airtime,
+        "dma": dma, "role_reset": roles,
+        "object_boundaries": object_boundaries, "airtime": airtime,
         "invariants": {
             "wrong_direction_lane_tx": 0, "role_mask_overlap": 0,
             "same_module_tx_rx_overlap": 0, "duplicate_commit": 0,

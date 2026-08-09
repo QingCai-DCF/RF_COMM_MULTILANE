@@ -703,6 +703,32 @@ static int p10_1_submit_deferred_tx_slot(
   return status;
 }
 
+static int p10_5_release_deferred_tx_object(
+    volatile p10_1_runtime_result_t *result,
+    p10_1_runtime_buffer_slot_t *slot,
+    uint32_t apply_receiver_lead,
+    uint32_t first_launch_object) {
+  uint32_t context_status = p9_pl_read(IR_REG_P10_5_CONTEXT_STATUS);
+  int status;
+
+  if ((context_status & UINT32_C(0x0000008f)) != UINT32_C(0x00000009))
+    return P10_1_RUNTIME_STATUS_PL_OBJECT;
+  if (apply_receiver_lead != 0U) {
+    usleep(P10_5_INTER_OBJECT_RX_LEAD_US);
+    context_status = p9_pl_read(IR_REG_P10_5_CONTEXT_STATUS);
+    if ((context_status & UINT32_C(0x0000008f)) != UINT32_C(0x00000009))
+      return P10_1_RUNTIME_STATUS_PL_OBJECT;
+  }
+  status = p10_1_submit_deferred_tx_slot(result, slot);
+  if (status != P10_1_RUNTIME_STATUS_OK)
+    return status;
+  result->p10_5_deferred_tx_objects_released++;
+  if (first_launch_object != 0U)
+    result->p10_5_launch_tx_descriptors_released +=
+        slot->descriptor_count;
+  return P10_1_RUNTIME_STATUS_OK;
+}
+
 static int p10_1_validate_stream_args(
     volatile p9_mailbox_t *mailbox,
     volatile p10_1_runtime_result_t *result) {
@@ -1542,16 +1568,20 @@ static int p10_1_command_autonomous_stream(
       goto stream_fail_v2;
   }
   if (dual_mode != 0U) {
-    uint32_t held_descriptors = 0U;
+    uint32_t held_descriptors_total = 0U;
     for (uint32_t index = 0U; index < initial_slot_count; ++index) {
       if (slots[index].valid == 0U || slots[index].tx_submitted != 0U ||
           slots[index].rx_submitted == 0U) {
         status = P10_1_RUNTIME_STATUS_DMA_CHAIN;
         goto stream_fail_v2;
       }
-      held_descriptors += slots[index].descriptor_count;
+      held_descriptors_total += slots[index].descriptor_count;
     }
-    result->p10_5_launch_tx_descriptors_held = held_descriptors;
+    result->p10_5_launch_tx_descriptors_held = slots[0].descriptor_count;
+    result->p10_5_initial_tx_descriptors_held_total =
+        held_descriptors_total;
+    result->p10_5_inter_object_rx_lead_us =
+        P10_5_INTER_OBJECT_RX_LEAD_US;
   }
   next_prepare_ordinal = initial_slot_count;
 
@@ -1581,6 +1611,7 @@ static int p10_1_command_autonomous_stream(
           status = P10_1_RUNTIME_STATUS_PL_OBJECT;
           goto stream_fail_v2;
         }
+        result->p10_5_unique_object_sessions_programmed++;
       } else {
         p10_1_configure_object(mailbox, flags,
                                ordinal == recovery_ordinal, local_rx);
@@ -1591,8 +1622,6 @@ static int p10_1_command_autonomous_stream(
        * local lead interval.  No TFDU control pulse is exchanged and this
        * interval does not depend on object verification or host traffic.
        */
-      if (ordinal != 0U && local_tx != 0U)
-        usleep(2000U);
       if (dual_mode != 0U) {
         status = p10_5_start_direction_stream();
         if (status != P9_RUNTIME_OK) {
@@ -1616,18 +1645,20 @@ static int p10_1_command_autonomous_stream(
           status = p10_5_wait_for_paired_launch_release(mailbox, result);
           if (status != P10_1_RUNTIME_STATUS_OK)
             goto stream_fail_v2;
-          for (uint32_t index = 0U; index < initial_slot_count; ++index) {
-            status = p10_1_submit_deferred_tx_slot(result, &slots[index]);
-            if (status != P10_1_RUNTIME_STATUS_OK)
-              goto stream_fail_v2;
-            result->p10_5_launch_tx_descriptors_released +=
-                slots[index].descriptor_count;
-          }
+          status = p10_5_release_deferred_tx_object(
+              result, slot, 0U, 1U);
+          if (status != P10_1_RUNTIME_STATUS_OK)
+            goto stream_fail_v2;
           if (result->p10_5_launch_tx_descriptors_released !=
               result->p10_5_launch_tx_descriptors_held) {
             status = P10_1_RUNTIME_STATUS_DMA_CHAIN;
             goto stream_fail_v2;
           }
+        } else {
+          status = p10_5_release_deferred_tx_object(
+              result, slot, 1U, 0U);
+          if (status != P10_1_RUNTIME_STATUS_OK)
+            goto stream_fail_v2;
         }
       } else {
         p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
@@ -1692,7 +1723,7 @@ static int p10_1_command_autonomous_stream(
       status = p10_1_prepare_slot(
           result, &slots[refill_index], refill_index,
           next_prepare_ordinal, local_tx, local_rx,
-          duration_mode == 0U, 0U, &input_sha_context,
+          duration_mode == 0U, dual_mode != 0U, &input_sha_context,
           &input_crc_state, &prepare_ticks);
       if (status != P10_1_RUNTIME_STATUS_OK)
         goto stream_fail_v2;
@@ -1905,17 +1936,21 @@ static int p10_1_command_autonomous_stream(
           status = P10_1_RUNTIME_STATUS_PL_OBJECT;
           goto stream_fail_v2;
         }
+        result->p10_5_unique_object_sessions_programmed++;
       } else {
         p10_1_configure_object(mailbox, flags, 0U, local_rx);
       }
-      if (local_tx != 0U)
-        usleep(2000U);
       if (dual_mode != 0U) {
         status = p10_5_start_direction_stream();
         if (status != P9_RUNTIME_OK) {
           status = P10_1_RUNTIME_STATUS_PL_OBJECT;
           goto stream_fail_v2;
         }
+        status = p10_5_release_deferred_tx_object(
+            result, &slots[(ordinal + 1U) % result->buffer_count],
+            1U, 0U);
+        if (status != P10_1_RUNTIME_STATUS_OK)
+          goto stream_fail_v2;
       } else {
         p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
       }

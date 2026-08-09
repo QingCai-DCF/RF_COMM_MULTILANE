@@ -282,12 +282,17 @@ typedef struct p10_1_runtime_result {
   volatile uint32_t p10_5_launch_wait_ticks_high;
   /* RX-first/TX-deferred first-object launch proof.  START_OBJECT is active
    * on both endpoints while the complete initial TX descriptor queue remains
-   * CPU-owned.  The queue is submitted only after the paired host release. */
+   * CPU-owned.  Only object 0 is submitted after the paired host release. */
   volatile uint32_t p10_5_launch_rx_object_prestarted;
   volatile uint32_t p10_5_launch_tx_descriptors_held;
   volatile uint32_t p10_5_launch_tx_descriptors_released;
   volatile uint32_t p10_5_launch_prestart_context_status;
-  volatile uint32_t reserved[4];
+  /* P10.5 append-only multi-object boundary proof.  Existing words 0..223
+   * remain unchanged. */
+  volatile uint32_t p10_5_initial_tx_descriptors_held_total;
+  volatile uint32_t p10_5_inter_object_rx_lead_us;
+  volatile uint32_t p10_5_deferred_tx_objects_released;
+  volatile uint32_t p10_5_unique_object_sessions_programmed;
 } p10_1_runtime_result_t;
 
 _Static_assert(offsetof(p10_1_runtime_result_t, service_state) == 4U * 4U,
@@ -334,6 +339,12 @@ _Static_assert(offsetof(p10_1_runtime_result_t,
 _Static_assert(offsetof(p10_1_runtime_result_t,
                         p10_5_launch_prestart_context_status) == 223U * 4U,
                "P10.5 RX-first launch evidence tail length changed");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        p10_5_initial_tx_descriptors_held_total) == 224U * 4U,
+               "P10.5 multi-object proof tail moved");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        p10_5_unique_object_sessions_programmed) == 227U * 4U,
+               "P10.5 multi-object proof tail length changed");
 _Static_assert(sizeof(p10_1_runtime_result_t) <= 2048U,
                "P10.1 result must fit the reserved two-KiB OCM window");
 
