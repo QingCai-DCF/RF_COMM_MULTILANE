@@ -47,6 +47,22 @@ OFFLINE_INPUTS = {
     "forensic_tcl": campaign.FORENSIC_TCL,
     "runtime_guard": ROOT / "scripts/p10_tfdu_runtime_guard.py",
 }
+# A hardware-runner-only remediation may be frozen after the FPGA/ELF source
+# commit without rebuilding byte-identical target artifacts.  The descendant
+# is admissible only when every intervening path is evidence, an immutable
+# artifact copy, the current-run authorization, generated traceability, or one
+# of the explicitly audited host harness/test files below.  Any RTL, firmware,
+# constraints, board configuration, register-map, build-script, or other path
+# change remains fail-closed and requires a new complete artifact build.
+POST_ARTIFACT_ALLOWED_EXACT = {
+    "config/p10_5_current_run_hardware_authorization.json",
+    "config/project_requirements.yaml",
+    "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+    "scripts/freeze_p10_5_artifacts.py",
+    "scripts/run_p10_5_hardware.py",
+    "tests/test_p10_5_hardware.py",
+}
+POST_ARTIFACT_ALLOWED_PREFIXES = ("artifacts/p10_5/", "evidence/")
 TCLSH = Path(r"D:\Xilinx\Vivado\2023.1\tps\win64\git-2.16.2\mingw64\bin\tclsh.exe")
 GATES = {
     "p10_5_runner_unit": [sys.executable, "-m", "unittest", "tests.test_p10_5_hardware"],
@@ -92,6 +108,24 @@ def load(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"JSON root is not an object: {path}")
     return value
+
+
+def post_artifact_path_allowed(path: str) -> bool:
+    normalized = path.replace("\\", "/")
+    return normalized in POST_ARTIFACT_ALLOWED_EXACT or any(
+        normalized.startswith(prefix)
+        for prefix in POST_ARTIFACT_ALLOWED_PREFIXES)
+
+
+def post_artifact_changes(source: str, head: str) -> tuple[list[str], list[str]]:
+    changed = subprocess.check_output(
+        ["git", "diff", "--name-only", "--diff-filter=ACDMRTUXB",
+         f"{source}..{head}"], cwd=ROOT, text=True
+    ).splitlines()
+    changed = [path.replace("\\", "/") for path in changed if path]
+    disallowed = [path for path in changed
+                  if not post_artifact_path_allowed(path)]
+    return changed, disallowed
 
 
 def run_gate(name: str, command: list[str]) -> dict[str, Any]:
@@ -141,6 +175,11 @@ def main() -> int:
                                      cwd=ROOT, text=True).strip()
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT,
                                    text=True).strip()
+    source_tree_clean = not subprocess.check_output(
+        ["git", "status", "--porcelain"], cwd=ROOT, text=True
+    ).strip()
+    if not source_tree_clean:
+        errors.append("worktree must be clean before artifact freeze")
     if branch != BRANCH:
         errors.append(f"branch mismatch: {branch}")
     summaries: dict[str, dict[str, Any]] = {}
@@ -151,8 +190,18 @@ def main() -> int:
             errors.append(f"{name} summary unavailable: {exc}")
     commits = {str(x.get("source_commit", "")) for x in summaries.values()}
     source = next(iter(commits), "") if len(commits) == 1 else ""
-    if not re.fullmatch(r"[0-9a-f]{40}", source) or source != head:
-        errors.append(f"build summaries/HEAD source mismatch: {sorted(commits)} / {head}")
+    post_artifact_files: list[str] = []
+    if not re.fullmatch(r"[0-9a-f]{40}", source):
+        errors.append(f"build-summary source mismatch: {sorted(commits)}")
+    elif subprocess.run(
+        ["git", "merge-base", "--is-ancestor", source, head], cwd=ROOT,
+        check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    ).returncode != 0:
+        errors.append(f"artifact source is not an ancestor of HEAD: {source} / {head}")
+    else:
+        post_artifact_files, disallowed = post_artifact_changes(source, head)
+        errors += [f"post-artifact target-affecting change requires rebuild: {path}"
+                   for path in disallowed]
     for name, summary in summaries.items():
         if summary.get("status") != "PASS":
             errors.append(f"{name} build is not PASS")
@@ -211,8 +260,11 @@ def main() -> int:
     payload = {
         "schema_version": 1, "test_id": "P10_5-IMMUTABLE-ARTIFACT-FREEZE",
         "status": status, "scope": campaign.SCOPE, "branch": branch,
-        "source_commit": source, "goal_sha256": campaign.GOAL_SHA256,
-        "acceptance_eligible": status == "PASS", "source_tree_clean": True,
+        "source_commit": source, "artifact_source_commit": source,
+        "harness_commit": head, "post_artifact_files": post_artifact_files,
+        "goal_sha256": campaign.GOAL_SHA256,
+        "acceptance_eligible": status == "PASS",
+        "source_tree_clean": source_tree_clean,
         "no_hardware": True, "current_run_hardware_authorization": False,
         "hardware_actions_executed": False, "old_hardware_pass_inherited": False,
         "automation_only": True, "user_hold_points": 0,
@@ -235,7 +287,8 @@ def main() -> int:
     FREEZE.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n",
                       encoding="utf-8", newline="\n")
     lines = ["# P10.5 immutable artifact freeze", "", f"- Status: `{status}`",
-             f"- Source commit: `{source or 'NONE'}`",
+             f"- Artifact source commit: `{source or 'NONE'}`",
+             f"- Harness commit: `{head}`",
              "- Hardware actions executed: `false`", "", "## Artifacts", ""]
     lines += [f"- `{x['role']}:{x['kind']}` `{x['sha256']}` `{x['path']}`"
               for x in artifacts]

@@ -1,0 +1,61 @@
+{
+  "artifact_source_commit": "ec4dc468a217e0e8db7b0c5c08b3d0ff3a59662d",
+  "direct_observations": {
+    "command_status_fixed": 12,
+    "command_status_rotating": 12,
+    "control_only_ack_count_fixed": 1063,
+    "control_only_ack_count_rotating": 1063,
+    "crc_bad_fixed": 0,
+    "crc_bad_rotating": 0,
+    "direction_reject_fixed": 0,
+    "direction_reject_rotating": 0,
+    "duration_target_ms": 1000,
+    "elapsed_host_observation_ms": 1397,
+    "p10_1_status_fixed": 263,
+    "p10_1_status_name": "P10_1_RUNTIME_STATUS_TIMER",
+    "p10_1_status_rotating": 263,
+    "physical_rx_bytes_fixed": 262144,
+    "physical_rx_bytes_rotating": 262144,
+    "physical_tx_bytes_fixed": 262144,
+    "physical_tx_bytes_rotating": 262144,
+    "retry_exhausted_fixed": 0,
+    "retry_exhausted_rotating": 0,
+    "role_epoch_reject_fixed": 0,
+    "role_epoch_reject_rotating": 0,
+    "sha_mismatch_fixed": 0,
+    "sha_mismatch_rotating": 0,
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "tx_timeout_fixed": 0,
+    "tx_timeout_rotating": 0
+  },
+  "failure_evidence": {
+    "final_summary": "evidence/hardware/p10_5/p10_5_20260809T225128Z_ec4dc468_f7fe756b_f3a5718e/final/p10_5_final_summary.json",
+    "final_summary_sha256": "d3ad171965e382a9ba70d0201712cc2aed1d79e1aa78ccd398bf41d54055743e",
+    "manifest": "evidence/hardware/p10_5/p10_5_20260809T225128Z_ec4dc468_f7fe756b_f3a5718e/final/run_evidence_sha256_manifest.json",
+    "manifest_sha256": "664fdb4cfc16667732736920fc03022d4177a42ce89537ca657b051a1d5479b5",
+    "run_id": "p10_5_20260809T225128Z_ec4dc468_f7fe756b_f3a5718e"
+  },
+  "generated_at_utc": "2026-08-09T23:00:42Z",
+  "hardware_acceptance": "PENDING_RETEST",
+  "hardware_actions_executed_by_remediation": false,
+  "hardware_actions_executed_in_source_run": true,
+  "new_capability_plan_sha256": "ca2fb8695af2b2fd2663573ef221a4ac9f1b492ee2ac46f418e215049253724d",
+  "old_capability_plan_sha256": "e03cc311a7c70a1cc6dd30dcd029f9fba6306abf86a2fcfd29d6f7eca39a0244",
+  "remediation": {
+    "capability_active_runtime_limit_seconds": 10,
+    "capability_case": "one finite 1048576-byte transfer comprising four 262144-byte objects",
+    "target_artifacts_changed": false,
+    "timed_mandatory_stages_preserved": [
+      10,
+      20,
+      30,
+      300,
+      1800
+    ]
+  },
+  "root_cause": "The capability gate incorrectly used a one-second duration deadline that included RX/DMA priming and a complete 256-KiB optical object. Both endpoints completed one clean object after the deadline and correctly returned TIMER before post-commit readback; the evidence does not indicate a physical, integrity, protocol, DMA, or safety fault.",
+  "scope": "P10_5_CAPABILITY_GATE_HOST_PLAN",
+  "status": "PASS",
+  "test_id": "P10_5-CAPABILITY-TIMER-ROOT-CAUSE"
+}

@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import run_p10_5_hardware as campaign
+import freeze_p10_5_artifacts as freezer
 from p10_tfdu_runtime_guard import RuntimeRestGuard, load_policy
 
 
@@ -60,6 +61,13 @@ class P10_5HardwareTests(unittest.TestCase):
 
     def test_required_streaming_and_formal_plan(self) -> None:
         plans = campaign.build_plans()
+        capability = [x for x in plans["capability"]
+                      if isinstance(x, campaign.P105Case)]
+        self.assertEqual(len(capability), 1)
+        self.assertEqual(capability[0].duration_ms, 0)
+        self.assertEqual(capability[0].size,
+                         4 * campaign.INTERNAL_OBJECT_BYTES)
+        self.assertEqual(campaign.stage_runtime_limit("capability"), 10)
         for index in range(1, 6):
             case = plans[f"streaming_64m_{index}"][0]
             self.assertIsInstance(case, campaign.P105Case)
@@ -80,6 +88,21 @@ class P10_5HardwareTests(unittest.TestCase):
                 hashlib.sha256(campaign.plan_text(
                     campaign.build_plans()[stage]).encode("ascii")).hexdigest(),
             )
+
+    def test_post_artifact_harness_allowlist_is_fail_closed(self) -> None:
+        for path in (
+                "scripts/run_p10_5_hardware.py",
+                "tests/test_p10_5_hardware.py",
+                "evidence/hardware/p10_5/run/final.json",
+                "artifacts/p10_5/source/hash/candidate.bit"):
+            self.assertTrue(freezer.post_artifact_path_allowed(path), path)
+        for path in (
+                "rtl/ir_data_plane_top.sv",
+                "software/ps_driver/p9_runtime_main.c",
+                "constraints/active/p10_ax7020_fixed.xdc",
+                "config/p10_5_dual_direction.yaml",
+                "scripts/build_p10_5_functional.py"):
+            self.assertFalse(freezer.post_artifact_path_allowed(path), path)
 
     def test_result_parser_tail_and_capability_aggregation(self) -> None:
         words = [0] * 512

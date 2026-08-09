@@ -250,7 +250,17 @@ def build_plans() -> dict[str, list[PlanItem]]:
                              "1024", "0", "0", "0", "0", "0", "0")]
     plans["capability"] = [
         ("P105_CAPABILITY", "precommit", "0", "0", "0"),
-        duration_case(ids, "capability_primary", PRIMARY_F2R, PRIMARY_R2F, 1),
+        # Capability is a finite transfer gate, not a duration-accuracy test.
+        # A one-second duration included RX-ring priming and the first complete
+        # 256-KiB optical object inside its deadline; direct hardware evidence
+        # showed that clean object finishing at ~1.4 s and therefore returning
+        # TIMER before the post-commit readback.  Use four finite objects so
+        # this gate still proves simultaneous TX/RX, ACK/credit progress and
+        # atomic commit without imposing a physically impossible wall-clock
+        # deadline.  Timed operation remains covered by the 10/20/30/300/1800
+        # second mandatory stages below.
+        object_case(ids, "capability_primary", PRIMARY_F2R, PRIMARY_R2F,
+                    4 * INTERNAL_OBJECT_BYTES),
         ("P105_CAPABILITY", "primary", "15", "3", "12"),
     ]
     for f_lane in range(4):
@@ -361,6 +371,10 @@ def validate_plans() -> list[str]:
     two = {(x.f2r, x.r2f) for x in plans["two_plus_two"] if isinstance(x, P105Case)}
     if two != {(3, 12), (12, 3), (5, 10), (10, 5), (9, 6), (6, 9)}:
         errors.append("directed 2+2 matrix mismatch")
+    capability = [x for x in plans["capability"] if isinstance(x, P105Case)]
+    if len(capability) != 1 or capability[0].duration_ms != 0 or \
+            capability[0].size != 4 * INTERNAL_OBJECT_BYTES:
+        errors.append("capability gate must be one finite four-object transfer")
     formal = [x for x in plans["formal_30min"] if isinstance(x, P105Case)]
     if len(formal) != 1 or formal[0].duration_ms != 1_800_000:
         errors.append("formal stage is not exactly 1800 seconds")
@@ -383,7 +397,7 @@ def tcl_stage(stage: str) -> str:
 
 def stage_runtime_limit(stage: str) -> int:
     return {
-        "safe_start": 1, "capability": 1, "one_plus_one": 120,
+        "safe_start": 1, "capability": 10, "one_plus_one": 120,
         "two_plus_one": 480, "two_plus_two": 180, "role_commit": 40,
         "performance": 300, "faults": 600, "formal_30min": 1800,
     }.get(stage, 600)
