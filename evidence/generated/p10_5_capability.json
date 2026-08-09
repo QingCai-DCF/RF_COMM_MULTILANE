@@ -5,12 +5,15 @@
       "command": 15,
       "descriptor_batch": 8,
       "descriptor_bytes": 65536,
+      "host_launch_release_mask": 2147483648,
+      "initial_launch_barrier": "HOST_RELEASE_AFTER_BOTH_ENDPOINTS_PRIMED",
       "internal_object_bytes": 262144,
+      "launch_barrier_timeout_ms": 60000,
       "maximum_stream_bytes": 1879048192,
       "ring_depth": 32
     },
     "capability": "CAP_SIMULTANEOUS_BIDIRECTIONAL_V1",
-    "config_sha256": "fb79523627256fb10258e13bc5bbd1e1c0fab5214b916bbbac44aeb17e5a1db6",
+    "config_sha256": "04fc247ee21dc3e6c360e87e86f28cc7f492c8ecb851cd869b258c9cf8905b45",
     "control_only_ack_support": true,
     "legacy_half_duplex_support": true,
     "mask_width": 4,
@@ -30,13 +33,13 @@
     "schema_version": 1
   },
   "capability_table": {
-    "bytes": 795,
+    "bytes": 953,
     "path": "config/generated/p10_5_capability_table.json",
-    "sha256": "5029753ef471f59376f27fe72cd85adf742df69eb8f68c09386d02ecb5ccfb88"
+    "sha256": "d0b5d2e6c01edaa9ed4dfa009f1d31091bcc55eb35391a4e9916274df65ac838"
   },
   "current_run_hardware_authorization": false,
   "errors": [],
-  "generated_at_utc": "2026-08-09T13:14:33.413844+00:00",
+  "generated_at_utc": "2026-08-09T15:51:16.220131+00:00",
   "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
   "hardware_actions_executed": false,
   "hardware_readback_pending": true,
@@ -47,7 +50,7 @@
     "sha256": "c15fc2a29b95de8e3b0f89e378ca41ddcaf49439489619b4b650080a50e36f0f"
   },
   "schema_version": 1,
-  "source_commit": "613ca80e8f551dfdc2d521cc7611b8d7777fde1b",
+  "source_commit": "ee0332ef2ab3eb74f6380fb1b9a174d2a4af0c36",
   "status": "PASS",
   "test_id": "P10_5-CAP-001-OFFLINE"
 }
