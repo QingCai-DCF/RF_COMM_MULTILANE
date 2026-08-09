@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-CLOSE-001",
+  "scope": "P10_4_IMMUTABLE_CLOSEOUT_FOR_P10_5_BASELINE",
+  "status": "PASS",
+  "generated_utc": "2026-08-09T04:11:14.7351700Z",
+  "hardware_actions_executed": false,
+  "current_run_hardware_authorization": false,
+  "p10_4": {
+    "status": "PASS_WITH_NONBLOCKING_LIMITS",
+    "final_commit": "7987e6385b65fa2c7ed7d3a008c1ecbdf323ffa8",
+    "artifact_source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
+    "evidence_checkpoint": "f53d98252dfa85d73f35d49ebf5dc01323bcb4e7",
+    "pass_tag": {
+      "name": "p10.4-autonomous-4lane-hardening-pass",
+      "object": "2e050f943a80ccae38790771da8e298d11fe7c79",
+      "target": "7987e6385b65fa2c7ed7d3a008c1ecbdf323ffa8",
+      "moved": false
+    },
+    "closed_tag": "p10.4-autonomous-4lane-hardening-closed",
+    "composite_run_id": "p10_4_composite_5da414ba_f53d9825",
+    "component_run_ids": [
+      "p10_4_20260808T102748Z_6ff17d33_94506af9_2b2b37d4",
+      "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4"
+    ],
+    "component_evidence_checkpoints": [
+      "5da414ba385b750caede64826f2b1e1ee39073d0",
+      "f53d98252dfa85d73f35d49ebf5dc01323bcb4e7"
+    ],
+    "two_plus_two": {
+      "result": "FAIL_WITH_EVIDENCE",
+      "capability": "UNSUPPORTED_SINGLE_BUNDLE_DIRECTION",
+      "tx_executed": false,
+      "f_to_r_bps": 0,
+      "r_to_f_bps": 0,
+      "nonblocking_for_p10_4_half_duplex_scope": true
+    },
+    "shutdown": {
+      "fixed": "PASS",
+      "rotating": "PASS"
+    },
+    "authorization": {
+      "current": false,
+      "consumed": true
+    },
+    "p11_status": "NOT_STARTED"
+  },
+  "artifact_sha256": {
+    "fixed_shutdown_bitstream": "7073abf6820d7a89829bc162db772274a5d62b855f1177de2f9e5c35de0de762",
+    "fixed_functional_bitstream": "94506af98a1fa90f6ad9dea3f29ffc6addb3b3e6bb9090bbfe4423c25d8efe3b",
+    "fixed_xsa": "68aefe1f25247b21a99ffd39085d17fbbbb799bf11cbe14a80abcd6c711f3c02",
+    "fixed_bsp": "684b77830634e311a46cd877e826493680f1bd001e4d9b2d1c03f8a3fafbaecc",
+    "fixed_elf": "dce91dd7172851da0ea0c6794c8eabf61f4214fddffdcb38002e1ae1404d61fb",
+    "rotating_shutdown_bitstream": "d938cb6494d23127c364dac80a000f088de71bb527ed19e9511179a484461c36",
+    "rotating_functional_bitstream": "2b2b37d47240680851fb52848943e6d7845dbbc3267d348f3ec4d33b0446e06e",
+    "rotating_xsa": "5197513841d82d0cbe437ecd80d359180d51dec94dc54a26dd73067a1677a7a6",
+    "rotating_bsp": "56b7d3ac9d312c3a07d47a747d0ed4ed66b3123788baca543d5f03b049cf5dec",
+    "rotating_elf": "a15b4b4472070632e1c4273392ddc500bd4e389e7bc2035301a1c3e2d55984e1"
+  },
+  "frozen_evidence_inputs": [
+    {
+      "path": "evidence/generated/p10_4_composite_manifest.json",
+      "sha256": "f946c91e2a244aa1c6b917ec429dcc16ce461d0cefa978759273283ea1b25266"
+    },
+    {
+      "path": "evidence/generated/p10_4_artifact_freeze.json",
+      "sha256": "f8f09b71563e837c435c06e8cfd8ab1d06f59b755ac855d388ae5c30b2894c47"
+    },
+    {
+      "path": "evidence/generated/p10_4_final_summary.json",
+      "sha256": "26672b885dc221a96fe2a5e7ca430df5337a9fa4e997cc2a0f69d4bbd281b5f4"
+    },
+    {
+      "path": "evidence/generated/p10_4_two_plus_two_requirement_closure.json",
+      "sha256": "631a91126cd11c488b4914efe1877f18bb00d119603478405737f1e450451305"
+    },
+    {
+      "path": "evidence/generated/p10_4_shutdown.json",
+      "sha256": "0f86c9700209c81f376ff6be5832a5be773500e1a80d8aeacb541125b9a9dab6"
+    },
+    {
+      "path": "evidence/generated/p10_4_authorization.json",
+      "sha256": "482a9d8a333885db71914a6c92c4d13ae2e7bcef32af61d4db2b2e0cb3cc0e4b"
+    },
+    {
+      "path": "evidence/generated/p10_4_resume_authorization.json",
+      "sha256": "e2d033777716486262b83091dfa7bbc1e5044513cdfbfeb549538a184f7754c9"
+    },
+    {
+      "path": "config/project_state.json",
+      "sha256": "ca494559cf1e3947e9c328559318b6596d4a6fbc05167ce9e6dc97481394327e"
+    }
+  ],
+  "preservation": {
+    "raw_hardware_run_roots_modified": false,
+    "composite_manifest_modified": false,
+    "pass_tag_moved": false,
+    "final_summary_modified": false,
+    "two_plus_two_requirement_closure_modified": false,
+    "authorization_records_modified": false,
+    "shutdown_evidence_modified": false
+  },
+  "errors": []
+}
