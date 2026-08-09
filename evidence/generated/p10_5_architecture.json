@@ -1,0 +1,75 @@
+{
+  "checks": [
+    {
+      "name": "reference_model",
+      "status": "PASS"
+    },
+    {
+      "name": "complete_xsim",
+      "status": "PASS"
+    },
+    {
+      "name": "4mbps_feasibility",
+      "status": "PASS"
+    },
+    {
+      "name": "half_duplex_compatibility",
+      "status": "PASS"
+    }
+  ],
+  "current_run_hardware_authorization": false,
+  "default_operating_mode": "LEGACY_BUNDLE_HALF_DUPLEX",
+  "errors": [],
+  "final_tx_kill_unchanged": true,
+  "generated_at_utc": "2026-08-09T07:57:58.492594+00:00",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "hardware_actions_executed": false,
+  "independent_local_contexts": [
+    "LOCAL_TX_DIRECTION",
+    "LOCAL_RX_DIRECTION"
+  ],
+  "inputs": [
+    {
+      "bytes": 37470,
+      "path": "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md",
+      "sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36"
+    },
+    {
+      "bytes": 1889,
+      "path": "config/p10_5_dual_direction.yaml",
+      "sha256": "fb79523627256fb10258e13bc5bbd1e1c0fab5214b916bbbac44aeb17e5a1db6"
+    },
+    {
+      "bytes": 795,
+      "path": "config/generated/p10_5_capability_table.json",
+      "sha256": "5029753ef471f59376f27fe72cd85adf742df69eb8f68c09386d02ecb5ccfb88"
+    },
+    {
+      "bytes": 2932,
+      "path": "evidence/generated/p10_5_reference_model.json",
+      "sha256": "cbc0bfcb129e69aa9aa4062c8b5485078d0938e5aef6e1368058919a87095b4d"
+    },
+    {
+      "bytes": 21632,
+      "path": "evidence/generated/p10_5_xsim/summary.json",
+      "sha256": "ad7f64e668b8e4fdf4a41276d3fed63dccaf687179f6b38d0ed9d166872aa649"
+    },
+    {
+      "bytes": 2045,
+      "path": "config/register_map/generated/ir_regs_manifest.json",
+      "sha256": "c15fc2a29b95de8e3b0f89e378ca41ddcaf49439489619b4b650080a50e36f0f"
+    }
+  ],
+  "legacy_half_duplex_preserved": true,
+  "network_used": false,
+  "operating_modes": {
+    "legacy_bundle_half_duplex": 0,
+    "split_lane_simultaneous_bidirectional": 1
+  },
+  "schema_version": 1,
+  "selected_operating_mode": "SPLIT_LANE_SIMULTANEOUS_BIDIRECTIONAL",
+  "single_global_permit_per_endpoint": true,
+  "source_commit": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
+  "status": "PASS",
+  "test_id": "P10_5-OFFLINE-ARCHITECTURE"
+}

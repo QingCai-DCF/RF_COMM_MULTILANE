@@ -1,0 +1,25 @@
+{
+  "control_only_ack_fallback": true,
+  "current_run_hardware_authorization": false,
+  "deadlock": 0,
+  "errors": [],
+  "fallback_xsim": "PASS",
+  "generated_at_utc": "2026-08-09T07:57:58.495132+00:00",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "hardware_actions_executed": false,
+  "model": {
+    "control_only_fallback": 312,
+    "deadlock": 0,
+    "events": 50000,
+    "max_abstract_ack_age": 64,
+    "piggyback": 6150
+  },
+  "network_used": false,
+  "piggyback_enable": true,
+  "piggyback_xsim": "PASS",
+  "schema_version": 1,
+  "source_commit": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
+  "starvation_limit_cycles": 64000,
+  "status": "PASS",
+  "test_id": "P10_5-ACK-OFFLINE"
+}

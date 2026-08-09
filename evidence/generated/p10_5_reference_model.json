@@ -1,0 +1,114 @@
+{
+  "ack_control": {
+    "control_only_fallback": 312,
+    "deadlock": 0,
+    "events": 50000,
+    "max_abstract_ack_age": 64,
+    "piggyback": 6150
+  },
+  "airtime": {
+    "clock_hz": 64000000,
+    "frame_cycles": 37760,
+    "frame_symbols": 1180,
+    "guard_cycles": 17984,
+    "hard_1ms_high_cycles_exclusive": 12800,
+    "hard_target": "PASS",
+    "maximum_1ms_high_cycles": 11512,
+    "maximum_continuous_high_cycles": 8,
+    "maximum_continuous_high_us": 0.125,
+    "payload_bytes": 247,
+    "per_direction_application_bps": 4537313,
+    "per_lane_application_bps": 2268657,
+    "stretch_4p8mbps": "FAIL_NONBLOCKING",
+    "target_1ms_high_cycles": 11520,
+    "target_bps": 4000000,
+    "vnext_data_header_bytes": 40
+  },
+  "config_sha256": "fb79523627256fb10258e13bc5bbd1e1c0fab5214b916bbbac44aeb17e5a1db6",
+  "current_run_hardware_authorization_used": false,
+  "dma": {
+    "backpressure_events": 7548,
+    "completed": 21279,
+    "descriptor_leak": 0,
+    "double_completion": 0,
+    "events": 50000,
+    "maximum_ring_occupancy": 32,
+    "submitted": 21279
+  },
+  "event_minima": {
+    "ack_control": 50000,
+    "dma_backpressure": 50000,
+    "protocol": 100000,
+    "role_reset": 25000
+  },
+  "generated_config_sha256": "1c4ea8e0e525805c2995819c81e33260b9f6f91152f28cc59b8afe170460e1f7",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "hardware_actions_executed": false,
+  "invariants": {
+    "deadlock": 0,
+    "descriptor_leak": 0,
+    "double_completion": 0,
+    "duplicate_commit": 0,
+    "role_mask_overlap": 0,
+    "same_module_tx_rx_overlap": 0,
+    "single_global_permit_per_endpoint": true,
+    "stale_role_session_commit": 0,
+    "wrong_direction_lane_tx": 0
+  },
+  "masks": {
+    "all_legal_count": 50,
+    "one_plus_one_count": 12,
+    "one_plus_two_count": 12,
+    "two_plus_one_count": 12,
+    "two_plus_two": [
+      "0x3/0xC",
+      "0x5/0xA",
+      "0x6/0x9",
+      "0x9/0x6",
+      "0xA/0x5",
+      "0xC/0x3"
+    ]
+  },
+  "protocol": {
+    "allocations": 30994,
+    "attempts": 40248,
+    "commits": 11401,
+    "direction_aborts": 4047,
+    "drops": 2183,
+    "duplicates": 0,
+    "events": 100000,
+    "fallback": 2535,
+    "max_ack_age": 64,
+    "piggyback": 6481,
+    "reorders": 0,
+    "retries": 28839,
+    "stale_role_rejects": 244,
+    "stale_session_rejects": 223
+  },
+  "role_reset": {
+    "accepted_commits": 12969,
+    "endpoint_resets": 104,
+    "events": 25000,
+    "final_active": "0xA",
+    "final_f_to_r": "0x8",
+    "final_r_to_f": "0x2",
+    "final_role_epoch": 12970,
+    "rejected_commits": 12031,
+    "stale_epoch_rejects": 5000
+  },
+  "schema_version": 1,
+  "seeds": [
+    1,
+    7,
+    17,
+    31,
+    127,
+    1024,
+    20260809,
+    22002200
+  ],
+  "source_commit": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
+  "status": "PASS",
+  "test_id": "P10_5_DUAL_DIRECTION_REFERENCE_MODEL",
+  "timestamp_utc": "2026-08-09T07:38:45.470357+00:00"
+}

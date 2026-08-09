@@ -43,6 +43,8 @@ enum p9_command {
   P9_COMMAND_IDLE_NOISE = 11,
   P9_COMMAND_PERMIT_DROP_DIAGNOSTIC = 12,
   P9_COMMAND_P10_1_AUTONOMOUS_STREAM = 13,
+  P9_COMMAND_P10_5_DUAL_OBJECT = 14,
+  P9_COMMAND_P10_5_AUTONOMOUS_DUAL_STREAM = 15,
 };
 
 enum p9_runtime_status {
@@ -66,7 +68,23 @@ enum p9_runtime_status {
   P9_RUNTIME_RFAP_VALIDATION = 17,
   P9_RUNTIME_PERMIT_DROP = 18,
   P9_RUNTIME_PS_LED_CONFIG = 19,
+  P9_RUNTIME_P10_5_CAPABILITY = 20,
+  P9_RUNTIME_P10_5_ROLE_COMMIT = 21,
+  P9_RUNTIME_P10_5_CONTEXT = 22,
 };
+
+/* P10.5 keeps the schema-5 mailbox immutable.  The dual-object command uses
+ * command-specific packing in lane_mask: the low nibble is the complete
+ * active mask, bits 11:8 are fixed-to-rotating, and bits 19:16 are
+ * rotating-to-fixed.  Legacy commands continue to accept only the low
+ * P10_LANE_COUNT bits and therefore cannot accidentally enable this mode. */
+#define P10_5_ACTIVE_MASK_SHIFT 0U
+#define P10_5_F2R_MASK_SHIFT 8U
+#define P10_5_R2F_MASK_SHIFT 16U
+#define P10_5_PACK_ROLE_MASKS(active, f2r, r2f) \
+  ((((uint32_t)(active) & UINT32_C(0x0f)) << P10_5_ACTIVE_MASK_SHIFT) | \
+   (((uint32_t)(f2r) & UINT32_C(0x0f)) << P10_5_F2R_MASK_SHIFT) | \
+   (((uint32_t)(r2f) & UINT32_C(0x0f)) << P10_5_R2F_MASK_SHIFT))
 
 enum p9_command_flags {
   P9_FLAG_ALLOW_EXPECTED_OBJECT_FAILURE = 1U << 0,

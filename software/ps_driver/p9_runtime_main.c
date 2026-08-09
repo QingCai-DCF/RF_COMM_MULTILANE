@@ -1,6 +1,8 @@
 #include "ir_regs.h"
 #include "p9_crypto.h"
 #include "p9_runtime_protocol.h"
+#include "p10_1_runtime_protocol.h"
+#include "p10_5_dual_direction_config.h"
 
 #include "sleep.h"
 #include "xaxidma.h"
@@ -1102,6 +1104,256 @@ static int p9_configure_object(volatile p9_mailbox_t *m) {
   return P9_RUNTIME_OK;
 }
 
+#if P10_ENDPOINT_ROLE != 0
+typedef struct {
+  uint32_t role_epoch;
+  uint32_t role_status;
+  uint32_t context_status;
+  uint32_t local_tx_mask;
+  uint32_t local_rx_mask;
+  uint32_t piggyback_ack_tx_count;
+  uint32_t piggyback_ack_rx_count;
+  uint32_t control_only_ack_count;
+  uint32_t direction_reject_count;
+  uint32_t role_epoch_reject_count;
+  uint32_t tx_bytes;
+  uint32_t rx_bytes;
+  uint32_t tx_window_occupancy;
+  uint32_t rx_window_occupancy;
+  uint32_t tx_receiver_credit;
+  uint32_t rx_receiver_credit;
+  uint32_t tx_retry_count;
+  uint32_t tx_timeout_count;
+  uint32_t ack_tx_bytes;
+  uint32_t ack_rx_bytes;
+  uint32_t control_tx_bytes;
+  uint32_t application_committed_bytes;
+  uint32_t tx_axis_stall;
+  uint32_t rx_axis_stall;
+  uint32_t control_queue_occupancy;
+} p10_5_direction_snapshot_t;
+
+static int p10_5_query_dual_direction_caps(void) {
+  if (P10_LANE_COUNT != 4 ||
+      p9_pl_read(IR_REG_P10_5_CAPS) != P10_5_CAPABILITY_WORD ||
+      (p9_pl_read(IR_REG_P10_5_VERSION) & UINT32_C(0xffff)) !=
+          P10_5_CAPABILITY_VERSION ||
+      p9_pl_read(IR_REG_P10_5_TELEMETRY_SCHEMA) != UINT32_C(0x50310502))
+    return P9_RUNTIME_P10_5_CAPABILITY;
+  return P9_RUNTIME_OK;
+}
+
+static int p10_5_stage_role_masks(uint32_t active_mask,
+                                  uint32_t f2r_mask,
+                                  uint32_t r2f_mask) {
+  if (active_mask == 0U || (active_mask & ~P10_LANE_MASK) != 0U ||
+      f2r_mask == 0U || r2f_mask == 0U ||
+      (f2r_mask & r2f_mask) != 0U ||
+      (f2r_mask | r2f_mask) != active_mask)
+    return P9_RUNTIME_BAD_ARGUMENT;
+  p9_pl_write(IR_REG_P10_5_MODE_SHADOW, 1U);
+  p9_pl_write(IR_REG_P10_5_ACTIVE_MASK_SHADOW, active_mask);
+  p9_pl_write(IR_REG_P10_5_F2R_MASK_SHADOW, f2r_mask);
+  p9_pl_write(IR_REG_P10_5_R2F_MASK_SHADOW, r2f_mask);
+  dsb();
+  return P9_RUNTIME_OK;
+}
+
+static int p10_5_commit_role_masks(uint32_t active_mask,
+                                   uint32_t f2r_mask,
+                                   uint32_t r2f_mask,
+                                   uint32_t *role_epoch) {
+  uint32_t before = p9_pl_read(IR_REG_P10_5_ROLE_EPOCH) & 0xffffU;
+  p9_pl_write(IR_REG_P10_5_ROLE_COMMIT, UINT32_C(0xc05a0001));
+  dsb();
+  uint64_t deadline = p9_deadline_ms(20U);
+  do {
+    uint32_t epoch = p9_pl_read(IR_REG_P10_5_ROLE_EPOCH) & 0xffffU;
+    uint32_t status = p9_pl_read(IR_REG_P10_5_ROLE_STATUS);
+    uint32_t error = p9_pl_read(IR_REG_P10_5_ROLE_ERROR);
+    if (error != 0U) return P9_RUNTIME_P10_5_ROLE_COMMIT;
+    if (epoch != 0U && epoch != before && (status & 7U) == 7U) {
+      uint32_t expected_tx = P10_ENDPOINT_ROLE == 1 ? f2r_mask : r2f_mask;
+      uint32_t expected_rx = P10_ENDPOINT_ROLE == 1 ? r2f_mask : f2r_mask;
+      if ((p9_pl_read(IR_REG_P10_5_ACTIVE_MASK) & P10_LANE_MASK) !=
+              active_mask ||
+          (p9_pl_read(IR_REG_P10_5_F2R_MASK) & P10_LANE_MASK) != f2r_mask ||
+          (p9_pl_read(IR_REG_P10_5_R2F_MASK) & P10_LANE_MASK) != r2f_mask ||
+          (p9_pl_read(IR_REG_P10_5_LOCAL_TX_MASK) & P10_LANE_MASK) !=
+              expected_tx ||
+          (p9_pl_read(IR_REG_P10_5_LOCAL_RX_MASK) & P10_LANE_MASK) !=
+              expected_rx)
+        return P9_RUNTIME_P10_5_ROLE_COMMIT;
+      if (role_epoch != NULL) *role_epoch = epoch;
+      return P9_RUNTIME_OK;
+    }
+    usleep(P9_POLL_DELAY_US);
+  } while (p9_time_now() < deadline);
+  return P9_RUNTIME_P10_5_ROLE_COMMIT;
+}
+
+static int p10_5_start_direction_stream(void) {
+  p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
+  usleep(10U);
+  return (p9_pl_read(IR_REG_P9_STATUS) & P9_STATUS_OBJECT_ACTIVE) != 0U ?
+             P9_RUNTIME_OK : P9_RUNTIME_P10_5_CONTEXT;
+}
+
+static int p10_5_abort_direction_stream(uint32_t abort_local_tx,
+                                        uint32_t abort_local_rx) {
+  uint32_t control = (abort_local_tx != 0U ? 1U : 0U) |
+                     (abort_local_rx != 0U ? 2U : 0U);
+  if (control == 0U) return P9_RUNTIME_BAD_ARGUMENT;
+  p9_pl_write(IR_REG_P10_5_CONTEXT_CONTROL, control);
+  dsb();
+  return P9_RUNTIME_OK;
+}
+
+static int p10_5_stop_direction_stream(void) {
+  if ((p9_pl_read(IR_REG_P9_STATUS) & P9_STATUS_OBJECT_ACTIVE) == 0U)
+    return P9_RUNTIME_OK;
+  int status = p10_5_abort_direction_stream(1U, 1U);
+  if (status != P9_RUNTIME_OK) return status;
+  uint64_t deadline = p9_deadline_ms(20U);
+  do {
+    if ((p9_pl_read(IR_REG_P9_STATUS) & P9_STATUS_OBJECT_ACTIVE) == 0U)
+      return P9_RUNTIME_OK;
+    usleep(P9_POLL_DELAY_US);
+  } while (p9_time_now() < deadline);
+  return P9_RUNTIME_P10_5_CONTEXT;
+}
+
+static int p10_5_snapshot_direction(p10_5_direction_snapshot_t *snapshot) {
+  if (snapshot == NULL) return P9_RUNTIME_BAD_ARGUMENT;
+  snapshot->role_epoch = p9_pl_read(IR_REG_P10_5_ROLE_EPOCH);
+  snapshot->role_status = p9_pl_read(IR_REG_P10_5_ROLE_STATUS);
+  snapshot->context_status = p9_pl_read(IR_REG_P10_5_CONTEXT_STATUS);
+  snapshot->local_tx_mask = p9_pl_read(IR_REG_P10_5_LOCAL_TX_MASK);
+  snapshot->local_rx_mask = p9_pl_read(IR_REG_P10_5_LOCAL_RX_MASK);
+  snapshot->piggyback_ack_tx_count =
+      p9_pl_read(IR_REG_P10_5_PIGGYBACK_ACK_TX_COUNT);
+  snapshot->piggyback_ack_rx_count =
+      p9_pl_read(IR_REG_P10_5_PIGGYBACK_ACK_RX_COUNT);
+  snapshot->control_only_ack_count =
+      p9_pl_read(IR_REG_P10_5_CONTROL_ACK_FALLBACK_COUNT);
+  snapshot->direction_reject_count =
+      p9_pl_read(IR_REG_P10_5_DIRECTION_REJECT_COUNT);
+  snapshot->role_epoch_reject_count =
+      p9_pl_read(IR_REG_P10_5_ROLE_EPOCH_REJECT_COUNT);
+  snapshot->tx_bytes = p9_pl_read(IR_REG_P10_5_TX_BYTES);
+  snapshot->rx_bytes = p9_pl_read(IR_REG_P10_5_RX_BYTES);
+  snapshot->tx_window_occupancy =
+      p9_pl_read(IR_REG_P10_5_TX_WINDOW_OCCUPANCY);
+  snapshot->rx_window_occupancy =
+      p9_pl_read(IR_REG_P10_5_RX_WINDOW_OCCUPANCY);
+  snapshot->tx_receiver_credit =
+      p9_pl_read(IR_REG_P10_5_TX_RECEIVER_CREDIT);
+  snapshot->rx_receiver_credit =
+      p9_pl_read(IR_REG_P10_5_RX_RECEIVER_CREDIT);
+  snapshot->tx_retry_count = p9_pl_read(IR_REG_P10_5_TX_RETRY_COUNT);
+  snapshot->tx_timeout_count = p9_pl_read(IR_REG_P10_5_TX_TIMEOUT_COUNT);
+  snapshot->ack_tx_bytes = p9_pl_read(IR_REG_P10_5_ACK_TX_BYTES);
+  snapshot->ack_rx_bytes = p9_pl_read(IR_REG_P10_5_ACK_RX_BYTES);
+  snapshot->control_tx_bytes = p9_pl_read(IR_REG_P10_5_CONTROL_TX_BYTES);
+  snapshot->application_committed_bytes =
+      p9_pl_read(IR_REG_P10_5_APPLICATION_COMMITTED_BYTES);
+  snapshot->tx_axis_stall = p9_pl_read(IR_REG_P10_5_TX_AXIS_STALL);
+  snapshot->rx_axis_stall = p9_pl_read(IR_REG_P10_5_RX_AXIS_STALL);
+  snapshot->control_queue_occupancy =
+      p9_pl_read(IR_REG_P10_5_CONTROL_QUEUE_OCCUPANCY);
+  return P9_RUNTIME_OK;
+}
+
+static int p10_5_clear_direction_errors(void) {
+  if ((p9_pl_read(IR_REG_P9_STATUS) &
+       (P9_STATUS_OBJECT_ACTIVE | P9_STATUS_RAW_BUSY)) != 0U)
+    return P9_RUNTIME_P10_5_CONTEXT;
+  p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_CLEAR_COUNTERS_MASK);
+  dsb();
+  return P9_RUNTIME_OK;
+}
+
+static uint32_t p10_5_direction_session(uint32_t base, uint32_t direction) {
+  return direction == 0U ? base : base ^ UINT32_C(0x80000000);
+}
+
+static uint32_t p10_5_direction_path(uint32_t base, uint32_t direction) {
+  return direction == 0U ? base & UINT32_C(0xffff) :
+                           (base ^ UINT32_C(0x8000)) & UINT32_C(0xffff);
+}
+
+static int p10_5_program_dual_object_context(volatile p9_mailbox_t *m,
+                                             uint32_t active_mask,
+                                             uint32_t preserve_live_faults) {
+  uint32_t local_direction = P10_ENDPOINT_ROLE == 2 ? 1U : 0U;
+  uint32_t remote_direction = local_direction ^ 1U;
+  uint32_t diagnostic = m->command_flags &
+      P10_5_RUNTIME_FLAG_DIRECTION_FAULT_TEST;
+  uint32_t fault_direction =
+      (m->command_flags & P10_5_RUNTIME_FLAG_FAULT_TARGET_R2F) != 0U;
+  uint32_t local_drop_data = m->drop_data_count & 0xffU;
+  uint32_t local_drop_ack = m->drop_ack_count & 0xffU;
+  uint32_t unavailable = m->lane_unavailable_mask & active_mask;
+  if (diagnostic != 0U) {
+    /* DATA belongs to the local TX context; ACK belongs to the local RX
+     * context and therefore acknowledges the remote direction.  Scope each
+     * one-shot fault to exactly the requested logical direction even though
+     * both role-bound mailboxes carry the same immutable CASE record. */
+    if (local_direction != fault_direction) local_drop_data = 0U;
+    if (remote_direction != fault_direction) local_drop_ack = 0U;
+  }
+  if (preserve_live_faults != 0U)
+    unavailable |= (p9_pl_read(IR_REG_P9_FAULT_INJECTION) >> 16) &
+                   active_mask;
+  p9_pl_write(IR_REG_P9_OBJECT_CONFIG,
+              active_mask | ((m->rate_select & 3U) << 8) |
+                  (local_direction << 16));
+  p9_pl_write(IR_REG_P9_LANE_WEIGHTS, m->lane_weights);
+  p9_pl_write(IR_REG_P9_SESSION_EPOCH,
+              p10_5_direction_session(m->session_epoch, local_direction));
+  p9_pl_write(IR_REG_P9_PATH_EPOCH,
+              p10_5_direction_path(m->path_epoch, local_direction));
+  p9_pl_write(IR_REG_P9_OBJECT_ID, m->object_id);
+  p9_pl_write(IR_REG_P9_INITIAL_SEQUENCE, m->initial_sequence & 0xffffU);
+  p9_pl_write(IR_REG_P9_PROTOCOL_FAULT_FLAGS,
+              m->protocol_fault_flags & 0x7ffffU);
+  p9_pl_write(IR_REG_P9_FAULT_INJECTION,
+              local_drop_data | (local_drop_ack << 8) |
+                  (unavailable << 16));
+  p9_pl_write(IR_REG_P10_5_TX_SESSION,
+              p10_5_direction_session(m->session_epoch, local_direction));
+  p9_pl_write(IR_REG_P10_5_RX_SESSION,
+              p10_5_direction_session(m->session_epoch, remote_direction));
+  p9_pl_write(IR_REG_P10_5_TX_PATH,
+              p10_5_direction_path(m->path_epoch, local_direction));
+  p9_pl_write(IR_REG_P10_5_RX_PATH,
+              p10_5_direction_path(m->path_epoch, remote_direction));
+  p9_pl_write(IR_REG_P10_5_TX_OBJECT, m->object_id);
+  p9_pl_write(IR_REG_P10_5_RX_OBJECT, m->object_id);
+  p9_pl_write(IR_REG_P10_5_TX_INITIAL_SEQUENCE,
+              m->initial_sequence & 0xffffU);
+  p9_pl_write(IR_REG_P10_5_RX_INITIAL_SEQUENCE,
+              m->initial_sequence & 0xffffU);
+  dsb();
+  return P9_RUNTIME_OK;
+}
+
+static int p10_5_configure_dual_object(volatile p9_mailbox_t *m,
+                                       uint32_t active_mask,
+                                       uint32_t f2r_mask,
+                                       uint32_t r2f_mask,
+                                       uint32_t *role_epoch) {
+  int status = p10_5_clear_direction_errors();
+  if (status != P9_RUNTIME_OK) return status;
+  status = p10_5_stage_role_masks(active_mask, f2r_mask, r2f_mask);
+  if (status != P9_RUNTIME_OK) return status;
+  status = p10_5_commit_role_masks(active_mask, f2r_mask, r2f_mask,
+                                   role_epoch);
+  if (status != P9_RUNTIME_OK) return status;
+  return p10_5_program_dual_object_context(m, active_mask, 0U);
+}
+#endif
+
 static int p9_validate_object_args(volatile p9_mailbox_t *m,
                                    UINTPTR *tx_address,
                                    UINTPTR *rx_address,
@@ -1124,6 +1376,86 @@ static int p9_validate_object_args(volatile p9_mailbox_t *m,
   *rx_address = (UINTPTR)P9_RX_BUFFER_BASEADDR + m->rx_offset;
   return P9_RUNTIME_OK;
 }
+
+#if P10_ENDPOINT_ROLE != 0
+static int p10_5_validate_dual_object_args(volatile p9_mailbox_t *m,
+                                           UINTPTR *tx_address,
+                                           UINTPTR *rx_address,
+                                           uint32_t *transfer_bytes,
+                                           uint32_t *active_mask,
+                                           uint32_t *f2r_mask,
+                                           uint32_t *r2f_mask) {
+  const uint32_t packed_mask_bits = UINT32_C(0x000f0f0f);
+  *active_mask = (m->lane_mask >> P10_5_ACTIVE_MASK_SHIFT) & P10_LANE_MASK;
+  *f2r_mask = (m->lane_mask >> P10_5_F2R_MASK_SHIFT) & P10_LANE_MASK;
+  *r2f_mask = (m->lane_mask >> P10_5_R2F_MASK_SHIFT) & P10_LANE_MASK;
+  if (P10_LANE_COUNT != 4 || (m->lane_mask & ~packed_mask_bits) != 0U ||
+      *active_mask == 0U || *f2r_mask == 0U || *r2f_mask == 0U ||
+      (*f2r_mask & *r2f_mask) != 0U ||
+      (*f2r_mask | *r2f_mask) != *active_mask ||
+      m->rate_select > 2U ||
+      (m->ring_depth != 8U && m->ring_depth != 16U &&
+       m->ring_depth != 32U) ||
+      m->cache_mode > 1U || m->object_size == 0U ||
+      m->object_size > P9_MAX_OBJECT_BYTES || m->tx_offset > 63U ||
+      m->rx_offset > 63U)
+    return P9_RUNTIME_BAD_ARGUMENT;
+  int status = p9_rfap_transfer_bytes(m, transfer_bytes);
+  if (status != P9_RUNTIME_OK ||
+      *transfer_bytes + m->tx_offset > P9_MAX_OBJECT_BYTES ||
+      *transfer_bytes + m->rx_offset > P9_MAX_OBJECT_BYTES)
+    return P9_RUNTIME_BAD_ARGUMENT;
+  *tx_address = (UINTPTR)P9_TX_BUFFER_BASEADDR + m->tx_offset;
+  *rx_address = (UINTPTR)P9_RX_BUFFER_BASEADDR + m->rx_offset;
+  return P9_RUNTIME_OK;
+}
+
+static void p10_5_select_payload_direction(volatile p9_mailbox_t *m,
+                                           uint32_t direction,
+                                           uint32_t *saved_direction,
+                                           uint32_t *saved_session,
+                                           uint32_t *saved_path) {
+  *saved_direction = m->direction;
+  *saved_session = m->session_epoch;
+  *saved_path = m->path_epoch;
+  m->direction = direction;
+  m->session_epoch = p10_5_direction_session(*saved_session, direction);
+  m->path_epoch = p10_5_direction_path(*saved_path, direction);
+}
+
+static void p10_5_restore_payload_context(volatile p9_mailbox_t *m,
+                                          uint32_t direction,
+                                          uint32_t session,
+                                          uint32_t path) {
+  m->direction = direction;
+  m->session_epoch = session;
+  m->path_epoch = path;
+}
+
+static int p10_5_prepare_direction_payload(volatile p9_mailbox_t *m,
+                                           uint8_t *output,
+                                           uint32_t transfer_bytes,
+                                           uint32_t direction) {
+  uint32_t saved_direction, saved_session, saved_path;
+  p10_5_select_payload_direction(m, direction, &saved_direction,
+                                 &saved_session, &saved_path);
+  int status = p9_prepare_payload(m, output, transfer_bytes);
+  p10_5_restore_payload_context(m, saved_direction, saved_session, saved_path);
+  return status;
+}
+
+static int p10_5_validate_direction_payload(volatile p9_mailbox_t *m,
+                                            const uint8_t *input,
+                                            uint32_t transfer_bytes,
+                                            uint32_t direction) {
+  uint32_t saved_direction, saved_session, saved_path;
+  p10_5_select_payload_direction(m, direction, &saved_direction,
+                                 &saved_session, &saved_path);
+  int status = p9_validate_rfap(m, input, transfer_bytes);
+  p10_5_restore_payload_context(m, saved_direction, saved_session, saved_path);
+  return status;
+}
+#endif
 
 static int p9_command_object(volatile p9_mailbox_t *m) {
   UINTPTR tx_address, rx_address;
@@ -1256,6 +1588,166 @@ object_exit:
                p9_time_now() - object_runtime_start);
   return status;
 }
+
+#if P10_ENDPOINT_ROLE != 0
+static int p10_5_command_dual_object(volatile p9_mailbox_t *m) {
+  UINTPTR tx_address, rx_address;
+  uint32_t transfer_bytes = 0U;
+  uint32_t active_mask = 0U, f2r_mask = 0U, r2f_mask = 0U;
+  const uint32_t local_direction = P10_ENDPOINT_ROLE == 2 ? 1U : 0U;
+  const uint32_t remote_direction = local_direction ^ 1U;
+  uint64_t object_runtime_start = p9_time_now();
+  uint32_t tx_submitted_before = g_metrics.tx_submitted;
+  uint32_t tx_completed_before = g_metrics.tx_completed;
+  uint32_t rx_submitted_before = g_metrics.rx_submitted;
+  uint32_t rx_completed_before = g_metrics.rx_completed;
+  int status = p10_5_query_dual_direction_caps();
+  if (status == P9_RUNTIME_OK)
+    status = p10_5_validate_dual_object_args(
+        m, &tx_address, &rx_address, &transfer_bytes, &active_mask,
+        &f2r_mask, &r2f_mask);
+  if (status != P9_RUNTIME_OK) {
+    p9_store_u64(&m->object_runtime_ticks_low,
+                 &m->object_runtime_ticks_high,
+                 p9_time_now() - object_runtime_start);
+    return status;
+  }
+
+  status = p9_shutdown();
+  if (status != P9_RUNTIME_OK) return status;
+  if (g_ring_depth != m->ring_depth) {
+    status = p9_dma_initialize(m->ring_depth, 1U);
+    if (status != P9_RUNTIME_OK) return status;
+  }
+
+  uint8_t *tx_buffer = (uint8_t *)tx_address;
+  uint8_t *rx_buffer = (uint8_t *)rx_address;
+  uint64_t prepare_start = p9_time_now();
+  status = p10_5_prepare_direction_payload(
+      m, tx_buffer, transfer_bytes, local_direction);
+  if (status != P9_RUNTIME_OK) goto dual_object_exit;
+  memset(rx_buffer, 0, transfer_bytes);
+  uint8_t input_sha[32], output_sha[32], expected_rx_sha[32];
+  m->input_crc32 = p9_crc32(tx_buffer, transfer_bytes);
+  p9_sha256(tx_buffer, transfer_bytes, input_sha);
+  p9_copy_digest(m->input_sha256, input_sha);
+  p9_store_u64(&m->payload_prepare_ticks_low,
+               &m->payload_prepare_ticks_high,
+               p9_time_now() - prepare_start);
+  if (m->cache_mode != 0U) {
+    p9_cache_enable();
+    g_metrics.cache_enabled_exercised = 1U;
+    p9_cache_flush(tx_address, transfer_bytes);
+    p9_cache_invalidate(rx_address, transfer_bytes);
+  } else {
+    p9_cache_disable();
+    g_metrics.cache_disabled_exercised = 1U;
+  }
+  if (m->tx_offset != 0U || m->rx_offset != 0U)
+    g_metrics.misaligned_transfer_handled = 1U;
+
+  uint32_t role_epoch = 0U;
+  status = p10_5_configure_dual_object(
+      m, active_mask, f2r_mask, r2f_mask, &role_epoch);
+  if (status != P9_RUNTIME_OK) goto dual_object_exit;
+  status = p9_enable_and_arm();
+  if (status != P9_RUNTIME_OK) goto dual_object_exit;
+  uint32_t token = m->command_sequence ^ m->object_id ^ UINT32_C(0x50350000);
+  status = p9_submit_rx(rx_address, transfer_bytes, token);
+  if (status != P9_RUNTIME_OK) goto dual_object_exit;
+  status = p10_5_start_direction_stream();
+  if (status != P9_RUNTIME_OK) {
+    m->last_error_detail = p9_pl_read(IR_REG_P9_OBJECT_ERROR);
+    goto dual_object_exit;
+  }
+  status = p9_submit_tx(tx_address, transfer_bytes, token);
+  if (status != P9_RUNTIME_OK) goto dual_object_exit;
+  status = p9_poll_completion(m, token, m->timeout_ms, 1U, 1U);
+  if (status == P9_RUNTIME_OK) {
+    p10_5_direction_snapshot_t snapshot;
+    status = p10_5_snapshot_direction(&snapshot);
+    if (status == P9_RUNTIME_OK &&
+        ((snapshot.role_epoch & 0xffffU) != role_epoch ||
+         (snapshot.local_tx_mask & P10_LANE_MASK) !=
+             (P10_ENDPOINT_ROLE == 1 ? f2r_mask : r2f_mask) ||
+         (snapshot.local_rx_mask & P10_LANE_MASK) !=
+             (P10_ENDPOINT_ROLE == 1 ? r2f_mask : f2r_mask) ||
+         (snapshot.context_status & UINT32_C(0x00f0)) != UINT32_C(0x0070) ||
+         snapshot.tx_bytes != transfer_bytes ||
+         snapshot.rx_bytes != transfer_bytes ||
+         snapshot.direction_reject_count != 0U ||
+         snapshot.role_epoch_reject_count != 0U)) {
+      m->last_error_detail = snapshot.context_status;
+      status = P9_RUNTIME_P10_5_CONTEXT;
+    }
+  }
+  if (status == P9_RUNTIME_OK) {
+    p9_capture_terminal_window(m);
+    if (m->cache_mode != 0U)
+      p9_cache_invalidate(rx_address, transfer_bytes);
+    dsb();
+    g_metrics.memory_barrier_count++;
+    uint64_t integrity_start = p9_time_now();
+    m->output_crc32 = p9_crc32(rx_buffer, transfer_bytes);
+    p9_sha256(rx_buffer, transfer_bytes, output_sha);
+    p9_copy_digest(m->output_sha256, output_sha);
+
+    /* Once MM2S and the PL object are complete, reuse the TX staging buffer
+     * to construct the byte-exact payload expected from the peer direction.
+     * This matters for RFAP-vNext because direction/session/path fields are
+     * intentionally different in the two simultaneous objects. */
+    status = p10_5_prepare_direction_payload(
+        m, tx_buffer, transfer_bytes, remote_direction);
+    if (status == P9_RUNTIME_OK) {
+      uint32_t expected_rx_crc = p9_crc32(tx_buffer, transfer_bytes);
+      p9_sha256(tx_buffer, transfer_bytes, expected_rx_sha);
+      m->first_mismatch_offset = UINT32_C(0xffffffff);
+      for (uint32_t index = 0U; index < transfer_bytes; ++index) {
+        if (tx_buffer[index] != rx_buffer[index]) {
+          m->first_mismatch_offset = index;
+          status = P9_RUNTIME_PAYLOAD_MISMATCH;
+          break;
+        }
+      }
+      if (m->actual_rx_length != transfer_bytes ||
+          expected_rx_crc != m->output_crc32 ||
+          memcmp(expected_rx_sha, output_sha, sizeof(expected_rx_sha)) != 0)
+        status = P9_RUNTIME_PAYLOAD_MISMATCH;
+    }
+    if (status == P9_RUNTIME_OK)
+      status = p10_5_validate_direction_payload(
+          m, rx_buffer, transfer_bytes, remote_direction);
+    p9_store_u64(&m->integrity_verify_ticks_low,
+                 &m->integrity_verify_ticks_high,
+                 p9_time_now() - integrity_start);
+  }
+
+dual_object_exit:
+  p9_cache_disable();
+  if (status != P9_RUNTIME_OK) {
+    (void)p10_5_stop_direction_stream();
+    if (g_metrics.tx_submitted - tx_submitted_before >
+        g_metrics.tx_completed - tx_completed_before) {
+      g_metrics.tx_completed++;
+      p9_advance_consumer(1U);
+    }
+    if (g_metrics.rx_submitted - rx_submitted_before >
+        g_metrics.rx_completed - rx_completed_before) {
+      g_metrics.rx_completed++;
+      p9_advance_consumer(0U);
+    }
+    (void)p9_dma_initialize(m->ring_depth, 1U);
+  }
+  {
+    int shutdown_status = p9_shutdown();
+    if (status == P9_RUNTIME_OK) status = shutdown_status;
+  }
+  p9_store_u64(&m->object_runtime_ticks_low,
+               &m->object_runtime_ticks_high,
+               p9_time_now() - object_runtime_start);
+  return status;
+}
+#endif
 
 static int p9_command_ring_diagnostic(volatile p9_mailbox_t *m) {
   if (m->ring_depth != 8U && m->ring_depth != 16U &&
@@ -1615,6 +2107,10 @@ static int p9_dispatch(volatile p9_mailbox_t *m) {
 #if P10_ENDPOINT_ROLE != 0
     case P9_COMMAND_P10_1_AUTONOMOUS_STREAM:
       return p10_1_command_autonomous_stream(m);
+    case P9_COMMAND_P10_5_AUTONOMOUS_DUAL_STREAM:
+      return p10_1_command_autonomous_stream(m);
+    case P9_COMMAND_P10_5_DUAL_OBJECT:
+      return p10_5_command_dual_object(m);
 #endif
     default: return P9_RUNTIME_BAD_COMMAND;
   }

@@ -12,7 +12,9 @@ module ir_data_plane_top #(
   parameter int ACK_FRAME_THRESHOLD = 8,
   parameter int ACK_MAX_DELAY_CYCLES = 32000,
   parameter int PAYLOAD_REF_WIDTH = 16,
-  parameter int DESCRIPTOR_WIDTH = 16
+  parameter int DESCRIPTOR_WIDTH = 16,
+  parameter bit P10_5_DUAL_CONTEXT = 1'b0,
+  parameter int SCHEDULER_OVERHEAD_BYTES = 22
 ) (
   input  logic                           clk,
   input  logic                           rst_n,
@@ -23,6 +25,18 @@ module ir_data_plane_top #(
   input  logic [31:0]                    session_epoch_i,
   input  logic [15:0]                    path_epoch_i,
   input  logic                           path_epoch_valid_i,
+  // P10.5 gives the already-independent TX and RX windows distinct lifecycle
+  // and epoch inputs.  The parameter is compile-time false for every legacy
+  // instantiation, preserving the original shared-context behavior.
+  input  logic                           tx_session_reset_i,
+  input  logic                           rx_session_reset_i,
+  input  logic                           tx_abort_i,
+  input  logic                           rx_abort_i,
+  input  logic [15:0]                    tx_initial_sequence_i,
+  input  logic [15:0]                    rx_initial_sequence_i,
+  input  logic [31:0]                    tx_session_epoch_i,
+  input  logic [31:0]                    rx_context_session_epoch_i,
+  input  logic [15:0]                    rx_context_path_epoch_i,
 
   input  logic [LANE_COUNT*8-1:0]        lane_weights_i,
   input  logic [LANE_COUNT-1:0]          active_lane_mask_i,
@@ -82,6 +96,7 @@ module ir_data_plane_top #(
   input  logic                           ack_control_event_i,
   input  logic                           ack_direction_boundary_i,
   input  logic                           ack_explicit_request_i,
+  input  logic                           ack_piggyback_commit_i,
   output logic                           local_ack_valid_o,
   input  logic                           local_ack_ready_i,
   output logic [31:0]                    local_ack_session_epoch_o,
@@ -127,6 +142,24 @@ module ir_data_plane_top #(
   localparam int ENTRY_WIDTH = $clog2(WINDOW_SIZE);
   localparam int LANE_WIDTH = $clog2(LANE_COUNT);
   localparam logic [$clog2(SACK_BITS):0] CONFIGURED_SACK_WIDTH = SACK_BITS;
+  wire effective_tx_session_reset = P10_5_DUAL_CONTEXT ?
+      tx_session_reset_i : session_reset_i;
+  wire effective_rx_session_reset = P10_5_DUAL_CONTEXT ?
+      rx_session_reset_i : session_reset_i;
+  wire effective_tx_abort = abort_all_i ||
+      (P10_5_DUAL_CONTEXT && tx_abort_i);
+  wire effective_rx_abort = abort_all_i ||
+      (P10_5_DUAL_CONTEXT && rx_abort_i);
+  wire [15:0] effective_tx_initial_sequence = P10_5_DUAL_CONTEXT ?
+      tx_initial_sequence_i : initial_sequence_i;
+  wire [15:0] effective_rx_initial_sequence = P10_5_DUAL_CONTEXT ?
+      rx_initial_sequence_i : initial_sequence_i;
+  wire [31:0] effective_tx_session_epoch = P10_5_DUAL_CONTEXT ?
+      tx_session_epoch_i : session_epoch_i;
+  wire [31:0] effective_rx_session_epoch = P10_5_DUAL_CONTEXT ?
+      rx_context_session_epoch_i : session_epoch_i;
+  wire [15:0] effective_rx_path_epoch = P10_5_DUAL_CONTEXT ?
+      rx_context_path_epoch_i : path_epoch_i;
 
   logic tx_attempt_valid;
   logic tx_attempt_ready;
@@ -221,7 +254,7 @@ module ir_data_plane_top #(
       pending_last_lane <= 3'd0;
       scheduler_last_defer_reason_o <= 4'd0;
     end else begin
-      if (session_reset_i || abort_all_i) begin
+      if (effective_tx_session_reset || effective_tx_abort) begin
         request_inflight <= 1'b0;
         scheduler_last_defer_reason_o <= 4'd0;
       end else begin
@@ -253,9 +286,11 @@ module ir_data_plane_top #(
     .RTO_CYCLES(RTO_CYCLES), .PAYLOAD_REF_WIDTH(PAYLOAD_REF_WIDTH),
     .DESCRIPTOR_WIDTH(DESCRIPTOR_WIDTH)
   ) u_tx_window (
-    .clk, .rst_n, .clear_counters_i, .session_reset_i, .initial_sequence_i,
-    .session_epoch_i,
-    .abort_all_i, .allocate_valid_i(tx_allocate_valid_i),
+    .clk, .rst_n, .clear_counters_i,
+    .session_reset_i(effective_tx_session_reset),
+    .initial_sequence_i(effective_tx_initial_sequence),
+    .session_epoch_i(effective_tx_session_epoch),
+    .abort_all_i(effective_tx_abort), .allocate_valid_i(tx_allocate_valid_i),
     .allocate_ready_o(tx_allocate_ready_o),
     .allocate_payload_ref_i(tx_allocate_payload_ref_i),
     .allocate_payload_length_i(tx_allocate_payload_length_i),
@@ -292,7 +327,7 @@ module ir_data_plane_top #(
     .LANE_COUNT(LANE_COUNT), .ENTRY_WIDTH(ENTRY_WIDTH)
   ) u_scheduler (
     .clk, .rst_n, .clear_counters_i,
-    .state_reset_i(session_reset_i || abort_all_i), .lane_weights_i,
+    .state_reset_i(effective_tx_session_reset || effective_tx_abort), .lane_weights_i,
     .active_lane_mask_i, .lane_ready_i({LANE_COUNT{1'b1}}),
     .lane_health_i, .mapping_valid_i,
     .frame_admission_i, .lane_tx_permit_i, .duty_headroom_i, .fault_free_i,
@@ -300,7 +335,8 @@ module ir_data_plane_top #(
     .path_epoch_valid_i, .receiver_credit_i(peer_receiver_credit_i), .path_epoch_i,
     .request_valid_i(scheduler_request_valid), .request_ready_o(scheduler_request_ready),
     .request_entry_i(tx_attempt_entry),
-    .request_cost_bytes_i(tx_attempt_payload_length + 16'd22),
+    .request_cost_bytes_i(tx_attempt_payload_length +
+                          SCHEDULER_OVERHEAD_BYTES[15:0]),
     .request_priority_i(tx_attempt_priority), .request_retry_i(tx_attempt_is_retry),
     .request_last_lane_i(tx_attempt_last_lane[LANE_WIDTH-1:0]),
     .decision_valid_o(scheduler_decision_valid),
@@ -322,9 +358,11 @@ module ir_data_plane_top #(
     .WINDOW_SIZE(WINDOW_SIZE), .SACK_BITS(SACK_BITS),
     .PAYLOAD_REF_WIDTH(PAYLOAD_REF_WIDTH)
   ) u_rx_window (
-    .clk, .rst_n, .clear_counters_i, .session_reset_i, .initial_sequence_i,
-    .session_epoch_i,
-    .current_path_epoch_i(path_epoch_i), .rx_valid_i(rx_frame_valid_i),
+    .clk, .rst_n, .clear_counters_i,
+    .session_reset_i(effective_rx_session_reset || effective_rx_abort),
+    .initial_sequence_i(effective_rx_initial_sequence),
+    .session_epoch_i(effective_rx_session_epoch),
+    .current_path_epoch_i(effective_rx_path_epoch), .rx_valid_i(rx_frame_valid_i),
     .rx_ready_o(rx_frame_ready_o), .rx_l1_valid_i,
     .rx_session_epoch_i, .rx_sequence_i, .rx_path_epoch_i,
     .rx_payload_ref_i, .rx_payload_length_i, .rx_accept_pulse_o(rx_accept_pulse),
@@ -346,18 +384,21 @@ module ir_data_plane_top #(
   ir_ack_aggregator #(
     .SACK_BITS(SACK_BITS),
     .FRAME_THRESHOLD(ACK_FRAME_THRESHOLD),
-    .MAX_DELAY_CYCLES(ACK_MAX_DELAY_CYCLES)
+    .MAX_DELAY_CYCLES(ACK_MAX_DELAY_CYCLES),
+    .P10_5_PIGGYBACK_CAPABLE(P10_5_DUAL_CONTEXT)
   ) u_ack_aggregator (
     .clk, .rst_n, .clear_counters_i,
-    .state_reset_i(session_reset_i || abort_all_i),
+    .state_reset_i(effective_rx_session_reset || effective_rx_abort),
     .rx_accept_i(rx_accept_pulse),
-    .session_epoch_i, .ack_base_i(rx_base_sequence_o),
+    .session_epoch_i(effective_rx_session_epoch),
+    .ack_base_i(rx_base_sequence_o),
     .sack_bitmap_i(rx_sack_bitmap_o), .sack_width_i(CONFIGURED_SACK_WIDTH),
     .receiver_credit_i({{(16-$clog2(WINDOW_SIZE+1)){1'b0}}, rx_receiver_credit_o}),
     .gap_blocked_i((|rx_sack_bitmap_o) && !rx_sack_bitmap_o[0]),
     .control_event_i(ack_control_event_i),
     .direction_boundary_i(ack_direction_boundary_i),
     .explicit_request_i(ack_explicit_request_i),
+    .piggyback_commit_i(ack_piggyback_commit_i),
     .ack_valid_o(local_ack_valid_o), .ack_ready_i(local_ack_ready_i),
     .ack_session_epoch_o(local_ack_session_epoch_o), .ack_base_o(local_ack_base_o),
     .ack_bitmap_o(local_ack_bitmap_o), .ack_width_o(local_ack_width_o),

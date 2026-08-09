@@ -5,9 +5,9 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 260
+REQUIREMENT_COUNT: 284
 PASS: 238
-PENDING: 16
+PENDING: 40
 FAIL: 6
 WAIVED: 0
 ```
@@ -60,10 +60,10 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `PHY-SAFE-005` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-HISTORY-COOLDOWN` | `evidence/generated/p8e_p0_p8d_regression_summary.json` | Duty-history invalidation requires at least 1000 us all-TX-low cooldown before reuse. |
 | `PHY-SAFE-006` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-PHYSICAL-MODULE-ACCOUNTING` | `evidence/generated/p8c_physical_module_accounting_summary.json` | Rolling-duty state is bound to physical-module identity and survives lane, path, and permit transitions. |
 | `L2-ARQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` | Each endpoint direction uses bounded selective-repeat TX/RX windows. |
-| `L2-ARQ-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | The shared global outstanding window supports at least 32 frames. |
+| `L2-ARQ-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_5-LEGACY-ARQ-REVERIFICATION` | `evidence/generated/p10_5_xsim/summary.json` | The shared global outstanding window supports at least 32 frames. |
 | `L2-SEQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8e_raw/r8d/p8d_selective_repeat_rtl_summary.json` | Sequence width is at least 16 bits and modular wrap is bit-exact. |
 | `L2-SACK-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | The negotiated SACK window supports at least 32 bits. |
-| `L2-SACK-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | ACK aggregation has a bounded frame threshold and maximum delay. |
+| `L2-SACK-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_5-LEGACY-SACK-REVERIFICATION` | `evidence/generated/p10_5_xsim/summary.json` | ACK aggregation has a bounded frame threshold and maximum delay. |
 | `L2-DUP-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-PYTHON-REFERENCE-CAMPAIGN` | `evidence/generated/p8e_precompletion_reverification_summary.json` | A duplicate logical frame never commits or completes twice. |
 | `L2-STALE-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` | Stale session/path data and ACK records are rejected. |
 | `L2-MIG-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | Only unacknowledged frames may migrate across eligible lanes or paths. |
@@ -224,6 +224,30 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_2-HWPREP-001` | `PASS` | P10_3_FAIL_CLOSED_RUNNER | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-001` | `evidence/generated/p10_2_hardware_dry_run.json` | The P10.3 command validator fails closed on missing authorization, old F1, mask>0xF, Ethernet, movement and two-hour requests. |
 | `P10_2-HWPREP-002` | `PASS` | P10_3_EVIDENCE_SCHEMA | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-002` | `evidence/generated/p10_2_p10_3_readiness.json` | P10.3 has machine-readable stage and 8x8 evidence templates without granting hardware authority. |
 | `P10_3-WIRE-001` | `PASS` | P10_3_AX7020_STATIONARY_4LANE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-WIRE-001` | `evidence/generated/p10_3_wiring.json` | The actual stationary four-lane wiring shall be frozen and hash-bound before hardware execution. |
+| `P10_5-CLOSE-001` | `PENDING` | P10_5_IMMUTABLE_P10_4_CLOSEOUT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-CLOSE-001` | `evidence/generated/p10_4_closeout_summary.json` | P10.4 immutable PASS_WITH_NONBLOCKING_LIMITS evidence and its non-transmitting 2+2 capability blocker shall remain unchanged and shall be closed by a separate annotated tag. |
+| `P10_5-CAP-001` | `PENDING` | P10_5_SPLIT_LANE_DUAL_DIRECTION | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-CAP-001` | — | The versioned endpoint capability shall explicitly advertise simultaneous split-lane bidirectional operation, four lanes, role epochs, ACK piggyback, and control-only ACK fallback. |
+| `P10_5-ROLE-001` | `PENDING` | P10_5_SPLIT_LANE_DUAL_DIRECTION | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_role_mask_commit` | `evidence/generated/p10_5_xsim/summary.json` | F-to-R and R-to-F lane-role masks shall be nonempty, disjoint, and subsets of ACTIVE_LANE_MASK, with endpoint-local TX/RX masks derived only from board role. |
+| `P10_5-ROLE-002` | `PENDING` | P10_5_ATOMIC_ROLE_COMMIT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_role_mask_commit` | `evidence/generated/p10_5_xsim/summary.json` | Lane-role changes shall use validated shadow registers and one quiet-boundary atomic commit with exactly one ROLE_EPOCH increment. |
+| `P10_5-ROLE-003` | `PENDING` | P10_5_ROLE_EPOCH_REJECTION | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-ROLE-003` | — | Frames carrying a stale role epoch shall be rejected without ACK, window progress, DMA write, or object commit. |
+| `P10_5-L2-001` | `PENDING` | P10_5_DUAL_DIRECTION_L2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_dual_direction_l2` | `evidence/generated/p10_5_xsim/summary.json` | The F-to-R direction shall have an independently tagged selective-repeat, SACK, receiver-credit, retry, completion, and object context. |
+| `P10_5-L2-002` | `PENDING` | P10_5_DUAL_DIRECTION_L2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_dual_direction_l2` | `evidence/generated/p10_5_xsim/summary.json` | The R-to-F direction shall have an independently tagged selective-repeat, SACK, receiver-credit, retry, completion, and object context. |
+| `P10_5-ACK-001` | `PENDING` | P10_5_BIDIRECTIONAL_ACK | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_ack_piggyback` | `evidence/generated/p10_5_xsim/summary.json` | Each DATA frame may carry CRC-protected ACK base, SACK bitmap, receiver credit, and validity for the opposite logical direction. |
+| `P10_5-ACK-002` | `PENDING` | P10_5_BIDIRECTIONAL_ACK | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_control_only_ack` | `evidence/generated/p10_5_xsim/summary.json` | When reverse application DATA is absent, bounded control-only ACK/SACK shall use only the direction's assigned local TX mask without changing bundle direction. |
+| `P10_5-ACK-003` | `PENDING` | P10_5_BIDIRECTIONAL_ACK | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5_DUAL_DIRECTION_REFERENCE_MODEL` | `evidence/generated/p10_5_reference_model.json` | ACK/control admission and receiver-credit updates shall have bounded latency with no simultaneous bidirectional deadlock. |
+| `P10_5-DMA-001` | `PENDING` | P10_5_BIDIRECTIONAL_DMA | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-DMA-001` | — | Each endpoint shall concurrently operate independent local TX and RX DMA rings without a global direction mutex or opposite-ring overwrite. |
+| `P10_5-DMA-002` | `PENDING` | P10_5_BIDIRECTIONAL_DMA | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-DMA-002` | — | Every descriptor shall carry direction, role epoch, object or stream identity, generation, and completion ownership so it can complete at most once. |
+| `P10_5-OBJ-001` | `PENDING` | P10_5_BIDIRECTIONAL_OBJECTS | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-OBJ-001` | — | F-to-R and R-to-F object and stream contexts shall be simultaneously active with independent integrity and atomic-publish state. |
+| `P10_5-OBJ-002` | `PENDING` | P10_5_DIRECTION_SCOPED_ABORT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-OBJ-002` | — | Aborting one direction shall reclaim only that direction's descriptors and object state while the opposite direction continues or pauses for a bounded interval. |
+| `P10_5-SAFE-001` | `PENDING` | P10_5_PER_MODULE_HALF_DUPLEX_SAFETY | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SAFE-001` | — | A physical TFDU module shall never be admitted for TX and RX simultaneously, and raw echo shall never become accepted DATA or ACK/SACK. |
+| `P10_5-SAFE-002` | `PENDING` | P10_5_SINGLE_GLOBAL_PERMIT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SAFE-002` | — | Each endpoint shall retain exactly one local active-high GLOBAL_PERMIT and all local physical TX paths shall remain subject to the unchanged final kill and TFDU safety guards. |
+| `P10_5-SAFE-003` | `PENDING` | P10_5_ROLE_MASK_SAFETY | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SAFE-003` | — | No active role configuration shall overlap local TX and RX masks or allow any lane outside ACTIVE_LANE_MASK to transmit. |
+| `P10_5-MASK-001` | `PENDING` | P10_5_CURRENT_AX7020_STATIONARY_4LANE | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-MASK-001` | — | All 12 ordered disjoint 1+1 lane-role pairs shall execute simultaneous bidirectional TX and commit clean data in both directions. |
+| `P10_5-MASK-002` | `PENDING` | P10_5_CURRENT_AX7020_STATIONARY_4LANE | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-MASK-002` | — | Hardware coverage shall exercise every lane as a dual-lane TX member, single-lane TX member, and RX member across legal 2+1 and 1+2 configurations. |
+| `P10_5-MASK-003` | `PENDING` | P10_5_CURRENT_AX7020_STATIONARY_4LANE | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-MASK-003` | — | All six directed 2+2 partitions shall execute physical TX and commit clean application data in both directions. |
+| `P10_5-PERF-001` | `PENDING` | P10_5_PRIMARY_2PLUS2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-PERF-001` | — | Primary 2+2 F-to-R application goodput shall be at least 4000000 bit/s over a board-autonomous interval of at least 300 seconds. |
+| `P10_5-PERF-002` | `PENDING` | P10_5_PRIMARY_2PLUS2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-PERF-002` | — | Primary 2+2 R-to-F application goodput shall be at least 4000000 bit/s over a board-autonomous interval of at least 300 seconds. |
+| `P10_5-STREAM-001` | `PENDING` | P10_5_SIMULTANEOUS_64M_STREAMING | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-STREAM-001` | — | Each direction shall simultaneously complete at least five 64 MiB streams with CRC32, SHA256, atomic-publish, and descriptor ownership checks. |
+| `P10_5-SOAK-001` | `PENDING` | P10_5_PRIMARY_2PLUS2_FORMAL | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SOAK-001` | — | Primary 2+2 shall sustain 1800 seconds of simultaneous bidirectional autonomous streaming with all integrity, protocol, DMA, admission, and TFDU safety hard-error counters at zero. |
 | `P10_4-SAFE-RUNTIME-001` | `PASS` | P10_4_TFDU_RUNTIME_REST_POLICY | `P10_4_RUNTIME_COOLDOWN_REMEDIATION` | `P10_4-SAFE-RUNTIME-001` | `evidence/generated/p10_4_runtime_rest_compliance.json` | Every hardware stage using any installed TFDU small board shall have a continuous runtime of no more than 1800 seconds, measured conservatively from immediately before the TX-capable stage invocation through verified dual-board shutdown-after. |
 | `P10_4-SAFE-COOLDOWN-001` | `PASS` | P10_4_TFDU_RUNTIME_REST_POLICY | `P10_4_RUNTIME_COOLDOWN_REMEDIATION` | `P10_4-SAFE-COOLDOWN-001` | `evidence/generated/p10_4_runtime_rest_compliance.json` | After every hardware stage, all installed TFDU small boards shall remain in verified dual-board shutdown for at least one half of that stage's measured runtime before any later transmission starts. |
 | `P10_4-CLOSE-001` | `PASS` | P10_4_P10_3_IMMUTABLE_CLOSEOUT | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-CLOSE-001` | `evidence/generated/p10_4_p10_3_closeout.json` | P10.3 evidence, pass tag, closeout tag, and stationary four-lane scoped PASS shall remain immutable and directly rechecked before P10.4. |
@@ -349,13 +373,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `ca494559cf1e3947e9c328559318b6596d4a6fbc05167ce9e6dc97481394327e`
-- `PROJECT_STATUS.md` — `bfdc23c847a760add47d99868f4ab1856e8fd1c6deb4df2f21a172b51ac2cdb0`
+- `config/project_state.json` — `5ca10b896504ea07dd3fa979a4c4d2c6867bd51cedce86c26079f543300da006`
+- `PROJECT_STATUS.md` — `58fdaeae2b63bfc991bd8cbd501fdc64ddc6e0e77cb9789df1faf8e0fd58c334`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `ca494559cf1e3947e9c328559318b6596d4a6fbc05167ce9e6dc97481394327e`
+- `config/project_state.json` — `5ca10b896504ea07dd3fa979a4c4d2c6867bd51cedce86c26079f543300da006`
 
 ### `P8A-EVID-001`
 
@@ -365,8 +389,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `ca494559cf1e3947e9c328559318b6596d4a6fbc05167ce9e6dc97481394327e`
-- `PROJECT_STATUS.md` — `bfdc23c847a760add47d99868f4ab1856e8fd1c6deb4df2f21a172b51ac2cdb0`
+- `config/project_state.json` — `5ca10b896504ea07dd3fa979a4c4d2c6867bd51cedce86c26079f543300da006`
+- `PROJECT_STATUS.md` — `58fdaeae2b63bfc991bd8cbd501fdc64ddc6e0e77cb9789df1faf8e0fd58c334`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -468,8 +492,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 ### `L2-ARQ-002`
 
 - `config/p8d_data_plane.yaml` — `7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732`
-- `rtl/ir_data_plane_top.sv` — `8205959e9d3602224aec1dac2a476b3b150fdf86921f1ff545aa47f3d40b6eab`
-- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
+- `rtl/ir_data_plane_top.sv` — `7218e966b0967592f2c91caf9788df0beb9ba5b1dfe21ba35810dfc9f77397c2`
+- `evidence/generated/p10_5_xsim/summary.json` — `ad7f64e668b8e4fdf4a41276d3fed63dccaf687179f6b38d0ed9d166872aa649`
 
 ### `L2-SEQ-001`
 
@@ -485,9 +509,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-SACK-002`
 
-- `rtl/ir_ack_aggregator.sv` — `bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa`
+- `rtl/ir_ack_aggregator.sv` — `1d271fa5f807fe2afc6844e4723bd9c192d4e882de97866063c1dcd0a6aed58d`
 - `sim/tb/tb_ir_sack_ack_aggregation.sv` — `926ef09ea677487e14a9defd87419208bbfd97fee947527e3552e9ed9ad1c075`
-- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
+- `evidence/generated/p10_5_xsim/summary.json` — `ad7f64e668b8e4fdf4a41276d3fed63dccaf687179f6b38d0ed9d166872aa649`
 
 ### `L2-DUP-001`
 

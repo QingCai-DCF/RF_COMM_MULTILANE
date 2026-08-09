@@ -76,6 +76,27 @@ class RuntimeRestGuardTests(unittest.TestCase):
         self.assertEqual(ledger["status"], "PASS")
         self.assertNotIn("_shutdown_monotonic", ledger["stages"][0])
 
+    def test_hardware_measured_runtime_sets_rest_and_preserves_wall_time(self) -> None:
+        self.guard.begin_stage("stage", 300)
+        self.fake.sleep(20)
+        entry = self.guard.finish_stage(
+            shutdown_verified=True, measured_runtime_seconds=12.25)
+        self.assertEqual(entry["measured_runtime_seconds"], 12.25)
+        self.assertEqual(entry["wall_runtime_seconds"], 20.0)
+        self.assertEqual(entry["required_cooldown_seconds"], 6.125)
+        self.assertEqual(entry["runtime_measurement_source"],
+                         "hardware_stage_active_evidence")
+
+    def test_invalid_external_measurement_is_archived_fail_closed(self) -> None:
+        self.guard.begin_stage("stage", 300)
+        self.fake.sleep(2)
+        with self.assertRaisesRegex(RuntimeError, "invalid externally"):
+            self.guard.finish_stage(
+                shutdown_verified=True, measured_runtime_seconds=4)
+        ledger = self.guard.public_ledger()
+        self.assertEqual(ledger["status"], "FAIL")
+        self.assertEqual(ledger["stages"][0]["status"], "FAIL")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,53 @@
+{
+  "capability": {
+    "autonomous_runtime": {
+      "buffer_count": 4,
+      "command": 15,
+      "descriptor_batch": 8,
+      "descriptor_bytes": 65536,
+      "internal_object_bytes": 262144,
+      "maximum_stream_bytes": 1879048192,
+      "ring_depth": 32
+    },
+    "capability": "CAP_SIMULTANEOUS_BIDIRECTIONAL_V1",
+    "config_sha256": "fb79523627256fb10258e13bc5bbd1e1c0fab5214b916bbbac44aeb17e5a1db6",
+    "control_only_ack_support": true,
+    "legacy_half_duplex_support": true,
+    "mask_width": 4,
+    "max_lane_count": 4,
+    "max_rx_lanes": 3,
+    "max_tx_lanes": 3,
+    "per_direction_outstanding": 32,
+    "per_direction_sack_width": 32,
+    "piggyback_support": true,
+    "primary_masks": {
+      "active": 15,
+      "f_to_r": 3,
+      "r_to_f": 12
+    },
+    "protocol_capability_version": 1,
+    "role_epoch_support": true,
+    "schema_version": 1
+  },
+  "capability_table": {
+    "bytes": 795,
+    "path": "config/generated/p10_5_capability_table.json",
+    "sha256": "5029753ef471f59376f27fe72cd85adf742df69eb8f68c09386d02ecb5ccfb88"
+  },
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "generated_at_utc": "2026-08-09T07:57:58.493220+00:00",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "hardware_actions_executed": false,
+  "hardware_readback_pending": true,
+  "network_used": false,
+  "register_manifest": {
+    "bytes": 2045,
+    "path": "config/register_map/generated/ir_regs_manifest.json",
+    "sha256": "c15fc2a29b95de8e3b0f89e378ca41ddcaf49439489619b4b650080a50e36f0f"
+  },
+  "schema_version": 1,
+  "source_commit": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
+  "status": "PASS",
+  "test_id": "P10_5-CAP-001-OFFLINE"
+}

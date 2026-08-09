@@ -69,6 +69,13 @@ enum p10_1_runtime_flags {
    * semantics for immutable P10.1/P10.3 replay. */
   P10_1_RUNTIME_FLAG_EXPECT_ABORT_50 = 1U << 25,
   P10_1_RUNTIME_FLAG_EXPECT_PL_RESET_LOCAL_TX = 1U << 26,
+  /* P10.5 direction-fault acceptance controls. These bits are accepted only
+   * by command 15 and never weaken the final TX kill or TFDU safety guards. */
+  P10_5_RUNTIME_FLAG_DIRECTION_FAULT_TEST = 1U << 27,
+  P10_5_RUNTIME_FLAG_FAULT_TARGET_R2F = 1U << 28,
+  P10_5_RUNTIME_FLAG_ABORT_TARGET_DIRECTION = 1U << 29,
+  P10_5_RUNTIME_FLAG_DMA_TX_BACKPRESSURE = 1U << 30,
+  P10_5_RUNTIME_FLAG_STALE_ROLE_EPOCH_ONCE = 1U << 31,
 };
 
 typedef struct p10_1_runtime_result {
@@ -224,7 +231,49 @@ typedef struct p10_1_runtime_result {
   volatile uint32_t perf_receiver_credit_stall_high;
   volatile uint32_t perf_direction_turnaround_idle_low;
   volatile uint32_t perf_direction_turnaround_idle_high;
-  volatile uint32_t reserved[52];
+  /* P10.5 append-only autonomous dual-direction evidence.  These fields are
+   * populated only by command 15; command 13 leaves them zero. */
+  volatile uint32_t p10_5_dual_direction_mode;
+  volatile uint32_t p10_5_active_mask;
+  volatile uint32_t p10_5_f2r_mask;
+  volatile uint32_t p10_5_r2f_mask;
+  volatile uint32_t p10_5_local_tx_mask;
+  volatile uint32_t p10_5_local_rx_mask;
+  volatile uint32_t p10_5_role_epoch;
+  volatile uint32_t p10_5_context_status;
+  volatile uint32_t p10_5_piggyback_ack_tx_count;
+  volatile uint32_t p10_5_piggyback_ack_rx_count;
+  volatile uint32_t p10_5_control_only_ack_count;
+  volatile uint32_t p10_5_direction_reject_count;
+  volatile uint32_t p10_5_role_epoch_reject_count;
+  volatile uint32_t p10_5_tx_bytes;
+  volatile uint32_t p10_5_rx_bytes;
+  volatile uint32_t p10_5_tx_retry_count;
+  volatile uint32_t p10_5_tx_timeout_count;
+  volatile uint32_t p10_5_tx_axis_stall;
+  volatile uint32_t p10_5_rx_axis_stall;
+  volatile uint32_t p10_5_control_queue_occupancy;
+  volatile uint32_t p10_5_tx_window_occupancy;
+  volatile uint32_t p10_5_rx_window_occupancy;
+  volatile uint32_t p10_5_tx_receiver_credit;
+  volatile uint32_t p10_5_rx_receiver_credit;
+  volatile uint32_t p10_5_ack_tx_bytes;
+  volatile uint32_t p10_5_ack_rx_bytes;
+  volatile uint32_t p10_5_control_tx_bytes;
+  volatile uint32_t p10_5_application_committed_bytes;
+  volatile uint32_t p10_5_duration_target_ms;
+  volatile uint32_t p10_5_duration_elapsed_ms;
+  volatile uint32_t p10_5_stream_ceiling_bytes;
+  volatile uint32_t p10_5_prefetched_objects_reclaimed;
+  volatile uint32_t p10_5_fault_test_kind;
+  volatile uint32_t p10_5_fault_target_direction;
+  volatile uint32_t p10_5_unaffected_progress_bytes;
+  volatile uint32_t p10_5_affected_commit_count;
+  volatile uint32_t p10_5_fault_recovery_pass;
+  volatile uint32_t p10_5_diagnostic_status_before;
+  volatile uint32_t p10_5_diagnostic_status_after;
+  volatile uint32_t p10_5_diagnostic_stall_delta;
+  volatile uint32_t reserved[12];
 } p10_1_runtime_result_t;
 
 _Static_assert(offsetof(p10_1_runtime_result_t, service_state) == 4U * 4U,
@@ -244,6 +293,21 @@ _Static_assert(offsetof(p10_1_runtime_result_t,
 _Static_assert(offsetof(p10_1_runtime_result_t,
                         perf_direction_turnaround_idle_high) == 175U * 4U,
                "P10.4 split-counter tail length changed");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        p10_5_dual_direction_mode) == 176U * 4U,
+               "P10.5 autonomous evidence tail moved");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        p10_5_application_committed_bytes) == 203U * 4U,
+               "P10.5 autonomous evidence tail length changed");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        p10_5_prefetched_objects_reclaimed) == 207U * 4U,
+               "P10.5 duration evidence tail length changed");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        p10_5_fault_test_kind) == 208U * 4U,
+               "P10.5 direction-fault evidence tail moved");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        p10_5_diagnostic_stall_delta) == 215U * 4U,
+               "P10.5 direction-fault evidence tail length changed");
 _Static_assert(sizeof(p10_1_runtime_result_t) <= 2048U,
                "P10.1 result must fit the reserved two-KiB OCM window");
 

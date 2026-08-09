@@ -19,6 +19,8 @@ P10_3_GOAL = "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOAL.md"
 P10_3_GOAL_SHA256 = "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
 P10_4_GOAL = "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md"
 P10_4_GOAL_SHA256 = "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f"
+P10_5_GOAL = "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md"
+P10_5_GOAL_SHA256 = "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36"
 BIN = Path(r"D:\Xilinx\Vivado\2023.1\bin")
 TOOLS = {name: BIN / f"{name}.bat" for name in ("xvlog", "xelab", "xsim")}
 SUITE = "sim/tb/tb_p10_2_4lane_suite.sv"
@@ -83,6 +85,61 @@ P10_4_TESTS = (
      "P10_4_FORENSIC_SAFETY_INTEGRATION_XSIM=PASS",
      [*CORE, "sim/tb/tb_p10_4_forensic_safety_integration.sv"]),
 )
+PERIPHERAL_CORE = [
+    *CORE,
+    "rtl/p6_axi_lite_bridge.sv",
+    "rtl/p10_1_metric_counter.sv",
+    "rtl/p10_1_timer_snapshot.sv",
+    "rtl/p10_1_event_fifo.sv",
+    "rtl/p10_1_perf_monitor.sv",
+    "rtl/p10_fault_forensics.sv",
+    "rtl/p9_axi_dma_peripheral.sv",
+]
+P10_5_TESTS = (
+    ("tb_p10_5_role_mask_commit", "TB_P10_5_ROLE_MASK_COMMIT=PASS",
+     [*PERIPHERAL_CORE, "sim/tb/tb_p10_5_role_mask_commit.sv"]),
+    ("tb_p10_5_half_duplex_compatibility",
+     "TB_2LANE_4LANE_REGRESSION=PASS",
+     [*CORE, ELAB, SUITE], "tb_2lane_4lane_regression"),
+    ("tb_p10_5_dual_direction_l2", "TB_P10_5_DUAL_DIRECTION_L2=PASS",
+     [*CORE, "sim/tb/tb_p10_5_dual_direction.sv"],
+     "tb_p10_5_dual_direction"),
+    ("tb_p10_5_ack_piggyback", "TB_P10_5_ACK_PIGGYBACK=PASS",
+     [*CORE, "sim/tb/tb_p10_5_dual_direction.sv"],
+     "tb_p10_5_dual_direction"),
+    ("tb_p10_5_control_only_ack", "TB_P10_5_CONTROL_ONLY_ACK=PASS",
+     [*CORE, "sim/tb/tb_p10_5_dual_direction.sv"],
+     "tb_p10_5_dual_direction"),
+    ("tb_p10_5_bidirectional_dma", "TB_P10_5_BIDIRECTIONAL_DMA=PASS",
+     [*CORE, "sim/tb/tb_p10_5_dual_direction.sv"],
+     "tb_p10_5_dual_direction"),
+    ("tb_p10_5_1plus1_mask_matrix", "TB_P10_5_1PLUS1_MASK_MATRIX=PASS",
+     [*PERIPHERAL_CORE, "sim/tb/tb_p10_5_role_mask_commit.sv"],
+     "tb_p10_5_role_mask_commit"),
+    ("tb_p10_5_2plus1_mask_matrix", "TB_P10_5_2PLUS1_MASK_MATRIX=PASS",
+     [*PERIPHERAL_CORE, "sim/tb/tb_p10_5_role_mask_commit.sv"],
+     "tb_p10_5_role_mask_commit"),
+    ("tb_p10_5_1plus2_mask_matrix", "TB_P10_5_1PLUS2_MASK_MATRIX=PASS",
+     [*PERIPHERAL_CORE, "sim/tb/tb_p10_5_role_mask_commit.sv"],
+     "tb_p10_5_role_mask_commit"),
+    ("tb_p10_5_2plus2_partitions", "TB_P10_5_2PLUS2_PARTITIONS=PASS",
+     [*PERIPHERAL_CORE, "sim/tb/tb_p10_5_role_mask_commit.sv"],
+     "tb_p10_5_role_mask_commit"),
+    ("tb_p10_5_role_epoch_stale", "TB_P10_5_ROLE_EPOCH_STALE=PASS",
+     [*CORE, "sim/tb/tb_p10_5_dual_direction.sv"],
+     "tb_p10_5_dual_direction"),
+    ("tb_p10_5_direction_abort_isolation",
+     "TB_P10_5_DIRECTION_ABORT_ISOLATION=PASS",
+     [*CORE, "sim/tb/tb_p10_5_dual_direction.sv"],
+     "tb_p10_5_dual_direction"),
+    ("tb_p10_5_dual_direction_faults", "TB_P10_5_DUAL_DIRECTION_FAULTS=PASS",
+     [*CORE, "sim/tb/tb_p10_5_dual_direction.sv"],
+     "tb_p10_5_dual_direction"),
+    ("tb_p10_5_dual_endpoint_integration",
+     "TB_P10_5_DUAL_ENDPOINT_INTEGRATION=PASS",
+     [*CORE, "sim/tb/tb_p10_5_dual_direction.sv"],
+     "tb_p10_5_dual_direction"),
+)
 
 
 def sha(path: Path) -> str:
@@ -93,15 +150,17 @@ def rel(path: Path) -> str:
     return path.resolve().relative_to(ROOT.resolve()).as_posix()
 
 
-def run_one(top: str, marker: str, sources: list[str], raw: Path) -> dict[str, object]:
-    work = raw / f"{top}_work"
+def run_one(test_id: str, marker: str, sources: list[str], raw: Path,
+            actual_top: str | None = None) -> dict[str, object]:
+    top = actual_top or test_id
+    work = raw / f"{test_id}_work"
     work.mkdir()
-    log = raw / f"{top}.log"
+    log = raw / f"{test_id}.log"
     commands = (
         [str(TOOLS["xvlog"]), "-sv", "-i", str(ROOT / "rtl"),
          "-i", str(ROOT / "sim/tb"), *[str(ROOT / item) for item in sources]],
-        [str(TOOLS["xelab"]), top, "-debug", "typical", "-s", f"{top}_snapshot"],
-        [str(TOOLS["xsim"]), f"{top}_snapshot", "-runall"],
+        [str(TOOLS["xelab"]), top, "-debug", "typical", "-s", f"{test_id}_snapshot"],
+        [str(TOOLS["xsim"]), f"{test_id}_snapshot", "-runall"],
     )
     chunks: list[str] = []
     returncode = 0
@@ -120,7 +179,8 @@ def run_one(top: str, marker: str, sources: list[str], raw: Path) -> dict[str, o
     log.write_text(text, encoding="utf-8", errors="replace", newline="\n")
     fatal = bool(re.search(r"(^|\n)(Fatal:|FATAL_ERROR|ERROR:.*\$fatal)", text))
     status = "PASS" if returncode == 0 and marker in text and not fatal else "FAIL"
-    return {"test_id": top, "status": status, "required_marker": marker,
+    return {"test_id": test_id, "elaboration_top": top,
+            "status": status, "required_marker": marker,
             "marker_present": marker in text, "fatal_detected": fatal,
             "returncode": returncode, "log": rel(log), "log_sha256": sha(log)}
 
@@ -128,11 +188,11 @@ def run_one(top: str, marker: str, sources: list[str], raw: Path) -> dict[str, o
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir")
-    parser.add_argument("--campaign", choices=("p10_2", "p10_3", "p10_3f", "p10_4"),
+    parser.add_argument("--campaign", choices=("p10_2", "p10_3", "p10_3f", "p10_4", "p10_5"),
                         default="p10_2")
     parser.add_argument(
         "--only", choices=[
-            test[0] for test in (*TESTS, *P10_3_TESTS, *P10_4_TESTS)
+            test[0] for test in (*TESTS, *P10_3_TESTS, *P10_4_TESTS, *P10_5_TESTS)
         ])
     args = parser.parse_args()
     if os.environ.get("NO_HARDWARE", "1") != "1" or os.environ.get(
@@ -142,21 +202,27 @@ def main() -> int:
     if any(not tool.is_file() for tool in TOOLS.values()):
         print("P10_2_XSIM_REFUSED=MISSING_VIVADO_SIMULATOR", file=sys.stderr)
         return 2
-    if args.campaign in {"p10_3", "p10_3f", "p10_4"} and (
+    if args.campaign in {"p10_3", "p10_3f", "p10_4", "p10_5"} and (
             not (ROOT / P10_3_GOAL).is_file() or
             sha(ROOT / P10_3_GOAL) != P10_3_GOAL_SHA256):
         print("P10_3_XSIM_REFUSED=GOAL_HASH_MISMATCH", file=sys.stderr)
         return 2
-    if args.campaign == "p10_4" and (
+    if args.campaign in {"p10_4", "p10_5"} and (
             not (ROOT / P10_4_GOAL).is_file() or
             sha(ROOT / P10_4_GOAL) != P10_4_GOAL_SHA256):
         print("P10_4_XSIM_REFUSED=GOAL_HASH_MISMATCH", file=sys.stderr)
+        return 2
+    if args.campaign == "p10_5" and (
+            not (ROOT / P10_5_GOAL).is_file() or
+            sha(ROOT / P10_5_GOAL) != P10_5_GOAL_SHA256):
+        print("P10_5_XSIM_REFUSED=GOAL_HASH_MISMATCH", file=sys.stderr)
         return 2
     output_name = args.output_dir or {
         "p10_2": "evidence/generated/p10_2_raw/xsim",
         "p10_3": "evidence/generated/p10_3_xsim",
         "p10_3f": "evidence/generated/p10_3_fault_forensics_xsim",
         "p10_4": "evidence/generated/p10_4_xsim",
+        "p10_5": "evidence/generated/p10_5_xsim",
     }[args.campaign]
     output = (ROOT / output_name).resolve()
     output.relative_to(ROOT.resolve())
@@ -164,7 +230,9 @@ def main() -> int:
     raw = output / "raw" / run_id
     raw.mkdir(parents=True)
     available = (
-        (*TESTS, *P10_3_TESTS, *P10_4_TESTS)
+        (*TESTS, *P10_3_TESTS, *P10_4_TESTS, *P10_5_TESTS)
+        if args.campaign == "p10_5"
+        else (*TESTS, *P10_3_TESTS, *P10_4_TESTS)
         if args.campaign == "p10_4"
         else (*TESTS, *P10_3_TESTS)
         if args.campaign in {"p10_3", "p10_3f"}
@@ -175,12 +243,13 @@ def main() -> int:
     if not selected:
         print("P10_2_XSIM_REFUSED=TEST_NOT_IN_CAMPAIGN", file=sys.stderr)
         return 2
-    results = [run_one(top, marker, list(sources), raw)
-               for top, marker, sources in selected]
+    results = [run_one(test[0], test[1], list(test[2]), raw,
+                       test[3] if len(test) == 4 else None)
+               for test in selected]
     status = "PASS" if all(item["status"] == "PASS" for item in results) else "FAIL"
-    source_files = sorted({item for _, _, sources in selected for item in sources} |
+    source_files = sorted({item for test in selected for item in test[2]} |
                           {rel(Path(__file__).resolve())})
-    if args.campaign in {"p10_3", "p10_3f", "p10_4"}:
+    if args.campaign in {"p10_3", "p10_3f", "p10_4", "p10_5"}:
         source_files.extend([
             P10_3_GOAL,
             "config/hardware/p10_3_actual_wiring.yaml",
@@ -188,7 +257,7 @@ def main() -> int:
             "config/hardware/p10_3_ax7020_activity_leds.yaml",
             "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
         ])
-        if args.campaign in {"p10_3f", "p10_4"}:
+        if args.campaign in {"p10_3f", "p10_4", "p10_5"}:
             source_files.extend([
                 "config/safety/p10_3_fault_forensics.yaml",
                 "config/performance/p10_3f_staircase.yaml",
@@ -200,12 +269,24 @@ def main() -> int:
                 "scripts/freeze_p10_3f_artifacts.py",
                 "scripts/finalize_p10_3f_offline.py",
             ])
-        if args.campaign == "p10_4":
+        if args.campaign in {"p10_4", "p10_5"}:
             source_files.extend([
                 P10_4_GOAL,
                 "config/p10_4_connector_ack_rx_quarantine.yaml",
                 "docs/design/P10_4_CONNECTOR_ACK_RX_QUARANTINE.md",
                 "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json",
+            ])
+        if args.campaign == "p10_5":
+            source_files.extend([
+                P10_5_GOAL,
+                "config/p10_5_dual_direction.yaml",
+                "config/generated/p10_5_dual_direction.py",
+                "config/generated/p10_5_capability_table.json",
+                "rtl/generated/p10_5_dual_direction_pkg.sv",
+                "software/ps_driver/p10_5_dual_direction_config.h",
+                "scripts/generate_p10_5_config.py",
+                "scripts/model_p10_5_dual_direction.py",
+                "docs/design/P10_5_DUAL_DIRECTION_CAPABILITY.md",
             ])
         source_files = sorted(set(source_files))
     summary = {
@@ -215,6 +296,7 @@ def main() -> int:
             "p10_3": "P10_3_4LANE_XSIM",
             "p10_3f": "P10_3F_FIRST_FAULT_4LANE_XSIM",
             "p10_4": "P10_4_HARDENED_4LANE_XSIM",
+            "p10_5": "P10_5_DUAL_DIRECTION_XSIM",
         }[args.campaign],
         "campaign": args.campaign,
         "status": status, "source_commit": subprocess.check_output(

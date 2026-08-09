@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 `default_nettype wire
 `include "generated/ir_register_map_defs.svh"
+`include "generated/p10_5_dual_direction_pkg.sv"
 
 // P9 Z7010 peripheral boundary.  The AXI DMA owns DDR movement; this block
 // owns only AXI-Stream framing, the optical transport, fail-closed controls,
@@ -10,6 +11,7 @@ module p9_axi_dma_peripheral #(
   parameter integer LANE_COUNT = 2,
   parameter integer WINDOW_SIZE = 32,
   parameter integer SACK_BITS = 32,
+  parameter integer P10_5_DUAL_CAPABLE = 0,
   parameter logic [31:0] BUILD_ID = 32'h5009_000B,
   parameter logic [31:0] PROFILE_ID = 32'h0070_1022,
   parameter logic [31:0] IDENTITY_MAGIC = 32'h5039_5A10
@@ -59,6 +61,7 @@ module p9_axi_dma_peripheral #(
   output logic [LANE_COUNT-1:0] monitor_valid_rx_frame_o,
   output logic         monitor_effective_full_shutdown_o
 );
+  import p10_5_dual_direction_pkg::*;
   localparam logic [31:0] P9_MAGIC = 32'h5039_5A10;
   localparam logic [31:0] P9_BUILD_ID = 32'h5009_000B;
   localparam logic [31:0] P9_PROFILE_ID = 32'h0070_1022;
@@ -106,6 +109,37 @@ module p9_axi_dma_peripheral #(
   logic [7:0] cfg_drop_data_q;
   logic [7:0] cfg_drop_ack_q;
   logic [LANE_COUNT-1:0] cfg_lane_unavailable_q;
+  logic p10_5_mode_shadow_q;
+  logic p10_5_mode_active_q;
+  logic [LANE_COUNT-1:0] p10_5_active_mask_shadow_q;
+  logic [LANE_COUNT-1:0] p10_5_f2r_mask_shadow_q;
+  logic [LANE_COUNT-1:0] p10_5_r2f_mask_shadow_q;
+  logic [LANE_COUNT-1:0] p10_5_active_mask_q;
+  logic [LANE_COUNT-1:0] p10_5_f2r_mask_q;
+  logic [LANE_COUNT-1:0] p10_5_r2f_mask_q;
+  logic [15:0] p10_5_role_epoch_q;
+  logic [31:0] p10_5_role_error_q;
+  logic [31:0] p10_5_role_commit_count_q;
+  logic [31:0] p10_5_role_reject_count_q;
+  logic [31:0] p10_5_tx_session_q;
+  logic [31:0] p10_5_rx_session_q;
+  logic [15:0] p10_5_tx_path_q;
+  logic [15:0] p10_5_rx_path_q;
+  logic [31:0] p10_5_tx_object_q;
+  logic [31:0] p10_5_rx_object_q;
+  logic [15:0] p10_5_tx_initial_q;
+  logic [15:0] p10_5_rx_initial_q;
+  logic p10_5_abort_tx_pulse_q;
+  logic p10_5_abort_rx_pulse_q;
+  logic p10_5_force_tx_backpressure_q;
+  logic [15:0] p10_5_diagnostic_accept_count_q;
+  logic [7:0] p10_5_diagnostic_reject_count_q;
+  logic [31:0] p10_5_diagnostic_stall_count_q;
+  logic transport_s_axis_tready;
+  wire [LANE_COUNT-1:0] p10_5_local_tx_mask = DEPLOYMENT_ROLE == 1 ?
+      p10_5_f2r_mask_q : p10_5_r2f_mask_q;
+  wire [LANE_COUNT-1:0] p10_5_local_rx_mask = DEPLOYMENT_ROLE == 1 ?
+      p10_5_r2f_mask_q : p10_5_f2r_mask_q;
   logic raw_direction_q;
   logic [LANE_COUNT-1:0] raw_lane_mask_q;
   logic [31:0] raw_target_q;
@@ -227,6 +261,24 @@ module p9_axi_dma_peripheral #(
   logic [31:0] rx_non_target_accepted_count;
   logic [31:0] rx_cross_lane_accepted_count;
   logic [LANE_COUNT*32-1:0] rx_decoder_clear_count_flat;
+  logic p10_5_dual_direction_active;
+  logic [LANE_COUNT-1:0] p10_5_core_tx_lane_mask;
+  logic [LANE_COUNT-1:0] p10_5_core_rx_lane_mask;
+  logic [15:0] p10_5_core_role_epoch;
+  logic [31:0] p10_5_piggyback_ack_tx_count;
+  logic [31:0] p10_5_piggyback_ack_rx_count;
+  logic [31:0] p10_5_control_ack_fallback_count;
+  logic [31:0] p10_5_direction_reject_count;
+  logic [31:0] p10_5_role_epoch_reject_count;
+  logic p10_5_tx_context_aborted;
+  logic p10_5_rx_context_aborted;
+  logic [5:0] p10_5_rx_receiver_credit;
+  logic [15:0] p10_5_peer_receiver_credit;
+  logic [15:0] p10_5_peer_ack_base;
+  logic [31:0] p10_5_peer_ack_bitmap;
+  logic [1:0] p10_5_control_queue_occupancy;
+  logic [31:0] p10_5_tx_axis_stall_count;
+  logic [31:0] p10_5_rx_axis_stall_count;
   logic [31:0] p10_1r_snapshot_generation_q;
   logic [31:0] p10_1r_snapshot_q [0:34];
   wire [LANE_COUNT*32-1:0] local_raw_rx_counts = DEPLOYMENT_ROLE == 2 ?
@@ -330,6 +382,9 @@ module p9_axi_dma_peripheral #(
       $error("AXI peripheral supports the frozen 2-lane and P10.2 4-lane profiles");
     if (WINDOW_SIZE != 32 || SACK_BITS != 32)
       $error("P10.2 peripheral freezes WINDOW_SIZE=SACK_BITS=32");
+    if (P10_5_DUAL_CAPABLE != 0 &&
+        (LANE_COUNT != 4 || (DEPLOYMENT_ROLE != 1 && DEPLOYMENT_ROLE != 2)))
+      $error("P10.5 dual-direction capability requires a role-bound four-lane endpoint");
   end
 
   always_comb begin
@@ -374,6 +429,32 @@ module p9_axi_dma_peripheral #(
       cfg_drop_data_q <= 0;
       cfg_drop_ack_q <= 0;
       cfg_lane_unavailable_q <= 0;
+      p10_5_mode_shadow_q <= 0;
+      p10_5_mode_active_q <= 0;
+      p10_5_active_mask_shadow_q <= 0;
+      p10_5_f2r_mask_shadow_q <= 0;
+      p10_5_r2f_mask_shadow_q <= 0;
+      p10_5_active_mask_q <= 0;
+      p10_5_f2r_mask_q <= 0;
+      p10_5_r2f_mask_q <= 0;
+      p10_5_role_epoch_q <= 0;
+      p10_5_role_error_q <= 0;
+      p10_5_role_commit_count_q <= 0;
+      p10_5_role_reject_count_q <= 0;
+      p10_5_tx_session_q <= 32'h0000_0001;
+      p10_5_rx_session_q <= 32'h8000_0001;
+      p10_5_tx_path_q <= 0;
+      p10_5_rx_path_q <= 16'h8000;
+      p10_5_tx_object_q <= 0;
+      p10_5_rx_object_q <= 0;
+      p10_5_tx_initial_q <= 0;
+      p10_5_rx_initial_q <= 0;
+      p10_5_abort_tx_pulse_q <= 0;
+      p10_5_abort_rx_pulse_q <= 0;
+      p10_5_force_tx_backpressure_q <= 0;
+      p10_5_diagnostic_accept_count_q <= 0;
+      p10_5_diagnostic_reject_count_q <= 0;
+      p10_5_diagnostic_stall_count_q <= 0;
       raw_direction_q <= 0;
       raw_lane_mask_q <= 0;
       raw_target_q <= 0;
@@ -415,6 +496,16 @@ module p9_axi_dma_peripheral #(
       start_pulse_q <= 0;
       abort_pulse_q <= 0;
       raw_start_pulse_q <= 0;
+      p10_5_abort_tx_pulse_q <= 0;
+      p10_5_abort_rx_pulse_q <= 0;
+      if (!object_active || shutdown_pulse_q || safety_fault_mask != 0)
+        p10_5_force_tx_backpressure_q <= 0;
+      if (clear_pulse_q)
+        p10_5_diagnostic_stall_count_q <= 0;
+      else if (p10_5_force_tx_backpressure_q && s_axis_tvalid &&
+               p10_5_diagnostic_stall_count_q != 32'hffff_ffff)
+        p10_5_diagnostic_stall_count_q <=
+            p10_5_diagnostic_stall_count_q + 1'b1;
       local_source_test_inject_q <= 0;
       forensic_archive_digest_write_q <= 0;
       forensic_archive_commit_q <= 0;
@@ -561,6 +652,92 @@ module p9_axi_dma_peripheral #(
             end else begin
               local_source_test_reject_count_q <=
                   local_source_test_reject_count_q + 1'b1;
+            end
+          end
+          `IR_REG_P10_5_MODE_SHADOW:
+            if (P10_5_DUAL_CAPABLE != 0)
+              p10_5_mode_shadow_q <= reg_wr_data[0];
+          `IR_REG_P10_5_ACTIVE_MASK_SHADOW:
+            if (P10_5_DUAL_CAPABLE != 0)
+              p10_5_active_mask_shadow_q <=
+                  reg_wr_data[LANE_COUNT-1:0];
+          `IR_REG_P10_5_F2R_MASK_SHADOW:
+            if (P10_5_DUAL_CAPABLE != 0)
+              p10_5_f2r_mask_shadow_q <=
+                  reg_wr_data[LANE_COUNT-1:0];
+          `IR_REG_P10_5_R2F_MASK_SHADOW:
+            if (P10_5_DUAL_CAPABLE != 0)
+              p10_5_r2f_mask_shadow_q <=
+                  reg_wr_data[LANE_COUNT-1:0];
+          `IR_REG_P10_5_ROLE_COMMIT: begin
+            if (P10_5_DUAL_CAPABLE == 0 ||
+                reg_wr_data != 32'hC05A_0001) begin
+              p10_5_role_error_q <= 32'h5035_0001;
+              p10_5_role_reject_count_q <=
+                  p10_5_role_reject_count_q + 1'b1;
+            end else if (object_active || raw_busy) begin
+              p10_5_role_error_q <= 32'h5035_0002;
+              p10_5_role_reject_count_q <=
+                  p10_5_role_reject_count_q + 1'b1;
+            end else if (!p10_5_mode_shadow_q ||
+                         p10_5_active_mask_shadow_q == 0 ||
+                         p10_5_f2r_mask_shadow_q == 0 ||
+                         p10_5_r2f_mask_shadow_q == 0 ||
+                         (|(p10_5_f2r_mask_shadow_q &
+                            p10_5_r2f_mask_shadow_q)) ||
+                         ((p10_5_f2r_mask_shadow_q |
+                           p10_5_r2f_mask_shadow_q) !=
+                          p10_5_active_mask_shadow_q)) begin
+              p10_5_role_error_q <= 32'h5035_0003;
+              p10_5_role_reject_count_q <=
+                  p10_5_role_reject_count_q + 1'b1;
+            end else begin
+              // One clock edge publishes the complete role tuple and the new
+              // protected epoch. No individual mask is live beforehand.
+              p10_5_mode_active_q <= 1;
+              p10_5_active_mask_q <= p10_5_active_mask_shadow_q;
+              p10_5_f2r_mask_q <= p10_5_f2r_mask_shadow_q;
+              p10_5_r2f_mask_q <= p10_5_r2f_mask_shadow_q;
+              p10_5_role_epoch_q <= p10_5_role_epoch_q == 16'hffff ?
+                  16'h0001 : p10_5_role_epoch_q + 1'b1;
+              p10_5_role_error_q <= 0;
+              p10_5_role_commit_count_q <=
+                  p10_5_role_commit_count_q + 1'b1;
+            end
+          end
+          `IR_REG_P10_5_TX_SESSION: p10_5_tx_session_q <= reg_wr_data;
+          `IR_REG_P10_5_RX_SESSION: p10_5_rx_session_q <= reg_wr_data;
+          `IR_REG_P10_5_TX_PATH: p10_5_tx_path_q <= reg_wr_data[15:0];
+          `IR_REG_P10_5_RX_PATH: p10_5_rx_path_q <= reg_wr_data[15:0];
+          `IR_REG_P10_5_TX_OBJECT: p10_5_tx_object_q <= reg_wr_data;
+          `IR_REG_P10_5_RX_OBJECT: p10_5_rx_object_q <= reg_wr_data;
+          `IR_REG_P10_5_TX_INITIAL_SEQUENCE:
+            p10_5_tx_initial_q <= reg_wr_data[15:0];
+          `IR_REG_P10_5_RX_INITIAL_SEQUENCE:
+            p10_5_rx_initial_q <= reg_wr_data[15:0];
+          `IR_REG_P10_5_CONTEXT_CONTROL: begin
+            if (P10_5_DUAL_CAPABLE != 0 && p10_5_mode_active_q &&
+                object_active) begin
+              p10_5_abort_tx_pulse_q <= reg_wr_data[0];
+              p10_5_abort_rx_pulse_q <= reg_wr_data[1];
+            end
+          end
+          `IR_REG_P10_5_DIAGNOSTIC_CONTROL: begin
+            if (reg_wr_data == 0) begin
+              p10_5_force_tx_backpressure_q <= 0;
+              p10_5_diagnostic_accept_count_q <=
+                  p10_5_diagnostic_accept_count_q + 1'b1;
+            end else if (P10_5_DUAL_CAPABLE != 0 &&
+                         p10_5_mode_active_q && object_active &&
+                         reg_wr_data == 32'hD1A6_0001) begin
+              // This diagnostic can only withhold AXI-stream input. It has
+              // no connection to permit, SD, Mode, Txd, or final TX kill.
+              p10_5_force_tx_backpressure_q <= 1;
+              p10_5_diagnostic_accept_count_q <=
+                  p10_5_diagnostic_accept_count_q + 1'b1;
+            end else begin
+              p10_5_diagnostic_reject_count_q <=
+                  p10_5_diagnostic_reject_count_q + 1'b1;
             end
           end
           // Atomic P10.1R telemetry snapshot.  All values and the even
@@ -1019,6 +1196,140 @@ module p9_axi_dma_peripheral #(
           reg_rd_data = local_source_test_accept_count_q;
       `IR_REG_P10_4_LOCAL_SOURCE_TEST_REJECT_COUNT:
           reg_rd_data = local_source_test_reject_count_q;
+      `IR_REG_P10_5_CAPS: reg_rd_data = P10_5_DUAL_CAPABLE != 0 ?
+          P10_5_CAPABILITY_WORD : 32'd0;
+      `IR_REG_P10_5_VERSION:
+          reg_rd_data = {16'd1, P10_5_CAPABILITY_VERSION[15:0]};
+      `IR_REG_P10_5_MODE_SHADOW:
+          reg_rd_data = {31'd0, p10_5_mode_shadow_q};
+      `IR_REG_P10_5_ACTIVE_MASK_SHADOW:
+          reg_rd_data = {{(32-LANE_COUNT){1'b0}},
+                         p10_5_active_mask_shadow_q};
+      `IR_REG_P10_5_F2R_MASK_SHADOW:
+          reg_rd_data = {{(32-LANE_COUNT){1'b0}}, p10_5_f2r_mask_shadow_q};
+      `IR_REG_P10_5_R2F_MASK_SHADOW:
+          reg_rd_data = {{(32-LANE_COUNT){1'b0}}, p10_5_r2f_mask_shadow_q};
+      `IR_REG_P10_5_ROLE_COMMIT: reg_rd_data = 0;
+      `IR_REG_P10_5_ROLE_EPOCH:
+          reg_rd_data = {16'd0, p10_5_role_epoch_q};
+      `IR_REG_P10_5_ROLE_STATUS: begin
+        reg_rd_data = 0;
+        reg_rd_data[0] = p10_5_mode_active_q;
+        reg_rd_data[1] = p10_5_role_epoch_q != 0;
+        reg_rd_data[2] = !object_active && !raw_busy;
+        reg_rd_data[3] = object_active;
+        reg_rd_data[4] = p10_5_dual_direction_active;
+        reg_rd_data[9:8] = DEPLOYMENT_ROLE[1:0];
+      end
+      `IR_REG_P10_5_ROLE_ERROR: reg_rd_data = p10_5_role_error_q;
+      `IR_REG_P10_5_ACTIVE_MASK:
+          reg_rd_data = {{(32-LANE_COUNT){1'b0}}, p10_5_active_mask_q};
+      `IR_REG_P10_5_F2R_MASK:
+          reg_rd_data = {{(32-LANE_COUNT){1'b0}}, p10_5_f2r_mask_q};
+      `IR_REG_P10_5_R2F_MASK:
+          reg_rd_data = {{(32-LANE_COUNT){1'b0}}, p10_5_r2f_mask_q};
+      `IR_REG_P10_5_LOCAL_TX_MASK:
+          reg_rd_data = {{(32-LANE_COUNT){1'b0}}, p10_5_local_tx_mask};
+      `IR_REG_P10_5_LOCAL_RX_MASK:
+          reg_rd_data = {{(32-LANE_COUNT){1'b0}}, p10_5_local_rx_mask};
+      `IR_REG_P10_5_TX_SESSION: reg_rd_data = p10_5_tx_session_q;
+      `IR_REG_P10_5_RX_SESSION: reg_rd_data = p10_5_rx_session_q;
+      `IR_REG_P10_5_TX_PATH: reg_rd_data = {16'd0, p10_5_tx_path_q};
+      `IR_REG_P10_5_RX_PATH: reg_rd_data = {16'd0, p10_5_rx_path_q};
+      `IR_REG_P10_5_TX_OBJECT: reg_rd_data = p10_5_tx_object_q;
+      `IR_REG_P10_5_RX_OBJECT: reg_rd_data = p10_5_rx_object_q;
+      `IR_REG_P10_5_TX_INITIAL_SEQUENCE:
+          reg_rd_data = {16'd0, p10_5_tx_initial_q};
+      `IR_REG_P10_5_RX_INITIAL_SEQUENCE:
+          reg_rd_data = {16'd0, p10_5_rx_initial_q};
+      `IR_REG_P10_5_CONTEXT_CONTROL: reg_rd_data = 0;
+      `IR_REG_P10_5_CONTEXT_STATUS: begin
+        reg_rd_data = 0;
+        reg_rd_data[0] = p10_5_dual_direction_active;
+        reg_rd_data[1] = p10_5_tx_context_aborted;
+        reg_rd_data[2] = p10_5_rx_context_aborted;
+        reg_rd_data[3] = object_active;
+        reg_rd_data[4] = input_complete;
+        reg_rd_data[5] = output_complete;
+        reg_rd_data[6] = object_done_sticky_q;
+        reg_rd_data[7] = object_fail_sticky_q;
+      end
+      `IR_REG_P10_5_PIGGYBACK_ACK_TX_COUNT:
+          reg_rd_data = p10_5_piggyback_ack_tx_count;
+      `IR_REG_P10_5_PIGGYBACK_ACK_RX_COUNT:
+          reg_rd_data = p10_5_piggyback_ack_rx_count;
+      `IR_REG_P10_5_CONTROL_ACK_FALLBACK_COUNT:
+          reg_rd_data = p10_5_control_ack_fallback_count;
+      `IR_REG_P10_5_DIRECTION_REJECT_COUNT:
+          reg_rd_data = p10_5_direction_reject_count;
+      `IR_REG_P10_5_ROLE_EPOCH_REJECT_COUNT:
+          reg_rd_data = p10_5_role_epoch_reject_count;
+      `IR_REG_P10_5_TX_BYTES: reg_rd_data = input_byte_count;
+      `IR_REG_P10_5_RX_BYTES: reg_rd_data = output_byte_count;
+      `IR_REG_P10_5_ROLE_COMMIT_COUNT:
+          reg_rd_data = p10_5_role_commit_count_q;
+      `IR_REG_P10_5_ROLE_REJECT_COUNT:
+          reg_rd_data = p10_5_role_reject_count_q;
+      `IR_REG_P10_5_WIRE_SCHEMA: reg_rd_data = {8'h35, 8'd40, 8'd22, 8'd1};
+      `IR_REG_P10_5_DIRECTION_STATUS: begin
+        reg_rd_data = 0;
+        reg_rd_data[0] = DEPLOYMENT_ROLE == 2;
+        reg_rd_data[1] = DEPLOYMENT_ROLE == 1;
+        reg_rd_data[8 +: LANE_COUNT] = p10_5_core_tx_lane_mask;
+        reg_rd_data[16 +: LANE_COUNT] = p10_5_core_rx_lane_mask;
+      end
+      `IR_REG_P10_5_TX_WINDOW_OCCUPANCY:
+          reg_rd_data = {26'd0, tx_outstanding_count};
+      `IR_REG_P10_5_RX_WINDOW_OCCUPANCY:
+          reg_rd_data = WINDOW_SIZE - p10_5_rx_receiver_credit;
+      `IR_REG_P10_5_TX_ACK_BASE:
+          reg_rd_data = {16'd0, tx_ack_base};
+      `IR_REG_P10_5_RX_ACK_BASE:
+          reg_rd_data = {16'd0, rx_base_sequence};
+      `IR_REG_P10_5_RX_SACK_BITMAP: reg_rd_data = rx_sack_bitmap;
+      `IR_REG_P10_5_TX_PEER_SACK_BITMAP:
+          reg_rd_data = p10_5_peer_ack_bitmap;
+      `IR_REG_P10_5_TX_RECEIVER_CREDIT:
+          reg_rd_data = {16'd0, p10_5_peer_receiver_credit};
+      `IR_REG_P10_5_RX_RECEIVER_CREDIT:
+          reg_rd_data = {26'd0, p10_5_rx_receiver_credit};
+      `IR_REG_P10_5_TX_RETRY_COUNT: reg_rd_data = tx_retry_count;
+      `IR_REG_P10_5_TX_TIMEOUT_COUNT: reg_rd_data = tx_timeout_count;
+      `IR_REG_P10_5_ACK_TX_BYTES:
+          reg_rd_data = (p10_5_piggyback_ack_tx_count << 4) -
+                        (p10_5_piggyback_ack_tx_count << 1) +
+                        (p10_5_control_ack_fallback_count << 4) +
+                        (p10_5_control_ack_fallback_count << 2) +
+                        (p10_5_control_ack_fallback_count << 1);
+      `IR_REG_P10_5_ACK_RX_BYTES:
+          reg_rd_data = (p10_5_piggyback_ack_rx_count << 4) -
+                        (p10_5_piggyback_ack_rx_count << 1) +
+                        (physical_ack_frames_good << 4) +
+                        (physical_ack_frames_good << 2) +
+                        (physical_ack_frames_good << 1);
+      `IR_REG_P10_5_CONTROL_TX_BYTES:
+          reg_rd_data = (p10_5_control_ack_fallback_count << 4) +
+                        (p10_5_control_ack_fallback_count << 2) +
+                        (p10_5_control_ack_fallback_count << 1);
+      `IR_REG_P10_5_APPLICATION_COMMITTED_BYTES:
+          reg_rd_data = output_byte_count;
+      `IR_REG_P10_5_TX_DMA_OCCUPANCY:
+          reg_rd_data = {31'd0, object_active && !input_complete};
+      `IR_REG_P10_5_RX_DMA_OCCUPANCY:
+          reg_rd_data = {31'd0, object_active && !output_complete};
+      `IR_REG_P10_5_TX_AXIS_STALL:
+          reg_rd_data = p10_5_tx_axis_stall_count +
+                        p10_5_diagnostic_stall_count_q;
+      `IR_REG_P10_5_RX_AXIS_STALL:
+          reg_rd_data = p10_5_rx_axis_stall_count;
+      `IR_REG_P10_5_CONTROL_QUEUE_OCCUPANCY:
+          reg_rd_data = {30'd0, p10_5_control_queue_occupancy};
+      `IR_REG_P10_5_TELEMETRY_SCHEMA: reg_rd_data = 32'h5031_0502;
+      `IR_REG_P10_5_DIAGNOSTIC_CONTROL: reg_rd_data = 0;
+      `IR_REG_P10_5_DIAGNOSTIC_STATUS: reg_rd_data = {
+          p10_5_diagnostic_accept_count_q,
+          p10_5_diagnostic_reject_count_q, 6'd0,
+          object_active, p10_5_force_tx_backpressure_q};
       default: begin
         if ((reg_rd_addr >= 12'h900 && reg_rd_addr <= 12'h9BC) ||
             (reg_rd_addr >= 12'hD84 && reg_rd_addr <= 12'hDAC))
@@ -1055,7 +1366,8 @@ module p9_axi_dma_peripheral #(
     .phy_ready_i(forensic_local_phy_ready),
     .startup_done_i(forensic_local_startup),
     .safety_fault_i(forensic_local_safety_fault),
-    .configured_lane_mask_i(cfg_lane_mask_q),
+    .configured_lane_mask_i(p10_5_mode_active_q ? p10_5_active_mask_q :
+                                                   cfg_lane_mask_q),
     .unavailable_lane_mask_i(cfg_lane_unavailable_q),
     .raw_lane_mask_i(raw_lane_mask_q),
     .raw_busy_i(raw_busy),
@@ -1063,7 +1375,7 @@ module p9_axi_dma_peripheral #(
     .object_active_i(object_active),
     .object_done_i(object_done),
     .object_fail_i(object_fail),
-    .object_id_i(cfg_object_q),
+    .object_id_i(p10_5_mode_active_q ? p10_5_tx_object_q : cfg_object_q),
     .object_error_i(object_error),
     .tx_next_sequence_i(tx_next_sequence),
     .tx_ack_base_i(tx_ack_base),
@@ -1130,26 +1442,45 @@ module p9_axi_dma_peripheral #(
     // endpoints use the directly measured guard selection.
     .ACK_TURNAROUND_GUARD_CYCLES(DEPLOYMENT_ROLE == 0 ? 37_120 : 4_352),
     .RX_MIN_POST_TX_GUARD_CYCLES(DEPLOYMENT_ROLE == 0 ? 36_864 : 4_096),
-    .DEPLOYMENT_ROLE(DEPLOYMENT_ROLE)
+    .DEPLOYMENT_ROLE(DEPLOYMENT_ROLE),
+    .P10_5_DUAL_CAPABLE(P10_5_DUAL_CAPABLE)
   ) u_transport (
     .clk(s_axi_aclk), .rst_n(transport_resetn_q),
     .receiver_enable_i(receiver_enable_q), .arm_request_i(arm_pulse_q),
     .disarm_request_i(disarm_pulse_q), .full_shutdown_request_i(shutdown_pulse_q),
     .forensic_fault_hold_i(forensic_fault_hold),
     .clear_counters_i(clear_pulse_q), .start_object_i(start_pulse_q),
-    .abort_object_i(abort_pulse_q), .cfg_lane_mask_i(cfg_lane_mask_q),
+    .abort_object_i(abort_pulse_q),
+    .cfg_lane_mask_i(p10_5_mode_active_q ? p10_5_active_mask_q :
+                                               cfg_lane_mask_q),
     .cfg_lane_weights_i(cfg_lane_weights_q), .cfg_rate_select_i(cfg_rate_q),
-    .cfg_direction_i(cfg_direction_q), .cfg_session_epoch_i(cfg_session_q),
-    .cfg_path_epoch_i(cfg_path_q), .cfg_object_id_i(cfg_object_q),
-    .cfg_initial_sequence_i(cfg_initial_sequence_q),
+    .cfg_direction_i(p10_5_mode_active_q ? (DEPLOYMENT_ROLE == 2) :
+                                          cfg_direction_q),
+    .cfg_session_epoch_i(p10_5_mode_active_q ? p10_5_tx_session_q :
+                                                cfg_session_q),
+    .cfg_path_epoch_i(p10_5_mode_active_q ? p10_5_tx_path_q : cfg_path_q),
+    .cfg_object_id_i(p10_5_mode_active_q ? p10_5_tx_object_q : cfg_object_q),
+    .cfg_initial_sequence_i(p10_5_mode_active_q ? p10_5_tx_initial_q :
+                                                   cfg_initial_sequence_q),
     .cfg_fault_flags_i(cfg_fault_flags_q),
     .cfg_drop_data_count_i(cfg_drop_data_q), .cfg_drop_ack_count_i(cfg_drop_ack_q),
     .cfg_lane_unavailable_i(cfg_lane_unavailable_q),
+    .cfg_p10_5_dual_direction_i(p10_5_mode_active_q),
+    .cfg_tx_lane_mask_i(p10_5_local_tx_mask),
+    .cfg_rx_lane_mask_i(p10_5_local_rx_mask),
+    .cfg_role_epoch_i(p10_5_role_epoch_q),
+    .cfg_rx_session_epoch_i(p10_5_rx_session_q),
+    .cfg_rx_path_epoch_i(p10_5_rx_path_q),
+    .cfg_rx_object_id_i(p10_5_rx_object_q),
+    .cfg_rx_initial_sequence_i(p10_5_rx_initial_q),
+    .abort_tx_context_i(p10_5_abort_tx_pulse_q),
+    .abort_rx_context_i(p10_5_abort_rx_pulse_q),
     .local_source_test_inject_i(local_source_test_inject_q),
     .raw_start_i(raw_start_pulse_q), .raw_direction_i(raw_direction_q),
     .raw_lane_mask_i(raw_lane_mask_q), .raw_pulse_target_i(raw_target_q),
     .raw_spacing_cycles_i(raw_spacing_q),
-    .s_axis_tvalid_i(s_axis_tvalid), .s_axis_tready_o(s_axis_tready),
+    .s_axis_tvalid_i(s_axis_tvalid && !p10_5_force_tx_backpressure_q),
+    .s_axis_tready_o(transport_s_axis_tready),
     .s_axis_tdata_i(s_axis_tdata), .s_axis_tkeep_i(s_axis_tkeep),
     .s_axis_tlast_i(s_axis_tlast), .m_axis_tvalid_o(m_axis_tvalid),
     .m_axis_tready_i(m_axis_tready), .m_axis_tdata_o(m_axis_tdata),
@@ -1255,8 +1586,32 @@ module p9_axi_dma_peripheral #(
     .rx_admission_violation_count_o(rx_admission_violation_count),
     .rx_non_target_accepted_count_o(rx_non_target_accepted_count),
     .rx_cross_lane_accepted_count_o(rx_cross_lane_accepted_count),
-    .rx_decoder_clear_count_flat_o(rx_decoder_clear_count_flat)
+    .rx_decoder_clear_count_flat_o(rx_decoder_clear_count_flat),
+    .p10_5_dual_direction_active_o(p10_5_dual_direction_active),
+    .p10_5_tx_lane_mask_o(p10_5_core_tx_lane_mask),
+    .p10_5_rx_lane_mask_o(p10_5_core_rx_lane_mask),
+    .p10_5_role_epoch_o(p10_5_core_role_epoch),
+    .p10_5_piggyback_ack_tx_count_o(p10_5_piggyback_ack_tx_count),
+    .p10_5_piggyback_ack_rx_count_o(p10_5_piggyback_ack_rx_count),
+    .p10_5_control_ack_fallback_count_o(
+        p10_5_control_ack_fallback_count),
+    .p10_5_direction_reject_count_o(p10_5_direction_reject_count),
+    .p10_5_role_epoch_reject_count_o(p10_5_role_epoch_reject_count),
+    .p10_5_tx_context_aborted_o(p10_5_tx_context_aborted),
+    .p10_5_rx_context_aborted_o(p10_5_rx_context_aborted),
+    .p10_5_rx_receiver_credit_o(p10_5_rx_receiver_credit),
+    .p10_5_peer_receiver_credit_o(p10_5_peer_receiver_credit),
+    .p10_5_peer_ack_base_o(p10_5_peer_ack_base),
+    .p10_5_peer_ack_bitmap_o(p10_5_peer_ack_bitmap),
+    .p10_5_control_queue_occupancy_o(p10_5_control_queue_occupancy),
+    .p10_5_tx_axis_stall_count_o(p10_5_tx_axis_stall_count),
+    .p10_5_rx_axis_stall_count_o(p10_5_rx_axis_stall_count)
   );
+
+  // Gate both handshake views together so neither the DMA nor the transport
+  // can consume an MM2S beat while the bounded diagnostic is active.
+  assign s_axis_tready = transport_s_axis_tready &&
+                         !p10_5_force_tx_backpressure_q;
 endmodule
 
 `default_nettype wire

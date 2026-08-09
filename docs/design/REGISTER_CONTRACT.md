@@ -2,9 +2,9 @@
 
 > Generated from `config/register_map/ir_axi_regs.yaml`; do not edit by hand.
 
-- Register map version: `P10-4` (`0x0A000004`)
-- Canonical source SHA256: `06c2105e05cbad4dd780316cf44dd857b13a32dad584e2df2ab4a5b8bcfecb39`
-- Compatibility: P0-P10.3F offsets and meanings are preserved; P10.4 appends unambiguous performance counters at 0x0D84-0x0DAC and a fail-closed local-source test injection at 0x0DB0-0x0DBC.
+- Register map version: `P10-5` (`0x0A000005`)
+- Canonical source SHA256: `723d1e35155a7d0184b787744a9cfd5c8d4574928572a4572f03df0ba16281d1`
+- Compatibility: P0-P10.4 offsets and meanings are preserved; P10.5 appends atomic split-lane role/configuration, independent direction context, protected ACK telemetry, DMA ownership, and stream backpressure at 0x0E00-0x0EDC.
 
 | Name | Offset | Access | Description |
 |---|---:|---|---|
@@ -477,3 +477,61 @@
 | `P10_4_LOCAL_SOURCE_TEST_STATUS` | `0x0DB4` | `RO` | Bit31 injection-safe now; bits3:0 last accepted lane mask |
 | `P10_4_LOCAL_SOURCE_TEST_ACCEPT_COUNT` | `0x0DB8` | `RO` | Accepted fail-closed digital source-ID injection command count |
 | `P10_4_LOCAL_SOURCE_TEST_REJECT_COUNT` | `0x0DBC` | `RO` | Rejected malformed or unsafe local-source test command count |
+| `P10_5_CAPS` | `0x0E00` | `RO` | CAP_SIMULTANEOUS_BIDIRECTIONAL_V1 identity and capability bits |
+| `P10_5_VERSION` | `0x0E04` | `RO` | P10.5 role, wire, context, and telemetry schema version |
+| `P10_5_MODE_SHADOW` | `0x0E08` | `RW` | Shadow mode bit 0: split-lane simultaneous bidirectional |
+| `P10_5_ACTIVE_MASK_SHADOW` | `0x0E0C` | `RW` | Shadow active lane mask |
+| `P10_5_F2R_MASK_SHADOW` | `0x0E10` | `RW` | Shadow fixed-to-rotating lane mask |
+| `P10_5_R2F_MASK_SHADOW` | `0x0E14` | `RW` | Shadow rotating-to-fixed lane mask |
+| `P10_5_ROLE_COMMIT` | `0x0E18` | `WO` | Write key 0xC05A0001 to atomically validate and commit all role masks at an idle boundary |
+| `P10_5_ROLE_EPOCH` | `0x0E1C` | `RO` | Nonzero epoch incremented exactly once per accepted atomic role commit |
+| `P10_5_ROLE_STATUS` | `0x0E20` | `RO` | Active mode, commit validity, quiet-boundary state, and endpoint role |
+| `P10_5_ROLE_ERROR` | `0x0E24` | `RO` | Sticky reason for the most recent rejected role commit |
+| `P10_5_ACTIVE_MASK` | `0x0E28` | `RO` | Atomically committed active lane mask |
+| `P10_5_F2R_MASK` | `0x0E2C` | `RO` | Atomically committed fixed-to-rotating lane mask |
+| `P10_5_R2F_MASK` | `0x0E30` | `RO` | Atomically committed rotating-to-fixed lane mask |
+| `P10_5_LOCAL_TX_MASK` | `0x0E34` | `RO` | Role-derived local physical transmit mask |
+| `P10_5_LOCAL_RX_MASK` | `0x0E38` | `RO` | Role-derived local physical receive mask |
+| `P10_5_TX_SESSION` | `0x0E3C` | `RW` | Local TX selective-repeat session epoch |
+| `P10_5_RX_SESSION` | `0x0E40` | `RW` | Local RX selective-repeat session epoch |
+| `P10_5_TX_PATH` | `0x0E44` | `RW` | Local TX path epoch bits 15:0 |
+| `P10_5_RX_PATH` | `0x0E48` | `RW` | Local RX path epoch bits 15:0 |
+| `P10_5_TX_OBJECT` | `0x0E4C` | `RW` | Local TX object context identity |
+| `P10_5_RX_OBJECT` | `0x0E50` | `RW` | Local RX object context identity |
+| `P10_5_TX_INITIAL_SEQUENCE` | `0x0E54` | `RW` | Local TX initial sequence bits 15:0 |
+| `P10_5_RX_INITIAL_SEQUENCE` | `0x0E58` | `RW` | Local RX initial sequence bits 15:0 |
+| `P10_5_CONTEXT_CONTROL` | `0x0E5C` | `WO` | Direction-scoped abort: bit 0 local TX context, bit 1 local RX context |
+| `P10_5_CONTEXT_STATUS` | `0x0E60` | `RO` | Dual active, TX/RX aborted, object state, and independent DMA completion |
+| `P10_5_PIGGYBACK_ACK_TX_COUNT` | `0x0E64` | `RO` | CRC-protected ACK/SACK snapshots emitted inside vNext DATA |
+| `P10_5_PIGGYBACK_ACK_RX_COUNT` | `0x0E68` | `RO` | Accepted direction/session/role-epoch protected piggyback ACKs |
+| `P10_5_CONTROL_ACK_FALLBACK_COUNT` | `0x0E6C` | `RO` | Control-only ACK fallbacks emitted when no DATA carrier was available |
+| `P10_5_DIRECTION_REJECT_COUNT` | `0x0E70` | `RO` | CRC-valid frames rejected for protected direction mismatch |
+| `P10_5_ROLE_EPOCH_REJECT_COUNT` | `0x0E74` | `RO` | CRC-valid frames rejected for missing or stale ROLE_EPOCH |
+| `P10_5_TX_BYTES` | `0x0E78` | `RO` | Local TX context AXI-stream input byte count |
+| `P10_5_RX_BYTES` | `0x0E7C` | `RO` | Local RX context AXI-stream output byte count |
+| `P10_5_ROLE_COMMIT_COUNT` | `0x0E80` | `RO` | Accepted atomic role commit count |
+| `P10_5_ROLE_REJECT_COUNT` | `0x0E84` | `RO` | Rejected malformed or non-idle role commit count |
+| `P10_5_WIRE_SCHEMA` | `0x0E88` | `RO` | vNext DATA and ACK header sizes plus protocol magic revision |
+| `P10_5_DIRECTION_STATUS` | `0x0E8C` | `RO` | Local TX/RX protected direction and active mask summary |
+| `P10_5_TX_WINDOW_OCCUPANCY` | `0x0E90` | `RO` | Local-direction selective-repeat TX window occupancy |
+| `P10_5_RX_WINDOW_OCCUPANCY` | `0x0E94` | `RO` | Remote-direction selective-repeat RX reorder-window occupancy |
+| `P10_5_TX_ACK_BASE` | `0x0E98` | `RO` | Local TX context cumulative peer-ACK base |
+| `P10_5_RX_ACK_BASE` | `0x0E9C` | `RO` | Local RX context cumulative ACK/SACK base |
+| `P10_5_RX_SACK_BITMAP` | `0x0EA0` | `RO` | Local RX context SACK bitmap |
+| `P10_5_TX_PEER_SACK_BITMAP` | `0x0EA4` | `RO` | Latest accepted peer SACK bitmap for the local TX context |
+| `P10_5_TX_RECEIVER_CREDIT` | `0x0EA8` | `RO` | Latest peer receiver credit governing the local TX context |
+| `P10_5_RX_RECEIVER_CREDIT` | `0x0EAC` | `RO` | Current local RX reorder-window credit advertised to the peer |
+| `P10_5_TX_RETRY_COUNT` | `0x0EB0` | `RO` | Local TX context retry count |
+| `P10_5_TX_TIMEOUT_COUNT` | `0x0EB4` | `RO` | Local TX context retransmission-timeout count |
+| `P10_5_ACK_TX_BYTES` | `0x0EB8` | `RO` | ACK/SACK bytes emitted for the local RX context, including piggyback payload and control-only fallback |
+| `P10_5_ACK_RX_BYTES` | `0x0EBC` | `RO` | ACK/SACK bytes accepted for the local TX context, including piggyback and control-only frames |
+| `P10_5_CONTROL_TX_BYTES` | `0x0EC0` | `RO` | Control-only ACK fallback bytes emitted for the local RX context |
+| `P10_5_APPLICATION_COMMITTED_BYTES` | `0x0EC4` | `RO` | Application bytes atomically delivered by the local RX direction context |
+| `P10_5_TX_DMA_OCCUPANCY` | `0x0EC8` | `RO` | Local MM2S object ownership occupancy; zero or one for the schema-5 command service |
+| `P10_5_RX_DMA_OCCUPANCY` | `0x0ECC` | `RO` | Local S2MM object ownership occupancy; zero or one for the schema-5 command service |
+| `P10_5_TX_AXIS_STALL` | `0x0ED0` | `RO` | Protocol-clock cycles with MM2S valid and dual-direction core not ready |
+| `P10_5_RX_AXIS_STALL` | `0x0ED4` | `RO` | Protocol-clock cycles with dual-direction RX valid and S2MM not ready |
+| `P10_5_CONTROL_QUEUE_OCCUPANCY` | `0x0ED8` | `RO` | Pending local ACK snapshots requiring piggyback or control-only fallback |
+| `P10_5_TELEMETRY_SCHEMA` | `0x0EDC` | `RO` | P10.5 local/global direction telemetry mapping schema identity 0x50310502 |
+| `P10_5_DIAGNOSTIC_CONTROL` | `0x0EE0` | `WO` | Direction-fault acceptance only: write 0xD1A60001 while a P10.5 object is active to force local MM2S AXI-stream backpressure; write zero to release |
+| `P10_5_DIAGNOSTIC_STATUS` | `0x0EE4` | `RO` | Bit0 local MM2S backpressure active; bit1 P10.5 object active; bits31:16 accepted control writes, bits15:8 rejected writes |

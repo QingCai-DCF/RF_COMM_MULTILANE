@@ -1,0 +1,129 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xvlog.bat -sv -i C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl -i C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\sim\tb C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_seq_math_pkg.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_health_weighted_scheduler.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_selective_repeat_tx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_selective_repeat_rx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_ack_aggregator.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_data_plane_top.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_tfdu_exact_duty_accountant.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_tfdu_physical_module_safety.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\tfdu_lane_phy.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\ir_4ppm_codec.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p9_rate_4ppm_rx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p9_4ppm_frame_tx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p9_4ppm_frame_rx.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_1r_rx_admission.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_4_connector_ack_rx_quarantine.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p9_optical_transport_core.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p6_axi_lite_bridge.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_1_metric_counter.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_1_timer_snapshot.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_1_event_fifo.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_1_perf_monitor.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_fault_forensics.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p9_axi_dma_peripheral.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\sim\tb\tb_p10_5_role_mask_commit.sv
+STDOUT_BEGIN
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_seq_math_pkg.sv" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_health_weighted_scheduler.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_health_weighted_scheduler
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_selective_repeat_tx.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_selective_repeat_tx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_selective_repeat_rx.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_selective_repeat_rx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_ack_aggregator.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_ack_aggregator
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_data_plane_top.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_data_plane_top
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_tfdu_exact_duty_accountant.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_tfdu_exact_duty_accountant
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_tfdu_physical_module_safety.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_tfdu_physical_module_safety
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/tfdu_lane_phy.sv" into library work
+INFO: [VRFC 10-311] analyzing module tfdu_lane_phy
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/ir_4ppm_codec.sv" into library work
+INFO: [VRFC 10-311] analyzing module ir_4ppm_codec
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p9_rate_4ppm_rx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_rate_4ppm_rx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p9_4ppm_frame_tx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_4ppm_frame_tx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p9_4ppm_frame_rx.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_4ppm_frame_rx
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_1r_rx_admission.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_1r_rx_admission
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_4_connector_ack_rx_quarantine.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_4_connector_ack_rx_quarantine
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p9_optical_transport_core.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_optical_transport_core
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p6_axi_lite_bridge.sv" into library work
+INFO: [VRFC 10-311] analyzing module p6_axi_lite_bridge
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_1_metric_counter.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_1_metric_counter
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_1_timer_snapshot.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_1_timer_snapshot
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_1_event_fifo.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_1_event_fifo
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_1_perf_monitor.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_1_perf_monitor
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_fault_forensics.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_fault_event_bram
+INFO: [VRFC 10-311] analyzing module p10_fault_forensics
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p9_axi_dma_peripheral.sv" into library work
+INFO: [VRFC 10-311] analyzing module p9_axi_dma_peripheral
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_p10_5_role_mask_commit.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_p10_5_role_mask_commit
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xelab.bat tb_p10_5_role_mask_commit -debug typical -s tb_p10_5_2plus1_mask_matrix_snapshot
+STDOUT_BEGIN
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_p10_5_role_mask_commit -debug typical -s tb_p10_5_2plus1_mask_matrix_snapshot 
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package work.p10_5_dual_direction_pkg
+Compiling package work.ir_seq_math_pkg
+Compiling module work.p6_axi_lite_bridge
+Compiling module work.p10_1_timer_snapshot
+Compiling module work.p10_1_event_fifo(DEPTH=32'b01000...
+Compiling module work.p10_1_perf_monitor(PHYSICAL_MODU...
+Compiling module work.p10_fault_event_bram(ADDR_W=8)
+Compiling module work.p10_fault_forensics_default
+Compiling module work.ir_selective_repeat_tx(SACK_BITS...
+Compiling module work.ir_health_weighted_scheduler(LAN...
+Compiling module work.ir_selective_repeat_rx(WINDOW_SI...
+Compiling module work.ir_ack_aggregator(SACK_BITS=32,F...
+Compiling module work.ir_data_plane_top(LANE_COUNT=4,W...
+Compiling module work.p10_4_connector_ack_rx_quarantin...
+Compiling module work.p9_4ppm_frame_tx(LANE_COUNT=4,P1...
+Compiling module work.ir_tfdu_exact_duty_accountant_de...
+Compiling module work.ir_tfdu_physical_module_safety_d...
+Compiling module work.tfdu_lane_phy(CLEAR_STICKY_INVAL...
+Compiling module work.p10_1r_rx_admission
+Compiling module work.ir_4ppm_codec(CNT_CHIP_MAX=31,DE...
+Compiling module work.ir_4ppm_codec(CNT_CHIP_MAX=15,DE...
+Compiling module work.ir_4ppm_codec(DETECT_START_CYCLE...
+Compiling module work.p9_rate_4ppm_rx
+Compiling module work.p9_4ppm_frame_rx(LANE_COUNT=4)
+Compiling module work.p9_optical_transport_core(LANE_C...
+Compiling module work.p9_axi_dma_peripheral(DEPLOYMENT...
+Compiling module work.tb_p10_5_role_mask_commit
+Built simulation snapshot tb_p10_5_2plus1_mask_matrix_snapshot
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_p10_5_2plus1_mask_matrix_snapshot -runall
+STDOUT_BEGIN
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_p10_5_2plus1_mask_matrix_snapshot/xsim_script.tcl
+# xsim {tb_p10_5_2plus1_mask_matrix_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+TB_P10_5_1PLUS1_MASK_MATRIX=PASS
+TB_P10_5_2PLUS1_MASK_MATRIX=PASS
+TB_P10_5_1PLUS2_MASK_MATRIX=PASS
+TB_P10_5_2PLUS2_PARTITIONS=PASS
+TB_P10_5_ROLE_MASK_COMMIT=PASS
+$finish called at time : 20540377 ps : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_p10_5_role_mask_commit.sv" Line 206
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Aug  9 15:50:37 2026...
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+RETURN_CODE=0

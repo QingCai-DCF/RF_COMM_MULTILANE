@@ -178,6 +178,9 @@ P10_3_STAGE = "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE"
 P10_4_STAGE = (
     "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT"
 )
+P10_5_STAGE = (
+    "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE"
+)
 P10_CLOSEOUT_SCOPE = "P10_POST_ACCEPTANCE_METADATA_ONLY_NO_HARDWARE"
 P10_ANALYSIS_SCOPE = "P10_POST_ACCEPTANCE_ANALYSIS_NO_HARDWARE"
 
@@ -397,6 +400,7 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
     p10_2_stage = stage_status.get(P10_2_STAGE) if isinstance(stage_status, dict) else None
     p10_3_stage = stage_status.get(P10_3_STAGE) if isinstance(stage_status, dict) else None
     p10_4_stage = stage_status.get(P10_4_STAGE) if isinstance(stage_status, dict) else None
+    p10_5_stage = stage_status.get(P10_5_STAGE) if isinstance(stage_status, dict) else None
     if not isinstance(stage_status, dict):
         errors.append("stage_status must be a mapping")
     else:
@@ -419,6 +423,8 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             expected_stages[P10_3_STAGE] = p10_3_stage
         if p10_4_stage is not None:
             expected_stages[P10_4_STAGE] = p10_4_stage
+        if p10_5_stage is not None:
+            expected_stages[P10_5_STAGE] = p10_5_stage
         for key, expected in expected_stages.items():
             if stage_status.get(key) != expected:
                 errors.append(f"stage_status.{key} must be {expected}")
@@ -444,6 +450,11 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             "PARTIAL", "FAIL",
         }:
             errors.append("P10.4 hardening stage has invalid status")
+        if p10_5_stage is not None and p10_5_stage not in {
+            "IN_PROGRESS", "AUTHORIZED", "PASS", "PASS_WITH_NONBLOCKING_LIMITS",
+            "PARTIAL", "FAIL",
+        }:
+            errors.append("P10.5 dual-direction stage has invalid status")
     if state.get("p8d_status") != p8d_stage:
         errors.append("p8d_status must match stage_status.P8D_SELECTIVE_REPEAT_DMA")
     if state.get("p8e_status") != p8e_stage:
@@ -458,13 +469,21 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
         errors.append("p10_3_status must match the P10.3 hardware-validation stage")
     if p10_4_stage is not None and state.get("p10_4_status") != p10_4_stage:
         errors.append("p10_4_status must match the P10.4 hardening stage")
+    if p10_5_stage is not None and state.get("p10_5_status") != p10_5_stage:
+        errors.append("p10_5_status must match the P10.5 dual-direction stage")
     authorization_consumed = state.get("last_hardware_authorization_consumed") is True
     p10_authorization = state.get("p10_current_run_authorization", {})
     p10_authorization_consumed = (
         isinstance(p10_authorization, dict)
         and p10_authorization.get("consumed") is True
     )
-    if p10_4_stage is not None:
+    if p10_5_stage is not None:
+        p10_5_record = state.get("p10_5_dual_direction", {})
+        expected_authorization = bool(
+            isinstance(p10_5_record, dict)
+            and p10_5_record.get("current_run_hardware_authorization") is True
+        )
+    elif p10_4_stage is not None:
         p10_4_record = state.get("p10_4_acceptance", {})
         expected_authorization = bool(
             isinstance(p10_4_record, dict)
@@ -605,7 +624,13 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
                 errors.append("external TFDU duty measurement must remain pending external measurement")
 
     if p8c_pass:
-        if p10_4_stage is not None:
+        if p10_5_stage is not None:
+            expected_program_stage = (
+                "P11_OFFLINE_PREPARATION"
+                if p10_5_stage in {"PASS", "PASS_WITH_NONBLOCKING_LIMITS"}
+                else P10_5_STAGE
+            )
+        elif p10_4_stage is not None:
             expected_program_stage = (
                 "P11_OFFLINE_PREPARATION"
                 if p10_4_stage in {"PASS", "PASS_WITH_NONBLOCKING_LIMITS"}

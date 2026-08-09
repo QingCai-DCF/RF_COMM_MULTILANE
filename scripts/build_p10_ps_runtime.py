@@ -54,6 +54,7 @@ SOURCES = [
     ROOT / "software/ps_driver/p9_runtime_protocol.h",
     ROOT / "software/ps_driver/p10_1_runtime_protocol.h",
     ROOT / "software/ps_driver/p10_1_runtime_extension.inc",
+    ROOT / "software/ps_driver/p10_5_dual_direction_config.h",
     ROOT / "software/ps_driver/p9_crypto.c",
     ROOT / "software/ps_driver/p9_crypto.h",
     ROOT / "software/ps_driver/ir_regs.h",
@@ -92,6 +93,8 @@ P10_3_GOAL = ROOT / "goals/P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE_GOA
 P10_3_GOAL_SHA256 = "6d92924f15ce64eec6e64ab1cf316c14397533e1dc08f3560d6c55d8c7bdd281"
 P10_4_GOAL = ROOT / "goals/P10_4_AUTONOMOUS_4LANE_HARDENING_GOAL.md"
 P10_4_GOAL_SHA256 = "0098acc827d22ad8f72876f5551e70d8051452e0c81eb2bfe8986e142f47254f"
+P10_5_GOAL = ROOT / "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md"
+P10_5_GOAL_SHA256 = "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36"
 P10_3F_PROVENANCE = [
     ROOT / "config/safety/p10_3_fault_forensics.yaml",
     ROOT / "config/performance/p10_3f_staircase.yaml",
@@ -108,6 +111,14 @@ P10_4_PROVENANCE = [
     ROOT / "docs/design/P10_4_CONNECTOR_ACK_RX_QUARANTINE.md",
     ROOT / "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json",
     ROOT / "scripts/verify_p10_4_crc_remediation.py",
+]
+P10_5_PROVENANCE = [
+    ROOT / "config/p10_5_dual_direction.yaml",
+    ROOT / "config/generated/p10_5_capability_table.json",
+    ROOT / "software/ps_driver/p10_5_dual_direction_config.h",
+    ROOT / "docs/design/P10_5_DUAL_DIRECTION_CAPABILITY.md",
+    ROOT / "scripts/generate_p10_5_config.py",
+    ROOT / "scripts/model_p10_5_dual_direction.py",
 ]
 
 
@@ -217,6 +228,25 @@ def configure_campaign(campaign: str) -> None:
             },
         }
         return
+    if campaign == "p10_5":
+        OUT = ROOT / "evidence/generated/vitis/p10_5_4lane_runtime"
+        ARTIFACTS = ROOT / "artifacts/p10_5"
+        SUMMARY_JSON = ROOT / "evidence/generated/p10_5_ps_runtime_build_summary.json"
+        SUMMARY_MD = ROOT / "evidence/generated/p10_5_ps_runtime_build_summary.md"
+        FUNCTIONAL_OUT = ROOT / "evidence/generated/vivado/p10_5_4lane"
+        TEST_ID = "P10_5-AX7020-DUAL-DIRECTION-4LANE-PS-RUNTIME-BUILD"
+        SUMMARY_TITLE = "P10.5 AX7020 split-lane dual-direction PS runtime build"
+        ROLES = {
+            "fixed": {
+                "role_value": 1,
+                "header": ROOT / "board_profiles/ax7020_fixed_4lane/p10_5_runtime_role.h",
+            },
+            "rotating": {
+                "role_value": 2,
+                "header": ROOT / "board_profiles/ax7020_rotating_4lane/p10_5_runtime_role.h",
+            },
+        }
+        return
     if campaign != "p10_1_led":
         raise ValueError(f"unsupported campaign: {campaign}")
     OUT = ROOT / "evidence/generated/vitis/p10_1_ax7020_pl_activity_led_runtime"
@@ -264,7 +294,7 @@ def freeze(path: Path, bundle: str) -> dict[str, Any]:
         subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip()
-        if CAMPAIGN in {"p10_1", "p10_1r", "p10_3", "p10_3f", "p10_4"}
+        if CAMPAIGN in {"p10_1", "p10_1r", "p10_3", "p10_3f", "p10_4", "p10_5"}
         else bundle
     )
     destination = ARTIFACTS / namespace / digest / path.name
@@ -290,10 +320,11 @@ def run(command: list[str], timeout: int = 1800) -> subprocess.CompletedProcess[
 
 def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]]:
     paths = [*SOURCES, header, xsa]
-    if CAMPAIGN in {"p10_2", "p10_3", "p10_3f", "p10_4"}:
-        paths.append(P10_4_GOAL if CAMPAIGN == "p10_4" else
+    if CAMPAIGN in {"p10_2", "p10_3", "p10_3f", "p10_4", "p10_5"}:
+        paths.append(P10_5_GOAL if CAMPAIGN == "p10_5" else
+                     P10_4_GOAL if CAMPAIGN == "p10_4" else
                      P10_3_GOAL if CAMPAIGN in {"p10_3", "p10_3f"} else P10_2_GOAL)
-    if CAMPAIGN in {"p10_3", "p10_3f", "p10_4"}:
+    if CAMPAIGN in {"p10_3", "p10_3f", "p10_4", "p10_5"}:
         paths.extend([
             ROOT / "config/hardware/p10_3_actual_wiring.yaml",
             ROOT / "config/hardware/tfdu_module_inventory.yaml",
@@ -301,10 +332,12 @@ def bundle_hash(role: str, header: Path, xsa: Path) -> tuple[str, dict[str, str]
             ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
             ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
         ])
-    if CAMPAIGN in {"p10_3f", "p10_4"}:
+    if CAMPAIGN in {"p10_3f", "p10_4", "p10_5"}:
         paths.extend(P10_3F_PROVENANCE)
-    if CAMPAIGN == "p10_4":
+    if CAMPAIGN in {"p10_4", "p10_5"}:
         paths.extend(P10_4_PROVENANCE)
+    if CAMPAIGN == "p10_5":
+        paths.extend(P10_5_PROVENANCE)
     if CAMPAIGN == "p10_1":
         paths.extend(P10_1_PROVENANCE)
     elif CAMPAIGN == "p10_1r":
@@ -401,7 +434,7 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
         "dma_sg_width": bool(re.search(r"#define\s+XPAR_AXI_DMA_0_SG_LENGTH_WIDTH\s+26", xparam_text)),
         "endpoint_base": bool(re.search(r"#define\s+XPAR_P10_ENDPOINT_0_BASEADDR\s+0x43C00000", xparam_text)),
     }
-    if CAMPAIGN in {"p10_3", "p10_3f", "p10_4"}:
+    if CAMPAIGN in {"p10_3", "p10_3f", "p10_4", "p10_5"}:
         xparam_checks.update({
             "ps_gpio_device": bool(re.search(
                 r"#define\s+XPAR_PS7_GPIO_0_DEVICE_ID\s+0", xparam_text)),
@@ -415,7 +448,7 @@ def run_role(role: str, cfg: dict[str, Any]) -> dict[str, Any]:
     mss_text = system_mss.read_text(encoding="utf-8", errors="replace") \
         if system_mss.is_file() else ""
     mss_checks = {}
-    if CAMPAIGN in {"p10_3", "p10_3f", "p10_4"}:
+    if CAMPAIGN in {"p10_3", "p10_3f", "p10_4", "p10_5"}:
         mss_checks = {
             "gpiops_driver": bool(re.search(
                 r"DRIVER_NAME\s*=\s*gpiops[\s\S]*?HW_INSTANCE\s*=\s*ps7_gpio_0",
@@ -471,7 +504,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--campaign",
-        choices=("p10", "p10_1_led", "p10_1", "p10_1r", "p10_2", "p10_3", "p10_3f", "p10_4"),
+        choices=("p10", "p10_1_led", "p10_1", "p10_1r", "p10_2", "p10_3", "p10_3f", "p10_4", "p10_5"),
         default="p10",
         help="Use a separate source-XSA, artifact, and evidence namespace.",
     )
@@ -517,6 +550,11 @@ def main() -> int:
     ):
         print("P10_RUNTIME_BUILD_REFUSED: P10.4 goal hash mismatch", file=sys.stderr)
         return 2
+    if CAMPAIGN == "p10_5" and (
+        not P10_5_GOAL.is_file() or sha256(P10_5_GOAL) != P10_5_GOAL_SHA256
+    ):
+        print("P10_RUNTIME_BUILD_REFUSED: P10.5 goal hash mismatch", file=sys.stderr)
+        return 2
     source_worktree_dirty = tracked_source_dirty([
         *SOURCES,
         *(
@@ -525,15 +563,17 @@ def main() -> int:
             if CAMPAIGN == "p10_1r"
             else [P10_2_GOAL] if CAMPAIGN == "p10_2"
             else [
+                P10_5_GOAL if CAMPAIGN == "p10_5" else
                 P10_4_GOAL if CAMPAIGN == "p10_4" else P10_3_GOAL,
                 ROOT / "config/hardware/p10_3_actual_wiring.yaml",
                 ROOT / "config/hardware/tfdu_module_inventory.yaml",
                 ROOT / "docs/hardware/P10_3_AS_WIRED_RECORD.md",
                 ROOT / "config/hardware/p10_3_ax7020_activity_leds.yaml",
                 ROOT / "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md",
-                *(P10_3F_PROVENANCE if CAMPAIGN in {"p10_3f", "p10_4"} else []),
-                *(P10_4_PROVENANCE if CAMPAIGN == "p10_4" else []),
-            ] if CAMPAIGN in {"p10_3", "p10_3f", "p10_4"}
+                *(P10_3F_PROVENANCE if CAMPAIGN in {"p10_3f", "p10_4", "p10_5"} else []),
+                *(P10_4_PROVENANCE if CAMPAIGN in {"p10_4", "p10_5"} else []),
+                *(P10_5_PROVENANCE if CAMPAIGN == "p10_5" else []),
+            ] if CAMPAIGN in {"p10_3", "p10_3f", "p10_4", "p10_5"}
             else []
         ),
         *(cfg["header"] for cfg in ROLES.values()),
@@ -564,11 +604,13 @@ def main() -> int:
                 "path": (
                     str(P10_1_HW_GOAL) if CAMPAIGN == "p10_1"
                     else str(P10_1R_GOAL) if CAMPAIGN == "p10_1r"
+                    else str(P10_5_GOAL) if CAMPAIGN == "p10_5"
                     else None
                 ),
                 "sha256": (
                     sha256(P10_1_HW_GOAL) if CAMPAIGN == "p10_1"
                     else sha256(P10_1R_GOAL) if CAMPAIGN == "p10_1r"
+                    else sha256(P10_5_GOAL) if CAMPAIGN == "p10_5"
                     else None
                 ),
             },
@@ -577,10 +619,11 @@ def main() -> int:
                 for path in (
                     P10_1_PROVENANCE if CAMPAIGN == "p10_1"
                     else P10_1R_PROVENANCE if CAMPAIGN == "p10_1r"
+                    else P10_5_PROVENANCE if CAMPAIGN == "p10_5"
                     else []
                 )
             }
-            if CAMPAIGN in {"p10_1", "p10_1r"}
+            if CAMPAIGN in {"p10_1", "p10_1r", "p10_5"}
             else {},
         },
         "roles": results,

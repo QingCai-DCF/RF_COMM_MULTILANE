@@ -1,0 +1,51 @@
+{
+  "compile_elaborate_run_return_code_zero": true,
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "generated_at_utc": "2026-08-09T07:57:58.495965+00:00",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "hardware_actions_executed": false,
+  "legacy_and_p10_5_test_count": 30,
+  "network_used": false,
+  "required_p10_5_tests": [
+    "tb_p10_5_1plus1_mask_matrix",
+    "tb_p10_5_1plus2_mask_matrix",
+    "tb_p10_5_2plus1_mask_matrix",
+    "tb_p10_5_2plus2_partitions",
+    "tb_p10_5_ack_piggyback",
+    "tb_p10_5_bidirectional_dma",
+    "tb_p10_5_control_only_ack",
+    "tb_p10_5_direction_abort_isolation",
+    "tb_p10_5_dual_direction_faults",
+    "tb_p10_5_dual_direction_l2",
+    "tb_p10_5_dual_endpoint_integration",
+    "tb_p10_5_half_duplex_compatibility",
+    "tb_p10_5_role_epoch_stale",
+    "tb_p10_5_role_mask_commit"
+  ],
+  "required_p10_5_tests_passed": [
+    "tb_p10_5_1plus1_mask_matrix",
+    "tb_p10_5_1plus2_mask_matrix",
+    "tb_p10_5_2plus1_mask_matrix",
+    "tb_p10_5_2plus2_partitions",
+    "tb_p10_5_ack_piggyback",
+    "tb_p10_5_bidirectional_dma",
+    "tb_p10_5_control_only_ack",
+    "tb_p10_5_direction_abort_isolation",
+    "tb_p10_5_dual_direction_faults",
+    "tb_p10_5_dual_direction_l2",
+    "tb_p10_5_dual_endpoint_integration",
+    "tb_p10_5_half_duplex_compatibility",
+    "tb_p10_5_role_epoch_stale",
+    "tb_p10_5_role_mask_commit"
+  ],
+  "schema_version": 1,
+  "source_commit": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
+  "status": "PASS",
+  "suite": {
+    "bytes": 21632,
+    "path": "evidence/generated/p10_5_xsim/summary.json",
+    "sha256": "ad7f64e668b8e4fdf4a41276d3fed63dccaf687179f6b38d0ed9d166872aa649"
+  },
+  "test_id": "P10_5-XSIM-OFFLINE"
+}

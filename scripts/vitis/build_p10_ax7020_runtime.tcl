@@ -5,7 +5,9 @@ set campaign p10
 if {[llength $argv] > 3} { set campaign [string tolower [lindex $argv 3]] }
 
 if {$role eq "fixed"} {
-  if {$campaign eq "p10_4"} {
+  if {$campaign eq "p10_5"} {
+    set role_header "$root_dir/board_profiles/ax7020_fixed_4lane/p10_5_runtime_role.h"
+  } elseif {$campaign eq "p10_4"} {
     set role_header "$root_dir/board_profiles/ax7020_fixed_4lane/p10_4_runtime_role.h"
   } elseif {$campaign eq "p10_3f"} {
     set role_header "$root_dir/board_profiles/ax7020_fixed_4lane/p10_3f_runtime_role.h"
@@ -17,7 +19,9 @@ if {$role eq "fixed"} {
     set role_header "$root_dir/board_profiles/ax7020_fixed_2lane/p10_runtime_role.h"
   }
 } elseif {$role eq "rotating"} {
-  if {$campaign eq "p10_4"} {
+  if {$campaign eq "p10_5"} {
+    set role_header "$root_dir/board_profiles/ax7020_rotating_4lane/p10_5_runtime_role.h"
+  } elseif {$campaign eq "p10_4"} {
     set role_header "$root_dir/board_profiles/ax7020_rotating_4lane/p10_4_runtime_role.h"
   } elseif {$campaign eq "p10_3f"} {
     set role_header "$root_dir/board_profiles/ax7020_rotating_4lane/p10_3f_runtime_role.h"
@@ -72,6 +76,7 @@ foreach source_path [list \
     software/ps_driver/p9_runtime_protocol.h \
     software/ps_driver/p10_1_runtime_protocol.h \
     software/ps_driver/p10_1_runtime_extension.inc \
+    software/ps_driver/p10_5_dual_direction_config.h \
     software/ps_driver/p9_crypto.c \
     software/ps_driver/p9_crypto.h \
     software/ps_driver/ir_regs.h] {

@@ -491,6 +491,81 @@ proc p104_local_source_test {label lane_mask} {
   p10_say "P10_4_LOCAL_SOURCE_EVIDENCE=$output"
 }
 
+# P10.5 read-only capability and committed role-mask gate.  This procedure is
+# deliberately observational: it never arms an endpoint, changes SD/Mode/Txd,
+# or writes a role configuration.  A preceding command-15 CASE is responsible
+# for an atomic role commit when nonzero expected masks are requested here.
+proc p105_capability {label expected_active expected_f2r expected_r2f} {
+  global p10_dump_dir p10_campaign_p105
+  if {!$p10_campaign_p105 ||
+      ![regexp {^[A-Za-z0-9_.-]+$} $label]} {
+    error "invalid P10.5 capability record"
+  }
+  foreach value [list $expected_active $expected_f2r $expected_r2f] {
+    if {![string is integer -strict $value] || $value < 0 || $value > 15} {
+      error "invalid P10.5 capability mask"
+    }
+  }
+  if {$expected_active == 0} {
+    if {$expected_f2r != 0 || $expected_r2f != 0} {
+      error "P10.5 capability-only read requires zero masks"
+    }
+  } elseif {$expected_f2r == 0 || $expected_r2f == 0 ||
+            ($expected_f2r & $expected_r2f) != 0 ||
+            ($expected_f2r | $expected_r2f) != $expected_active} {
+    error "invalid P10.5 expected committed role masks"
+  }
+  set output [file join $p10_dump_dir "${label}.p10_5_capability.psv"]
+  set out [open $output w]
+  puts $out "role|caps|version|role_status|role_error|active|f2r|r2f|local_tx|local_rx|role_epoch|wire_schema|telemetry_schema|diagnostic_status"
+  foreach role {fixed rotating} {
+    set caps [p10_read32 $role 0x43C00E00]
+    set version [p10_read32 $role 0x43C00E04]
+    set role_status [p10_read32 $role 0x43C00E20]
+    set role_error [p10_read32 $role 0x43C00E24]
+    set active [p10_read32 $role 0x43C00E28]
+    set f2r [p10_read32 $role 0x43C00E2C]
+    set r2f [p10_read32 $role 0x43C00E30]
+    set local_tx [p10_read32 $role 0x43C00E34]
+    set local_rx [p10_read32 $role 0x43C00E38]
+    set role_epoch [p10_read32 $role 0x43C00E1C]
+    set wire_schema [p10_read32 $role 0x43C00E88]
+    set telemetry_schema [p10_read32 $role 0x43C00EDC]
+    set diagnostic_status [p10_read32 $role 0x43C00EE4]
+    puts $out [join [list $role $caps $version $role_status $role_error \
+        $active $f2r $r2f $local_tx $local_rx $role_epoch $wire_schema \
+        $telemetry_schema $diagnostic_status] "|"]
+    if {$caps != 0x5035021F || $version != 0x00010001 ||
+        $wire_schema != 0x35281601 || $telemetry_schema != 0x50310502 ||
+        $role_error != 0 || ($role_status & 0x0C) != 0x04 ||
+        ($diagnostic_status & 0x3) != 0} {
+      close $out
+      error [format "P10.5 %s capability/read-only safety mismatch caps=0x%08X version=0x%08X status=0x%08X error=0x%08X wire=0x%08X telemetry=0x%08X diagnostic=0x%08X" \
+          $role $caps $version $role_status $role_error $wire_schema \
+          $telemetry_schema $diagnostic_status]
+    }
+    set expected_role_bits [expr {$role eq "fixed" ? 0x100 : 0x200}]
+    if {($role_status & 0x300) != $expected_role_bits} {
+      close $out
+      error "P10.5 endpoint deployment-role readback mismatch"
+    }
+    if {$expected_active != 0} {
+      set expected_local_tx [expr {$role eq "fixed" ? $expected_f2r : $expected_r2f}]
+      set expected_local_rx [expr {$role eq "fixed" ? $expected_r2f : $expected_f2r}]
+      if {$active != $expected_active || $f2r != $expected_f2r ||
+          $r2f != $expected_r2f || $local_tx != $expected_local_tx ||
+          $local_rx != $expected_local_rx || ($role_status & 0x13) != 0x13 ||
+          $role_epoch == 0} {
+        close $out
+        error "P10.5 committed role-mask readback mismatch"
+      }
+    }
+  }
+  close $out
+  p10_say "P10_5_CAPABILITY_PASS=$label"
+  p10_say "P10_5_CAPABILITY_EVIDENCE=$output"
+}
+
 proc p10_record_p10_1r_telemetry {sequence label} {
   global p10_telemetry_handle
   set captured [clock milliseconds]
@@ -584,19 +659,33 @@ proc p10_case_dict {fields} {
     }
   }
   if {![regexp {^[A-Za-z0-9_.-]+$} [dict get $d label]]} { error "invalid P10 CASE label" }
-  if {[dict get $d lane] < 0 || [dict get $d lane] > $p10_max_lane_mask ||
+  set command [dict get $d command]
+  set lane [dict get $d lane]
+  set p105_packed [expr {$command in {14 15}}]
+  set active [expr {$lane & $p10_max_lane_mask}]
+  set f2r [expr {($lane >> 8) & $p10_max_lane_mask}]
+  set r2f [expr {($lane >> 16) & $p10_max_lane_mask}]
+  set p105_allowed_lane_word_mask [expr {$p10_max_lane_mask |
+      ($p10_max_lane_mask << 8) | ($p10_max_lane_mask << 16)}]
+  if {($p105_packed &&
+       (($lane & ~$p105_allowed_lane_word_mask) != 0 ||
+        $active == 0 || $f2r == 0 ||
+        $r2f == 0 || ($f2r & $r2f) != 0 || ($f2r | $r2f) != $active)) ||
+      (!$p105_packed && ($lane < 0 || $lane > $p10_max_lane_mask)) ||
       [dict get $d unavailable] < 0 || [dict get $d unavailable] > $p10_max_lane_mask ||
       [dict get $d injectmask] < 0 || [dict get $d injectmask] > $p10_max_lane_mask} {
     error "P10 lane mask outside current-run authorization"
   }
-  if {[dict get $d direction] < 0 || [dict get $d direction] > 1 ||
+  if {($p105_packed && [dict get $d direction] != 2) ||
+      (!$p105_packed &&
+       ([dict get $d direction] < 0 || [dict get $d direction] > 1)) ||
       [dict get $d rate] < 0 || [dict get $d rate] > 2} {
     error "P10 direction/rate outside authorization"
   }
   if {[dict get $d timeout] < 1 || [dict get $d timeout] > 1800000} {
     error "P10 case timeout outside authorization"
   }
-  if {[dict get $d command] in {2 3 12 13} && [dict get $d lane] == 0} {
+  if {$command in {2 3 12 13 14 15} && $active == 0} {
     error "P10 transmit-capable command has an empty lane mask"
   }
   return $d
@@ -1053,7 +1142,7 @@ proc p10_execute_case {d {window "NA"}} {
   set rotating_dump [p10_dump_mailbox rotating [dict get $d label]]
   set fixed_p10_1_dump ""
   set rotating_p10_1_dump ""
-  if {$command == 13} {
+  if {$command in {13 15}} {
     set fixed_p10_1_dump [p10_dump_p10_1_result fixed [dict get $d label]]
     set rotating_p10_1_dump [p10_dump_p10_1_result rotating [dict get $d label]]
   }
@@ -2237,12 +2326,15 @@ set p10_authorization_file [file normalize [lindex $argv 14]]
 set p10_run_id [lindex $argv 15]
 set p10_campaign_p103f [expr {[string match "P10_3F-*" $p10_stage]}]
 set p10_campaign_p104 [expr {[string match "P10_4-*" $p10_stage]}]
-set p10_campaign_forensic [expr {$p10_campaign_p103f || $p10_campaign_p104}]
+set p10_campaign_p105 [expr {[string match "P10_5-*" $p10_stage]}]
+set p10_campaign_forensic [expr {
+    $p10_campaign_p103f || $p10_campaign_p104 || $p10_campaign_p105}]
 set p10_campaign_p103 [expr {[string match "P10_3-*" $p10_stage] ||
     $p10_campaign_forensic}]
 set p10_lane_count [expr {$p10_campaign_p103 ? 4 : 2}]
 set p10_max_lane_mask [expr {$p10_campaign_p103 ? 15 : 3}]
-set p10_max_aggregate_bytes [expr {$p10_campaign_p104 ? 134217728 : 67108864}]
+set p10_max_aggregate_bytes [expr {$p10_campaign_p105 ? 0x70000000 :
+    ($p10_campaign_p104 ? 134217728 : 67108864)}]
 # P9_PHY_STATUS concatenates three fields of width 2*LANE_COUNT in the
 # order {safety, startup, ready}.  The historical 0x00000F00 safety mask is
 # correct only for LANE_COUNT=2; for P10.3 LANE_COUNT=4 it aliases the low
@@ -2318,18 +2410,23 @@ set rc [catch {
   if {![info exists ::env(RF_COMM_P10_HW_AUTH)] ||
       $::env(RF_COMM_P10_HW_AUTH) ni {
         P10_FASTTRACK_IMMUTABLE_AUTHORIZED P10_3F_IMMUTABLE_AUTHORIZED
-        P10_4_IMMUTABLE_AUTHORIZED}} {
+        P10_4_IMMUTABLE_AUTHORIZED P10_5_IMMUTABLE_AUTHORIZED}} {
     error "P10 immutable current-run environment marker required"
   }
   set p10_1r_stage_ok [regexp {^P10_1R-(PREFLIGHT|ECHO_TAIL|CROSSTALK|PHY_SANITY|ACK_TUNING|PERFORMANCE|STREAMING_64M|FORMAL_30MIN)$} $p10_stage]
   set p10_3_stage_ok [regexp {^P10_3-(PREFLIGHT|MODULE_INTAKE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STREAMING_64M|PERFORMANCE|FORMAL_30MIN|LANE2_RAW_RETEST|LANE3_RAW_RETEST)$} $p10_stage]
   set p10_3f_stage_ok [regexp {^P10_3F-(PREFLIGHT|MODULE_INTAKE|FAULT_CAPTURE|RAW_8X8|PER_LANE_PHY|TWO_LANE_REGRESSION|FOUR_LANE_RAW|MASK_MATRIX|DEGRADE|ARQ_SACK|DMA|STAIRCASE|STREAMING_64M|STREAMING_FAULT|STREAMING_SERVICE_RESET|PERFORMANCE|FORMAL)$} $p10_stage]
   set p10_4_stage_ok [regexp {^P10_4-(PREFLIGHT|BASELINE_SMOKE|COUNTER_SEMANTICS|TUNING|HALF_DUPLEX|STREAMING_64M|STREAMING_128M|STREAMING_FAULT|DEGRADE|DIRECTION_SWITCH|RESET_RECOVERY|ECHO_CROSSTALK|TWO_PLUS_TWO|MIXED_FORMAL)$} $p10_stage]
+  set p10_5_stage_ok [regexp {^P10_5-(SAFE_START|CAPABILITY|ONE_PLUS_ONE|TWO_PLUS_ONE|TWO_PLUS_TWO|ROLE_COMMIT|PERFORMANCE|STREAMING_64M|FAULTS|FORMAL_30MIN)$} $p10_stage]
   if {!$p10_1r_stage_ok && !$p10_3_stage_ok && !$p10_3f_stage_ok &&
-      !$p10_4_stage_ok} {
+      !$p10_4_stage_ok && !$p10_5_stage_ok} {
     error "unsupported P10 XSDB stage"
   }
-  if {$p10_campaign_p104} {
+  if {$p10_campaign_p105} {
+    if {![regexp {^p10_5_[A-Za-z0-9_.-]+$} $p10_run_id]} {
+      error "unsafe P10.5 run id"
+    }
+  } elseif {$p10_campaign_p104} {
     if {![regexp {^p10_4_[A-Za-z0-9_.-]+$} $p10_run_id]} {
       error "unsafe P10.4 run id"
     }
@@ -2496,6 +2593,18 @@ set rc [catch {
         error "invalid P10.4 2+2 probe record"
       }
       lappend parsed_plan $fields
+    } elseif {$kind eq "P105_CAPABILITY"} {
+      if {[llength $fields] != 5 ||
+          ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]]} {
+        error "invalid P10.5 capability record"
+      }
+      foreach index {2 3 4} {
+        if {![string is integer -strict [lindex $fields $index]] ||
+            [lindex $fields $index] < 0 || [lindex $fields $index] > 15} {
+          error "invalid numeric P10.5 capability field"
+        }
+      }
+      lappend parsed_plan $fields
     } elseif {$kind eq "P101_1PLUS1_PROBE"} {
       if {[llength $fields] != 2 ||
           ![regexp {^[A-Za-z0-9_.-]+$} [lindex $fields 1]]} {
@@ -2654,6 +2763,9 @@ set rc [catch {
       p104_run_mixed_formal [lindex $record 1] [lindex $record 2]
     } elseif {$kind eq "P104_TWO_PLUS_TWO_PROBE"} {
       p104_two_plus_two_probe [lindex $record 1] [lindex $record 2]
+    } elseif {$kind eq "P105_CAPABILITY"} {
+      p105_capability [lindex $record 1] [lindex $record 2] \
+          [lindex $record 3] [lindex $record 4]
     } elseif {$kind eq "P101_1PLUS1_PROBE"} {
       p10_probe_1plus1 [lindex $record 1]
     } elseif {$kind eq "P101R_ECHO_SWEEP"} {

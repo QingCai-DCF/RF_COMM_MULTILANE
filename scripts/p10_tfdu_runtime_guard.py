@@ -158,19 +158,53 @@ class RuntimeRestGuard:
         }
         self._persist()
 
-    def finish_stage(self, *, shutdown_verified: bool) -> dict[str, Any]:
+    def finish_stage(
+        self,
+        *,
+        shutdown_verified: bool,
+        measured_runtime_seconds: float | None = None,
+    ) -> dict[str, Any]:
         if self._active is None:
             raise RuntimeError("no active TFDU stage")
         stopped = self.clock()
         finished_utc = self.utc_clock()
         entry = self._active
         self._active = None
-        elapsed = max(0.0, stopped - float(entry.pop("_start_monotonic")))
+        wall_elapsed = max(0.0, stopped - float(entry.pop("_start_monotonic")))
+        if measured_runtime_seconds is None:
+            elapsed = wall_elapsed
+            measurement = "conservative_wall_clock"
+        else:
+            elapsed = float(measured_runtime_seconds)
+            if elapsed <= 0.0 or elapsed > wall_elapsed + 1.0:
+                entry.update({
+                    "shutdown_verified": bool(shutdown_verified),
+                    "shutdown_verified_utc": (
+                        _utc_text(finished_utc) if shutdown_verified else None
+                    ),
+                    "measured_runtime_seconds": elapsed,
+                    "wall_runtime_seconds": round(wall_elapsed, 6),
+                    "runtime_measurement_source":
+                        "invalid_hardware_stage_active_evidence",
+                    "runtime_limit_status": "FAIL",
+                    "required_cooldown_seconds": None,
+                    "cooldown_completed_utc": None,
+                    "actual_cooldown_seconds": None,
+                    "cooldown_status": "FAIL",
+                    "status": "FAIL",
+                })
+                self.entries.append(entry)
+                self._failed_closed = True
+                self._persist()
+                raise RuntimeError("invalid externally measured active runtime")
+            measurement = "hardware_stage_active_evidence"
         required = math.ceil(elapsed * self.ratio * 1000.0) / 1000.0
         entry.update({
             "shutdown_verified": bool(shutdown_verified),
             "shutdown_verified_utc": _utc_text(finished_utc) if shutdown_verified else None,
             "measured_runtime_seconds": round(elapsed, 6),
+            "wall_runtime_seconds": round(wall_elapsed, 6),
+            "runtime_measurement_source": measurement,
             "runtime_limit_status": "PASS" if elapsed <= self.maximum else "FAIL",
             "required_cooldown_seconds": required,
             "cooldown_completed_utc": None,

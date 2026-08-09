@@ -348,11 +348,11 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: ca494559cf1e3947e9c328559318b6596d4a6fbc05167ce9e6dc97481394327e
-    bytes: 57305
+    sha256: 5ca10b896504ea07dd3fa979a4c4d2c6867bd51cedce86c26079f543300da006
+    bytes: 58718
   - path: PROJECT_STATUS.md
-    sha256: bfdc23c847a760add47d99868f4ab1856e8fd1c6deb4df2f21a172b51ac2cdb0
-    bytes: 10141
+    sha256: 58fdaeae2b63bfc991bd8cbd501fdc64ddc6e0e77cb9789df1faf8e0fd58c334
+    bytes: 10269
   artifact_hash: bfdc23c847a760add47d99868f4ab1856e8fd1c6deb4df2f21a172b51ac2cdb0
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
@@ -367,8 +367,8 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: ca494559cf1e3947e9c328559318b6596d4a6fbc05167ce9e6dc97481394327e
-    bytes: 57305
+    sha256: 5ca10b896504ea07dd3fa979a4c4d2c6867bd51cedce86c26079f543300da006
+    bytes: 58718
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -398,11 +398,11 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: ca494559cf1e3947e9c328559318b6596d4a6fbc05167ce9e6dc97481394327e
-    bytes: 57305
+    sha256: 5ca10b896504ea07dd3fa979a4c4d2c6867bd51cedce86c26079f543300da006
+    bytes: 58718
   - path: PROJECT_STATUS.md
-    sha256: bfdc23c847a760add47d99868f4ab1856e8fd1c6deb4df2f21a172b51ac2cdb0
-    bytes: 10141
+    sha256: 58fdaeae2b63bfc991bd8cbd501fdc64ddc6e0e77cb9789df1faf8e0fd58c334
+    bytes: 10269
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
   artifact_hash: bfdc23c847a760add47d99868f4ab1856e8fd1c6deb4df2f21a172b51ac2cdb0
@@ -723,22 +723,22 @@ requirements:
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION
-  evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+  test_id: P10_5-LEGACY-ARQ-REVERIFICATION
+  evidence_path: evidence/generated/p10_5_xsim/summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: config/p8d_data_plane.yaml
     sha256: 7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732
   - path: rtl/ir_data_plane_top.sv
-    sha256: 8205959e9d3602224aec1dac2a476b3b150fdf86921f1ff545aa47f3d40b6eab
-  - path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
-    sha256: 0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9
+    sha256: 7218e966b0967592f2c91caf9788df0beb9ba5b1dfe21ba35810dfc9f77397c2
+  - path: evidence/generated/p10_5_xsim/summary.json
+    sha256: ad7f64e668b8e4fdf4a41276d3fed63dccaf687179f6b38d0ed9d166872aa649
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
   artifact_hash: 7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732
-  source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
-  reverification_stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+  source_commit: bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676
+  reverification_stage: P10_5_DUAL_DIRECTION_LEGACY_REGRESSION
   reverification_history:
   - stage: P10_DUAL_ENDPOINT_SOURCE_REVERIFY
     previous_source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
@@ -750,6 +750,10 @@ requirements:
     previous_artifact_hash: 2a417bd34e63403302c378c78d82970fb739ee6d35f902a02edcf5c4d14a0c02
   - stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
     previous_source_commit: 0e6032a1a55745e1c7131cd7b6c0457b6c783553
+    previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    previous_artifact_hash: 7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732
+  - stage: P10_5_DUAL_DIRECTION_LEGACY_REGRESSION
+    previous_source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
     previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
     previous_artifact_hash: 7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732
 - requirement_id: L2-SEQ-001
@@ -811,20 +815,20 @@ requirements:
   verification_method: Direct Python reference, XSIM RTL, offline C, OOC synthesis, and evidence consistency gates.
   verification_stage: P8D
   verification_scope: PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL
-  test_id: P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION
-  evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+  test_id: P10_5-LEGACY-SACK-REVERIFICATION
+  evidence_path: evidence/generated/p10_5_xsim/summary.json
   status: PASS
   waiver: null
   artifact_hashes:
   - path: rtl/ir_ack_aggregator.sv
-    sha256: bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa
+    sha256: 1d271fa5f807fe2afc6844e4723bd9c192d4e882de97866063c1dcd0a6aed58d
   - path: sim/tb/tb_ir_sack_ack_aggregation.sv
     sha256: 926ef09ea677487e14a9defd87419208bbfd97fee947527e3552e9ed9ad1c075
-  - path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
-    sha256: 0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9
+  - path: evidence/generated/p10_5_xsim/summary.json
+    sha256: ad7f64e668b8e4fdf4a41276d3fed63dccaf687179f6b38d0ed9d166872aa649
   hardware_followup: Real AXI DMA/DDR/cache coherency, target implementation timing/CDC, Z7020 hardware, rotation, external
     throughput, and final-product acceptance remain pending P8E/P9 or later.
-  artifact_hash: bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa
+  artifact_hash: 1d271fa5f807fe2afc6844e4723bd9c192d4e882de97866063c1dcd0a6aed58d
   reverification_history:
   - stage: P9_PRE_HARDWARE_P8D_EXACT_SOURCE
     previous_source_commit: 0c67e7717a5a0fb594a237a05184be65cf748f4f
@@ -842,8 +846,12 @@ requirements:
     previous_source_commit: 0e6032a1a55745e1c7131cd7b6c0457b6c783553
     previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
     previous_artifact_hash: bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa
-  source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
-  reverification_stage: P10_3_RETRY_PATH_DIVERSITY_SOURCE_REVERIFY
+  - stage: P10_5_DUAL_DIRECTION_LEGACY_REGRESSION
+    previous_source_commit: 99c83fc58488eba1a86751b6259ac7ed9b3d2999
+    previous_evidence_path: evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json
+    previous_artifact_hash: bb149d456f09c006f6181fdd313de97e46a8fd21df1c1764f14d57079051dafa
+  source_commit: bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676
+  reverification_stage: P10_5_DUAL_DIRECTION_LEGACY_REGRESSION
 - requirement_id: L2-DUP-001
   requirement_text: A duplicate logical frame never commits or completes twice.
   profile: P8D_MULTI_PROFILE_OFFLINE
@@ -4362,6 +4370,270 @@ requirements:
   artifact_hash: ca89d42ac92a77f104f0b82e5de237738435d69b862e0e1260f6e8e7d3d49782
   hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
     external electrical/duty measurement and product-final acceptance remain pending.
+- requirement_id: P10_5-CLOSE-001
+  requirement_text: P10.4 immutable PASS_WITH_NONBLOCKING_LIMITS evidence and its non-transmitting 2+2 capability blocker shall remain unchanged and shall be closed by a separate annotated tag.
+  profile: P10_5_IMMUTABLE_P10_4_CLOSEOUT
+  verification_method: Verify the P10.4 final commit, artifact source, evidence checkpoint, pass tag object and target, component runs, artifact hashes, consumed authorization, and both shutdown markers.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_4_FROZEN_BASELINE
+  test_id: P10_5-CLOSE-001
+  evidence_path: evidence/generated/p10_4_closeout_summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-CAP-001
+  requirement_text: The versioned endpoint capability shall explicitly advertise simultaneous split-lane bidirectional operation, four lanes, role epochs, ACK piggyback, and control-only ACK fallback.
+  profile: P10_5_SPLIT_LANE_DUAL_DIRECTION
+  verification_method: XSIM and generated capability-table checks, followed by current-artifact hardware register readback.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_ARTIFACT
+  test_id: P10_5-CAP-001
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-ROLE-001
+  requirement_text: F-to-R and R-to-F lane-role masks shall be nonempty, disjoint, and subsets of ACTIVE_LANE_MASK, with endpoint-local TX/RX masks derived only from board role.
+  profile: P10_5_SPLIT_LANE_DUAL_DIRECTION
+  verification_method: Exhaust every legal four-bit role tuple and reject every overlap, out-of-active, empty-direction, and unknown-bit tuple.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_OFFLINE_ARCHITECTURE
+  test_id: tb_p10_5_role_mask_commit
+  evidence_path: evidence/generated/p10_5_xsim/summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-ROLE-002
+  requirement_text: Lane-role changes shall use validated shadow registers and one quiet-boundary atomic commit with exactly one ROLE_EPOCH increment.
+  profile: P10_5_ATOMIC_ROLE_COMMIT
+  verification_method: XSIM shall prove rejected tuples do not change active configuration and valid quiet commits update all live fields atomically.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_OFFLINE_ARCHITECTURE
+  test_id: tb_p10_5_role_mask_commit
+  evidence_path: evidence/generated/p10_5_xsim/summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-ROLE-003
+  requirement_text: Frames carrying a stale role epoch shall be rejected without ACK, window progress, DMA write, or object commit.
+  profile: P10_5_ROLE_EPOCH_REJECTION
+  verification_method: XSIM and deterministic protocol-model stale-epoch injection, followed by hardware role-commit testing.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_ARTIFACT
+  test_id: P10_5-ROLE-003
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-L2-001
+  requirement_text: The F-to-R direction shall have an independently tagged selective-repeat, SACK, receiver-credit, retry, completion, and object context.
+  profile: P10_5_DUAL_DIRECTION_L2
+  verification_method: Dual-endpoint XSIM and deterministic randomized reference-model isolation checks.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_OFFLINE_ARCHITECTURE
+  test_id: tb_p10_5_dual_direction_l2
+  evidence_path: evidence/generated/p10_5_xsim/summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-L2-002
+  requirement_text: The R-to-F direction shall have an independently tagged selective-repeat, SACK, receiver-credit, retry, completion, and object context.
+  profile: P10_5_DUAL_DIRECTION_L2
+  verification_method: Dual-endpoint XSIM and deterministic randomized reference-model isolation checks.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_OFFLINE_ARCHITECTURE
+  test_id: tb_p10_5_dual_direction_l2
+  evidence_path: evidence/generated/p10_5_xsim/summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-ACK-001
+  requirement_text: Each DATA frame may carry CRC-protected ACK base, SACK bitmap, receiver credit, and validity for the opposite logical direction.
+  profile: P10_5_BIDIRECTIONAL_ACK
+  verification_method: Wire-format encode/decode and dual-endpoint XSIM shall prove opposite-direction ACK piggyback advances only the intended TX context.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_OFFLINE_ARCHITECTURE
+  test_id: tb_p10_5_ack_piggyback
+  evidence_path: evidence/generated/p10_5_xsim/summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-ACK-002
+  requirement_text: When reverse application DATA is absent, bounded control-only ACK/SACK shall use only the direction's assigned local TX mask without changing bundle direction.
+  profile: P10_5_BIDIRECTIONAL_ACK
+  verification_method: XSIM shall suppress reverse DATA, observe bounded control-only ACK progress, and prove role masks remain unchanged.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_OFFLINE_ARCHITECTURE
+  test_id: tb_p10_5_control_only_ack
+  evidence_path: evidence/generated/p10_5_xsim/summary.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-ACK-003
+  requirement_text: ACK/control admission and receiver-credit updates shall have bounded latency with no simultaneous bidirectional deadlock.
+  profile: P10_5_BIDIRECTIONAL_ACK
+  verification_method: At least 50000 ACK/control model events plus dual-direction fault XSIM shall prove bounded progress and zero deadlock.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_OFFLINE_ARCHITECTURE
+  test_id: P10_5_DUAL_DIRECTION_REFERENCE_MODEL
+  evidence_path: evidence/generated/p10_5_reference_model.json
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-DMA-001
+  requirement_text: Each endpoint shall concurrently operate independent local TX and RX DMA rings without a global direction mutex or opposite-ring overwrite.
+  profile: P10_5_BIDIRECTIONAL_DMA
+  verification_method: Concurrent AXI-stream XSIM and at least 50000 randomized DMA/backpressure events, followed by current-artifact hardware streaming.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_ARTIFACT
+  test_id: P10_5-DMA-001
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-DMA-002
+  requirement_text: Every descriptor shall carry direction, role epoch, object or stream identity, generation, and completion ownership so it can complete at most once.
+  profile: P10_5_BIDIRECTIONAL_DMA
+  verification_method: Randomized ring ownership and dual-endpoint XSIM shall prove zero leak and zero double completion; hardware streaming shall recheck.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_ARTIFACT
+  test_id: P10_5-DMA-002
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-OBJ-001
+  requirement_text: F-to-R and R-to-F object and stream contexts shall be simultaneously active with independent integrity and atomic-publish state.
+  profile: P10_5_BIDIRECTIONAL_OBJECTS
+  verification_method: Dual-endpoint XSIM followed by simultaneous current-hardware streaming in both directions.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_ARTIFACT
+  test_id: P10_5-OBJ-001
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-OBJ-002
+  requirement_text: Aborting one direction shall reclaim only that direction's descriptors and object state while the opposite direction continues or pauses for a bounded interval.
+  profile: P10_5_DIRECTION_SCOPED_ABORT
+  verification_method: XSIM and randomized reference model, followed by one-direction hardware abort and clean recovery.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_ARTIFACT
+  test_id: P10_5-OBJ-002
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-SAFE-001
+  requirement_text: A physical TFDU module shall never be admitted for TX and RX simultaneously, and raw echo shall never become accepted DATA or ACK/SACK.
+  profile: P10_5_PER_MODULE_HALF_DUPLEX_SAFETY
+  verification_method: Safety XSIM and all current-hardware mask, crosstalk, fault, and formal stages.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_HARDWARE
+  test_id: P10_5-SAFE-001
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-SAFE-002
+  requirement_text: Each endpoint shall retain exactly one local active-high GLOBAL_PERMIT and all local physical TX paths shall remain subject to the unchanged final kill and TFDU safety guards.
+  profile: P10_5_SINGLE_GLOBAL_PERMIT
+  verification_method: RTL structural and safety regression plus current-artifact safe-boot and shutdown evidence.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_HARDWARE
+  test_id: P10_5-SAFE-002
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-SAFE-003
+  requirement_text: No active role configuration shall overlap local TX and RX masks or allow any lane outside ACTIVE_LANE_MASK to transmit.
+  profile: P10_5_ROLE_MASK_SAFETY
+  verification_method: Exhaustive four-bit mask verification followed by all current-hardware role partitions.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_HARDWARE
+  test_id: P10_5-SAFE-003
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-MASK-001
+  requirement_text: All 12 ordered disjoint 1+1 lane-role pairs shall execute simultaneous bidirectional TX and commit clean data in both directions.
+  profile: P10_5_CURRENT_AX7020_STATIONARY_4LANE
+  verification_method: Ten-second autonomous hardware smoke for every ordered pair with integrity, admission, and safety gates.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_HARDWARE
+  test_id: P10_5-MASK-001
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-MASK-002
+  requirement_text: Hardware coverage shall exercise every lane as a dual-lane TX member, single-lane TX member, and RX member across legal 2+1 and 1+2 configurations.
+  profile: P10_5_CURRENT_AX7020_STATIONARY_4LANE
+  verification_method: Bounded 20-second autonomous hardware cases with bidirectional progress and ACK/control liveness.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_HARDWARE
+  test_id: P10_5-MASK-002
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-MASK-003
+  requirement_text: All six directed 2+2 partitions shall execute physical TX and commit clean application data in both directions.
+  profile: P10_5_CURRENT_AX7020_STATIONARY_4LANE
+  verification_method: Thirty-second autonomous hardware case for each directed partition with per-lane utilization and integrity evidence.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_HARDWARE
+  test_id: P10_5-MASK-003
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-PERF-001
+  requirement_text: Primary 2+2 F-to-R application goodput shall be at least 4000000 bit/s over a board-autonomous interval of at least 300 seconds.
+  profile: P10_5_PRIMARY_2PLUS2
+  verification_method: Current-artifact hardware performance stage with independent timer cross-check within one percent.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_HARDWARE
+  test_id: P10_5-PERF-001
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-PERF-002
+  requirement_text: Primary 2+2 R-to-F application goodput shall be at least 4000000 bit/s over a board-autonomous interval of at least 300 seconds.
+  profile: P10_5_PRIMARY_2PLUS2
+  verification_method: Current-artifact hardware performance stage with independent timer cross-check within one percent.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_HARDWARE
+  test_id: P10_5-PERF-002
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-STREAM-001
+  requirement_text: Each direction shall simultaneously complete at least five 64 MiB streams with CRC32, SHA256, atomic-publish, and descriptor ownership checks.
+  profile: P10_5_SIMULTANEOUS_64M_STREAMING
+  verification_method: Board-autonomous current-artifact hardware streaming with both directions active concurrently.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_HARDWARE
+  test_id: P10_5-STREAM-001
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
+- requirement_id: P10_5-SOAK-001
+  requirement_text: Primary 2+2 shall sustain 1800 seconds of simultaneous bidirectional autonomous streaming with all integrity, protocol, DMA, admission, and TFDU safety hard-error counters at zero.
+  profile: P10_5_PRIMARY_2PLUS2_FORMAL
+  verification_method: One bounded 1800-second current-artifact hardware run followed by verified dual-endpoint shutdown.
+  verification_stage: P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE
+  verification_scope: P10_5_CURRENT_HARDWARE
+  test_id: P10_5-SOAK-001
+  evidence_path: null
+  status: PENDING
+  waiver: null
+  artifact_hashes: []
 - requirement_id: P10_4-SAFE-RUNTIME-001
   requirement_text: Every hardware stage using any installed TFDU small board shall have a continuous runtime of no more than
     1800 seconds, measured conservatively from immediately before the TX-capable stage invocation through verified dual-board

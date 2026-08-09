@@ -7,6 +7,7 @@
 module p10_axi_dma_endpoint_peripheral_bd #(
   parameter integer ENDPOINT_ROLE = 1,
   parameter integer LANE_COUNT = 2,
+  parameter integer P10_5_DUAL_CAPABLE = 0,
   parameter [31:0] BUILD_ID_OVERRIDE = 32'h0000_0000
 ) (
   (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 s_axi_aclk CLK" *)
@@ -54,7 +55,9 @@ module p10_axi_dma_endpoint_peripheral_bd #(
   output [3:0] pl_activity_led_n_o
 );
   localparam [31:0] P10_MAGIC = 32'h5031_305A;
-  localparam [31:0] P10_DEFAULT_BUILD_ID = LANE_COUNT == 4 ?
+  localparam [31:0] P10_DEFAULT_BUILD_ID = P10_5_DUAL_CAPABLE != 0 ?
+      (ENDPOINT_ROLE == 1 ? 32'h5035_3446 : 32'h5035_3452) :
+      LANE_COUNT == 4 ?
       (ENDPOINT_ROLE == 1 ? 32'h5032_3446 : 32'h5032_3452) :
       (ENDPOINT_ROLE == 1 ? 32'h5032_5346 : 32'h5032_5352);
   localparam [31:0] P10_BUILD_ID = BUILD_ID_OVERRIDE != 0 ?
@@ -90,6 +93,7 @@ module p10_axi_dma_endpoint_peripheral_bd #(
   p9_axi_dma_peripheral #(
     .DEPLOYMENT_ROLE(ENDPOINT_ROLE),
     .LANE_COUNT(LANE_COUNT),
+    .P10_5_DUAL_CAPABLE(P10_5_DUAL_CAPABLE),
     .BUILD_ID(P10_BUILD_ID),
     .PROFILE_ID(P10_PROFILE_ID),
     .IDENTITY_MAGIC(P10_MAGIC)

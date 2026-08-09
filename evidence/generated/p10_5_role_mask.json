@@ -1,0 +1,35 @@
+{
+  "active_lane_mask": "0xF",
+  "atomic_commit": "PASS",
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "exhaustive_matrix": {
+    "all_legal_count": 50,
+    "one_plus_one_count": 12,
+    "one_plus_two_count": 12,
+    "two_plus_one_count": 12,
+    "two_plus_two": [
+      "0x3/0xC",
+      "0x5/0xA",
+      "0x6/0x9",
+      "0x9/0x6",
+      "0xA/0x5",
+      "0xC/0x3"
+    ]
+  },
+  "f_to_r_lane_mask": "0x3",
+  "fixed_local_rx_mask": "0xC",
+  "fixed_local_tx_mask": "0x3",
+  "generated_at_utc": "2026-08-09T07:57:58.494161+00:00",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "hardware_actions_executed": false,
+  "network_used": false,
+  "r_to_f_lane_mask": "0xC",
+  "rotating_local_rx_mask": "0x3",
+  "rotating_local_tx_mask": "0xC",
+  "schema_version": 1,
+  "source_commit": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
+  "stale_epoch_rejection": "PASS",
+  "status": "PASS",
+  "test_id": "P10_5-ROLE-OFFLINE"
+}

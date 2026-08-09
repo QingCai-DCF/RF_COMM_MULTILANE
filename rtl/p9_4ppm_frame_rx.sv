@@ -35,6 +35,14 @@ module p9_4ppm_frame_rx #(
   output logic [31:0] ack_bitmap_o,
   output logic [15:0] ack_credit_o,
   output logic        direction_o,
+  output logic        vnext_o,
+  output logic [15:0] role_epoch_o,
+  output logic        piggyback_ack_valid_o,
+  output logic        piggyback_ack_direction_o,
+  output logic [31:0] piggyback_ack_session_o,
+  output logic [15:0] piggyback_ack_base_o,
+  output logic [31:0] piggyback_ack_bitmap_o,
+  output logic [15:0] piggyback_ack_credit_o,
   output wire  [31:0] frame_good_count_o,
   output wire  [31:0] frame_bad_count_o,
   output wire  [31:0] crc_bad_count_o,
@@ -48,6 +56,10 @@ module p9_4ppm_frame_rx #(
   // receive paths on the resource-limited XC7Z010.  The AXI register contract
   // remains 32-bit through explicit zero extension.
   localparam int PHYSICAL_COUNTER_WIDTH = 20;
+  localparam int DATA_HEADER_BYTES = 24;
+  localparam int ACK_HEADER_BYTES = 20;
+  localparam int VNEXT_DATA_HEADER_BYTES = 40;
+  localparam int VNEXT_ACK_HEADER_BYTES = 22;
 
   initial begin
     if (LANE_COUNT != 2 && LANE_COUNT != 4 && LANE_COUNT != 8)
@@ -55,12 +67,13 @@ module p9_4ppm_frame_rx #(
   end
   typedef enum logic [1:0] {RX_WAIT, RX_COLLECT, RX_VALIDATE} state_t;
   state_t state;
-  logic [7:0] header [0:23];
+  logic [7:0] header [0:39];
   logic [15:0] byte_index;
   logic [1:0] symbol_index;
   logic [7:0] current_byte;
   logic frame_type_known;
   logic active_ack;
+  logic active_vnext;
   logic malformed;
   logic [15:0] header_crc;
   logic [31:0] payload_crc;
@@ -126,6 +139,7 @@ module p9_4ppm_frame_rx #(
       current_byte <= 8'd0;
       frame_type_known <= 1'b0;
       active_ack <= 1'b0;
+      active_vnext <= 1'b0;
       malformed <= 1'b0;
       header_crc <= 16'hFFFF;
       payload_crc <= 32'hFFFF_FFFF;
@@ -150,12 +164,20 @@ module p9_4ppm_frame_rx #(
       ack_bitmap_o <= 32'd0;
       ack_credit_o <= 16'd0;
       direction_o <= 1'b0;
+      vnext_o <= 1'b0;
+      role_epoch_o <= 16'd0;
+      piggyback_ack_valid_o <= 1'b0;
+      piggyback_ack_direction_o <= 1'b0;
+      piggyback_ack_session_o <= 32'd0;
+      piggyback_ack_base_o <= 16'd0;
+      piggyback_ack_bitmap_o <= 32'd0;
+      piggyback_ack_credit_o <= 16'd0;
       frame_good_count_q <= '0;
       frame_bad_count_q <= '0;
       crc_bad_count_q <= '0;
       preamble_count_q <= '0;
       symbol_error_count_q <= '0;
-      for (int idx = 0; idx < 24; idx++) header[idx] <= 8'd0;
+      for (int idx = 0; idx < 40; idx++) header[idx] <= 8'd0;
     end else begin
       payload_write_pulse_o <= 1'b0;
       frame_valid_o <= 1'b0;
@@ -163,8 +185,11 @@ module p9_4ppm_frame_rx #(
       completed_byte = current_byte;
       header_valid = 1'b0;
       payload_valid = 1'b0;
-      data_payload_index = byte_index - 16'd24;
-      data_trailer_index = byte_index - (16'd24 + observed_payload_length);
+      data_payload_index = byte_index -
+          (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES);
+      data_trailer_index = byte_index -
+          ((active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES) +
+           observed_payload_length);
 
       if (!enable_i || align_i) begin
         state <= RX_WAIT;
@@ -187,12 +212,13 @@ module p9_4ppm_frame_rx #(
               current_byte <= 8'd0;
               frame_type_known <= 1'b0;
               active_ack <= 1'b0;
+              active_vnext <= 1'b0;
               malformed <= 1'b0;
               header_crc <= 16'hFFFF;
               payload_crc <= 32'hFFFF_FFFF;
               seen_payload_crc <= 32'd0;
               observed_payload_length <= 16'd0;
-              for (int idx = 0; idx < 24; idx++) header[idx] <= 8'd0;
+              for (int idx = 0; idx < 40; idx++) header[idx] <= 8'd0;
             end
           end
           RX_COLLECT: begin
@@ -203,14 +229,26 @@ module p9_4ppm_frame_rx #(
               if (symbol_index == 2'd3) begin
                 current_byte <= 8'd0;
                 symbol_index <= 2'd0;
-                if (byte_index < 24) header[byte_index] <= completed_byte;
+                if (byte_index < 40) header[byte_index] <= completed_byte;
                 if (byte_index == 1) begin
-                  frame_type_known <= (completed_byte == 8'h31 || completed_byte == 8'h32);
-                  active_ack <= completed_byte == 8'h32;
-                  if (completed_byte != 8'h31 && completed_byte != 8'h32) malformed <= 1'b1;
+                  frame_type_known <=
+                      (header[0] == 8'hA5 &&
+                       (completed_byte == 8'h31 || completed_byte == 8'h35)) ||
+                      (header[0] == 8'hAD &&
+                       (completed_byte == 8'h32 || completed_byte == 8'h35));
+                  active_ack <= completed_byte == 8'h32 ||
+                      (completed_byte == 8'h35 && header[0] == 8'hAD);
+                  active_vnext <= completed_byte == 8'h35;
+                  if (!((header[0] == 8'hA5 &&
+                         (completed_byte == 8'h31 || completed_byte == 8'h35)) ||
+                        (header[0] == 8'hAD &&
+                         (completed_byte == 8'h32 || completed_byte == 8'h35))))
+                    malformed <= 1'b1;
                 end
-                if ((!active_ack && byte_index < 22) ||
-                    (active_ack && byte_index < 18) ||
+                if ((!active_ack && byte_index <
+                     (active_vnext ? 38 : 22)) ||
+                    (active_ack && byte_index <
+                     (active_vnext ? 20 : 18)) ||
                     (!frame_type_known && byte_index < 2))
                   header_crc <= crc16_next_byte(completed_byte, header_crc);
                 if (!active_ack && byte_index == 11) begin
@@ -218,18 +256,27 @@ module p9_4ppm_frame_rx #(
                   if ({completed_byte, header[10]} > MAX_PAYLOAD_BYTES)
                     malformed <= 1'b1;
                 end
-                if (!active_ack && byte_index >= 24 &&
+                if (!active_ack && byte_index >=
+                    (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES) &&
                     data_payload_index < observed_payload_length) begin
                   payload_write_pulse_o <= 1'b1;
                   payload_write_index_o <= data_payload_index[7:0];
                   payload_write_data_o <= completed_byte;
                   payload_crc <= crc32_next_byte(completed_byte, payload_crc);
                 end else if (!active_ack && data_trailer_index < 4 &&
-                             byte_index >= 24 + observed_payload_length) begin
+                             byte_index >=
+                             (active_vnext ? VNEXT_DATA_HEADER_BYTES :
+                                             DATA_HEADER_BYTES) +
+                             observed_payload_length) begin
                   seen_payload_crc[8*data_trailer_index +: 8] <= completed_byte;
                 end
-                if ((active_ack && byte_index == 19) ||
-                    (!active_ack && byte_index == 27 + observed_payload_length)) begin
+                if ((active_ack && byte_index ==
+                     (active_vnext ? VNEXT_ACK_HEADER_BYTES-1 :
+                                     ACK_HEADER_BYTES-1)) ||
+                    (!active_ack && byte_index ==
+                     (active_vnext ? VNEXT_DATA_HEADER_BYTES+3 :
+                                     DATA_HEADER_BYTES+3) +
+                     observed_payload_length)) begin
                   state <= RX_VALIDATE;
                 end else begin
                   byte_index <= byte_index + 1'b1;
@@ -241,12 +288,19 @@ module p9_4ppm_frame_rx #(
           end
           RX_VALIDATE: begin
             if (active_ack) begin
-              header_valid = header[0] == 8'hAD && header[1] == 8'h32 &&
-                  {header[19], header[18]} == header_crc && header[10] == 8'd32;
+              header_valid = header[0] == 8'hAD &&
+                  header[1] == (active_vnext ? 8'h35 : 8'h32) &&
+                  (active_vnext ?
+                   ({header[21], header[20]} == header_crc) :
+                   ({header[19], header[18]} == header_crc)) &&
+                  header[10] == 8'd32;
               payload_valid = 1'b1;
             end else begin
-              header_valid = header[0] == 8'hA5 && header[1] == 8'h31 &&
-                  {header[23], header[22]} == header_crc &&
+              header_valid = header[0] == 8'hA5 &&
+                  header[1] == (active_vnext ? 8'h35 : 8'h31) &&
+                  (active_vnext ?
+                   ({header[39], header[38]} == header_crc) :
+                   ({header[23], header[22]} == header_crc)) &&
                   observed_payload_length <= MAX_PAYLOAD_BYTES;
               payload_valid = seen_payload_crc == ~payload_crc;
             end
@@ -262,6 +316,7 @@ module p9_4ppm_frame_rx #(
             end
             session_epoch_o <= {header[5], header[4], header[3], header[2]};
             path_epoch_o <= {header[7], header[6]};
+            vnext_o <= active_vnext;
             if (active_ack) begin
               sequence_o <= 16'd0;
               payload_length_o <= 16'd0;
@@ -280,8 +335,15 @@ module p9_4ppm_frame_rx #(
               fragment_offset_o <= 32'd0;
               ack_base_o <= {header[9], header[8]};
               direction_o <= header[11][0];
+              role_epoch_o <= active_vnext ? {header[19], header[18]} : 16'd0;
               ack_credit_o <= {header[13], header[12]};
               ack_bitmap_o <= {header[17], header[16], header[15], header[14]};
+              piggyback_ack_valid_o <= 1'b0;
+              piggyback_ack_direction_o <= 1'b0;
+              piggyback_ack_session_o <= 32'd0;
+              piggyback_ack_base_o <= 16'd0;
+              piggyback_ack_bitmap_o <= 32'd0;
+              piggyback_ack_credit_o <= 16'd0;
             end else begin
               sequence_o <= {header[9], header[8]};
               payload_length_o <= {header[11], header[10]};
@@ -298,7 +360,18 @@ module p9_4ppm_frame_rx #(
               ack_base_o <= 16'd0;
               ack_bitmap_o <= 32'd0;
               ack_credit_o <= 16'd0;
-              direction_o <= 1'b0;
+              direction_o <= active_vnext ? header[22][0] : 1'b0;
+              role_epoch_o <= active_vnext ? {header[24], header[23]} : 16'd0;
+              piggyback_ack_valid_o <= active_vnext && header[22][1];
+              piggyback_ack_direction_o <= active_vnext && header[22][2];
+              piggyback_ack_session_o <= active_vnext ?
+                  {header[28], header[27], header[26], header[25]} : 32'd0;
+              piggyback_ack_base_o <= active_vnext ?
+                  {header[30], header[29]} : 16'd0;
+              piggyback_ack_bitmap_o <= active_vnext ?
+                  {header[34], header[33], header[32], header[31]} : 32'd0;
+              piggyback_ack_credit_o <= active_vnext ?
+                  {header[36], header[35]} : 16'd0;
             end
             state <= RX_WAIT;
           end

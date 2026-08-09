@@ -144,7 +144,7 @@
       "xdc_path": "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc"
     }
   ],
-  "current_program_stage": "P11_OFFLINE_PREPARATION",
+  "current_program_stage": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
   "current_run_hardware_authorization": false,
   "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
   "final_product_status": "PENDING_HW",
@@ -839,6 +839,43 @@
     "status": "CONSUMED_AFTER_P10_4_RESUME_PASS_WITH_NONBLOCKING_LIMITS"
   },
   "p10_4_status": "PASS_WITH_NONBLOCKING_LIMITS",
+  "p10_5_dual_direction": {
+    "active_lane_mask": "0xF",
+    "automation_only": true,
+    "base_commit": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
+    "base_tag": "p10.4-autonomous-4lane-hardening-closed",
+    "board_binding": {
+      "fixed": "AX7020-F/JTAG:210249855178",
+      "rotating": "AX7020-R/JTAG:210512180081"
+    },
+    "current_run_hardware_authorization": false,
+    "f_to_r_lane_mask": "0x3",
+    "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+    "hardware_actions_executed": false,
+    "maximum_lane_mask": "0xF",
+    "maximum_single_formal_run_seconds": 1800,
+    "minimum_interstage_cooldown_ratio": 0.5,
+    "module_binding": {
+      "F0": "A0019",
+      "F1": "B0012",
+      "F2": "B0019",
+      "F3": "B0020",
+      "R0": "A0010",
+      "R1": "A0017",
+      "R2": "B0023",
+      "R3": "B0025"
+    },
+    "network_allowed": false,
+    "operating_mode": "SPLIT_LANE_SIMULTANEOUS_BIDIRECTIONAL",
+    "p10_4_two_plus_two_failure_preserved": true,
+    "p11_status": "NOT_STARTED",
+    "r_to_f_lane_mask": "0xC",
+    "standing_authorization": "GRANTED_BY_SUBMISSION_OF_P10_5_GOAL_PENDING_IMMUTABLE_ARTIFACT_MATERIALIZATION",
+    "status": "IN_PROGRESS",
+    "user_hold_points": 0,
+    "wiring_changed": false
+  },
+  "p10_5_status": "IN_PROGRESS",
   "p10_acceptance": {
     "application_goodput_f_to_r_bps": 5767.861069534447,
     "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",
@@ -1217,6 +1254,7 @@
     "P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS": "PASS",
     "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE": "PASS",
     "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT": "PASS_WITH_NONBLOCKING_LIMITS",
+    "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE": "IN_PROGRESS",
     "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
     "P1_OFFLINE_HARDENING": "PASS",
     "P2_SIMULATION_BASELINE": "PASS",
@@ -1232,7 +1270,7 @@
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
-  "state_revision": "P10-4-COMPOSITE-PASS-WITH-NONBLOCKING-LIMITS-B0019",
+  "state_revision": "P10-5-DUAL-DIRECTION-IN-PROGRESS",
   "stationary_4lane_hardware": "PASS",
   "two_lane_baseline_status": "FROZEN_ACCEPTED",
   "two_lane_speed_stability": "PASS_STATIONARY_AX7020_2LANE_HALF_DUPLEX",

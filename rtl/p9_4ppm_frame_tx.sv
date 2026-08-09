@@ -11,7 +11,8 @@ module p9_4ppm_frame_tx #(
   // LANE_COUNT=2 is bit-for-bit compatible with the frozen P10.1R wire
   // format. Four- and eight-lane builds consume only formerly source-ID bits;
   // endpoint IDs 1 and 2 remain exactly representable.
-  parameter int LANE_COUNT = 2
+  parameter int LANE_COUNT = 2,
+  parameter bit P10_5_VNEXT_CAPABLE = 1'b0
 ) (
   input  logic                          clk,
   input  logic                          rst_n,
@@ -35,6 +36,18 @@ module p9_4ppm_frame_tx #(
   input  logic [31:0]                   ack_bitmap_i,
   input  logic [15:0]                   ack_credit_i,
   input  logic                          direction_i,
+  // P10.5 vNext extends both DATA and control-only ACK headers.  Direction,
+  // ROLE_EPOCH, and an optional reverse-direction cumulative ACK are covered
+  // by the existing header CRC.  Legacy callers leave vnext_i deasserted and
+  // retain the frozen P9/P10.4 byte stream exactly.
+  input  logic                          vnext_i,
+  input  logic [15:0]                   role_epoch_i,
+  input  logic                          piggyback_ack_valid_i,
+  input  logic                          piggyback_ack_direction_i,
+  input  logic [31:0]                   piggyback_ack_session_i,
+  input  logic [15:0]                   piggyback_ack_base_i,
+  input  logic [31:0]                   piggyback_ack_bitmap_i,
+  input  logic [15:0]                   piggyback_ack_credit_i,
   input  logic [PAYLOAD_ADDR_WIDTH-1:0] payload_base_i,
   output logic [PAYLOAD_ADDR_WIDTH-1:0] payload_read_address_o,
   input  logic [7:0]                    payload_read_data_i,
@@ -46,6 +59,8 @@ module p9_4ppm_frame_tx #(
 );
   localparam int DATA_HEADER_BYTES = 24;
   localparam int ACK_HEADER_BYTES = 20;
+  localparam int VNEXT_DATA_HEADER_BYTES = 40;
+  localparam int VNEXT_ACK_HEADER_BYTES = 22;
   localparam int PREAMBLE_SYMBOLS = 16;
 
   initial begin
@@ -68,6 +83,14 @@ module p9_4ppm_frame_tx #(
   logic [31:0] active_ack_bitmap;
   logic [15:0] active_ack_credit;
   logic active_direction;
+  logic active_vnext;
+  logic [15:0] active_role_epoch;
+  logic active_piggyback_ack_valid;
+  logic active_piggyback_ack_direction;
+  logic [31:0] active_piggyback_ack_session;
+  logic [15:0] active_piggyback_ack_base;
+  logic [31:0] active_piggyback_ack_bitmap;
+  logic [15:0] active_piggyback_ack_credit;
   logic [PAYLOAD_ADDR_WIDTH-1:0] active_payload_base;
   logic [7:0] active_chip_cycles;
   logic [7:0] active_pulse_cycles;
@@ -81,7 +104,7 @@ module p9_4ppm_frame_tx #(
   logic [15:0] header_crc_data;
   logic [15:0] header_crc_ack;
   logic preparing;
-  logic [4:0] header_crc_index;
+  logic [5:0] header_crc_index;
   logic [15:0] header_crc_work;
   logic [15:0] header_crc_next;
   logic [7:0] header_crc_input;
@@ -110,7 +133,7 @@ module p9_4ppm_frame_tx #(
     begin
       unique case (index)
         0: data_header_byte_no_crc = 8'hA5;
-        1: data_header_byte_no_crc = 8'h31;
+        1: data_header_byte_no_crc = active_vnext ? 8'h35 : 8'h31;
         2: data_header_byte_no_crc = active_session[7:0];
         3: data_header_byte_no_crc = active_session[15:8];
         4: data_header_byte_no_crc = active_session[23:16];
@@ -135,6 +158,24 @@ module p9_4ppm_frame_tx #(
         19: data_header_byte_no_crc = active_fragment_offset[15:8];
         20: data_header_byte_no_crc = active_fragment_offset[23:16];
         21: data_header_byte_no_crc = active_fragment_offset[31:24];
+        22: data_header_byte_no_crc = active_vnext ?
+            {5'd0, active_piggyback_ack_direction,
+             active_piggyback_ack_valid, active_direction} : 8'h00;
+        23: data_header_byte_no_crc = active_vnext ? active_role_epoch[7:0] : 8'h00;
+        24: data_header_byte_no_crc = active_vnext ? active_role_epoch[15:8] : 8'h00;
+        25: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_session[7:0] : 8'h00;
+        26: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_session[15:8] : 8'h00;
+        27: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_session[23:16] : 8'h00;
+        28: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_session[31:24] : 8'h00;
+        29: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_base[7:0] : 8'h00;
+        30: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_base[15:8] : 8'h00;
+        31: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_bitmap[7:0] : 8'h00;
+        32: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_bitmap[15:8] : 8'h00;
+        33: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_bitmap[23:16] : 8'h00;
+        34: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_bitmap[31:24] : 8'h00;
+        35: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_credit[7:0] : 8'h00;
+        36: data_header_byte_no_crc = active_vnext ? active_piggyback_ack_credit[15:8] : 8'h00;
+        37: data_header_byte_no_crc = active_vnext ? 8'd32 : 8'h00;
         default: data_header_byte_no_crc = 8'h00;
       endcase
     end
@@ -144,7 +185,7 @@ module p9_4ppm_frame_tx #(
     begin
       unique case (index)
         0: ack_header_byte_no_crc = 8'hAD;
-        1: ack_header_byte_no_crc = 8'h32;
+        1: ack_header_byte_no_crc = active_vnext ? 8'h35 : 8'h32;
         2: ack_header_byte_no_crc = active_session[7:0];
         3: ack_header_byte_no_crc = active_session[15:8];
         4: ack_header_byte_no_crc = active_session[23:16];
@@ -168,6 +209,8 @@ module p9_4ppm_frame_tx #(
         15: ack_header_byte_no_crc = active_ack_bitmap[15:8];
         16: ack_header_byte_no_crc = active_ack_bitmap[23:16];
         17: ack_header_byte_no_crc = active_ack_bitmap[31:24];
+        18: ack_header_byte_no_crc = active_vnext ? active_role_epoch[7:0] : 8'h00;
+        19: ack_header_byte_no_crc = active_vnext ? active_role_epoch[15:8] : 8'h00;
         default: ack_header_byte_no_crc = 8'h00;
       endcase
     end
@@ -177,17 +220,26 @@ module p9_4ppm_frame_tx #(
     integer data_payload_index;
     integer data_trailer_index;
     begin
-      data_payload_index = index - DATA_HEADER_BYTES;
-      data_trailer_index = index - DATA_HEADER_BYTES - active_payload_length;
+      data_payload_index = index -
+          (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES);
+      data_trailer_index = index -
+          (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES) -
+          active_payload_length;
       if (active_ack) begin
-        if (index < 18) frame_byte = ack_header_byte_no_crc(index);
-        else if (index == 18) frame_byte = header_crc_ack[7:0];
-        else if (index == 19) frame_byte = header_crc_ack[15:8];
+        if (index < (active_vnext ? 20 : 18))
+          frame_byte = ack_header_byte_no_crc(index);
+        else if (index == (active_vnext ? 20 : 18))
+          frame_byte = header_crc_ack[7:0];
+        else if (index == (active_vnext ? 21 : 19))
+          frame_byte = header_crc_ack[15:8];
         else frame_byte = 8'h00;
       end else begin
-        if (index < 22) frame_byte = data_header_byte_no_crc(index);
-        else if (index == 22) frame_byte = header_crc_data[7:0];
-        else if (index == 23) frame_byte = header_crc_data[15:8];
+        if (index < (active_vnext ? 38 : 22))
+          frame_byte = data_header_byte_no_crc(index);
+        else if (index == (active_vnext ? 38 : 22))
+          frame_byte = header_crc_data[7:0];
+        else if (index == (active_vnext ? 39 : 23))
+          frame_byte = header_crc_data[15:8];
         else if (data_payload_index >= 0 && data_payload_index < active_payload_length)
           frame_byte = payload_byte_q;
         else begin
@@ -217,10 +269,15 @@ module p9_4ppm_frame_tx #(
     end else begin
       frame_byte_index = (symbol_index - PREAMBLE_SYMBOLS) >> 2;
       symbol_in_byte = (symbol_index - PREAMBLE_SYMBOLS) & 2'b11;
-      payload_offset = (frame_byte_index >= DATA_HEADER_BYTES) ?
-          frame_byte_index - DATA_HEADER_BYTES : 16'd0;
-      if (!active_ack && frame_byte_index >= DATA_HEADER_BYTES &&
-          frame_byte_index < DATA_HEADER_BYTES + active_payload_length &&
+      payload_offset = (frame_byte_index >=
+          (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES)) ?
+          frame_byte_index -
+          (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES) : 16'd0;
+      if (!active_ack && frame_byte_index >=
+          (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES) &&
+          frame_byte_index <
+          (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES) +
+          active_payload_length &&
           payload_offset + 1'b1 < active_payload_length)
         payload_read_address_o = active_payload_base + payload_offset + 1'b1;
       else
@@ -277,6 +334,14 @@ module p9_4ppm_frame_tx #(
       active_ack_bitmap <= 32'd0;
       active_ack_credit <= 16'd0;
       active_direction <= 1'b0;
+      active_vnext <= 1'b0;
+      active_role_epoch <= 16'd0;
+      active_piggyback_ack_valid <= 1'b0;
+      active_piggyback_ack_direction <= 1'b0;
+      active_piggyback_ack_session <= 32'd0;
+      active_piggyback_ack_base <= 16'd0;
+      active_piggyback_ack_bitmap <= 32'd0;
+      active_piggyback_ack_credit <= 16'd0;
       active_payload_base <= '0;
       payload_byte_q <= 8'd0;
       header_crc_data <= 16'd0;
@@ -298,7 +363,9 @@ module p9_4ppm_frame_tx #(
         symbol_index <= 16'd0;
         symbol_cycle <= 16'd0;
       end else if (preparing) begin
-        if (header_crc_index == (active_ack ? 5'd17 : 5'd21)) begin
+        if (header_crc_index == (active_ack ?
+            (active_vnext ? 6'd19 : 6'd17) :
+            (active_vnext ? 6'd37 : 6'd21))) begin
           if (active_ack) header_crc_ack <= header_crc_next;
           else header_crc_data <= header_crc_next;
           preparing <= 1'b0;
@@ -330,6 +397,14 @@ module p9_4ppm_frame_tx #(
           active_ack_bitmap <= ack_bitmap_i;
           active_ack_credit <= ack_credit_i;
           active_direction <= direction_i;
+          active_vnext <= P10_5_VNEXT_CAPABLE ? vnext_i : 1'b0;
+          active_role_epoch <= role_epoch_i;
+          active_piggyback_ack_valid <= piggyback_ack_valid_i;
+          active_piggyback_ack_direction <= piggyback_ack_direction_i;
+          active_piggyback_ack_session <= piggyback_ack_session_i;
+          active_piggyback_ack_base <= piggyback_ack_base_i;
+          active_piggyback_ack_bitmap <= piggyback_ack_bitmap_i;
+          active_piggyback_ack_credit <= piggyback_ack_credit_i;
           active_payload_base <= payload_base_i;
           unique case (rate_select_i)
             2'd0: begin active_chip_cycles <= 8'd32; active_pulse_cycles <= 8'd8; end
@@ -341,8 +416,12 @@ module p9_4ppm_frame_tx #(
             default: begin active_chip_cycles <= 8'd8; active_pulse_cycles <= 8'd8; end
           endcase
           total_symbols <= PREAMBLE_SYMBOLS +
-              (frame_is_ack_i ? ACK_HEADER_BYTES*4 :
-               (DATA_HEADER_BYTES + ((payload_length_i > MAX_PAYLOAD_BYTES) ?
+              (frame_is_ack_i ?
+               ((P10_5_VNEXT_CAPABLE && vnext_i) ?
+                VNEXT_ACK_HEADER_BYTES : ACK_HEADER_BYTES)*4 :
+               (((P10_5_VNEXT_CAPABLE && vnext_i) ?
+                 VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES) +
+                ((payload_length_i > MAX_PAYLOAD_BYTES) ?
                 MAX_PAYLOAD_BYTES : payload_length_i) + 4)*4);
           symbol_index <= 16'd0;
           symbol_cycle <= 16'd0;
@@ -350,12 +429,17 @@ module p9_4ppm_frame_tx #(
       end else if (symbol_cycle == active_chip_cycles*4 - 1'b1) begin
         symbol_cycle <= 16'd0;
         if (!active_ack &&
-            symbol_index == PREAMBLE_SYMBOLS + DATA_HEADER_BYTES*4 - 1)
+            symbol_index == PREAMBLE_SYMBOLS +
+            (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES)*4 - 1)
           payload_byte_q <= payload_read_data_i;
         else if (!active_ack &&
-                 symbol_index >= PREAMBLE_SYMBOLS + DATA_HEADER_BYTES*4 &&
-                 frame_byte_index >= DATA_HEADER_BYTES &&
-                 frame_byte_index < DATA_HEADER_BYTES + active_payload_length &&
+                 symbol_index >= PREAMBLE_SYMBOLS +
+                 (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES)*4 &&
+                 frame_byte_index >=
+                 (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES) &&
+                 frame_byte_index <
+                 (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES) +
+                 active_payload_length &&
                  symbol_in_byte == 2'd3 &&
                  payload_offset + 1'b1 < active_payload_length)
           payload_byte_q <= payload_read_data_i;
@@ -364,7 +448,10 @@ module p9_4ppm_frame_tx #(
           done_pulse_o <= 1'b1;
           frame_count_o <= frame_count_o + 1'b1;
           byte_count_o <= byte_count_o +
-              (active_ack ? ACK_HEADER_BYTES : DATA_HEADER_BYTES + active_payload_length + 4);
+              (active_ack ?
+               (active_vnext ? VNEXT_ACK_HEADER_BYTES : ACK_HEADER_BYTES) :
+               (active_vnext ? VNEXT_DATA_HEADER_BYTES : DATA_HEADER_BYTES) +
+               active_payload_length + 4);
         end else begin
           symbol_index <= symbol_index + 1'b1;
         end

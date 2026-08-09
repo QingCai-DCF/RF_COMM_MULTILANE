@@ -47,6 +47,9 @@ build/
 !artifacts/p10_3_fault_forensics/**/*.bit
 !artifacts/p10_3_fault_forensics/**/*.xsa
 !artifacts/p10_3_fault_forensics/**/*.elf
+!artifacts/p10_5/**/*.bit
+!artifacts/p10_5/**/*.xsa
+!artifacts/p10_5/**/*.elf
 !evidence/generated/p10_2_raw/**/*.log
 !evidence/generated/p10_2_software/**/*.log
 !evidence/generated/p10_2_software/**/*.elf
@@ -59,6 +62,11 @@ build/
 !evidence/generated/p10_3_fault_forensics_offline_raw/**/*.log
 !evidence/generated/p10_3_fault_forensics_freeze_raw/**/*.log
 !evidence/generated/vitis/p10_3_fault_forensics_runtime/**/*.log
+!evidence/generated/p10_5_xsim/raw/**/*.log
+!evidence/generated/vivado/p10_5_4lane/**/*.log
+!evidence/generated/vivado/p10_5_4lane/**/*.xsa
+!evidence/generated/vitis/p10_5_4lane_runtime/**/*.log
+!evidence/hardware/p10_5/**/*.log
 !evidence/hardware/p10_3/**/*.log
 /evidence/generated/vitis/p10_ax7020_runtime/p10_crypto_test.exe
 /evidence/generated/vitis/p10_1_ax7020_pl_activity_led_runtime/p10_crypto_test.exe
@@ -98,6 +106,15 @@ evidence/generated/hw_preflight/
 /evidence/generated/p8d_raw/airtime_quick.*
 /evidence/generated/p8d_raw/rfap_probe.json
 /evidence/generated/p8d_raw/rfap_quick.json
+
+# P10.5 iterative compile/simulation probes.  The complete accepted suite is
+# retained under evidence/generated/p10_5_xsim; these named directories are
+# local development scratch only.
+/evidence/generated/p10_5_compile_smoke*/
+/evidence/generated/p10_5_role_matrix_smoke/
+/evidence/generated/p10_5_telemetry_smoke_*/
+/evidence/generated/p10_5_xsim_focused_*/
+/evidence/generated/p10_5_xsim_smoke_*/
 
 # P8E implementation work products are content-addressed in the accepted raw
 # artifact manifest.  Retain reports and logs, but do not version Vivado/XSim

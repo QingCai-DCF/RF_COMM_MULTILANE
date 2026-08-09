@@ -1,0 +1,39 @@
+{
+  "current_run_hardware_authorization": false,
+  "direction_abort_isolation": "PASS",
+  "directions": [
+    "F_TO_R",
+    "R_TO_F"
+  ],
+  "duplicate_commit": 0,
+  "errors": [],
+  "generated_at_utc": "2026-08-09T07:57:58.494602+00:00",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "hardware_actions_executed": false,
+  "network_used": false,
+  "outstanding": 32,
+  "protocol_model": {
+    "allocations": 30994,
+    "attempts": 40248,
+    "commits": 11401,
+    "direction_aborts": 4047,
+    "drops": 2183,
+    "duplicates": 0,
+    "events": 100000,
+    "fallback": 2535,
+    "max_ack_age": 64,
+    "piggyback": 6481,
+    "reorders": 0,
+    "retries": 28839,
+    "stale_role_rejects": 244,
+    "stale_session_rejects": 223
+  },
+  "receiver_credit": 32,
+  "sack_window": 32,
+  "schema_version": 1,
+  "sequence_width": 16,
+  "source_commit": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
+  "stale_role_session_commit": 0,
+  "status": "PASS",
+  "test_id": "P10_5-L2-OFFLINE"
+}

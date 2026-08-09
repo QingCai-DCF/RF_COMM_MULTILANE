@@ -576,6 +576,7 @@ static int p10_1_prepare_slot(
     volatile p10_1_runtime_result_t *result,
     p10_1_runtime_buffer_slot_t *slot,
     uint32_t slot_index, uint32_t ordinal, uint32_t local_tx,
+    uint32_t local_rx, uint32_t hash_on_prepare,
     p9_sha256_context_t *input_sha_context, uint32_t *input_crc_state,
     uint64_t *prepare_ticks) {
   uint64_t stream_offset = (uint64_t)ordinal * result->object_bytes;
@@ -585,7 +586,8 @@ static int p10_1_prepare_slot(
   uint64_t phase_start;
   int status;
 
-  if (slot->valid != 0U || stream_offset >= result->total_bytes ||
+  if ((local_tx | local_rx) == 0U || slot->valid != 0U ||
+      stream_offset >= result->total_bytes ||
       current == 0U)
     return P10_1_RUNTIME_STATUS_BAD_ARGUMENT;
 
@@ -604,24 +606,29 @@ static int p10_1_prepare_slot(
   p10_1_fill_payload(slot->tx_buffer, current, result->payload_pattern,
                      result->first_object_id, ordinal);
   *prepare_ticks += p9_time_now() - phase_start;
-  *input_crc_state =
-      p9_crc32_update(*input_crc_state, slot->tx_buffer, current);
-  p9_sha256_update(input_sha_context, slot->tx_buffer, current);
+  if (hash_on_prepare != 0U) {
+    *input_crc_state =
+        p9_crc32_update(*input_crc_state, slot->tx_buffer, current);
+    p9_sha256_update(input_sha_context, slot->tx_buffer, current);
+  }
 
   if (local_tx != 0U) {
     p9_cache_flush((UINTPTR)slot->tx_buffer, current);
     status = p10_1_submit_chain(
         1U, (UINTPTR)slot->tx_buffer, current, result->descriptor_bytes,
         slot->token_base, result);
-  } else {
+    if (status != P10_1_RUNTIME_STATUS_OK)
+      return status;
+  }
+  if (local_rx != 0U) {
     memset(slot->rx_buffer, 0x5a ^ (uint8_t)ordinal, current);
     p9_cache_invalidate((UINTPTR)slot->rx_buffer, current);
     status = p10_1_submit_chain(
         0U, (UINTPTR)slot->rx_buffer, current, result->descriptor_bytes,
         slot->token_base, result);
+    if (status != P10_1_RUNTIME_STATUS_OK)
+      return status;
   }
-  if (status != P10_1_RUNTIME_STATUS_OK)
-    return status;
   slot->valid = 1U;
   result->objects_submitted++;
   return P10_1_RUNTIME_STATUS_OK;
@@ -633,6 +640,34 @@ static int p10_1_validate_stream_args(
   uint32_t total = mailbox->object_size;
   uint32_t object_bytes = mailbox->raw_target;
   uint32_t descriptor_bytes = mailbox->raw_spacing_cycles;
+  uint32_t dual_mode =
+      mailbox->command == P9_COMMAND_P10_5_AUTONOMOUS_DUAL_STREAM;
+  uint32_t duration_mode = dual_mode != 0U && mailbox->idle_duration_ms != 0U;
+  uint32_t direction_fault_test = mailbox->command_flags &
+      P10_5_RUNTIME_FLAG_DIRECTION_FAULT_TEST;
+  uint32_t stale_role_epoch_test = mailbox->command_flags &
+      P10_5_RUNTIME_FLAG_STALE_ROLE_EPOCH_ONCE;
+  uint32_t direction_fault_kind_count =
+      (mailbox->drop_data_count != 0U) +
+      (mailbox->drop_ack_count != 0U) +
+      ((mailbox->command_flags &
+        P10_5_RUNTIME_FLAG_ABORT_TARGET_DIRECTION) != 0U) +
+      ((mailbox->command_flags &
+        P10_5_RUNTIME_FLAG_DMA_TX_BACKPRESSURE) != 0U);
+  uint32_t active_mask = mailbox->lane_mask & P10_LANE_MASK;
+  uint32_t f2r_mask =
+      (mailbox->lane_mask >> P10_5_F2R_MASK_SHIFT) & P10_LANE_MASK;
+  uint32_t r2f_mask =
+      (mailbox->lane_mask >> P10_5_R2F_MASK_SHIFT) & P10_LANE_MASK;
+  uint32_t lane_encoding_valid = dual_mode != 0U ?
+      ((mailbox->lane_mask & ~UINT32_C(0x000f0f0f)) == 0U &&
+       active_mask != 0U && f2r_mask != 0U && r2f_mask != 0U &&
+       (f2r_mask & r2f_mask) == 0U &&
+       (f2r_mask | r2f_mask) == active_mask) :
+      (mailbox->lane_mask != 0U &&
+       (mailbox->lane_mask & ~P10_LANE_MASK) == 0U);
+  uint32_t stream_limit = dual_mode != 0U ?
+      P10_5_MAX_STREAM_BYTES : P10_1_RUNTIME_MAX_STREAM_BYTES;
   uint32_t descriptor_count;
   uint32_t configured_buffer_count;
   uint32_t active_buffer_count;
@@ -653,14 +688,15 @@ static int p10_1_validate_stream_args(
        P10_1_RUNTIME_FLAG_EXPECT_PS_RESET_RECEIVER);
   uint32_t recovery_vector_flags =
       abort_flags | reset_flags | injected_fault_flags;
-  if (mailbox->lane_mask == 0U ||
-      (mailbox->lane_mask & ~P10_LANE_MASK) != 0U ||
-      mailbox->direction > 1U || mailbox->rate_select > 2U ||
+  if (lane_encoding_valid == 0U ||
+      (dual_mode != 0U ? mailbox->direction != 2U :
+                        mailbox->direction > 1U) ||
+      mailbox->rate_select > 2U ||
       (mailbox->ring_depth != 8U && mailbox->ring_depth != 16U &&
        mailbox->ring_depth != 32U) ||
       mailbox->cache_mode != 1U ||
       total == 0U || object_bytes == 0U ||
-      total > P10_1_RUNTIME_MAX_STREAM_BYTES ||
+      total > stream_limit ||
       object_bytes > total ||
       object_bytes > P10_1_RUNTIME_MAX_OBJECT_BYTES ||
       descriptor_bytes == 0U || descriptor_bytes > object_bytes ||
@@ -679,12 +715,49 @@ static int p10_1_validate_stream_args(
        (recovery_vector_flags & (recovery_vector_flags - 1U)) != 0U) ||
       (recovery_vector_flags != 0U && service_reset_flags != 0U))
     return P10_1_RUNTIME_STATUS_BAD_ARGUMENT;
+  if (dual_mode != 0U &&
+      (recovery_vector_flags != 0U || service_reset_flags != 0U ||
+       ((mailbox->drop_data_count != 0U ||
+         mailbox->drop_ack_count != 0U) && direction_fault_test == 0U) ||
+       (mailbox->lane_unavailable_mask & ~active_mask) != 0U ||
+       mailbox->idle_duration_ms > P10_1_RUNTIME_MAX_TIMEOUT_MS ||
+       (direction_fault_test != 0U &&
+        (duration_mode != 0U || total != object_bytes ||
+         object_bytes != P10_5_INTERNAL_OBJECT_BYTES ||
+         direction_fault_kind_count != 1U ||
+         mailbox->drop_data_count > 1U ||
+         mailbox->drop_ack_count > 1U)) ||
+       (direction_fault_test == 0U &&
+         (mailbox->command_flags &
+          (P10_5_RUNTIME_FLAG_FAULT_TARGET_R2F |
+           P10_5_RUNTIME_FLAG_ABORT_TARGET_DIRECTION |
+           P10_5_RUNTIME_FLAG_DMA_TX_BACKPRESSURE)) != 0U) ||
+        (stale_role_epoch_test != 0U &&
+         mailbox->protocol_fault_flags != UINT32_C(0x00001000)) ||
+        (stale_role_epoch_test == 0U &&
+         (mailbox->protocol_fault_flags & UINT32_C(0x00001000)) != 0U) ||
+       (duration_mode != 0U &&
+        ((uint64_t)total <
+         (uint64_t)mailbox->idle_duration_ms * UINT64_C(1000) ||
+         mailbox->timeout_ms < mailbox->idle_duration_ms))))
+    return P10_1_RUNTIME_STATUS_BAD_ARGUMENT;
   descriptor_count = p10_1_descriptor_count(object_bytes,
                                              descriptor_bytes);
   if (descriptor_count == 0U || descriptor_count > mailbox->ring_depth)
     return P10_1_RUNTIME_STATUS_BAD_ARGUMENT;
-  result->lane_mask = mailbox->lane_mask;
-  result->direction = mailbox->direction;
+  result->lane_mask = active_mask;
+  result->direction = dual_mode != 0U ? 2U : mailbox->direction;
+  result->p10_5_dual_direction_mode = dual_mode;
+  result->p10_5_active_mask = dual_mode != 0U ? active_mask : 0U;
+  result->p10_5_f2r_mask = dual_mode != 0U ? f2r_mask : 0U;
+  result->p10_5_r2f_mask = dual_mode != 0U ? r2f_mask : 0U;
+  result->p10_5_local_tx_mask = dual_mode != 0U ?
+      (P10_ENDPOINT_ROLE == 1 ? f2r_mask : r2f_mask) : 0U;
+  result->p10_5_local_rx_mask = dual_mode != 0U ?
+      (P10_ENDPOINT_ROLE == 1 ? r2f_mask : f2r_mask) : 0U;
+  result->p10_5_duration_target_ms = duration_mode != 0U ?
+      mailbox->idle_duration_ms : 0U;
+  result->p10_5_stream_ceiling_bytes = duration_mode != 0U ? total : 0U;
   result->rate_select = mailbox->rate_select;
   result->total_bytes = total;
   result->object_bytes = object_bytes;
@@ -697,10 +770,20 @@ static int p10_1_validate_stream_args(
   configured_buffer_count = mailbox->stale_token == 0U ?
       4U : mailbox->stale_token;
   result->buffer_count = configured_buffer_count;
-  result->ack_threshold = mailbox->drop_data_count == 0U ?
-      32U : mailbox->drop_data_count;
-  result->outstanding_frames = mailbox->drop_ack_count == 0U ?
-      32U : mailbox->drop_ack_count;
+  result->ack_threshold = dual_mode != 0U ? 32U :
+      (mailbox->drop_data_count == 0U ? 32U : mailbox->drop_data_count);
+  result->outstanding_frames = dual_mode != 0U ? 32U :
+      (mailbox->drop_ack_count == 0U ? 32U : mailbox->drop_ack_count);
+  if (direction_fault_test != 0U) {
+    result->p10_5_fault_target_direction =
+        (mailbox->command_flags &
+         P10_5_RUNTIME_FLAG_FAULT_TARGET_R2F) != 0U;
+    result->p10_5_fault_test_kind =
+        mailbox->drop_data_count != 0U ? 1U :
+        (mailbox->drop_ack_count != 0U ? 2U :
+         ((mailbox->command_flags &
+           P10_5_RUNTIME_FLAG_ABORT_TARGET_DIRECTION) != 0U ? 3U : 4U));
+  }
   result->timeout_ms = mailbox->timeout_ms;
   result->session_epoch = mailbox->session_epoch;
   result->path_epoch = mailbox->path_epoch;
@@ -721,6 +804,69 @@ static int p10_1_validate_stream_args(
           P9_MAX_OBJECT_BYTES ||
       descriptor_count * active_buffer_count > result->ring_depth)
     return P10_1_RUNTIME_STATUS_BAD_ARGUMENT;
+  return P10_1_RUNTIME_STATUS_OK;
+}
+
+static int p10_1_snapshot_p10_5(
+    volatile p10_1_runtime_result_t *result, uint32_t require_clean) {
+  p10_5_direction_snapshot_t snapshot;
+  uint32_t last_object_bytes;
+  int status;
+  if (result->p10_5_dual_direction_mode == 0U)
+    return P10_1_RUNTIME_STATUS_OK;
+  status = p10_5_snapshot_direction(&snapshot);
+  if (status != P9_RUNTIME_OK)
+    return P10_1_RUNTIME_STATUS_PL_OBJECT;
+  result->p10_5_role_epoch = snapshot.role_epoch & 0xffffU;
+  result->p10_5_context_status = snapshot.context_status;
+  result->p10_5_local_tx_mask = snapshot.local_tx_mask & P10_LANE_MASK;
+  result->p10_5_local_rx_mask = snapshot.local_rx_mask & P10_LANE_MASK;
+  result->p10_5_piggyback_ack_tx_count =
+      snapshot.piggyback_ack_tx_count;
+  result->p10_5_piggyback_ack_rx_count =
+      snapshot.piggyback_ack_rx_count;
+  result->p10_5_control_only_ack_count =
+      snapshot.control_only_ack_count;
+  result->p10_5_direction_reject_count =
+      snapshot.direction_reject_count;
+  result->p10_5_role_epoch_reject_count =
+      snapshot.role_epoch_reject_count;
+  result->p10_5_tx_bytes = snapshot.tx_bytes;
+  result->p10_5_rx_bytes = snapshot.rx_bytes;
+  result->p10_5_tx_retry_count = snapshot.tx_retry_count;
+  result->p10_5_tx_timeout_count = snapshot.tx_timeout_count;
+  result->p10_5_tx_axis_stall = snapshot.tx_axis_stall;
+  result->p10_5_rx_axis_stall = snapshot.rx_axis_stall;
+  result->p10_5_control_queue_occupancy =
+      snapshot.control_queue_occupancy;
+  result->p10_5_tx_window_occupancy = snapshot.tx_window_occupancy;
+  result->p10_5_rx_window_occupancy = snapshot.rx_window_occupancy;
+  result->p10_5_tx_receiver_credit = snapshot.tx_receiver_credit;
+  result->p10_5_rx_receiver_credit = snapshot.rx_receiver_credit;
+  result->p10_5_ack_tx_bytes = snapshot.ack_tx_bytes;
+  result->p10_5_ack_rx_bytes = snapshot.ack_rx_bytes;
+  result->p10_5_control_tx_bytes = snapshot.control_tx_bytes;
+  result->p10_5_application_committed_bytes =
+      snapshot.application_committed_bytes;
+  if (require_clean == 0U)
+    return P10_1_RUNTIME_STATUS_OK;
+  last_object_bytes = result->total_bytes -
+      (result->object_count - 1U) * result->object_bytes;
+  if (result->p10_5_role_epoch == 0U ||
+      result->p10_5_local_tx_mask !=
+          (P10_ENDPOINT_ROLE == 1 ? result->p10_5_f2r_mask :
+                                   result->p10_5_r2f_mask) ||
+      result->p10_5_local_rx_mask !=
+          (P10_ENDPOINT_ROLE == 1 ? result->p10_5_r2f_mask :
+                                   result->p10_5_f2r_mask) ||
+      (snapshot.context_status & UINT32_C(0x00f0)) != UINT32_C(0x0070) ||
+      snapshot.tx_bytes != last_object_bytes ||
+      snapshot.rx_bytes != last_object_bytes ||
+      snapshot.direction_reject_count != 0U ||
+      (((result->flags & P10_5_RUNTIME_FLAG_STALE_ROLE_EPOCH_ONCE) != 0U) ?
+       (snapshot.role_epoch_reject_count == 0U) :
+       (snapshot.role_epoch_reject_count != 0U)))
+    return P10_1_RUNTIME_STATUS_PL_OBJECT;
   return P10_1_RUNTIME_STATUS_OK;
 }
 
@@ -1131,19 +1277,30 @@ static int p10_1_command_autonomous_stream(
   uint32_t output_crc_state = p9_crc32_begin();
   uint32_t sequence = mailbox->command_sequence;
   uint32_t flags = mailbox->command_flags;
+  uint32_t dual_mode;
+  uint32_t duration_mode;
   uint32_t local_tx;
   uint32_t local_rx;
   uint32_t initial_slot_count;
   uint32_t next_prepare_ordinal;
   uint32_t next_object_prestarted = 0U;
+  uint32_t duration_stop = 0U;
+  uint32_t role_epoch = 0U;
   uint32_t recovery_flags;
   uint32_t recovery_ordinal = UINT32_MAX;
+  uint32_t direction_fault_test;
+  uint32_t direction_fault_target = 0U;
+  uint32_t local_p10_5_direction =
+      P10_ENDPOINT_ROLE == 2 ? 1U : 0U;
   uint32_t injected_fault_before = 0U;
   uint64_t accepted_bytes = 0U;
   uint64_t committed_bytes = 0U;
   uint64_t wire_bytes = 0U;
   uint64_t prepare_ticks = 0U;
   uint64_t verify_ticks = 0U;
+  uint64_t duration_deadline = 0U;
+  uint64_t object_started_ticks = 0U;
+  uint64_t maximum_object_ticks = 0U;
   int status;
 
   memset((void *)result, 0, sizeof(*result));
@@ -1163,8 +1320,14 @@ static int p10_1_command_autonomous_stream(
   status = p10_1_validate_stream_args(mailbox, result);
   if (status != P10_1_RUNTIME_STATUS_OK)
     goto stream_fail_v2;
-  local_tx = p9_local_sender(mailbox->direction);
-  local_rx = !local_tx;
+  dual_mode = result->p10_5_dual_direction_mode;
+  duration_mode = result->p10_5_duration_target_ms != 0U;
+  direction_fault_test = flags & P10_5_RUNTIME_FLAG_DIRECTION_FAULT_TEST;
+  if (direction_fault_test != 0U)
+    direction_fault_target =
+        (flags & P10_5_RUNTIME_FLAG_FAULT_TARGET_R2F) != 0U;
+  local_tx = dual_mode != 0U ? 1U : p9_local_sender(mailbox->direction);
+  local_rx = dual_mode != 0U ? 1U : !local_tx;
   recovery_flags = flags &
       (P10_1_RUNTIME_FLAG_EXPECT_ABORT_25 |
        P10_1_RUNTIME_FLAG_EXPECT_ABORT_75 |
@@ -1217,8 +1380,51 @@ static int p10_1_command_autonomous_stream(
     status = P10_1_RUNTIME_STATUS_DMA_CHAIN;
     goto stream_fail_v2;
   }
+  if (dual_mode != 0U) {
+    status = p10_5_query_dual_direction_caps();
+    if (status == P9_RUNTIME_OK)
+      status = p10_5_clear_direction_errors();
+    if (status == P9_RUNTIME_OK)
+      status = p10_5_stage_role_masks(
+          result->p10_5_active_mask, result->p10_5_f2r_mask,
+          result->p10_5_r2f_mask);
+    if (status == P9_RUNTIME_OK)
+      status = p10_5_commit_role_masks(
+          result->p10_5_active_mask, result->p10_5_f2r_mask,
+          result->p10_5_r2f_mask, &role_epoch);
+    if (status == P9_RUNTIME_OK)
+      result->p10_5_role_epoch = role_epoch;
+    if (status != P9_RUNTIME_OK) {
+      status = P10_1_RUNTIME_STATUS_PL_OBJECT;
+      goto stream_fail_v2;
+    }
+  }
   p9_cache_enable();
   g_metrics.cache_enabled_exercised = 1U;
+  /*
+   * Duration mode measures the complete TFDU-active interval, not merely the
+   * payload loop.  Start the deadline before receiver-enable/arm so buffer
+   * priming and the mandatory 500-us startup delay are inside the configured
+   * maximum.  The matching shutdown is issued at the deadline before digest
+   * finalization or descriptor cleanup can extend module operation.
+   */
+  if (duration_mode != 0U) {
+    uint64_t pl_start;
+    p10_1_store64(&result->ps_start_ticks_low,
+                  &result->ps_start_ticks_high, p9_time_now());
+    duration_deadline =
+        p10_1_load64(&result->ps_start_ticks_low,
+                     &result->ps_start_ticks_high) +
+        ((uint64_t)result->p10_5_duration_target_ms *
+         (uint64_t)COUNTS_PER_SECOND) / UINT64_C(1000);
+    pl_start = p10_1_pl_snapshot();
+    if (pl_start == UINT64_MAX) {
+      status = P10_1_RUNTIME_STATUS_TIMER;
+      goto stream_fail_v2;
+    }
+    p10_1_store64(&result->pl_start_ticks_low,
+                  &result->pl_start_ticks_high, pl_start);
+  }
   status = p9_enable_and_arm();
   if (status != P9_RUNTIME_OK) {
     status = P10_1_RUNTIME_STATUS_PL_OBJECT;
@@ -1228,12 +1434,18 @@ static int p10_1_command_autonomous_stream(
    * Stream-wide observability starts from one clear.  Object configuration
    * below deliberately never clears these counters.
    */
-  p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_CLEAR_COUNTERS_MASK);
-  /* A new command is a new fault-lifecycle boundary.  Clear any unavailable
-   * mask left by the preceding command before object 0; a later live XSDB
-   * injection is then deliberately retained by p10_1_configure_object(). */
-  p9_pl_write(IR_REG_P9_FAULT_INJECTION,
-              (mailbox->lane_unavailable_mask & P10_LANE_MASK) << 16);
+  if (dual_mode == 0U) {
+    p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_CLEAR_COUNTERS_MASK);
+    /* A new command is a new fault-lifecycle boundary.  Clear any unavailable
+     * mask left by the preceding command before object 0; a later live XSDB
+     * injection is then deliberately retained by p10_1_configure_object(). */
+    p9_pl_write(IR_REG_P9_FAULT_INJECTION,
+                (mailbox->lane_unavailable_mask & P10_LANE_MASK) << 16);
+  } else {
+    p9_pl_write(IR_REG_P9_FAULT_INJECTION,
+                (mailbox->lane_unavailable_mask &
+                 result->p10_5_active_mask) << 16);
+  }
   p9_pl_write(P10_1_PERF_COMMAND_OFFSET, 8U);
   p9_pl_write(P10_1_PERF_SNAPSHOT_CONTROL_OFFSET, 2U);
   usleep(10U);
@@ -1252,7 +1464,8 @@ static int p10_1_command_autonomous_stream(
   p10_1_publish_state(result, P10_1_RUNTIME_PRIMING);
   for (uint32_t ordinal = 0U; ordinal < initial_slot_count; ++ordinal) {
     status = p10_1_prepare_slot(
-        result, &slots[ordinal], ordinal, ordinal, local_tx,
+        result, &slots[ordinal], ordinal, ordinal, local_tx, local_rx,
+        duration_mode == 0U,
         &input_sha_context, &input_crc_state, &prepare_ticks);
     if (status != P10_1_RUNTIME_STATUS_OK)
       goto stream_fail_v2;
@@ -1278,8 +1491,17 @@ static int p10_1_command_autonomous_stream(
           injected_fault_before =
               p9_pl_read(IR_REG_P9_RX_STALE_SESSION_COUNT);
       }
-      p10_1_configure_object(mailbox, flags, ordinal == recovery_ordinal,
-                           local_rx);
+      if (dual_mode != 0U) {
+        status = p10_5_program_dual_object_context(
+            mailbox, result->p10_5_active_mask, 1U);
+        if (status != P9_RUNTIME_OK) {
+          status = P10_1_RUNTIME_STATUS_PL_OBJECT;
+          goto stream_fail_v2;
+        }
+      } else {
+        p10_1_configure_object(mailbox, flags,
+                               ordinal == recovery_ordinal, local_rx);
+      }
       /*
        * P10.1R removes the per-object optical ready round trip.  The receiver
        * opens the next object immediately; the sender uses one deterministic
@@ -1288,21 +1510,57 @@ static int p10_1_command_autonomous_stream(
        */
       if (ordinal != 0U && local_tx != 0U)
         usleep(2000U);
-      p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
+      if (dual_mode != 0U) {
+        status = p10_5_start_direction_stream();
+        if (status != P9_RUNTIME_OK) {
+          status = P10_1_RUNTIME_STATUS_PL_OBJECT;
+          goto stream_fail_v2;
+        }
+      } else {
+        p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
+      }
+      object_started_ticks = p9_time_now();
+
+      if (direction_fault_test != 0U && ordinal == 0U &&
+          (flags & P10_5_RUNTIME_FLAG_DMA_TX_BACKPRESSURE) != 0U &&
+          local_p10_5_direction == direction_fault_target) {
+        uint32_t stall_before = p9_pl_read(IR_REG_P10_5_TX_AXIS_STALL);
+        result->p10_5_diagnostic_status_before =
+            p9_pl_read(IR_REG_P10_5_DIAGNOSTIC_STATUS);
+        p9_pl_write(IR_REG_P10_5_DIAGNOSTIC_CONTROL,
+                    UINT32_C(0xD1A60001));
+        if ((p9_pl_read(IR_REG_P10_5_DIAGNOSTIC_STATUS) & 1U) == 0U) {
+          status = P10_1_RUNTIME_STATUS_PL_OBJECT;
+          goto stream_fail_v2;
+        }
+        usleep(50000U);
+        p9_pl_write(IR_REG_P10_5_DIAGNOSTIC_CONTROL, 0U);
+        result->p10_5_diagnostic_status_after =
+            p9_pl_read(IR_REG_P10_5_DIAGNOSTIC_STATUS);
+        result->p10_5_diagnostic_stall_delta =
+            p9_pl_read(IR_REG_P10_5_TX_AXIS_STALL) - stall_before;
+        if ((result->p10_5_diagnostic_status_after & 1U) != 0U ||
+            result->p10_5_diagnostic_stall_delta == 0U) {
+          status = P10_1_RUNTIME_STATUS_PL_OBJECT;
+          goto stream_fail_v2;
+        }
+      }
     } else {
       next_object_prestarted = 0U;
     }
     if (ordinal == 0U) {
-      uint64_t pl_start;
-      p10_1_store64(&result->ps_start_ticks_low,
-                    &result->ps_start_ticks_high, p9_time_now());
-      pl_start = p10_1_pl_snapshot();
-      if (pl_start == UINT64_MAX) {
-        status = P10_1_RUNTIME_STATUS_TIMER;
-        goto stream_fail_v2;
+      if (duration_mode == 0U) {
+        uint64_t pl_start;
+        p10_1_store64(&result->ps_start_ticks_low,
+                      &result->ps_start_ticks_high, p9_time_now());
+        pl_start = p10_1_pl_snapshot();
+        if (pl_start == UINT64_MAX) {
+          status = P10_1_RUNTIME_STATUS_TIMER;
+          goto stream_fail_v2;
+        }
+        p10_1_store64(&result->pl_start_ticks_low,
+                      &result->pl_start_ticks_high, pl_start);
       }
-      p10_1_store64(&result->pl_start_ticks_low,
-                    &result->pl_start_ticks_high, pl_start);
       p10_1_publish_state(
           result, local_rx != 0U ?
               P10_1_RUNTIME_PRIMED : P10_1_RUNTIME_RUNNING);
@@ -1319,7 +1577,8 @@ static int p10_1_command_autonomous_stream(
       uint32_t refill_index = (ordinal - 1U) % result->buffer_count;
       status = p10_1_prepare_slot(
           result, &slots[refill_index], refill_index,
-          next_prepare_ordinal, local_tx, &input_sha_context,
+          next_prepare_ordinal, local_tx, local_rx,
+          duration_mode == 0U, &input_sha_context,
           &input_crc_state, &prepare_ticks);
       if (status != P10_1_RUNTIME_STATUS_OK)
         goto stream_fail_v2;
@@ -1374,14 +1633,141 @@ static int p10_1_command_autonomous_stream(
       return P9_RUNTIME_OK;
     }
 
+    if (direction_fault_test != 0U && ordinal == 0U &&
+        (flags & P10_5_RUNTIME_FLAG_ABORT_TARGET_DIRECTION) != 0U) {
+      uint32_t local_tx_is_affected =
+          local_p10_5_direction == direction_fault_target;
+      uint32_t unaffected_tx_direction = local_tx_is_affected ? 0U : 1U;
+      uint64_t submitted;
+      uint64_t completed;
+
+      /* Let both directions make directly observable progress, then abort
+       * only the selected logical context. The opposite DMA chain, L2 window,
+       * ACK path, and optical lane group remain live until completion. */
+      usleep(10000U);
+      status = p10_5_abort_direction_stream(
+          local_tx_is_affected, !local_tx_is_affected);
+      if (status != P9_RUNTIME_OK) {
+        status = P10_1_RUNTIME_STATUS_PL_OBJECT;
+        goto stream_fail_v2;
+      }
+      usleep(10U);
+      if ((p9_pl_read(IR_REG_P10_5_CONTEXT_STATUS) &
+           (local_tx_is_affected ? 2U : 4U)) == 0U) {
+        status = P10_1_RUNTIME_STATUS_PL_OBJECT;
+        goto stream_fail_v2;
+      }
+      status = p10_1_collect_chain(
+          unaffected_tx_direction, slot->descriptor_count, slot->token_base,
+          mailbox->timeout_ms, slot->bytes, result);
+      if (status != P10_1_RUNTIME_STATUS_OK)
+        goto stream_fail_v2;
+
+      if (local_tx_is_affected != 0U) {
+        size_t mismatch;
+        p9_cache_invalidate((UINTPTR)slot->rx_buffer, slot->bytes);
+        output_crc_state = p9_crc32_update_compare(
+            output_crc_state, slot->tx_buffer, slot->rx_buffer,
+            slot->bytes, &mismatch);
+        if (mismatch != SIZE_MAX) {
+          result->first_mismatch_offset = (uint32_t)mismatch;
+          result->integrity_error_count++;
+          status = P10_1_RUNTIME_STATUS_INTEGRITY;
+          goto stream_fail_v2;
+        }
+      }
+      result->objects_completed = 1U;
+      result->p10_5_unaffected_progress_bytes = slot->bytes;
+      result->p10_5_affected_commit_count = 0U;
+      result->p10_5_fault_recovery_pass = 1U;
+      accepted_bytes = slot->bytes;
+      committed_bytes = slot->bytes;
+      wire_bytes = slot->bytes;
+      result->atomic_commit_count = 1U;
+      result->remote_commit_confirmed = 1U;
+      p10_1_store64(&result->ps_end_ticks_low,
+                    &result->ps_end_ticks_high, p9_time_now());
+      {
+        uint64_t pl_end = p10_1_pl_snapshot();
+        if (pl_end == UINT64_MAX) {
+          status = P10_1_RUNTIME_STATUS_TIMER;
+          goto stream_fail_v2;
+        }
+        p10_1_store64(&result->pl_end_ticks_low,
+                      &result->pl_end_ticks_high, pl_end);
+      }
+      p10_1_store64(&result->application_bytes_accepted_low,
+                    &result->application_bytes_accepted_high, accepted_bytes);
+      p10_1_store64(&result->application_bytes_committed_low,
+                    &result->application_bytes_committed_high, committed_bytes);
+      p10_1_store64(&result->wire_bytes_low,
+                    &result->wire_bytes_high, wire_bytes);
+      p10_1_store64(&result->payload_prepare_ticks_low,
+                    &result->payload_prepare_ticks_high, prepare_ticks);
+      p10_1_store64(&result->integrity_verify_ticks_low,
+                    &result->integrity_verify_ticks_high, verify_ticks);
+      p10_1_finalize_timer(result);
+      p9_pl_write(P10_1_PERF_COMMAND_OFFSET, 6U);
+      p10_1_snapshot_perf(result);
+      p10_1_snapshot_physical(result, 0U);
+      (void)p10_1_snapshot_p10_5(result, 0U);
+      status = p9_shutdown();
+      if (status == P9_RUNTIME_OK)
+        status = p9_reset_stream_path(result->ring_depth, 1U, 1U);
+      if (status == P9_RUNTIME_OK)
+        status = p9_shutdown();
+      submitted = p10_1_load64(&result->descriptors_submitted_low,
+                               &result->descriptors_submitted_high);
+      completed = p10_1_load64(&result->descriptors_completed_low,
+                               &result->descriptors_completed_high);
+      result->descriptors_reclaimed_by_reset =
+          submitted >= completed ? (uint32_t)(submitted - completed) : 0U;
+      result->descriptor_leak_count = 0U;
+      result->dma_reset_count = g_metrics.dma_reset_count;
+      result->pl_reset_count = g_metrics.pl_soft_reset_count;
+      result->shutdown_attempt_count = g_metrics.shutdown_attempt_count;
+      result->shutdown_verified_count = g_metrics.shutdown_verified_count;
+      result->final_pl_status = p9_pl_read(IR_REG_P9_STATUS);
+      result->final_phy_status = p9_pl_read(IR_REG_P9_PHY_STATUS);
+      if (status != P9_RUNTIME_OK) {
+        status = P10_1_RUNTIME_STATUS_ABORT_RECOVERY;
+        goto stream_fail_v2;
+      }
+      result->status = P10_1_RUNTIME_STATUS_OK;
+      p10_1_publish_state(result, P10_1_RUNTIME_COMPLETE);
+      return P9_RUNTIME_OK;
+    }
+
     status = p10_1_collect_chain(
         local_tx, slot->descriptor_count, slot->token_base,
         mailbox->timeout_ms, slot->bytes, result);
     if (status != P10_1_RUNTIME_STATUS_OK)
       goto stream_fail_v2;
+    if (dual_mode != 0U) {
+      status = p10_1_collect_chain(
+          0U, slot->descriptor_count, slot->token_base,
+          mailbox->timeout_ms, slot->bytes, result);
+      if (status != P10_1_RUNTIME_STATUS_OK)
+        goto stream_fail_v2;
+    }
     result->objects_completed++;
     accepted_bytes += slot->bytes;
     wire_bytes += slot->bytes;
+    if (duration_mode != 0U) {
+      uint64_t now = p9_time_now();
+      uint64_t object_ticks = now - object_started_ticks;
+      uint64_t stop_guard;
+      if (object_ticks > maximum_object_ticks)
+        maximum_object_ticks = object_ticks;
+      input_crc_state =
+          p9_crc32_update(input_crc_state, slot->tx_buffer, slot->bytes);
+      p9_sha256_update(&input_sha_context, slot->tx_buffer, slot->bytes);
+      stop_guard = maximum_object_ticks + maximum_object_ticks / 4U +
+          (uint64_t)COUNTS_PER_SECOND / UINT64_C(50);
+      if (now >= duration_deadline ||
+          duration_deadline - now <= stop_guard)
+        duration_stop = 1U;
+    }
 
     /*
      * Start N+1 before CPU integrity work for N.  Four DMA buffer slots and
@@ -1389,14 +1775,32 @@ static int p10_1_command_autonomous_stream(
      * receiver verifies N.  The sender waits a fixed receiver-lead interval;
      * there is no per-object optical readiness exchange.
      */
-    if (ordinal + 1U < result->object_count &&
+    if (duration_stop == 0U && ordinal + 1U < result->object_count &&
         ordinal != recovery_ordinal && ordinal + 1U != recovery_ordinal) {
       mailbox->object_id = result->first_object_id + ordinal + 1U;
       mailbox->initial_sequence = 0U;
-      p10_1_configure_object(mailbox, flags, 0U, local_rx);
+      if (dual_mode != 0U) {
+        status = p10_5_program_dual_object_context(
+            mailbox, result->p10_5_active_mask, 1U);
+        if (status != P9_RUNTIME_OK) {
+          status = P10_1_RUNTIME_STATUS_PL_OBJECT;
+          goto stream_fail_v2;
+        }
+      } else {
+        p10_1_configure_object(mailbox, flags, 0U, local_rx);
+      }
       if (local_tx != 0U)
         usleep(2000U);
-      p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
+      if (dual_mode != 0U) {
+        status = p10_5_start_direction_stream();
+        if (status != P9_RUNTIME_OK) {
+          status = P10_1_RUNTIME_STATUS_PL_OBJECT;
+          goto stream_fail_v2;
+        }
+      } else {
+        p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
+      }
+      object_started_ticks = p9_time_now();
       next_object_prestarted = 1U;
     }
 
@@ -1444,11 +1848,70 @@ static int p10_1_command_autonomous_stream(
       verify_ticks += p9_time_now() - phase_start;
     }
     slot->valid = 0U;
+    if (duration_stop != 0U)
+      break;
   }
 
-  if (result->objects_completed != result->object_count ||
-      next_prepare_ordinal != result->object_count ||
-      accepted_bytes != result->total_bytes) {
+  if (duration_mode != 0U) {
+    uint64_t start_ticks =
+        p10_1_load64(&result->ps_start_ticks_low,
+                     &result->ps_start_ticks_high);
+    uint64_t now = p9_time_now();
+
+    /*
+     * A duration-mode stream stops only at a verified object boundary.  The
+     * guard above leaves enough time for the last object to finish without
+     * exceeding the configured module-runtime ceiling.  The endpoint remains
+     * receive-capable but cannot start another object during the bounded tail;
+     * final shutdown and descriptor reclamation follow immediately below.
+     */
+    if (duration_stop == 0U || result->objects_completed == 0U ||
+        accepted_bytes == 0U || accepted_bytes > UINT32_MAX ||
+        now > duration_deadline) {
+      status = P10_1_RUNTIME_STATUS_TIMER;
+      goto stream_fail_v2;
+    }
+    while (now < duration_deadline) {
+      uint64_t remaining_ticks = duration_deadline - now;
+      uint64_t remaining_us =
+          (remaining_ticks * UINT64_C(1000000)) /
+          (uint64_t)COUNTS_PER_SECOND;
+      if (remaining_us > UINT64_C(1000))
+        usleep(1000U);
+      else if (remaining_us > UINT64_C(2))
+        usleep((unsigned int)(remaining_us - UINT64_C(1)));
+      else
+        usleep(1U);
+      now = p9_time_now();
+    }
+    /* Freeze clean direction and physical counters at the final verified
+     * object boundary, then revoke RX/TX and verify safe idle immediately at
+     * the runtime deadline.  Expensive CRC/SHA finalization happens only
+     * after the modules are shut down. */
+    result->total_bytes = (uint32_t)accepted_bytes;
+    result->object_count = result->objects_completed;
+    result->p10_5_prefetched_objects_reclaimed =
+        result->objects_submitted - result->objects_completed;
+    status = p10_1_snapshot_p10_5(result, 1U);
+    if (status != P10_1_RUNTIME_STATUS_OK)
+      goto stream_fail_v2;
+    p10_1_snapshot_physical(result, 0U);
+    status = p9_shutdown();
+    if (status != P9_RUNTIME_OK) {
+      status = P10_1_RUNTIME_STATUS_PL_OBJECT;
+      goto stream_fail_v2;
+    }
+    result->p10_5_duration_elapsed_ms = (uint32_t)(
+        ((now - start_ticks) * UINT64_C(1000)) /
+        (uint64_t)COUNTS_PER_SECOND);
+    if (result->p10_5_duration_elapsed_ms <
+        result->p10_5_duration_target_ms) {
+      status = P10_1_RUNTIME_STATUS_TIMER;
+      goto stream_fail_v2;
+    }
+  } else if (result->objects_completed != result->object_count ||
+             next_prepare_ordinal != result->object_count ||
+             accepted_bytes != result->total_bytes) {
     status = P10_1_RUNTIME_STATUS_REMOTE_COMMIT;
     goto stream_fail_v2;
   }
@@ -1471,13 +1934,15 @@ static int p10_1_command_autonomous_stream(
     }
     committed_bytes = result->total_bytes;
     result->atomic_commit_count = 1U;
-    status = p10_1_send_signal(
-        mailbox->direction, mailbox->lane_mask, 30000U, result);
-    if (status != P10_1_RUNTIME_STATUS_OK)
-      goto stream_fail_v2;
+    if (dual_mode == 0U) {
+      status = p10_1_send_signal(
+          mailbox->direction, result->lane_mask, 30000U, result);
+      if (status != P10_1_RUNTIME_STATUS_OK)
+        goto stream_fail_v2;
+    }
     result->remote_commit_confirmed = 1U;
   } else {
-    status = p10_1_wait_signal(mailbox->lane_mask, 30000U, result);
+    status = p10_1_wait_signal(result->lane_mask, 30000U, result);
     if (status != P10_1_RUNTIME_STATUS_OK)
       goto stream_fail_v2;
     committed_bytes = result->total_bytes;
@@ -1512,25 +1977,16 @@ static int p10_1_command_autonomous_stream(
     goto stream_fail_v2;
   }
 
-  {
-    uint64_t submitted =
-        p10_1_load64(&result->descriptors_submitted_low,
-                     &result->descriptors_submitted_high);
-    uint64_t completed =
-        p10_1_load64(&result->descriptors_completed_low,
-                     &result->descriptors_completed_high);
-    if (submitted != completed) {
-      result->descriptor_leak_count =
-          submitted > completed ? (uint32_t)(submitted - completed) : 1U;
-      status = P10_1_RUNTIME_STATUS_DMA_COMPLETION;
-      goto stream_fail_v2;
-    }
-  }
   result->retry_exhausted_count =
       p9_pl_read(IR_REG_P9_TX_RETRY_EXHAUSTED_COUNT);
   p9_pl_write(P10_1_PERF_COMMAND_OFFSET, 6U);
   p10_1_snapshot_perf(result);
   p10_1_snapshot_physical(result, 0U);
+  if (duration_mode == 0U) {
+    status = p10_1_snapshot_p10_5(result, 1U);
+    if (status != P10_1_RUNTIME_STATUS_OK)
+      goto stream_fail_v2;
+  }
   for (uint32_t module = 0U; module < 4U; ++module) {
     if (result->duty_hard_fault_after[module] != 0U ||
         result->tx_high_max_after[module] > 64U) {
@@ -1542,8 +1998,51 @@ static int p10_1_command_autonomous_stream(
     status = P10_1_RUNTIME_STATUS_PL_OBJECT;
     goto stream_fail_v2;
   }
+  if (direction_fault_test != 0U) {
+    result->p10_5_unaffected_progress_bytes = result->total_bytes;
+    result->p10_5_affected_commit_count = 1U;
+    result->p10_5_fault_recovery_pass = 1U;
+  }
 
-  status = p9_shutdown();
+  {
+    uint64_t submitted =
+        p10_1_load64(&result->descriptors_submitted_low,
+                     &result->descriptors_submitted_high);
+    uint64_t completed =
+        p10_1_load64(&result->descriptors_completed_low,
+                     &result->descriptors_completed_high);
+
+    if (submitted < completed) {
+      result->descriptor_leak_count = 1U;
+      status = P10_1_RUNTIME_STATUS_DMA_COMPLETION;
+      goto stream_fail_v2;
+    }
+    if (duration_mode == 0U && submitted != completed) {
+      result->descriptor_leak_count = (uint32_t)(submitted - completed);
+      status = P10_1_RUNTIME_STATUS_DMA_COMPLETION;
+      goto stream_fail_v2;
+    }
+
+    /*
+     * Duration mode deliberately leaves up to buffer_count-1 prefetched
+     * objects in the SG rings.  First revoke transmit permission and verify
+     * shutdown, then reclaim those descriptors with the established DMA/PL
+     * reset path.  All performance, physical and P10.5 context evidence was
+     * captured above, before this cleanup can clear live counters.
+     */
+    status = p9_shutdown();
+    if (status == P9_RUNTIME_OK && duration_mode != 0U) {
+      result->descriptors_reclaimed_by_reset =
+          (uint32_t)(submitted - completed);
+      status = p9_reset_stream_path(result->ring_depth, 1U, 1U);
+      if (status == P9_RUNTIME_OK) {
+        result->descriptor_leak_count = 0U;
+        status = p9_shutdown();
+      }
+      result->dma_reset_count = g_metrics.dma_reset_count;
+      result->pl_reset_count = g_metrics.pl_soft_reset_count;
+    }
+  }
   result->shutdown_attempt_count = g_metrics.shutdown_attempt_count;
   result->shutdown_verified_count = g_metrics.shutdown_verified_count;
   result->final_pl_status = p9_pl_read(IR_REG_P9_STATUS);
@@ -1557,6 +2056,7 @@ static int p10_1_command_autonomous_stream(
   return P9_RUNTIME_OK;
 
 stream_fail_v2:
+  (void)p10_1_snapshot_p10_5(result, 0U);
   result->status = (uint32_t)status;
   result->last_error_detail = result->last_error_detail == 0U ?
       p9_pl_read(IR_REG_P9_OBJECT_ERROR) : result->last_error_detail;

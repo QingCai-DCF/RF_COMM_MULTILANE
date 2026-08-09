@@ -1,0 +1,14 @@
+# P10.5 split-lane dual-direction architecture
+
+- Status: `PASS`
+- test_id: `P10_5-OFFLINE-ARCHITECTURE`
+- source_commit: `bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676`
+- hardware_actions_executed: `False`
+- current_run_hardware_authorization: `False`
+
+| Check | Status |
+|---|---|
+| reference_model | PASS |
+| complete_xsim | PASS |
+| 4mbps_feasibility | PASS |
+| half_duplex_compatibility | PASS |

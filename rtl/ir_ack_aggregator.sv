@@ -3,7 +3,8 @@ module ir_ack_aggregator #(
   parameter int SACK_BITS = 64,
   parameter int FRAME_THRESHOLD = 8,
   parameter int MAX_DELAY_CYCLES = 32000,
-  parameter int CREDIT_LOW_WATERMARK = 8
+  parameter int CREDIT_LOW_WATERMARK = 8,
+  parameter bit P10_5_PIGGYBACK_CAPABLE = 1'b0
 ) (
   input  logic                       clk,
   input  logic                       rst_n,
@@ -19,6 +20,7 @@ module ir_ack_aggregator #(
   input  logic                       control_event_i,
   input  logic                       direction_boundary_i,
   input  logic                       explicit_request_i,
+  input  logic                       piggyback_commit_i,
   output logic                       ack_valid_o,
   input  logic                       ack_ready_i,
   output logic [31:0]                ack_session_epoch_o,
@@ -35,6 +37,8 @@ module ir_ack_aggregator #(
   logic [31:0] delay_counter;
   logic trigger_now;
   logic timer_trigger;
+  wire effective_piggyback_commit = P10_5_PIGGYBACK_CAPABLE &&
+      piggyback_commit_i;
 
   always_comb begin
     timer_trigger = (pending_frames != 0) &&
@@ -83,7 +87,7 @@ module ir_ack_aggregator #(
           timer_expiry_count_o <= 32'd0;
           ack_frames_sent_o <= 32'd0;
         end
-        if (ack_valid_o && ack_ready_i) begin
+        if ((ack_valid_o && ack_ready_i) || effective_piggyback_commit) begin
           ack_valid_o <= 1'b0;
           // pending_frames counts receive/control events that occurred after
           // the currently presented immutable ACK snapshot. They must survive

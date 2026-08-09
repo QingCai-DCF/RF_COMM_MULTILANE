@@ -80,7 +80,7 @@ set ps [create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 proce
 apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 \
   -config {make_external "FIXED_IO, DDR" apply_board_preset "0" Master "Disable" Slave "Disable"} $ps
 source "$root_dir/board_profiles/ax7020_common/p10_ps7_config.tcl"
-p10_apply_ax7020_ps7_config $ps [expr {$campaign in {p10_3 p10_3f p10_4}}]
+p10_apply_ax7020_ps7_config $ps [expr {$campaign in {p10_3 p10_3f p10_4 p10_5}}]
 
 set dma [create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 axi_dma_0]
 set_property -dict [list \
@@ -104,6 +104,9 @@ update_compile_order -fileset sources_1
 set endpoint [create_bd_cell -type module -reference p10_axi_dma_endpoint_peripheral_bd p10_endpoint_0]
 set_property CONFIG.ENDPOINT_ROLE $endpoint_role $endpoint
 set_property CONFIG.LANE_COUNT $lane_count $endpoint
+if {$campaign eq "p10_5"} {
+  set_property CONFIG.P10_5_DUAL_CAPABLE 1 $endpoint
+}
 if {$campaign eq "p10_3"} {
   set_property CONFIG.BUILD_ID_OVERRIDE \
       [expr {$endpoint_role == 1 ? 0x50333446 : 0x50333452}] $endpoint
@@ -113,6 +116,9 @@ if {$campaign eq "p10_3"} {
 } elseif {$campaign eq "p10_4"} {
   set_property CONFIG.BUILD_ID_OVERRIDE \
       [expr {$endpoint_role == 1 ? 0x50343446 : 0x50343452}] $endpoint
+} elseif {$campaign eq "p10_5"} {
+  set_property CONFIG.BUILD_ID_OVERRIDE \
+      [expr {$endpoint_role == 1 ? 0x50353546 : 0x50353552}] $endpoint
 }
 
 set rst64 [create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_protocol_64]
@@ -316,7 +322,7 @@ if {$wns < 0.0 || $whs < 0.0 || $tns < 0.0 || $drc_critical != 0 ||
     $drc_error != 0 || $reqp_1839 != 0 || $methodology_critical != 0 ||
     $cdc_critical != 0 || $unconstrained_internal_endpoints != 0 ||
     $no_clock_count != 0 || !$resource_limits_pass ||
-    ($campaign in {p10_3f p10_4} && !$forensic_bram_inferred)} {
+    ($campaign in {p10_3f p10_4 p10_5} && !$forensic_bram_inferred)} {
   error "P10 signoff gate failed: WNS=$wns WHS=$whs TNS=$tns DRC_CRITICAL=$drc_critical DRC_ERROR=$drc_error REQP_1839=$reqp_1839 METHODOLOGY_CRITICAL=$methodology_critical CDC_CRITICAL=$cdc_critical UNCONSTRAINED_INTERNAL=$unconstrained_internal_endpoints NO_CLOCK=$no_clock_count RESOURCE_LIMITS=$resource_limits_pass"
 }
 
@@ -332,7 +338,9 @@ puts $marker "P10_ENDPOINT_ROLE_VALUE=$endpoint_role"
 puts $marker "P10_PROFILE_ID=$profile_id"
 puts $marker "P10_LANE_COUNT=$lane_count"
 puts $marker "P10_CAMPAIGN=$campaign"
-set marker_build_id [expr {$campaign eq "p10_4" ?
+set marker_build_id [expr {$campaign eq "p10_5" ?
+    ($endpoint_role == 1 ? 0x50353546 : 0x50353552) :
+    ($campaign eq "p10_4" ?
     ($endpoint_role == 1 ? 0x50343446 : 0x50343452) :
     ($campaign eq "p10_3f" ?
     ($endpoint_role == 1 ? 0x50334646 : 0x50334652) :
@@ -340,7 +348,7 @@ set marker_build_id [expr {$campaign eq "p10_4" ?
       ($endpoint_role == 1 ? 0x50333446 : 0x50333452) :
       ($lane_count == 4 ?
         ($endpoint_role == 1 ? 0x50323446 : 0x50323452) :
-        ($endpoint_role == 1 ? 0x50325346 : 0x50325352))))}]
+        ($endpoint_role == 1 ? 0x50325346 : 0x50325352)))))}]
 puts $marker [format "P10_PL_BUILD_ID=0x%08X" $marker_build_id]
 puts $marker "P10_PART=[get_property PART [current_project]]"
 puts $marker "P10_TOP=p10_ps_system_wrapper"
@@ -354,7 +362,7 @@ puts $marker "P10_DMA_CLOCK_HZ=100000000"
 puts $marker "P10_AXIL_CLOCK_HZ=50000000"
 puts $marker "P10_NETWORK_USED=false"
 puts $marker "P10_ETHERNET_ENABLED=false"
-if {$campaign in {p10_3 p10_3f p10_4}} {
+if {$campaign in {p10_3 p10_3f p10_4 p10_5}} {
   puts $marker "P10_PS_GPIO_ENABLED=true"
   puts $marker "P10_PS_ACTIVITY_LED_MAPPING=PS_LED1_MIO0_MM2S_INFLIGHT_PS_LED2_MIO13_S2MM_INFLIGHT"
   puts $marker "P10_PS_ACTIVITY_LED_ACTIVE_LOW=true"
@@ -363,7 +371,7 @@ if {$campaign in {p10_3 p10_3f p10_4}} {
   puts $marker "P10_PS_GPIO_ENABLED=false"
   puts $marker "P10_PS_ACTIVITY_LED_MAPPING=DISABLED"
 }
-if {$campaign in {p10_3f p10_4}} {
+if {$campaign in {p10_3f p10_4 p10_5}} {
   set forensic_bram_marker [expr {$forensic_bram_inferred ? "true" : "false"}]
   puts $marker "P10_FIRST_FAULT_FORENSICS=true"
   puts $marker "P10_FORENSIC_SNAPSHOT_WORDS=64"
@@ -372,6 +380,12 @@ if {$campaign in {p10_3f p10_4}} {
   puts $marker "P10_FORENSIC_RESET_POLICY=NO_FUNCTIONAL_RESET"
   puts $marker "P10_FORENSIC_BRAM_INFERRED=$forensic_bram_marker"
   puts $marker "P10_FORENSIC_BRAM_PRIMITIVES=$forensic_bram_count"
+}
+if {$campaign eq "p10_5"} {
+  puts $marker "P10_5_DUAL_DIRECTION_CAPABLE=true"
+  puts $marker "P10_5_CAPABILITY_WORD=0x5035021F"
+  puts $marker "P10_5_ROLE_COMMIT_ATOMIC=true"
+  puts $marker "P10_5_SINGLE_GLOBAL_PERMIT_UNCHANGED=true"
 }
 if {$lane_count == 4} {
   puts $marker "P10_PL_ACTIVITY_LED_MAPPING=LED1_LANE0_ACTIVITY_LED2_LANE1_ACTIVITY_LED3_LANE2_ACTIVITY_LED4_LANE3_ACTIVITY"
