@@ -126,6 +126,33 @@ class P10_5FirmwareContractTests(unittest.TestCase):
             extension,
         )
 
+    def test_dual_direction_delivery_reopens_advertised_credit(self) -> None:
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "wire p10_5_ack_state_changed = dp_rx_accept_pulse ||", core
+        )
+        self.assertIn(
+            "dp_delivery_valid && dp_delivery_ready_q", core
+        )
+        self.assertIn(
+            "dp_rx_delivery_delayed_q <= dp_delivery_valid && "
+            "dp_delivery_ready_q;",
+            core,
+        )
+        self.assertIn(
+            "object_dual_direction_q &&\n                          "
+            "dp_rx_delivery_delayed_q",
+            core,
+        )
+        self.assertIn(
+            "p10_5_ack_dirty_q <= p10_5_ack_state_changed;", core
+        )
+        self.assertNotIn(
+            "p10_5_ack_dirty_q <= dp_rx_accept_pulse;", core
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

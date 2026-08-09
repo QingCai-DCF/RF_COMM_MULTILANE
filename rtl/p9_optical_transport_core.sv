@@ -765,6 +765,7 @@ module p9_optical_transport_core #(
   reg [1:0] dp_turnaround_pipe_q;
   reg [15:0] dp_turnaround_sequence_pipe_q [0:1];
   reg dp_rx_accept_delayed_q;
+  reg dp_rx_delivery_delayed_q;
   reg dp_rx_frame_valid_q;
   reg dp_rx_l1_valid_q;
   reg dp_rx_turnaround_q;
@@ -790,6 +791,14 @@ module p9_optical_transport_core #(
   reg dp_ack_piggyback_commit_q;
   reg p10_5_ack_dirty_q;
   wire [5:0] dp_rx_credit;
+  // RX acceptance is not the only event that changes the cumulative ACK
+  // snapshot. Releasing an in-order entry to AXI advances ACK base/SACK and
+  // reopens receiver credit. If the last advertised snapshot carried zero
+  // credit, omitting this delivery event creates a symmetric 32-frame
+  // deadlock: both endpoints have free RX windows but each peer remains
+  // blocked by the stale zero-credit advertisement.
+  wire p10_5_ack_state_changed = dp_rx_accept_pulse ||
+      (dp_delivery_valid && dp_delivery_ready_q);
   wire dp_local_ack_snapshot_stale = endpoint_mode &&
       (dp_local_ack_base != rx_base_sequence_o ||
        dp_local_ack_bitmap != rx_sack_bitmap_o ||
@@ -894,8 +903,10 @@ module p9_optical_transport_core #(
     // A validated physical DATA event that was not newly accepted forces a
     // cumulative response.  New frames participate in bounded aggregation;
     // duplicates force a re-ACK so reverse-path ACK loss is recoverable.
-    .ack_control_event_i(dp_ack_control_pipe_q[1] &&
-                         !dp_rx_accept_delayed_q),
+    .ack_control_event_i((dp_ack_control_pipe_q[1] &&
+                          !dp_rx_accept_delayed_q) ||
+                         (object_dual_direction_q &&
+                          dp_rx_delivery_delayed_q)),
     .ack_direction_boundary_i(endpoint_mode &&
                               endpoint_turnaround_ack_eligible),
     .ack_explicit_request_i(!endpoint_mode && input_complete_q &&
@@ -965,6 +976,7 @@ module p9_optical_transport_core #(
       dp_turnaround_sequence_pipe_q[0] <= 16'd0;
       dp_turnaround_sequence_pipe_q[1] <= 16'd0;
       dp_rx_accept_delayed_q <= 1'b0;
+      dp_rx_delivery_delayed_q <= 1'b0;
     end else if (start_object_i || abort_object_i || disarm_request_i ||
                  full_shutdown_request_i || any_safety_fault) begin
       dp_ack_control_pipe_q <= 2'b00;
@@ -972,6 +984,7 @@ module p9_optical_transport_core #(
       dp_turnaround_sequence_pipe_q[0] <= 16'd0;
       dp_turnaround_sequence_pipe_q[1] <= 16'd0;
       dp_rx_accept_delayed_q <= 1'b0;
+      dp_rx_delivery_delayed_q <= 1'b0;
     end else begin
       dp_ack_control_pipe_q <= {
           dp_ack_control_pipe_q[0],
@@ -985,6 +998,10 @@ module p9_optical_transport_core #(
       dp_turnaround_sequence_pipe_q[1] <=
           dp_turnaround_sequence_pipe_q[0];
       dp_rx_accept_delayed_q <= dp_rx_accept_pulse;
+      // The RX reorder window updates base/SACK/credit on this handshake.
+      // Delay the control request one cycle so the immutable ACK snapshot is
+      // captured from the post-delivery state rather than the stale state.
+      dp_rx_delivery_delayed_q <= dp_delivery_valid && dp_delivery_ready_q;
     end
   end
 
@@ -1297,7 +1314,7 @@ module p9_optical_transport_core #(
     end else begin
       dp_local_ack_ready_q <= 0;
       dp_ack_piggyback_commit_q <= 0;
-      if (dp_rx_accept_pulse) p10_5_ack_dirty_q <= 1;
+      if (p10_5_ack_state_changed) p10_5_ack_dirty_q <= 1;
       if (clear_counters_i) begin
         dropped_data_count_q <= 0;
         dropped_ack_count_q <= 0;
@@ -1369,8 +1386,6 @@ module p9_optical_transport_core #(
                                            !object_direction_q);
           if (phase_q == PH_ACK_START && copy_lane == ack_lane_q) begin
             dp_local_ack_ready_q <= 1;
-            if (object_dual_direction_q)
-              p10_5_ack_dirty_q <= dp_rx_accept_pulse;
             endpoint_turnaround_pending_q <= 0;
             endpoint_turnaround_settle_timer_q <= 0;
             phase_q <= PH_ACK_WAIT_DONE;
@@ -1588,7 +1603,10 @@ module p9_optical_transport_core #(
             if (p10_5_piggyback_available) begin
               dp_ack_piggyback_commit_q <= 1;
               if (dp_local_ack_valid) dp_local_ack_ready_q <= 1;
-              p10_5_ack_dirty_q <= dp_rx_accept_pulse;
+              // The DATA header snapshots the pre-edge ACK state. Preserve
+              // dirty when this same edge accepts or delivers an RX entry so
+              // a following piggyback/control frame advertises the update.
+              p10_5_ack_dirty_q <= p10_5_ack_state_changed;
               p10_5_piggyback_ack_tx_count_q <=
                   p10_5_piggyback_ack_tx_count_q + 1'b1;
             end
@@ -1687,6 +1705,11 @@ module p9_optical_transport_core #(
               lane_piggyback_ack_bitmap[ack_selected_lane] <= 0;
               lane_piggyback_ack_credit[ack_selected_lane] <= 0;
               lane_start_pending[ack_selected_lane] <= 1;
+              if (object_dual_direction_q)
+                // Clear only at snapshot capture. Any ACK-state transition
+                // while this immutable control frame waits for the serializer
+                // reasserts dirty and must survive the later start handshake.
+                p10_5_ack_dirty_q <= p10_5_ack_state_changed;
               if (object_dual_direction_q)
                 p10_5_control_ack_fallback_count_q <=
                     p10_5_control_ack_fallback_count_q + 1'b1;

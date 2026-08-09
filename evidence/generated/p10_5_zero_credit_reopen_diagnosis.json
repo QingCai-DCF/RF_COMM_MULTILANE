@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-ZERO-CREDIT-REOPEN-DIAGNOSIS",
+  "status": "CONFIRMED_REMEDIATED_OFFLINE_PENDING_NEW_HARDWARE",
+  "failed_run_id": "p10_5_20260809T193616Z_33273a1a_3aa03b83_605dd1b6",
+  "failed_source_commit": "33273a1a8e6fb785881fb2aa65a5fbaa3150a03c",
+  "failed_stage": "one_plus_one",
+  "failed_case": "oneplusone_f0_r1",
+  "shutdown": {
+    "fixed": "PASS",
+    "rotating": "PASS"
+  },
+  "observed": {
+    "fixed": {
+      "tx_bytes": 116090,
+      "rx_bytes": 101268,
+      "tx_window_occupancy": 32,
+      "last_peer_credit": 0,
+      "local_rx_credit": 32,
+      "tx_retry_exhausted": 0
+    },
+    "rotating": {
+      "tx_bytes": 109174,
+      "rx_bytes": 108184,
+      "tx_window_occupancy": 32,
+      "last_peer_credit": 0,
+      "local_rx_credit": 32,
+      "tx_retry_exhausted": 0
+    },
+    "safety_faults": 0,
+    "crc_bad": 0,
+    "direction_reject": 0,
+    "role_epoch_reject": 0
+  },
+  "root_cause": "RX delivery changed ACK base/SACK/credit without forcing a new advertisement; a stale credit-zero snapshot symmetrically blocked both transmitters",
+  "remediation": [
+    "mark ACK state dirty on RX acceptance and ordered AXI delivery",
+    "request the post-delivery ACK snapshot one PL cycle after delivery",
+    "preserve dirty state across same-edge changes and queued control serialization"
+  ],
+  "focused_xsim": {
+    "path": "evidence/generated/p10_5_credit_reopen_xsim_v2/summary.json",
+    "status": "PASS",
+    "required_marker": "TB_P10_5_CREDIT_REOPEN=PASS",
+    "bytes_per_direction": 8500,
+    "forced_zero_credit": true
+  },
+  "hardware_actions_executed_by_remediation": false,
+  "old_hardware_pass_inherited": false
+}

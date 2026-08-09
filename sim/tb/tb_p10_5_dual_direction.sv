@@ -3,7 +3,8 @@
 
 module tb_p10_5_dual_direction;
   localparam integer LANE_COUNT = 4;
-  localparam integer MAX_OBJECT_BYTES = 4096;
+  localparam integer MAX_OBJECT_BYTES = 10000;
+  localparam integer CREDIT_REOPEN_BYTES = 8500;
 
   logic f_clk = 0;
   logic r_clk = 0;
@@ -36,6 +37,7 @@ module tb_p10_5_dual_direction;
   wire [31:0] f_m_data, r_m_data;
   wire [3:0] f_m_keep, r_m_keep;
   wire f_m_last, r_m_last;
+  logic f_m_ready, r_m_ready;
 
   wire [3:0] f_a_txd, f_a_sd, f_a_mode;
   wire [3:0] f_b_txd, f_b_sd, f_b_mode;
@@ -93,7 +95,7 @@ module tb_p10_5_dual_direction;
       if (capture_clear) begin
         f_capture_count <= 0;
         f_capture_last <= 0;
-      end else if (f_m_valid) begin
+      end else if (f_m_valid && f_m_ready) begin
         if (!f_m_last && f_m_keep != 4'hf)
           $fatal(1, "fixed non-final AXI beat sparse TKEEP=%x", f_m_keep);
         for (byte_lane = 0; byte_lane < 4; byte_lane = byte_lane + 1)
@@ -115,7 +117,7 @@ module tb_p10_5_dual_direction;
       if (capture_clear) begin
         r_capture_count <= 0;
         r_capture_last <= 0;
-      end else if (r_m_valid) begin
+      end else if (r_m_valid && r_m_ready) begin
         if (!r_m_last && r_m_keep != 4'hf)
           $fatal(1, "rotating non-final AXI beat sparse TKEEP=%x", r_m_keep);
         for (byte_lane = 0; byte_lane < 4; byte_lane = byte_lane + 1)
@@ -172,7 +174,7 @@ module tb_p10_5_dual_direction;
     .s_axis_tvalid_i(f_s_valid), .s_axis_tready_o(f_s_ready),
     .s_axis_tdata_i(f_s_data), .s_axis_tkeep_i(f_s_keep),
     .s_axis_tlast_i(f_s_last),
-    .m_axis_tvalid_o(f_m_valid), .m_axis_tready_i(1'b1),
+    .m_axis_tvalid_o(f_m_valid), .m_axis_tready_i(f_m_ready),
     .m_axis_tdata_o(f_m_data), .m_axis_tkeep_o(f_m_keep),
     .m_axis_tlast_o(f_m_last),
     .a_rxd_i(f_a_rxd), .a_txd_o(f_a_txd), .a_sd_o(f_a_sd),
@@ -229,7 +231,7 @@ module tb_p10_5_dual_direction;
     .s_axis_tvalid_i(r_s_valid), .s_axis_tready_o(r_s_ready),
     .s_axis_tdata_i(r_s_data), .s_axis_tkeep_i(r_s_keep),
     .s_axis_tlast_i(r_s_last),
-    .m_axis_tvalid_o(r_m_valid), .m_axis_tready_i(1'b1),
+    .m_axis_tvalid_o(r_m_valid), .m_axis_tready_i(r_m_ready),
     .m_axis_tdata_o(r_m_data), .m_axis_tkeep_o(r_m_keep),
     .m_axis_tlast_o(r_m_last),
     .a_rxd_i(4'hf), .a_txd_o(r_a_txd), .a_sd_o(r_a_sd),
@@ -468,6 +470,8 @@ module tb_p10_5_dual_direction;
   endtask
 
   integer watchdog, index, lane_index;
+  integer f_fallback_before_credit_reopen;
+  integer r_fallback_before_credit_reopen;
   initial begin
     f_receiver_enable = 0; r_receiver_enable = 0;
     f_arm = 0; r_arm = 0; f_disarm = 0; r_disarm = 0;
@@ -476,6 +480,7 @@ module tb_p10_5_dual_direction;
     f_abort_tx = 0; f_abort_rx = 0; r_abort_tx = 0; r_abort_rx = 0;
     f_s_valid = 0; f_s_data = 0; f_s_keep = 0; f_s_last = 0;
     r_s_valid = 0; r_s_data = 0; r_s_keep = 0; r_s_last = 0;
+    f_m_ready = 1; r_m_ready = 1;
     capture_clear = 0;
     f_role_cfg = 1;
     r_role_cfg = 1;
@@ -554,6 +559,57 @@ module tb_p10_5_dual_direction;
     repeat (4) @(posedge f_clk); #1;
     if (!f_armed || !r_armed || f_epoch_reject != 0 || r_epoch_reject != 0)
       $fatal(1, "stale-role recovery/clear failed");
+
+    // Hold both AXI receive consumers until each selective-repeat window has
+    // advertised zero credit. Releasing the consumers changes ACK base/SACK
+    // and credit without accepting another optical DATA frame. A correct
+    // implementation must therefore emit a fresh control-only ACK and reopen
+    // both transmitters; relying only on rx_accept would deadlock here.
+    clear_capture();
+    f_m_ready = 0;
+    r_m_ready = 0;
+    pulse_starts();
+    fork
+      stream_fixed(CREDIT_REOPEN_BYTES, 8'h5a);
+      stream_rotating(CREDIT_REOPEN_BYTES, 8'ha5);
+      begin : credit_reopen_coordinator
+        watchdog = 0;
+        while ((fixed_endpoint.dp_peer_ack_credit_q != 0 ||
+                rotating_endpoint.dp_peer_ack_credit_q != 0) &&
+               watchdog < 5_000_000) begin
+          @(posedge f_clk); #1;
+          watchdog = watchdog + 1;
+        end
+        if (fixed_endpoint.dp_peer_ack_credit_q != 0 ||
+            rotating_endpoint.dp_peer_ack_credit_q != 0)
+          $fatal(1, "zero-credit setup did not fill both RX windows credit=%0d/%0d",
+                 fixed_endpoint.dp_peer_ack_credit_q,
+                 rotating_endpoint.dp_peer_ack_credit_q);
+        f_fallback_before_credit_reopen = f_fallback;
+        r_fallback_before_credit_reopen = r_fallback;
+        repeat (8) @(posedge f_clk);
+        f_m_ready = 1;
+        r_m_ready = 1;
+      end
+    join
+    wait_both_done(8_000_000);
+    if (f_output_bytes != CREDIT_REOPEN_BYTES ||
+        r_output_bytes != CREDIT_REOPEN_BYTES ||
+        f_capture_count != CREDIT_REOPEN_BYTES ||
+        r_capture_count != CREDIT_REOPEN_BYTES ||
+        !f_capture_last || !r_capture_last)
+      $fatal(1, "credit-reopen byte accounting mismatch");
+    if (f_fallback <= f_fallback_before_credit_reopen ||
+        r_fallback <= r_fallback_before_credit_reopen)
+      $fatal(1, "delivery did not force fresh control ACK fallback=%0d/%0d before=%0d/%0d",
+             f_fallback, r_fallback, f_fallback_before_credit_reopen,
+             r_fallback_before_credit_reopen);
+    for (index = 0; index < CREDIT_REOPEN_BYTES; index = index + 1) begin
+      if (f_received[index] !== payload_pattern(index, 8'ha5))
+        $fatal(1, "credit-reopen R-to-F mismatch index=%0d", index);
+      if (r_received[index] !== payload_pattern(index, 8'h5a))
+        $fatal(1, "credit-reopen F-to-R mismatch index=%0d", index);
+    end
 
     clear_capture();
     pulse_starts();
@@ -639,6 +695,7 @@ module tb_p10_5_dual_direction;
     $display("TB_P10_5_DUAL_DIRECTION_L2=PASS");
     $display("TB_P10_5_ACK_PIGGYBACK=PASS");
     $display("TB_P10_5_CONTROL_ONLY_ACK=PASS");
+    $display("TB_P10_5_CREDIT_REOPEN=PASS");
     $display("TB_P10_5_BIDIRECTIONAL_DMA=PASS");
     $display("TB_P10_5_ROLE_EPOCH_STALE=PASS");
     $display("TB_P10_5_DIRECTION_ABORT_ISOLATION=PASS");
