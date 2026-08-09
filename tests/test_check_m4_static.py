@@ -148,6 +148,25 @@ class M4RegisterOwnershipTests(unittest.TestCase):
             )
         )
 
+    def test_p10_5_window_is_owned_by_endpoint_decoder(self) -> None:
+        names = [name for name in self.offsets if name.startswith("P10_5_")]
+        self.assertEqual(58, len(names))
+        for name in names:
+            self.assertTrue(
+                subject.p9_rtl_consumes_register(
+                    name, self.offsets[name], self.endpoint_rtl
+                ),
+                name,
+            )
+        target = "P10_5_CAPS"
+        self.assertFalse(
+            subject.p9_rtl_consumes_register(
+                target,
+                self.offsets[target],
+                self.endpoint_rtl.replace(f"`IR_REG_{target}", "`REMOVED", 1),
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

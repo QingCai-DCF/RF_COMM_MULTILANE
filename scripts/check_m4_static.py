@@ -219,6 +219,13 @@ def main() -> int:
             rtl_consumes_register = p10_4_rtl_consumes_register(
                 name, off, p9_rtl, p10_1_perf_rtl
             )
+        elif name.startswith("P10_5_"):
+            # P10.5 extends the same endpoint peripheral with its atomic role
+            # commit, independent direction contexts, ACK/SACK, DMA, and
+            # telemetry windows.  Every canonical word is a generated-macro
+            # case item in that owner; do not incorrectly search the legacy
+            # P8 AXI register block for this additive window.
+            rtl_consumes_register = p9_rtl_consumes_register(name, off, p9_rtl)
         elif name.startswith("P8D_"):
             rtl_consumes_register = p8d_rtl_consumes_register(name, off, p8d_rtl)
         else:
