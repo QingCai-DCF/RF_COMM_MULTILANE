@@ -6,6 +6,7 @@ Opening the hardware design, this may take few seconds.
 INFO: [Hsi 55-2053] elapsed time for repository (D:/Xilinx/Vitis/2023.1/data/embeddedsw) loading 0 seconds
 WARNING : No interface that uses file system is available 
 
+generate_target: Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 146.305 ; gain = 7.512
 INFO: Populating the default qemu data for the domain "standalone_domain" from the install location D:/Xilinx/Vitis/2023.1/data/emulation/platforms/zynq/sw/a9_standalone/qemu/
 Building the zynq_fsbl application.
 make: Entering directory 'C:/p10_vitis/p10_5_rotating/p10_rotating_platform/zynq_fsbl/zynq_fsbl_bsp'
@@ -252,11 +253,11 @@ files -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
 
 "Running Make libs in ps7_cortexa9_0/libsrc/scutimer_v2_4/src"
 
-"Running Make libs in ps7_cortexa9_0/libsrc/scuwdt_v2_4/src"
-
 make -C ps7_cortexa9_0/libsrc/scutimer_v2_4/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" 
 "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nosta
 rtfiles -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
+
+"Running Make libs in ps7_cortexa9_0/libsrc/scuwdt_v2_4/src"
 
 make -C ps7_cortexa9_0/libsrc/scuwdt_v2_4/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" "A
 RCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostart
@@ -498,11 +499,11 @@ files -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
 
 "Running Make libs in ps7_cortexa9_0/libsrc/scutimer_v2_4/src"
 
-"Running Make libs in ps7_cortexa9_0/libsrc/scuwdt_v2_4/src"
-
 make -C ps7_cortexa9_0/libsrc/scutimer_v2_4/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" 
 "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nosta
 rtfiles -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
+
+"Running Make libs in ps7_cortexa9_0/libsrc/scuwdt_v2_4/src"
 
 make -C ps7_cortexa9_0/libsrc/scuwdt_v2_4/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" "A
 RCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostart
@@ -516,15 +517,15 @@ tartfiles -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
 
 "Running Make libs in ps7_cortexa9_0/libsrc/uartps_v3_12/src"
 
+make -C ps7_cortexa9_0/libsrc/uartps_v3_12/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" "
+ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostar
+tfiles -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
+
 "Running Make libs in ps7_cortexa9_0/libsrc/xadcps_v2_6/src"
 
 make -C ps7_cortexa9_0/libsrc/xadcps_v2_6/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" "A
 RCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostart
 files -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
-
-make -C ps7_cortexa9_0/libsrc/uartps_v3_12/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" "
-ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostar
-tfiles -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
 
 'Finished building libraries parallelly.'
 

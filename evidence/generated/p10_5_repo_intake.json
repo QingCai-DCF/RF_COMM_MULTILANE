@@ -52,6 +52,8 @@
   "git_status": [
     "M config/project_requirements.yaml",
     " M docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+    " M evidence/generated/p10_4_closeout.json",
+    " M evidence/generated/p10_4_closeout.md",
     " M evidence/generated/p10_5_ack_piggyback.json",
     " M evidence/generated/p10_5_ack_piggyback.md",
     " M evidence/generated/p10_5_architecture.json",
@@ -64,7 +66,6 @@
     " M evidence/generated/p10_5_dma_concurrency.md",
     " M evidence/generated/p10_5_functional_build_summary.json",
     " M evidence/generated/p10_5_ps_runtime_build_summary.json",
-    " M evidence/generated/p10_5_reference_model.json",
     " M evidence/generated/p10_5_repo_intake.json",
     " M evidence/generated/p10_5_repo_intake.md",
     " M evidence/generated/p10_5_role_mask.json",
@@ -93,11 +94,11 @@
     " M evidence/generated/vivado/p10_5_shutdown/rotating/post_synth_drc.rpt",
     " M evidence/generated/vivado/p10_5_shutdown/rotating/post_synth_utilization.rpt",
     " M evidence/generated/vivado/p10_5_shutdown/rotating/vivado_stdout_stderr.txt",
-    "?? artifacts/p10_5/c8241bb6dac852752c7eba70c2a1584aa9700059/",
-    "?? evidence/generated/p10_5_xsim/raw/20260809T095758.145104Z/"
+    "?? artifacts/p10_5/e3693553673a6a9b1053172fd1ab4b2d6eb1024d/",
+    "?? evidence/generated/p10_5_xsim/raw/20260809T103217.876853Z/"
   ],
   "hardware_actions_executed": false,
-  "head": "c8241bb6dac852752c7eba70c2a1584aa9700059",
+  "head": "e3693553673a6a9b1053172fd1ab4b2d6eb1024d",
   "inputs": {
     "AGENTS": {
       "path": "AGENTS.md",
@@ -133,7 +134,7 @@
     },
     "requirements": {
       "path": "config/project_requirements.yaml",
-      "sha256": "4649f47f899be1b481f7cc581154dba1d77214339118019e4c0c104d99451e11"
+      "sha256": "906051b04f4c8ac36bea6f6f5af7a14930a5ffdd9f51182cd9b83e9b87c9896c"
     },
     "rotating_profile": {
       "path": "board_profiles/ax7020_rotating_4lane/profile.yaml",
@@ -150,7 +151,7 @@
   "p10_4_final_commit": "7987e6385b65fa2c7ed7d3a008c1ecbdf323ffa8",
   "schema_version": 1,
   "source_audit_package_sha256": "6c351c7f7fdcac9d1a2cead7548b940d0345c6e1cc7e48d7e3783c7c38e3c904",
-  "start_timestamp_utc": "2026-08-09T10:18:46.211042+00:00",
+  "start_timestamp_utc": "2026-08-09T10:53:56.434390+00:00",
   "status": "PASS",
   "test_id": "P10_5-REPO-INTAKE",
   "tool_versions": {
