@@ -1,0 +1,81 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Mon Aug 10 05:33:04 2026
+# Process ID: 4200
+# Current directory: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/evidence/generated/p10_5_xsim/raw/20260809T211007.946236Z/tb_p10_5_dual_endpoint_integration_work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/tb_p10_5_dual_endpoint_integration_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/evidence/generated/p10_5_xsim/raw/20260809T211007.946236Z/tb_p10_5_dual_endpoint_integration_work/xsim.log
+# Journal file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/evidence/generated/p10_5_xsim/raw/20260809T211007.946236Z/tb_p10_5_dual_endpoint_integration_work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_p10_5_dual_endpoint_integration_snapshot/xsim_script.tcl
+# xsim {tb_p10_5_dual_endpoint_integration_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P10_5_WAIT watchdog=50000 active=1/1 complete=1/0/1/0 bytes=8500/7904/8500/7904 outstanding=3/3 phase=0/0 piggy=9/9 fallback=13/13
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0000 sched=0011 duty_empty=1100 schedule=1111 busy=0011 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=6 reset=0 abort=0 state=1001001001000100
+P10_5_FIXED_RX admission=1100 raw=0/0/19435/18962 preamble=0/0/27/21 good=32 bad=0 crc=0 symbol=0 pulses=0100
+P10_5_ROT_SCHED attempt=0 lane=3 ready=0000 sched=1100 duty_empty=0011 schedule=1111 busy=1100 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=6 reset=0 abort=0 state=1001001001000100
+P10_5_ROT_RX admission=0011 raw=19467/18936/0/0 preamble=27/21/0/0 good=32 bad=0 crc=0 symbol=0 pulses=0010
+P10_5_WAIT watchdog=100000 active=1/1 complete=1/0/1/0 bytes=8500/8396/8500/8396 outstanding=1/1 phase=0/0 piggy=9/9 fallback=15/15
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0001 sched=0011 duty_empty=1100 schedule=1111 busy=0010 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=32 reset=0 abort=0 state=1001010010011001
+P10_5_FIXED_RX admission=1101 raw=0/0/20019/19910 preamble=0/0/29/22 good=34 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=3 ready=0100 sched=1100 duty_empty=0011 schedule=1111 busy=1000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=32 reset=0 abort=0 state=1001010010011001
+P10_5_ROT_RX admission=0111 raw=20044/19884/0/0 preamble=29/22/0/0 good=34 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=50000 active=1/1 complete=1/0/1/0 bytes=800/0/800/0 outstanding=4/4 phase=0/0 piggy=9/9 fallback=16/16
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0011 duty_empty=1100 schedule=1111 busy=0011 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=0010001001000100
+P10_5_FIXED_RX admission=1100 raw=0/0/21093/20882 preamble=0/0/31/23 good=35 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0000 sched=1100 duty_empty=0011 schedule=1111 busy=1100 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=0010001001000100
+P10_5_ROT_RX admission=0011 raw=21124/20862/0/0 preamble=31/23/0/0 good=35 bad=0 crc=0 symbol=0 pulses=0011
+P10_5_WAIT watchdog=100000 active=1/1 complete=1/0/1/0 bytes=800/492/800/492 outstanding=2/2 phase=1/1 piggy=9/9 fallback=18/18
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0000 sched=0011 duty_empty=1100 schedule=1111 busy=0001 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=32 reset=0 abort=0 state=0100010010011001
+P10_5_FIXED_RX admission=1110 raw=0/0/22022/21533 preamble=0/0/33/25 good=38 bad=0 crc=0 symbol=0 pulses=0100
+P10_5_ROT_SCHED attempt=0 lane=3 ready=0000 sched=1100 duty_empty=0011 schedule=1111 busy=0100 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=32 reset=0 abort=0 state=0100010010011001
+P10_5_ROT_RX admission=1011 raw=22042/21515/0/0 preamble=33/25/0/0 good=38 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=150000 active=1/1 complete=1/1/1/1 bytes=800/800/800/800 outstanding=1/1 phase=0/0 piggy=9/9 fallback=19/19
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0011 sched=0011 duty_empty=1100 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=31 reset=0 abort=0 state=1001010010011001
+P10_5_FIXED_RX admission=1111 raw=0/0/22454/21635 preamble=0/0/33/26 good=39 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=3 ready=1100 sched=1100 duty_empty=0011 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=31 reset=0 abort=0 state=1001010010011001
+P10_5_ROT_RX admission=1111 raw=22479/21618/0/0 preamble=33/26/0/0 good=39 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=50000 active=1/1 complete=1/0/1/0 bytes=600/0/800/0 outstanding=0/4 phase=0/0 piggy=9/9 fallback=20/20
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0011 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/0/0 live=0 credit=32 reset=0 abort=1 state=1001001000100010
+P10_5_FIXED_RX admission=1111 raw=0/0/23535/22610 preamble=0/0/35/27 good=39 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0000 sched=1100 duty_empty=0011 schedule=1111 busy=1100 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=0010001001000100
+P10_5_ROT_RX admission=0011 raw=22582/21618/0/0 preamble=34/26/0/0 good=39 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=100000 active=1/1 complete=1/0/1/0 bytes=600/492/800/0 outstanding=0/1 phase=0/0 piggy=9/9 fallback=23/20
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0011 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/0/0 live=0 credit=32 reset=0 abort=1 state=1001001000100010
+P10_5_FIXED_RX admission=1111 raw=0/0/24479/23156 preamble=0/0/36/28 good=42 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=3 ready=0000 sched=1100 duty_empty=0011 schedule=1111 busy=0100 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=31 reset=0 abort=0 state=1001010010011001
+P10_5_ROT_RX admission=1011 raw=22890/21618/0/0 preamble=37/26/0/0 good=39 bad=0 crc=0 symbol=0 pulses=0000
+TB_P10_5_DUAL_DIRECTION_L2=PASS
+TB_P10_5_ACK_PIGGYBACK=PASS
+TB_P10_5_CONTROL_ONLY_ACK=PASS
+TB_P10_5_CREDIT_REOPEN=PASS
+TB_P10_5_BIDIRECTIONAL_DMA=PASS
+TB_P10_5_ROLE_EPOCH_STALE=PASS
+TB_P10_5_DIRECTION_ABORT_ISOLATION=PASS
+TB_P10_5_DUAL_DIRECTION_FAULTS=PASS
+TB_P10_5_DUAL_ENDPOINT_INTEGRATION=PASS
+TB_P10_5_DUAL_DIRECTION=PASS piggy=9/9 fallback=25/20 simultaneous=141637
+$finish called at time : 23396646727 ps : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_p10_5_dual_direction.sv" Line 707
+run: Time (s): cpu = 00:00:00 ; elapsed = 00:01:55 . Memory (MB): peak = 210.996 ; gain = 0.000
+exit
+INFO: xsimkernel Simulation Memory Usage: 17468 KB (Peak: 17468 KB), Simulation CPU Usage: 113234 ms
+INFO: [Common 17-206] Exiting xsim at Mon Aug 10 05:35:02 2026...
