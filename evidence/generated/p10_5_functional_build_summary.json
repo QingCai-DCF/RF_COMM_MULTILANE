@@ -18,7 +18,7 @@
   "blocking_condition": "P10-SAFETY-POWERUP-001",
   "campaign": "p10_5",
   "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-08-09T16:48:45.843789+00:00",
+  "generated_at_utc": "2026-08-09T19:24:20.851794+00:00",
   "hardware_actions_executed": false,
   "hardware_admission": false,
   "network_used": false,
@@ -29,20 +29,20 @@
       "artifacts": {
         "bitstream": {
           "bytes": 4045681,
-          "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/bab90cd4ba9b6f711af795b45dfd696315044d02279718a36fb4003ee707ba4f/p10_ax7020_fixed_functional.bit",
+          "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/3aa03b83993147d59f8d72a04257aae3ddbaa6a0f68143683681ae0c07822837/p10_ax7020_fixed_functional.bit",
           "read_only": true,
-          "sha256": "bab90cd4ba9b6f711af795b45dfd696315044d02279718a36fb4003ee707ba4f"
+          "sha256": "3aa03b83993147d59f8d72a04257aae3ddbaa6a0f68143683681ae0c07822837"
         },
         "xsa": {
-          "bytes": 1411542,
-          "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/35d01d1cc073208699e1656f27f30111186005b9b2003abb9de5a44f1b64c4ad/p10_ax7020_fixed_functional.xsa",
+          "bytes": 1411541,
+          "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/117cc71c49c06aa9bac90b181a4f323893289f410432bfcde530f4ad0a90903d/p10_ax7020_fixed_functional.xsa",
           "read_only": true,
-          "sha256": "35d01d1cc073208699e1656f27f30111186005b9b2003abb9de5a44f1b64c4ad"
+          "sha256": "117cc71c49c06aa9bac90b181a4f323893289f410432bfcde530f4ad0a90903d"
         }
       },
       "errors": [],
       "log": "evidence/generated/vivado/p10_5_4lane/fixed/vivado_stdout_stderr.txt",
-      "log_sha256": "9eb3a842a1dfaf42e83c1e7a8c076945d138e9ad2adf6c35244bb7e8f60990e8",
+      "log_sha256": "d13509dd9575aad3d590616ac6638d5c207cc5dc1ec4c57e3ad5376469ef7001",
       "markers": {
         "P10_5_CAPABILITY_WORD": "0x5035021F",
         "P10_5_DUAL_DIRECTION_CAPABLE": "true",
@@ -112,37 +112,37 @@
         {
           "bytes": 29322,
           "path": "evidence/generated/vivado/p10_5_4lane/fixed/post_route_drc.rpt",
-          "sha256": "acfbc8339bacb91c67c42fc779e13c95fa9df29098f9d3c15e88156b417245af"
+          "sha256": "b3cbd8c0ac6e1afc8b5f26c9c75ce7394d5d12f205b7de192ce448eaa4217eb8"
         },
         {
           "bytes": 39439,
           "path": "evidence/generated/vivado/p10_5_4lane/fixed/post_route_methodology.rpt",
-          "sha256": "227318a492faa323f9b2dd724dc21e88f639bdefa97229f21a93d784607af75d"
+          "sha256": "69549f5b5c692483c66ed34fd5a74b2a53e7913d5665b7a03dabaa724f2fea44"
         },
         {
           "bytes": 217078,
           "path": "evidence/generated/vivado/p10_5_4lane/fixed/post_route_timing_summary.rpt",
-          "sha256": "1ecbdcb605880d3b68a2bafe71a93e67fca68918071fac368927ad3831b9b8ed"
+          "sha256": "ce758ce3f4f9adcd518cbe80e54e580916d47635f7611805ef2e5a3c31a3d76a"
         },
         {
           "bytes": 3666,
           "path": "evidence/generated/vivado/p10_5_4lane/fixed/post_route_check_timing.rpt",
-          "sha256": "d8fb7141e4db6e50204163b08e98c61020f71459eb8a20ab0a492262db8defc4"
+          "sha256": "9142aa07437d03890faff6778b6c9b019375b8142c288dced123fe48089d6a7b"
         },
         {
           "bytes": 188200,
           "path": "evidence/generated/vivado/p10_5_4lane/fixed/post_route_utilization.rpt",
-          "sha256": "b2797d59763cb2f8b2d54a1bfa18d3c6acc4695ab478aa7633ccf71d43bd0584"
+          "sha256": "023c9bf78c2b24eb9e26bf8188ed35a7a56e12db72dc29d8c1950ea5c56a4e84"
         },
         {
           "bytes": 77370,
           "path": "evidence/generated/vivado/p10_5_4lane/fixed/post_route_cdc.rpt",
-          "sha256": "6827ffff050c9d9822ec34738d414b1bf5f1acf2626c20514fdda513297bbba4"
+          "sha256": "8cb2a416321421532594049b99ed8823b5e15a9a3bc9e52f38ff1fcedb073dc1"
         },
         {
           "bytes": 2885,
           "path": "evidence/generated/vivado/p10_5_4lane/fixed/post_route_clock_interaction.rpt",
-          "sha256": "58243b9942e19458e8187e6f3a7cb354582285b5e6ff4f5bbb46596394f44930"
+          "sha256": "f4b04f145fb276e77b397b51f7a7bb26e9ce2edba70edc18e050ac4a58a501e3"
         }
       ],
       "role": "fixed",
@@ -244,20 +244,20 @@
       "artifacts": {
         "bitstream": {
           "bytes": 4045681,
-          "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/8b6b6b36c32b0fc3b8ac456f908109e7db3c84eebe8bd2ae13d2e49cd0d21167/p10_ax7020_rotating_functional.bit",
+          "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/605dd1b660cfc5484c2baddd72fca8195f422093e706706c5b0e493b5fd12ffb/p10_ax7020_rotating_functional.bit",
           "read_only": true,
-          "sha256": "8b6b6b36c32b0fc3b8ac456f908109e7db3c84eebe8bd2ae13d2e49cd0d21167"
+          "sha256": "605dd1b660cfc5484c2baddd72fca8195f422093e706706c5b0e493b5fd12ffb"
         },
         "xsa": {
-          "bytes": 1419624,
-          "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/96cbc0be83dfe4279154c091f97d477df9b40dd92e70122f38fcf516d04464f4/p10_ax7020_rotating_functional.xsa",
+          "bytes": 1419625,
+          "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/80d4186ffb240c2808f48217d70367e5b37ef78220968cd77e60d937f2d7250b/p10_ax7020_rotating_functional.xsa",
           "read_only": true,
-          "sha256": "96cbc0be83dfe4279154c091f97d477df9b40dd92e70122f38fcf516d04464f4"
+          "sha256": "80d4186ffb240c2808f48217d70367e5b37ef78220968cd77e60d937f2d7250b"
         }
       },
       "errors": [],
       "log": "evidence/generated/vivado/p10_5_4lane/rotating/vivado_stdout_stderr.txt",
-      "log_sha256": "220d22c9e719da31fdfaf939d113f8e8e3d8f6068180975a2fcdf7a57e7200ca",
+      "log_sha256": "892022798b5d6c7858ce7a3b592a3e168f752ecf151453b52546fa843c8aa5fd",
       "markers": {
         "P10_5_CAPABILITY_WORD": "0x5035021F",
         "P10_5_DUAL_DIRECTION_CAPABLE": "true",
@@ -327,37 +327,37 @@
         {
           "bytes": 29331,
           "path": "evidence/generated/vivado/p10_5_4lane/rotating/post_route_drc.rpt",
-          "sha256": "49327f70a43029cc18b604863dd54dc8d29ca79d9d984e74af1b1db71f65c513"
+          "sha256": "36e6d8d9b6732589fd8885cf4d9f308f523f5c07fc2b3ed78cdeaf31b7389f00"
         },
         {
           "bytes": 39448,
           "path": "evidence/generated/vivado/p10_5_4lane/rotating/post_route_methodology.rpt",
-          "sha256": "1b9fc6ff168acc6df16b98e6f4a014339e315710c3a29df30597626d8cf83810"
+          "sha256": "4298f088f5b38efdabd8caef17c37f0134b1e06df881f813eb4e9a47f85fcbb4"
         },
         {
           "bytes": 215684,
           "path": "evidence/generated/vivado/p10_5_4lane/rotating/post_route_timing_summary.rpt",
-          "sha256": "432b55d04bd22d9a89a274f3e594bff1439845537a86778b6a77ba71562e8997"
+          "sha256": "74eb13d8fab42f177650b4873eb72358d94fe9a3095ac9a5074ef7468ad0bde5"
         },
         {
           "bytes": 3675,
           "path": "evidence/generated/vivado/p10_5_4lane/rotating/post_route_check_timing.rpt",
-          "sha256": "28d150eb2b88083f0b102b6f09405f865e070c3a16f4c12513eb937b9a727f00"
+          "sha256": "37db96784fffb86dc59235e10506069c9a2ecf7d681e572985348573c6a4ef0e"
         },
         {
           "bytes": 188209,
           "path": "evidence/generated/vivado/p10_5_4lane/rotating/post_route_utilization.rpt",
-          "sha256": "b84119b48fac82b017c9f9a3909ba715fe76cc7f898ce916c7d15ac5c240f80e"
+          "sha256": "86b259bf420ed0b82b759ca4dee5b699025d26d79efeea90c411febabe513247"
         },
         {
           "bytes": 77379,
           "path": "evidence/generated/vivado/p10_5_4lane/rotating/post_route_cdc.rpt",
-          "sha256": "0e71c350b9e9e295931f590b67178125fc75b75860a431f5066649f062c0282f"
+          "sha256": "02351f4e7e38298da1034fc7e113066fee5c9486d83c5b2122b39d6a32d0fd1d"
         },
         {
           "bytes": 2894,
           "path": "evidence/generated/vivado/p10_5_4lane/rotating/post_route_clock_interaction.rpt",
-          "sha256": "bccf218277ff5830eb375548a23fb3903e5070878432f92ff76e9e1e56d16dcd"
+          "sha256": "4b0f5218a9b3670f5465eee0764836c4a2ab15f8fa1744ffac2c492d569f8bf5"
         }
       ],
       "role": "rotating",
@@ -457,7 +457,7 @@
     }
   ],
   "schema_version": 1,
-  "source_commit": "dcbeb75a21b0026675dd8bb99b87a32905a28393",
+  "source_commit": "33273a1a8e6fb785881fb2aa65a5fbaa3150a03c",
   "source_worktree_dirty": false,
   "status": "PASS",
   "test_id": "P10_5-AX7020-DUAL-DIRECTION-4LANE-FUNCTIONAL-BUILD"

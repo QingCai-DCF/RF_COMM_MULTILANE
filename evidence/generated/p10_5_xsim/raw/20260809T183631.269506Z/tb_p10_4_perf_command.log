@@ -1,0 +1,65 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xvlog.bat -sv -i C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl -i C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\sim\tb C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\generated\ir_register_map_defs.svh C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_1_metric_counter.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_1_timer_snapshot.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_1_event_fifo.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\rtl\p10_1_perf_monitor.sv C:\Users\user\Documents\RF_COMM_MULTILANE_P10_5\sim\tb\tb_p10_4_perf_command.sv
+STDOUT_BEGIN
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/generated/ir_register_map_defs.svh" into library work
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_1_metric_counter.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_1_metric_counter
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_1_timer_snapshot.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_1_timer_snapshot
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_1_event_fifo.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_1_event_fifo
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/rtl/p10_1_perf_monitor.sv" into library work
+INFO: [VRFC 10-311] analyzing module p10_1_perf_monitor
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_p10_4_perf_command.sv" into library work
+INFO: [VRFC 10-311] analyzing module tb_p10_4_perf_command
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xelab.bat tb_p10_4_perf_command -debug typical -s tb_p10_4_perf_command_snapshot
+STDOUT_BEGIN
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe tb_p10_4_perf_command -debug typical -s tb_p10_4_perf_command_snapshot 
+Multi-threading is on. Using 26 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.p10_1_timer_snapshot
+Compiling module work.p10_1_event_fifo(DEPTH=32'b01000...
+Compiling module work.p10_1_perf_monitor
+Compiling module work.tb_p10_4_perf_command
+Built simulation snapshot tb_p10_4_perf_command_snapshot
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_p10_4_perf_command_snapshot -runall
+STDOUT_BEGIN
+
+****** xsim v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/tb_p10_4_perf_command_snapshot/xsim_script.tcl
+# xsim {tb_p10_4_perf_command_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P10_4_PERF_COUNTER_SPLIT_XSIM=PASS
+$finish called at time : 221 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_p10_4_perf_command.sv" Line 68
+exit
+INFO: [Common 17-206] Exiting xsim at Mon Aug 10 02:44:12 2026...
+
+STDOUT_END
+STDERR_BEGIN
+
+STDERR_END
+RETURN_CODE=0
