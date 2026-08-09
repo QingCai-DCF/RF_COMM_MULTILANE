@@ -2,7 +2,7 @@
 
 - Status: `PASS`
 - test_id: `P10_5-OFFLINE-ARCHITECTURE`
-- source_commit: `d1ab17777b9f45896b311008815d3d0a7708ef5c`
+- source_commit: `ec4dc468a217e0e8db7b0c5c08b3d0ff3a59662d`
 - hardware_actions_executed: `False`
 - current_run_hardware_authorization: `False`
 
