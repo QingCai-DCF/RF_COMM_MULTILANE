@@ -34,12 +34,12 @@
   },
   "root_cause": "RX delivery changed ACK base/SACK/credit without forcing a new advertisement; a stale credit-zero snapshot symmetrically blocked both transmitters",
   "remediation": [
-    "mark ACK state dirty on RX acceptance and ordered AXI delivery",
+    "mark ACK state dirty on RX acceptance",
     "request the post-delivery ACK snapshot one PL cycle after delivery",
     "preserve dirty state across same-edge changes and queued control serialization"
   ],
   "focused_xsim": {
-    "path": "evidence/generated/p10_5_credit_reopen_xsim_v2/summary.json",
+    "path": "evidence/generated/p10_5_credit_reopen_xsim_v3/summary.json",
     "status": "PASS",
     "required_marker": "TB_P10_5_CREDIT_REOPEN=PASS",
     "bytes_per_direction": 8500,

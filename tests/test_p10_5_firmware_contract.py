@@ -131,12 +131,6 @@ class P10_5FirmwareContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn(
-            "wire p10_5_ack_state_changed = dp_rx_accept_pulse ||", core
-        )
-        self.assertIn(
-            "dp_delivery_valid && dp_delivery_ready_q", core
-        )
-        self.assertIn(
             "dp_rx_delivery_delayed_q <= dp_delivery_valid && "
             "dp_delivery_ready_q;",
             core,
@@ -147,10 +141,10 @@ class P10_5FirmwareContractTests(unittest.TestCase):
             core,
         )
         self.assertIn(
-            "p10_5_ack_dirty_q <= p10_5_ack_state_changed;", core
+            "p10_5_ack_dirty_q <= dp_rx_accept_pulse;", core
         )
         self.assertNotIn(
-            "p10_5_ack_dirty_q <= dp_rx_accept_pulse;", core
+            "wire p10_5_ack_state_changed", core
         )
 
 

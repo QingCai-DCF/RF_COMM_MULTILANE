@@ -46,12 +46,13 @@ after the immutable control header had been captured.
 
 For a live P10.5 RX context:
 
-1. either RX acceptance or ordered AXI delivery marks cumulative ACK state
-   dirty;
-2. delivery is delayed by one PL cycle before it requests a control snapshot,
+1. RX acceptance marks the cumulative ACK state dirty;
+2. ordered AXI delivery is delayed by one PL cycle before it requests a
+   control snapshot,
    so the snapshot observes the post-delivery base/SACK/credit values;
-3. a piggyback clears dirty only if no acceptance or delivery occurred on the
-   capture edge;
+3. a piggyback clears dirty only if no RX acceptance occurred on the capture
+   edge; a delivery cannot be lost because its delayed control request is
+   independent of the dirty flag;
 4. a control-only ACK clears dirty when its immutable header is captured, not
    later when serialization begins; any intervening change therefore remains
    pending;
@@ -71,6 +72,6 @@ transmitters to resume, 8500 bytes to commit in each direction with exact byte
 equality, and `TB_P10_5_CREDIT_REOPEN=PASS`.
 
 The focused post-fix XSIM evidence is under
-`evidence/generated/p10_5_credit_reopen_xsim_v2`. Hardware acceptance remains
+`evidence/generated/p10_5_credit_reopen_xsim_v3`. Hardware acceptance remains
 pending a newly frozen artifact bundle and a new current-run authorization;
 the failed run above is immutable and receives no retroactive PASS.
