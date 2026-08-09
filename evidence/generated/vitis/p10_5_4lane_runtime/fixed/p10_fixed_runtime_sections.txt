@@ -1,0 +1,56 @@
+
+C:\p10_vitis\p10_5_fixed\p10_fixed_runtime\Debug\p10_fixed_runtime.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000f658  00000000  00000000  00010000  2**6
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .init         0000000c  0000f658  0000f658  0001f658  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .fini         0000000c  0000f664  0000f664  0001f664  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  3 .rodata       000004a5  0000f670  0000f670  0001f670  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  4 .data         000008d0  0000fb18  0000fb18  0001fb18  2**3
+                  CONTENTS, ALLOC, LOAD, DATA
+  5 .eh_frame     00000004  000103e8  000103e8  000203e8  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  6 .mmu_tbl      00004000  00014000  00014000  00024000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .ARM.exidx    00000008  00018000  00018000  00028000  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .init_array   00000004  00018008  00018008  00028008  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .fini_array   00000004  0001800c  0001800c  0002800c  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+ 10 .ARM.attributes 00000033  00018010  00018010  00028010  2**0
+                  CONTENTS, READONLY
+ 11 .bss          00000888  00018010  00018010  00028010  2**2
+                  ALLOC
+ 12 .heap         00002008  00018898  00018898  00028010  2**0
+                  ALLOC
+ 13 .stack        00003800  0001a8a0  0001a8a0  00028010  2**0
+                  ALLOC
+ 14 .comment      00000012  00000000  00000000  00028043  2**0
+                  CONTENTS, READONLY
+ 15 .debug_info   0001ee24  00000000  00000000  00028055  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 16 .debug_abbrev 00002ada  00000000  00000000  00046e79  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 17 .debug_loclists 00013922  00000000  00000000  00049953  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 18 .debug_aranges 00000358  00000000  00000000  0005d278  2**3
+                  CONTENTS, READONLY, DEBUGGING
+ 19 .debug_rnglists 000034a4  00000000  00000000  0005d5d0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 20 .debug_macro  00004d5e  00000000  00000000  00060a74  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 21 .debug_line   00015dd7  00000000  00000000  000657d2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 22 .debug_str    0001e216  00000000  00000000  0007b5a9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 23 .debug_frame  0000121c  00000000  00000000  000997c0  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 24 .debug_line_str 00000098  00000000  00000000  0009a9dc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+

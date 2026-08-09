@@ -1,0 +1,11 @@
+# P10.5 AX7020 split-lane dual-direction PS runtime build
+
+- Status: `PASS`
+- Hardware actions executed: `false`
+- Runtime transport: JTAG/OCM mailbox plus independent local AXI DMA; Ethernet is disabled.
+- Hardware admission remains blocked by `P10-SAFETY-POWERUP-001`.
+
+| Role | Build | ELF end | ELF SHA256 | BSP SHA256 |
+|---|---|---|---|---|
+| fixed | PASS | 0x0001E0A0 | `acee254b7f6a0e11dc57ba5620913743e235f3039159c92056dbb7ccbfb299b3` | `9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a` |
+| rotating | PASS | 0x0001E0A0 | `2e966793ac17c3b2d11d8ad553364bcb3cdbb88fd71105e82f05b9b3ebb63e41` | `48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c` |
