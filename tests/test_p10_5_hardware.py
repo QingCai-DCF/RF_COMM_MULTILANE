@@ -151,6 +151,8 @@ class P10_5HardwareTests(unittest.TestCase):
         self.assertIn("P10_5_PAIR_PRIMED", source)
         self.assertIn("P10_5_PAIRED_RELEASE_SKEW_US", source)
         self.assertIn("($pl_status & 0x207) == 0x205", source)
+        self.assertIn("($role_status & 0x1F) == 0x1B", source)
+        self.assertNotIn("($role_status & 0x0F) == 0x07", source)
         self.assertIn("($context_status & 0x8F) == 0x09", source)
         self.assertIn("$submitted_low == $tx_held", source)
         self.assertNotIn("P10_5_PAIRED_LAUNCH_SKEW_US", source)

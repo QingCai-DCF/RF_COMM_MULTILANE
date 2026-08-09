@@ -877,11 +877,14 @@ proc p10_wait_p10_5_pair_primed {d sequence} {
         error [format "P10.5 %s safety fault before paired release: phy=0x%08X mask=0x%08X" \
             $role $phy $p10_phy_safety_mask]
       }
+      # ROLE_STATUS is live here, not the quiet post-object readback used by
+      # p105_capability. Require mode+epoch+object-active+dual active (bits
+      # 0,1,3,4) and therefore require idle bit 2 to be clear.
       if {$main_state == 3 && $magic == 0x31303150 &&
           $result_state == 3 && $result_status == 0 &&
           $result_sequence == $sequence &&
           ($pl_status & 0x207) == 0x205 &&
-          ($role_status & 0x0F) == 0x07 && $role_error == 0 &&
+          ($role_status & 0x1F) == 0x1B && $role_error == 0 &&
           $local_tx == $expected_tx($role) &&
           $local_rx == $expected_rx($role) && $role_epoch != 0 &&
           ($context_status & 0x8F) == 0x09 &&

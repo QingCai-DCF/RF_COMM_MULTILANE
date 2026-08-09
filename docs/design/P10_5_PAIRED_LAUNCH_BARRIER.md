@@ -88,6 +88,11 @@ released, that the RX-submitted count equals the held-TX count, and records
 failed runs remain immutable and do not inherit any result from the repaired
 bundle.
 
+The live `P10_5_ROLE_STATUS` gate at this point is `0x1B` under mask `0x1F`:
+mode active, role epoch valid, object active, and dual-direction active, with
+the mutually exclusive idle bit clear.  The quiet post-object capability
+readback remains a separate check and must not be reused as the launch gate.
+
 ## Safety boundary
 
 The barrier is host/firmware/DMA launch sequencing only. It does not
