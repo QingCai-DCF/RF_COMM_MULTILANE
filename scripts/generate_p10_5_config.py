@@ -58,6 +58,11 @@ def render(data: dict[str, Any]) -> dict[str, str]:
             as_int(runtime["buffer_count"]) != 4 or \
             as_int(runtime["descriptor_batch"]) != 8:
         raise ValueError("P10.5 autonomous runtime contract is not the frozen SG design")
+    if runtime["initial_launch_barrier"] != \
+            "HOST_RELEASE_AFTER_BOTH_ENDPOINTS_PRIMED" or \
+            as_int(runtime["host_launch_release_mask"]) != 0x80000000 or \
+            as_int(runtime["launch_barrier_timeout_ms"]) != 60000:
+        raise ValueError("P10.5 autonomous runtime launch barrier is not fail closed")
 
     sv = f"""// Generated from config/p10_5_dual_direction.yaml; do not edit.
 package p10_5_dual_direction_pkg;
@@ -107,6 +112,8 @@ endpackage
 #define P10_5_RUNTIME_RING_DEPTH UINT32_C({as_int(runtime['ring_depth'])})
 #define P10_5_RUNTIME_BUFFER_COUNT UINT32_C({as_int(runtime['buffer_count'])})
 #define P10_5_RUNTIME_DESCRIPTOR_BATCH UINT32_C({as_int(runtime['descriptor_batch'])})
+#define P10_5_HOST_LAUNCH_RELEASE_MASK UINT32_C(0x{as_int(runtime['host_launch_release_mask']):08X})
+#define P10_5_LAUNCH_BARRIER_TIMEOUT_MS UINT32_C({as_int(runtime['launch_barrier_timeout_ms'])})
 """
     py = f'''# Generated from config/p10_5_dual_direction.yaml; do not edit.
 P10_5_CAPABILITY_VERSION = 1
@@ -134,6 +141,9 @@ DESCRIPTOR_BYTES = {as_int(runtime['descriptor_bytes'])}
 RUNTIME_RING_DEPTH = {as_int(runtime['ring_depth'])}
 RUNTIME_BUFFER_COUNT = {as_int(runtime['buffer_count'])}
 RUNTIME_DESCRIPTOR_BATCH = {as_int(runtime['descriptor_batch'])}
+INITIAL_LAUNCH_BARRIER = "{runtime['initial_launch_barrier']}"
+HOST_LAUNCH_RELEASE_MASK = 0x{as_int(runtime['host_launch_release_mask']):08X}
+LAUNCH_BARRIER_TIMEOUT_MS = {as_int(runtime['launch_barrier_timeout_ms'])}
 
 def validate_masks(active, f_to_r, r_to_f, require_both=True):
     known = (1 << LANE_COUNT) - 1
@@ -171,6 +181,9 @@ def validate_masks(active, f_to_r, r_to_f, require_both=True):
             "ring_depth": as_int(runtime["ring_depth"]),
             "buffer_count": as_int(runtime["buffer_count"]),
             "descriptor_batch": as_int(runtime["descriptor_batch"]),
+            "initial_launch_barrier": runtime["initial_launch_barrier"],
+            "host_launch_release_mask": as_int(runtime["host_launch_release_mask"]),
+            "launch_barrier_timeout_ms": as_int(runtime["launch_barrier_timeout_ms"]),
         },
     }
     doc = f"""# P10.5 Dual-Direction Capability
@@ -185,6 +198,7 @@ def validate_masks(active, f_to_r, r_to_f, require_both=True):
 - Per-direction selective-repeat/SACK: `{per['outstanding']}` / `{per['sack_window']}`
 - ACK: CRC-protected DATA piggyback with bounded control-only fallback
 - Autonomous runtime: mailbox command `{runtime['autonomous_dual_stream_command']}`, simultaneous MM2S/S2MM, up to `0x{as_int(runtime['maximum_stream_bytes']):08X}` bytes per direction
+- Initial launch: both endpoints publish RX/TX-context `PRIMED`; the host then releases both with mailbox mask `0x{as_int(runtime['host_launch_release_mask']):08X}` within `{runtime['launch_barrier_timeout_ms']}` ms
 - Safety: one active-high `GLOBAL_PERMIT` per endpoint; no direction or lane permit was added
 - Compatibility: legacy half-duplex remains the reset/default mode
 """

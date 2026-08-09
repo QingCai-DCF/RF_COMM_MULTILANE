@@ -86,12 +86,16 @@ class P10_5HardwareTests(unittest.TestCase):
         words[0:7] = [0x31303150, 1, campaign.EXPECTED_BUILD["fixed"],
                       1, 6, 0, 7]
         words[176:216] = list(range(40))
+        words[216:220] = [1, 1, 0x89ABCDEF, 0x01234567]
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "result.bin"
             path.write_bytes(struct.pack("<512I", *words))
             parsed = campaign.parse_p105_result(path, "fixed")
         self.assertEqual(parsed["dual_mode"], 0)
         self.assertEqual(parsed["diagnostic_stall_delta"], 39)
+        self.assertEqual(parsed["launch_barrier_waited"], 1)
+        self.assertEqual(parsed["launch_release_seen"], 1)
+        self.assertEqual(parsed["launch_wait_ticks"], 0x0123456789ABCDEF)
         pair = {
             "fixed": {"piggyback_tx": 2, "piggyback_rx": 3,
                       "control_only_ack": 0, "tx_bytes": 4, "rx_bytes": 5},
@@ -135,10 +139,18 @@ class P10_5HardwareTests(unittest.TestCase):
             "p10_submit_staged_case rotating $sequence", stage_rotating)
         submit_fixed = source.index(
             "p10_submit_staged_case fixed $sequence", submit_rotating)
+        wait_pair = source.index(
+            "p10_wait_p10_5_pair_primed $d $sequence", submit_fixed)
+        release_pair = source.index(
+            "p10_release_p10_5_pair $d $sequence", wait_pair)
         self.assertLess(stage_fixed, stage_rotating)
         self.assertLess(stage_rotating, submit_rotating)
         self.assertLess(submit_rotating, submit_fixed)
-        self.assertIn("P10_5_PAIRED_LAUNCH_SKEW_US", source)
+        self.assertLess(submit_fixed, wait_pair)
+        self.assertLess(wait_pair, release_pair)
+        self.assertIn("P10_5_PAIR_PRIMED", source)
+        self.assertIn("P10_5_PAIRED_RELEASE_SKEW_US", source)
+        self.assertNotIn("P10_5_PAIRED_LAUNCH_SKEW_US", source)
 
     def test_all_hardware_tcl_guards_admit_p10_5_marker(self) -> None:
         paths = (

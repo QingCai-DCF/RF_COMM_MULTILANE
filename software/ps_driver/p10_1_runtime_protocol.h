@@ -44,6 +44,7 @@ enum p10_1_runtime_status {
   P10_1_RUNTIME_STATUS_TIMER = 0x107,
   P10_1_RUNTIME_STATUS_REMOTE_COMMIT = 0x108,
   P10_1_RUNTIME_STATUS_ABORT_RECOVERY = 0x109,
+  P10_1_RUNTIME_STATUS_HOST_LAUNCH_BARRIER = 0x10a,
 };
 
 enum p10_1_runtime_flags {
@@ -273,7 +274,13 @@ typedef struct p10_1_runtime_result {
   volatile uint32_t p10_5_diagnostic_status_before;
   volatile uint32_t p10_5_diagnostic_status_after;
   volatile uint32_t p10_5_diagnostic_stall_delta;
-  volatile uint32_t reserved[12];
+  /* Command-15 first-object launch barrier evidence.  The host may release
+   * transmission only after both endpoint result pages publish PRIMED. */
+  volatile uint32_t p10_5_launch_barrier_waited;
+  volatile uint32_t p10_5_launch_release_seen;
+  volatile uint32_t p10_5_launch_wait_ticks_low;
+  volatile uint32_t p10_5_launch_wait_ticks_high;
+  volatile uint32_t reserved[8];
 } p10_1_runtime_result_t;
 
 _Static_assert(offsetof(p10_1_runtime_result_t, service_state) == 4U * 4U,
@@ -308,6 +315,12 @@ _Static_assert(offsetof(p10_1_runtime_result_t,
 _Static_assert(offsetof(p10_1_runtime_result_t,
                         p10_5_diagnostic_stall_delta) == 215U * 4U,
                "P10.5 direction-fault evidence tail length changed");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        p10_5_launch_barrier_waited) == 216U * 4U,
+               "P10.5 launch-barrier evidence tail moved");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        p10_5_launch_wait_ticks_high) == 219U * 4U,
+               "P10.5 launch-barrier evidence tail length changed");
 _Static_assert(sizeof(p10_1_runtime_result_t) <= 2048U,
                "P10.1 result must fit the reserved two-KiB OCM window");
 

@@ -19,6 +19,12 @@ class P10_5FirmwareContractTests(unittest.TestCase):
         self.assertEqual(cfg.RUNTIME_RING_DEPTH, 32)
         self.assertEqual(cfg.RUNTIME_BUFFER_COUNT, 4)
         self.assertEqual(cfg.RUNTIME_DESCRIPTOR_BATCH, 8)
+        self.assertEqual(
+            cfg.INITIAL_LAUNCH_BARRIER,
+            "HOST_RELEASE_AFTER_BOTH_ENDPOINTS_PRIMED",
+        )
+        self.assertEqual(cfg.HOST_LAUNCH_RELEASE_MASK, 0x80000000)
+        self.assertEqual(cfg.LAUNCH_BARRIER_TIMEOUT_MS, 60_000)
 
     def test_command_is_append_only_and_dispatched(self) -> None:
         protocol = (ROOT / "software/ps_driver/p9_runtime_protocol.h").read_text(
@@ -62,7 +68,33 @@ class P10_5FirmwareContractTests(unittest.TestCase):
         self.assertIn(
             "p10_5_prefetched_objects_reclaimed) == 207U * 4U", header
         )
+        self.assertIn("p10_5_launch_barrier_waited) == 216U * 4U", header)
+        self.assertIn("p10_5_launch_wait_ticks_high) == 219U * 4U", header)
         self.assertIn("sizeof(p10_1_runtime_result_t) <= 2048U", header)
+
+    def test_first_dual_object_waits_for_host_paired_release(self) -> None:
+        extension = (
+            ROOT / "software/ps_driver/p10_1_runtime_extension.inc"
+        ).read_text(encoding="utf-8")
+        runtime = (ROOT / "software/ps_driver/p9_runtime_main.c").read_text(
+            encoding="utf-8"
+        )
+        helper = extension[
+            extension.index("static int p10_5_wait_for_paired_launch_release(") :
+            extension.index("static uint32_t p10_1_mix32(")
+        ]
+        self.assertIn("p10_1_publish_state(result, P10_1_RUNTIME_PRIMED);", helper)
+        self.assertIn("P10_5_HOST_LAUNCH_RELEASE_MASK", helper)
+        self.assertIn("P10_5_LAUNCH_BARRIER_TIMEOUT_MS", helper)
+        self.assertIn("P10_1_RUNTIME_STATUS_HOST_LAUNCH_BARRIER", helper)
+        object_loop = extension[
+            extension.index("for (uint32_t ordinal = 0U;") :
+            extension.index("Expensive CRC/SHA finalization happens only")
+        ]
+        wait_at = object_loop.index("p10_5_wait_for_paired_launch_release")
+        start_at = object_loop.index("p10_5_start_direction_stream()")
+        self.assertLess(wait_at, start_at)
+        self.assertIn("m->protocol_fault_flags & UINT32_C(0x0007ffff)", runtime)
 
     def test_duration_mode_stops_at_object_boundary_and_reclaims_prefetch(self) -> None:
         extension = (

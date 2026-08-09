@@ -1096,7 +1096,7 @@ static int p9_configure_object(volatile p9_mailbox_t *m) {
   p9_pl_write(IR_REG_P9_OBJECT_ID, m->object_id);
   p9_pl_write(IR_REG_P9_INITIAL_SEQUENCE, m->initial_sequence & 0xffffU);
   p9_pl_write(IR_REG_P9_PROTOCOL_FAULT_FLAGS,
-              m->protocol_fault_flags & 0x7ffffU);
+              m->protocol_fault_flags & UINT32_C(0x0007ffff));
   p9_pl_write(IR_REG_P9_FAULT_INJECTION,
               (m->drop_data_count & 0xffU) |
                   ((m->drop_ack_count & 0xffU) << 8) |
@@ -1316,7 +1316,7 @@ static int p10_5_program_dual_object_context(volatile p9_mailbox_t *m,
   p9_pl_write(IR_REG_P9_OBJECT_ID, m->object_id);
   p9_pl_write(IR_REG_P9_INITIAL_SEQUENCE, m->initial_sequence & 0xffffU);
   p9_pl_write(IR_REG_P9_PROTOCOL_FAULT_FLAGS,
-              m->protocol_fault_flags & 0x7ffffU);
+              m->protocol_fault_flags & UINT32_C(0x0007ffff));
   p9_pl_write(IR_REG_P9_FAULT_INJECTION,
               local_drop_data | (local_drop_ack << 8) |
                   (unavailable << 16));

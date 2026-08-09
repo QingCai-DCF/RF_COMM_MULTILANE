@@ -65,6 +65,8 @@ FLAG_TARGET_R2F = 1 << 28
 FLAG_ABORT_DIRECTION = 1 << 29
 FLAG_DMA_BACKPRESSURE = 1 << 30
 FLAG_STALE_ROLE = 1 << 31
+HOST_LAUNCH_RELEASE_MASK = 1 << 31
+LAUNCH_BARRIER_TIMEOUT_MS = 60_000
 MODULE_BINDING = {
     "F0": "A0019", "F1": "B0012", "F2": "B0019", "F3": "B0020",
     "R0": "A0010", "R1": "A0017", "R2": "B0023", "R3": "B0025",
@@ -181,6 +183,8 @@ class P105Case:
         if self.duration_ms and (self.timeout < self.duration_ms or
                                  self.size < self.duration_ms * 1000):
             raise ValueError(f"duration ceiling is unsafe: {self.label}")
+        if self.protocol_flags not in {0, STALE_ROLE_PROTOCOL_FLAG}:
+            raise ValueError(f"unsupported P10.5 protocol flags: {self.label}")
 
     def plan_line(self) -> str:
         self.validate()
@@ -659,6 +663,9 @@ def parse_p105_result(path: Path, role: str) -> dict[str, Any]:
         "unaffected_progress": words[210], "affected_commit": words[211],
         "fault_recovery_pass": words[212], "diagnostic_before": words[213],
         "diagnostic_after": words[214], "diagnostic_stall_delta": words[215],
+        "launch_barrier_waited": words[216],
+        "launch_release_seen": words[217],
+        "launch_wait_ticks": u64(words, 218),
     }
 
 
@@ -667,6 +674,8 @@ def result_errors(label: str, case: P105Case, result: dict[str, Any]) -> list[st
     errors: list[str] = []
     expected_local_tx = case.f2r if role == "fixed" else case.r2f
     expected_local_rx = case.r2f if role == "fixed" else case.f2r
+    launch_limit_ticks = (LAUNCH_BARRIER_TIMEOUT_MS * result["ps_timer_hz"] // 1000
+                          if result["ps_timer_hz"] else 0)
     checks = {
         "result identity": result["magic"] == 0x31303150 and result["schema"] == 1,
         "firmware build": result["firmware_build"] == EXPECTED_BUILD[role],
@@ -683,6 +692,10 @@ def result_errors(label: str, case: P105Case, result: dict[str, Any]) -> list[st
         "transport timeout": result["tx_timeouts"] == 0,
         "physical TX evidence": result["tx_bytes"] > 0,
         "physical RX evidence": result["rx_bytes"] > 0,
+        "paired launch barrier":
+            result["launch_barrier_waited"] == 1 and
+            result["launch_release_seen"] == 1 and
+            0 < result["launch_wait_ticks"] <= launch_limit_ticks,
     }
     errors += [f"{label}:{role}: {name}" for name, passed in checks.items() if not passed]
     for name in ("partial_commit", "duplicate_commit", "stale_commit",

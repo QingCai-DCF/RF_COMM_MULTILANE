@@ -75,6 +75,50 @@ static uint64_t p10_1_load64(volatile const uint32_t *low,
   return (uint64_t)*low | ((uint64_t)*high << 32);
 }
 
+static int p10_5_wait_for_paired_launch_release(
+    volatile p9_mailbox_t *mailbox,
+    volatile p10_1_runtime_result_t *result) {
+  uint64_t started = p9_time_now();
+  uint64_t deadline = started +
+      ((uint64_t)P10_5_LAUNCH_BARRIER_TIMEOUT_MS *
+       (uint64_t)COUNTS_PER_SECOND) / UINT64_C(1000);
+
+  /*
+   * protocol_fault_flags shares a write-back OCM cache line with other
+   * command inputs.  Flush all CPU-side command edits before publishing
+   * PRIMED.  The host cannot set RELEASE until it observes PRIMED on both
+   * endpoints, so subsequent invalidations cannot discard a dirty neighbor.
+   */
+  result->p10_5_launch_barrier_waited = 1U;
+  if (g_cache_enabled != 0U)
+    p9_cache_flush((UINTPTR)&mailbox->protocol_fault_flags,
+                   sizeof(mailbox->protocol_fault_flags));
+  p10_1_publish_state(result, P10_1_RUNTIME_PRIMED);
+
+  do {
+    uint32_t live_flags;
+    if (g_cache_enabled != 0U)
+      p9_cache_invalidate((UINTPTR)&mailbox->protocol_fault_flags,
+                          sizeof(mailbox->protocol_fault_flags));
+    dsb();
+    live_flags = mailbox->protocol_fault_flags;
+    if ((live_flags & P10_5_HOST_LAUNCH_RELEASE_MASK) != 0U) {
+      result->p10_5_launch_release_seen = 1U;
+      p10_1_store64(&result->p10_5_launch_wait_ticks_low,
+                    &result->p10_5_launch_wait_ticks_high,
+                    p9_time_now() - started);
+      return P10_1_RUNTIME_STATUS_OK;
+    }
+    usleep(1000U);
+  } while (p9_time_now() < deadline);
+
+  p10_1_store64(&result->p10_5_launch_wait_ticks_low,
+                &result->p10_5_launch_wait_ticks_high,
+                p9_time_now() - started);
+  result->last_error_detail = UINT32_C(0x42415252); /* BARR */
+  return P10_1_RUNTIME_STATUS_HOST_LAUNCH_BARRIER;
+}
+
 static uint32_t p10_1_mix32(uint32_t value) {
   value ^= value >> 16;
   value *= UINT32_C(0x7feb352d);
@@ -732,6 +776,8 @@ static int p10_1_validate_stream_args(
           (P10_5_RUNTIME_FLAG_FAULT_TARGET_R2F |
            P10_5_RUNTIME_FLAG_ABORT_TARGET_DIRECTION |
            P10_5_RUNTIME_FLAG_DMA_TX_BACKPRESSURE)) != 0U) ||
+        (mailbox->protocol_fault_flags &
+         ~IR_P9_PROTOCOL_FAULT_FLAGS_STALE_ROLE_EPOCH_ONCE_MASK) != 0U ||
         (stale_role_epoch_test != 0U &&
          mailbox->protocol_fault_flags != UINT32_C(0x00001000)) ||
         (stale_role_epoch_test == 0U &&
@@ -1511,6 +1557,11 @@ static int p10_1_command_autonomous_stream(
       if (ordinal != 0U && local_tx != 0U)
         usleep(2000U);
       if (dual_mode != 0U) {
+        if (ordinal == 0U) {
+          status = p10_5_wait_for_paired_launch_release(mailbox, result);
+          if (status != P10_1_RUNTIME_STATUS_OK)
+            goto stream_fail_v2;
+        }
         status = p10_5_start_direction_stream();
         if (status != P9_RUNTIME_OK) {
           status = P10_1_RUNTIME_STATUS_PL_OBJECT;
@@ -1562,8 +1613,9 @@ static int p10_1_command_autonomous_stream(
                       &result->pl_start_ticks_high, pl_start);
       }
       p10_1_publish_state(
-          result, local_rx != 0U ?
-              P10_1_RUNTIME_PRIMED : P10_1_RUNTIME_RUNNING);
+          result, dual_mode != 0U ? P10_1_RUNTIME_RUNNING :
+              (local_rx != 0U ?
+                   P10_1_RUNTIME_PRIMED : P10_1_RUNTIME_RUNNING));
     } else {
       p10_1_publish_state(result, P10_1_RUNTIME_RUNNING);
     }

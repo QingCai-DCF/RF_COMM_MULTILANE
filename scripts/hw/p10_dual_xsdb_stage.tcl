@@ -805,6 +805,114 @@ proc p10_wait_receiver_primed {role d} {
       $last_p10_1_sequence]
 }
 
+# Command 15 is symmetric: each endpoint owns one TX direction and the other
+# RX direction.  A submit-order approximation is not a launch barrier because
+# the first CPU can emit its first window before the second CPU has programmed
+# its RX object context.  Wait for direct, role-bound evidence that both sides
+# are armed, receive-enabled, quiet, and blocked in the firmware PRIMED state.
+proc p10_wait_p10_5_pair_primed {d sequence} {
+  global p10_phy_safety_mask
+  set timeout [dict get $d timeout]
+  set bounded [expr {$timeout < 120000 ? $timeout : 120000}]
+  set deadline [expr {[clock milliseconds] + $bounded}]
+  set expected_tx(fixed) [expr {([dict get $d lane] >> 8) & 0xF}]
+  set expected_rx(fixed) [expr {([dict get $d lane] >> 16) & 0xF}]
+  set expected_tx(rotating) $expected_rx(fixed)
+  set expected_rx(rotating) $expected_tx(fixed)
+  foreach role {fixed rotating} {
+    foreach field {main_state result_state result_status result_sequence
+                   pl_status phy role_status role_error local_tx local_rx
+                   role_epoch barrier_waited} {
+      set last($role,$field) 0
+    }
+  }
+  while {[clock milliseconds] < $deadline} {
+    p10_check_abort
+    set ready_count 0
+    foreach role {fixed rotating} {
+      set main_state [p10_read32 $role 0x0002000C]
+      set magic [p10_read32 $role 0x00020400]
+      set result_state [p10_read32 $role 0x00020410]
+      set result_status [p10_read32 $role 0x00020414]
+      set result_sequence [p10_read32 $role 0x00020418]
+      set pl_status [p10_read32 $role 0x43C0071C]
+      set phy [p10_read32 $role 0x43C00720]
+      set role_status [p10_read32 $role 0x43C00E20]
+      set role_error [p10_read32 $role 0x43C00E24]
+      set local_tx [p10_read32 $role 0x43C00E34]
+      set local_rx [p10_read32 $role 0x43C00E38]
+      set role_epoch [p10_read32 $role 0x43C00E1C]
+      set barrier_waited [p10_read32 $role 0x00020760]
+      foreach field {main_state result_state result_status result_sequence
+                     pl_status phy role_status role_error local_tx local_rx
+                     role_epoch barrier_waited} {
+        set last($role,$field) [set $field]
+      }
+      if {$main_state == 5 || $result_state == 8} {
+        error [format "P10.5 %s faulted before paired release: main=0x%08X result_state=0x%08X result_status=0x%08X" \
+            $role $main_state $result_state $result_status]
+      }
+      if {($phy & $p10_phy_safety_mask) != 0} {
+        error [format "P10.5 %s safety fault before paired release: phy=0x%08X mask=0x%08X" \
+            $role $phy $p10_phy_safety_mask]
+      }
+      if {$main_state == 3 && $magic == 0x31303150 &&
+          $result_state == 3 && $result_status == 0 &&
+          $result_sequence == $sequence &&
+          ($pl_status & 0x207) == 0x201 &&
+          ($role_status & 0x0F) == 0x07 && $role_error == 0 &&
+          $local_tx == $expected_tx($role) &&
+          $local_rx == $expected_rx($role) && $role_epoch != 0 &&
+          $barrier_waited == 1} {
+        incr ready_count
+      }
+    }
+    if {$ready_count == 2} {
+      p10_say "P10_5_PAIR_PRIMED=[dict get $d label]:PASS"
+      return
+    }
+    after 1
+  }
+  error [format "P10.5 pair did not prime before release: wait_ms=%d fixed(main=0x%08X,result=0x%08X,status=0x%08X,pl=0x%08X,phy=0x%08X,role=0x%08X,epoch=0x%08X,barrier=%d) rotating(main=0x%08X,result=0x%08X,status=0x%08X,pl=0x%08X,phy=0x%08X,role=0x%08X,epoch=0x%08X,barrier=%d)" \
+      $bounded $last(fixed,main_state) $last(fixed,result_state) \
+      $last(fixed,result_status) $last(fixed,pl_status) $last(fixed,phy) \
+      $last(fixed,role_status) $last(fixed,role_epoch) \
+      $last(fixed,barrier_waited) $last(rotating,main_state) \
+      $last(rotating,result_state) $last(rotating,result_status) \
+      $last(rotating,pl_status) $last(rotating,phy) \
+      $last(rotating,role_status) $last(rotating,role_epoch) \
+      $last(rotating,barrier_waited)]
+}
+
+proc p10_release_p10_5_pair {d sequence} {
+  set planned_flags [dict get $d faultflags]
+  if {($planned_flags & 0x80000000) != 0} {
+    error "P10.5 immutable plan attempted to pre-release launch barrier"
+  }
+  foreach role {fixed rotating} {
+    if {[p10_read32 $role 0x00020018] != $sequence ||
+        [p10_read32 $role 0x0002000C] != 3 ||
+        [p10_read32 $role 0x00020410] != 3 ||
+        [p10_read32 $role 0x00020418] != $sequence} {
+      error "P10.5 paired-release precondition changed for $role"
+    }
+  }
+  set release_flags [expr {$planned_flags | 0x80000000}]
+  set first_us [clock microseconds]
+  p10_write32 rotating 0x00020078 [format "0x%08X" $release_flags]
+  p10_write32 fixed 0x00020078 [format "0x%08X" $release_flags]
+  set release_skew_us [expr {[clock microseconds] - $first_us}]
+  foreach role {fixed rotating} {
+    if {[p10_read32 $role 0x00020078] != $release_flags} {
+      error "P10.5 paired-release readback mismatch for $role"
+    }
+  }
+  p10_say "P10_5_PAIRED_RELEASE_SKEW_US=[dict get $d label]:$release_skew_us"
+  if {$release_skew_us > 25000} {
+    error "P10.5 paired release skew exceeded 25 ms"
+  }
+}
+
 proc p10_record_observation {d sequence started finished fixed_dump rotating_dump fixed_p10_1_dump rotating_p10_1_dump fixed_p10_1r_dump rotating_p10_1r_dump fixed_status rotating_status fixed_state rotating_state window {injection_applied 0} {injection_readback 0} {injection_timestamp_ms 0} {injection_sender NA} {injection_preconditions_verified 0} {injection_pre_outstanding 0} {injection_pre_target_scheduled 0} {injection_pre_target_physical_tx 0} {injection_pre_dropped_ack 0} {injection_pre_migration_count 0} {injection_initial_sequence 0} {injection_pre_ack_base 0} {injection_baseline_physical_ack_good 0} {injection_pre_physical_ack_good 0} {injection_post_write_ack_base 0} {injection_baseline_target_crc_bad 0} {injection_pre_target_crc_bad 0} {injection_atomic_status 0} {injection_trigger_sequence 0} {injection_trigger_ack_base 0} {injection_trigger_outstanding 0} {injection_trigger_attempt_count 0} {injection_trigger_physical_tx_count 0} {injection_trigger_count 0} {injection_trigger_migration_count 0} {injection_trigger_scheduled_count 0}} {
   global p10_observation_handle
   set values [list [dict get $d label] [dict get $d command] [dict get $d expected_status] \
@@ -1144,20 +1252,23 @@ proc p10_execute_case {d {window "NA"}} {
     }
   } else {
     # Commands 14/15 make both endpoints TX+RX peers.  Populate and verify
-    # both complete mailboxes while neither service is SUBMITTED, then release
-    # them with only two adjacent writes.  This removes the former full-mailbox
-    # JTAG skew that could exceed the 50-ms PL retransmission timeout and cause
-    # an artificial first-window retry burst on the endpoint released first.
+    # both complete mailboxes while neither service is SUBMITTED. Command 15
+    # then blocks before START_OBJECT until both endpoints have published
+    # direct PRIMED evidence and the host performs the paired release writes.
     if {$command in {14 15}} {
       p10_stage_case fixed $d $sequence
       p10_stage_case rotating $d $sequence
-      set launch_first_us [clock microseconds]
+      set submit_first_us [clock microseconds]
       p10_submit_staged_case rotating $sequence
       p10_submit_staged_case fixed $sequence
-      set launch_skew_us [expr {[clock microseconds] - $launch_first_us}]
-      p10_say "P10_5_PAIRED_LAUNCH_SKEW_US=[dict get $d label]:$launch_skew_us"
-      if {$launch_skew_us > 25000} {
-        error "P10.5 paired launch skew exceeded 25 ms"
+      set submit_skew_us [expr {[clock microseconds] - $submit_first_us}]
+      p10_say "P10_5_PAIRED_SUBMIT_SKEW_US=[dict get $d label]:$submit_skew_us"
+      if {$submit_skew_us > 25000} {
+        error "P10.5 paired submit skew exceeded 25 ms"
+      }
+      if {$command == 15} {
+        p10_wait_p10_5_pair_primed $d $sequence
+        p10_release_p10_5_pair $d $sequence
       }
     } else {
       p10_publish_case fixed $d $sequence
