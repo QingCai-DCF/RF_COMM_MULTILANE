@@ -493,7 +493,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `config/p8d_data_plane.yaml` — `7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732`
 - `rtl/ir_data_plane_top.sv` — `7218e966b0967592f2c91caf9788df0beb9ba5b1dfe21ba35810dfc9f77397c2`
-- `evidence/generated/p10_5_xsim/summary.json` — `848f8af37515a2a91013f6eac7f50a0c4628752e1ed4abcbddeb6f15468066ab`
+- `evidence/generated/p10_5_xsim/summary.json` — `e76abe851d544870a49d5db0f62778f2e2021328462377ff171b30b6afc78344`
 
 ### `L2-SEQ-001`
 
@@ -511,7 +511,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 - `rtl/ir_ack_aggregator.sv` — `1d271fa5f807fe2afc6844e4723bd9c192d4e882de97866063c1dcd0a6aed58d`
 - `sim/tb/tb_ir_sack_ack_aggregation.sv` — `926ef09ea677487e14a9defd87419208bbfd97fee947527e3552e9ed9ad1c075`
-- `evidence/generated/p10_5_xsim/summary.json` — `848f8af37515a2a91013f6eac7f50a0c4628752e1ed4abcbddeb6f15468066ab`
+- `evidence/generated/p10_5_xsim/summary.json` — `e76abe851d544870a49d5db0f62778f2e2021328462377ff171b30b6afc78344`
 
 ### `L2-DUP-001`
 

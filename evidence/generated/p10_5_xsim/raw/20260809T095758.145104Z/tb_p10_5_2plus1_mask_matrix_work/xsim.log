@@ -1,0 +1,25 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Sun Aug  9 18:07:45 2026
+# Process ID: 30844
+# Current directory: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/evidence/generated/p10_5_xsim/raw/20260809T095758.145104Z/tb_p10_5_2plus1_mask_matrix_work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/tb_p10_5_2plus1_mask_matrix_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/evidence/generated/p10_5_xsim/raw/20260809T095758.145104Z/tb_p10_5_2plus1_mask_matrix_work/xsim.log
+# Journal file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/evidence/generated/p10_5_xsim/raw/20260809T095758.145104Z/tb_p10_5_2plus1_mask_matrix_work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_p10_5_2plus1_mask_matrix_snapshot/xsim_script.tcl
+# xsim {tb_p10_5_2plus1_mask_matrix_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+TB_P10_5_1PLUS1_MASK_MATRIX=PASS
+TB_P10_5_2PLUS1_MASK_MATRIX=PASS
+TB_P10_5_1PLUS2_MASK_MATRIX=PASS
+TB_P10_5_2PLUS2_PARTITIONS=PASS
+TB_P10_5_ROLE_MASK_COMMIT=PASS
+$finish called at time : 20540377 ps : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_p10_5_role_mask_commit.sv" Line 206
+exit
+INFO: [Common 17-206] Exiting xsim at Sun Aug  9 18:07:47 2026...
