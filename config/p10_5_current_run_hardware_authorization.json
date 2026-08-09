@@ -32,36 +32,36 @@
     "formal_30min"
   ],
   "artifact_freeze": "evidence/generated/p10_5_artifact_freeze.json",
-  "artifact_freeze_sha256": "42dc380062f896afb5f1465863ed1f4758b3678dbd6347931de451a302f378be",
+  "artifact_freeze_sha256": "d6bb1ce37b302ec30fb0a2d6f756cdbbd3445f984d5a68196ae988fe4a2de9a9",
   "artifacts": [
     {
       "bytes": 369449,
       "kind": "shutdown_bitstream",
-      "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/293e0cffa19caa6f1a1b86bf7d07bb59bc5dd6a44bf0e6be449c7adfdfd0e349/p10_ax7020_fixed_shutdown.bit",
+      "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/94ca2ecb311e4dd06e3c0029ed176fc65584a8f88820f69b3e1339bcead3c90e/p10_ax7020_fixed_shutdown.bit",
       "read_only": true,
       "role": "fixed",
-      "sha256": "293e0cffa19caa6f1a1b86bf7d07bb59bc5dd6a44bf0e6be449c7adfdfd0e349"
+      "sha256": "94ca2ecb311e4dd06e3c0029ed176fc65584a8f88820f69b3e1339bcead3c90e"
     },
     {
       "bytes": 4045681,
       "kind": "functional_bitstream",
-      "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/bab90cd4ba9b6f711af795b45dfd696315044d02279718a36fb4003ee707ba4f/p10_ax7020_fixed_functional.bit",
+      "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/3aa03b83993147d59f8d72a04257aae3ddbaa6a0f68143683681ae0c07822837/p10_ax7020_fixed_functional.bit",
       "read_only": true,
       "role": "fixed",
-      "sha256": "bab90cd4ba9b6f711af795b45dfd696315044d02279718a36fb4003ee707ba4f"
+      "sha256": "3aa03b83993147d59f8d72a04257aae3ddbaa6a0f68143683681ae0c07822837"
     },
     {
-      "bytes": 1411542,
+      "bytes": 1411541,
       "kind": "xsa",
-      "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/35d01d1cc073208699e1656f27f30111186005b9b2003abb9de5a44f1b64c4ad/p10_ax7020_fixed_functional.xsa",
+      "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/117cc71c49c06aa9bac90b181a4f323893289f410432bfcde530f4ad0a90903d/p10_ax7020_fixed_functional.xsa",
       "read_only": true,
       "role": "fixed",
-      "sha256": "35d01d1cc073208699e1656f27f30111186005b9b2003abb9de5a44f1b64c4ad"
+      "sha256": "117cc71c49c06aa9bac90b181a4f323893289f410432bfcde530f4ad0a90903d"
     },
     {
       "bytes": 1970295,
       "kind": "bsp",
-      "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip",
+      "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip",
       "read_only": true,
       "role": "fixed",
       "sha256": "9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a"
@@ -69,7 +69,7 @@
     {
       "bytes": 658712,
       "kind": "elf",
-      "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/3e50c18065a273ee6b65d368aba2717ef0d6be953f00ef7ab688e3515ab35cc7/p10_fixed_runtime.elf",
+      "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/3e50c18065a273ee6b65d368aba2717ef0d6be953f00ef7ab688e3515ab35cc7/p10_fixed_runtime.elf",
       "read_only": true,
       "role": "fixed",
       "sha256": "3e50c18065a273ee6b65d368aba2717ef0d6be953f00ef7ab688e3515ab35cc7"
@@ -77,31 +77,31 @@
     {
       "bytes": 369449,
       "kind": "shutdown_bitstream",
-      "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/8cec4a0de7c7084d9ee680a665b715626551c940440767ecf5bec30ae83e4344/p10_ax7020_rotating_shutdown.bit",
+      "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/f7112fcd2b0ed74935764db9390945623261c1c6a8c144f3e983cf1ebd8e1a26/p10_ax7020_rotating_shutdown.bit",
       "read_only": true,
       "role": "rotating",
-      "sha256": "8cec4a0de7c7084d9ee680a665b715626551c940440767ecf5bec30ae83e4344"
+      "sha256": "f7112fcd2b0ed74935764db9390945623261c1c6a8c144f3e983cf1ebd8e1a26"
     },
     {
       "bytes": 4045681,
       "kind": "functional_bitstream",
-      "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/8b6b6b36c32b0fc3b8ac456f908109e7db3c84eebe8bd2ae13d2e49cd0d21167/p10_ax7020_rotating_functional.bit",
+      "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/605dd1b660cfc5484c2baddd72fca8195f422093e706706c5b0e493b5fd12ffb/p10_ax7020_rotating_functional.bit",
       "read_only": true,
       "role": "rotating",
-      "sha256": "8b6b6b36c32b0fc3b8ac456f908109e7db3c84eebe8bd2ae13d2e49cd0d21167"
+      "sha256": "605dd1b660cfc5484c2baddd72fca8195f422093e706706c5b0e493b5fd12ffb"
     },
     {
-      "bytes": 1419624,
+      "bytes": 1419625,
       "kind": "xsa",
-      "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/96cbc0be83dfe4279154c091f97d477df9b40dd92e70122f38fcf516d04464f4/p10_ax7020_rotating_functional.xsa",
+      "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/80d4186ffb240c2808f48217d70367e5b37ef78220968cd77e60d937f2d7250b/p10_ax7020_rotating_functional.xsa",
       "read_only": true,
       "role": "rotating",
-      "sha256": "96cbc0be83dfe4279154c091f97d477df9b40dd92e70122f38fcf516d04464f4"
+      "sha256": "80d4186ffb240c2808f48217d70367e5b37ef78220968cd77e60d937f2d7250b"
     },
     {
       "bytes": 1970378,
       "kind": "bsp",
-      "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip",
+      "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip",
       "read_only": true,
       "role": "rotating",
       "sha256": "48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c"
@@ -109,28 +109,27 @@
     {
       "bytes": 659532,
       "kind": "elf",
-      "path": "artifacts/p10_5/dcbeb75a21b0026675dd8bb99b87a32905a28393/056816efa612b3aa36a1dc7df59c8c022b0d4e16c28a11c1cee5a4ead628fd7e/p10_rotating_runtime.elf",
+      "path": "artifacts/p10_5/33273a1a8e6fb785881fb2aa65a5fbaa3150a03c/056816efa612b3aa36a1dc7df59c8c022b0d4e16c28a11c1cee5a4ead628fd7e/p10_rotating_runtime.elf",
       "read_only": true,
       "role": "rotating",
       "sha256": "056816efa612b3aa36a1dc7df59c8c022b0d4e16c28a11c1cee5a4ead628fd7e"
     }
   ],
   "authorization_id": "P10_5-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "68a42504d724185636b438aeb427ced1db82c740",
+  "authorization_parent_commit": "5e4ad4233d8c0d17e9bab31069a05932509a0b36",
   "authorization_source": [
     "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md",
     "direct user submission of the P10.5 Goal dated 2026-08-09"
   ],
   "authorization_source_semantics": "Submitting the Goal explicitly authorizes its complete bounded P10.5 hardware campaign without further confirmation after immutable offline freeze.",
-  "authorized": false,
+  "authorized": true,
   "board_binding": {
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
-  "consumed": true,
-  "consumed_at_utc": "2026-08-09T18:27:17+00:00",
-  "created_at_utc": "2026-08-09T18:23:22.965971+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "created_at_utc": "2026-08-09T19:36:16.331871+00:00",
+  "current_run_hardware_authorization": true,
   "errors": [],
   "ethernet_allowed": false,
   "external_instrumentation_allowed": false,
@@ -176,9 +175,9 @@
       "sha256": "6c90331dc94f20b9378f50f03e0222a2444c50e1e94933abb7366bf4ff74366a"
     },
     "stage_tcl": {
-      "bytes": 139585,
+      "bytes": 139801,
       "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
-      "sha256": "e8fe5b7d74a9da3f4124df3eba1ace2ef0dc457d5de913254177aed53d40272f"
+      "sha256": "3cadd6d158f4a463f9ed6b0b1d0a0ab4ac0a75e12d57227e43ca302c14ddb093"
     }
   },
   "maximum_continuous_module_runtime_seconds": 1800,
@@ -196,7 +195,7 @@
     "R3": "B0025"
   },
   "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
-  "no_hardware": true,
+  "no_hardware": false,
   "offline_inputs": {
     "actual_wiring": {
       "bytes": 5507,
@@ -251,7 +250,7 @@
     "reference_model": {
       "bytes": 2932,
       "path": "evidence/generated/p10_5_reference_model.json",
-      "sha256": "bc60e25cea63d1fc34a35bff940757331c633d4dbf0b2bf768a976947b95ff8b"
+      "sha256": "5373b1250b26667df3971899802c206d3baf1731fed30951b464c3ad822ef190"
     },
     "register_manifest": {
       "bytes": 2045,
@@ -274,14 +273,14 @@
       "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
     },
     "stage_tcl": {
-      "bytes": 139585,
+      "bytes": 139801,
       "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
-      "sha256": "e8fe5b7d74a9da3f4124df3eba1ace2ef0dc457d5de913254177aed53d40272f"
+      "sha256": "3cadd6d158f4a463f9ed6b0b1d0a0ab4ac0a75e12d57227e43ca302c14ddb093"
     },
     "xsim_summary": {
       "bytes": 21633,
       "path": "evidence/generated/p10_5_xsim/summary.json",
-      "sha256": "bf198c04cac8967965363db17d0efecff8bae2723171099acf96acffdc06d6f7"
+      "sha256": "9812ad0d72825613e57f197600affc41467eeecb1cf1f1b2441b7facc8ea643d"
     }
   },
   "p11_allowed": false,
@@ -294,9 +293,8 @@
     "hash_low": "0xA16281D1",
     "version": "0x0A000005"
   },
-  "result": "evidence/hardware/p10_5/p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36/final/p10_5_final_summary.json",
   "rotating_jtag_serial": "210512180081",
-  "run_id": "p10_5_20260809T182322Z_dcbeb75a_bab90cd4_8b6b6b36",
+  "run_id": "p10_5_20260809T193616Z_33273a1a_3aa03b83_605dd1b6",
   "runtime_rest_policy": {
     "conservative_modules": [
       "F0",
@@ -323,7 +321,7 @@
     "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
     "verify_both_shutdown_markers": true
   },
-  "source_commit": "dcbeb75a21b0026675dd8bb99b87a32905a28393",
+  "source_commit": "33273a1a8e6fb785881fb2aa65a5fbaa3150a03c",
   "spi_allowed": false,
   "stage_runtime_limits_seconds": {
     "capability": 1,
@@ -341,6 +339,6 @@
     "two_plus_one": 480,
     "two_plus_two": 180
   },
-  "status": "CONSUMED_AFTER_P10_5_FAIL",
+  "status": "READY_FOR_EXACT_CURRENT_RUN",
   "two_hour_test_allowed": false
 }
