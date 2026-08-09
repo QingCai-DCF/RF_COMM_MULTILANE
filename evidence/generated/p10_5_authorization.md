@@ -1,6 +1,5 @@
 # P10.5 current-run authorization
 
-- Status: `CONSUMED_AFTER_P10_5_FAIL`
-- test_id: `P10_5-AUTHORIZATION`
-- run_id: `p10_5_20260809T225128Z_ec4dc468_f7fe756b_f3a5718e`
-- artifact_source_commit: `ec4dc468a217e0e8db7b0c5c08b3d0ff3a59662d`
+- Status: `READY_FOR_EXACT_CURRENT_RUN`
+- Run ID: `p10_5_20260809T230540Z_ec4dc468_f7fe756b_f3a5718e`
+- Hardware actions executed: `false`
