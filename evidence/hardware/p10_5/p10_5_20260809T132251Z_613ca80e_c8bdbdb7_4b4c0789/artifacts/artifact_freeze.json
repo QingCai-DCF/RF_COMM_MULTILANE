@@ -1,0 +1,469 @@
+{
+  "acceptance_eligible": true,
+  "allowed_hardware_stages": [
+    "safe_start",
+    "capability",
+    "one_plus_one",
+    "two_plus_one",
+    "two_plus_two",
+    "role_commit",
+    "performance",
+    "streaming_64m_1",
+    "streaming_64m_2",
+    "streaming_64m_3",
+    "streaming_64m_4",
+    "streaming_64m_5",
+    "faults",
+    "formal_30min"
+  ],
+  "allowed_plan_sha256": {
+    "capability": "e03cc311a7c70a1cc6dd30dcd029f9fba6306abf86a2fcfd29d6f7eca39a0244",
+    "faults": "8509e1ca5e760f7eecc6593217ceac620f2b023fe612aac5cdaaab31edfa88ea",
+    "formal_30min": "508f70c362a1dce7799574f2a521109d618f131bbd9b088b61083945c98f4c33",
+    "one_plus_one": "a313fa2d319b9dab672ee207497f03cba3bf07b18eb043ac6991c0f3597d3ab9",
+    "performance": "a76cd7aca11bc587b8dd691a8b326afb99ff83ce570f5a9f4aa5f61e5160a8a3",
+    "role_commit": "c78bc58d41de30948ad2098771e1d73231d3b24609a7167fa6b8cc80dd1956f0",
+    "safe_start": "5374960c79b709f2b97b5d28353248b626c4acf04ad0b5ca74ef6ca7194e325e",
+    "streaming_64m_1": "38e756b28bba97a9dd5226bc3c21b75f34b6fe5fa558873ce382f8959895b5fe",
+    "streaming_64m_2": "570ad892e03fed991f30ce6e0a926b622cecea3dd9be90c53585712c9e92946c",
+    "streaming_64m_3": "6d193a5adb8783d8b7cd4f2acdf9acf06b6ac035ba51d65c5d51ae65de7491c8",
+    "streaming_64m_4": "5cdea485eaeaa4a09ec02a96423ef26a4f29ef498911a838e10e336ccd98ca88",
+    "streaming_64m_5": "7bf6ec68eae635203310d7a2f823b52a61615c316793930c10335bebd0d4d317",
+    "two_plus_one": "9b5423894049e52d98d2e0b2edabf7a2934623d8ec86632818c03f0c4e8e9fc3",
+    "two_plus_two": "cdb3459a984ea6b87e3f0c06308246218740277f8e280cfe48e081b1397314fd"
+  },
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_5/613ca80e8f551dfdc2d521cc7611b8d7777fde1b/258b0c4a317b1791f282fdd7532381fe5d94260187771705207070f8eb033bc6/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "258b0c4a317b1791f282fdd7532381fe5d94260187771705207070f8eb033bc6"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_5/613ca80e8f551dfdc2d521cc7611b8d7777fde1b/c8bdbdb795f7776fab07d2635e498b93d86a9999988dca977d4a9425ebc01074/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "c8bdbdb795f7776fab07d2635e498b93d86a9999988dca977d4a9425ebc01074"
+    },
+    {
+      "bytes": 1411543,
+      "kind": "xsa",
+      "path": "artifacts/p10_5/613ca80e8f551dfdc2d521cc7611b8d7777fde1b/8242afd2cdcc1a5603a0b509c2f9637835b3334dd364bcaae673cad1c6862a2b/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "8242afd2cdcc1a5603a0b509c2f9637835b3334dd364bcaae673cad1c6862a2b"
+    },
+    {
+      "bytes": 1970295,
+      "kind": "bsp",
+      "path": "artifacts/p10_5/613ca80e8f551dfdc2d521cc7611b8d7777fde1b/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a"
+    },
+    {
+      "bytes": 650832,
+      "kind": "elf",
+      "path": "artifacts/p10_5/613ca80e8f551dfdc2d521cc7611b8d7777fde1b/acee254b7f6a0e11dc57ba5620913743e235f3039159c92056dbb7ccbfb299b3/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "acee254b7f6a0e11dc57ba5620913743e235f3039159c92056dbb7ccbfb299b3"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_5/613ca80e8f551dfdc2d521cc7611b8d7777fde1b/2e30bec0f76563fbc1e54335034b9c9ebc52b1807a4c521540b68f7f83fc9003/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2e30bec0f76563fbc1e54335034b9c9ebc52b1807a4c521540b68f7f83fc9003"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_5/613ca80e8f551dfdc2d521cc7611b8d7777fde1b/4b4c07892e731dd9dd9f837e82ba148c34d15d571c91b3cdafc2fc44fc0d3bbf/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "4b4c07892e731dd9dd9f837e82ba148c34d15d571c91b3cdafc2fc44fc0d3bbf"
+    },
+    {
+      "bytes": 1419627,
+      "kind": "xsa",
+      "path": "artifacts/p10_5/613ca80e8f551dfdc2d521cc7611b8d7777fde1b/7b7c800742a9fd6c95a0cfb3503a70a0d9cc3174bc7e7fdd9ecc8914f212baea/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "7b7c800742a9fd6c95a0cfb3503a70a0d9cc3174bc7e7fdd9ecc8914f212baea"
+    },
+    {
+      "bytes": 1970378,
+      "kind": "bsp",
+      "path": "artifacts/p10_5/613ca80e8f551dfdc2d521cc7611b8d7777fde1b/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c"
+    },
+    {
+      "bytes": 651480,
+      "kind": "elf",
+      "path": "artifacts/p10_5/613ca80e8f551dfdc2d521cc7611b8d7777fde1b/2e966793ac17c3b2d11d8ad553364bcb3cdbb88fd71105e82f05b9b3ebb63e41/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2e966793ac17c3b2d11d8ad553364bcb3cdbb88fd71105e82f05b9b3ebb63e41"
+    }
+  ],
+  "automation_only": true,
+  "branch": "p10.5/dual-direction-2plus2",
+  "build_evidence": {
+    "functional": {
+      "bytes": 29969,
+      "path": "evidence/generated/p10_5_functional_build_summary.json",
+      "sha256": "5282f12a8f2cb166841d67a83d1169f6926014cf525105e789c2ad063983bcb0"
+    },
+    "ps_runtime": {
+      "bytes": 16441,
+      "path": "evidence/generated/p10_5_ps_runtime_build_summary.json",
+      "sha256": "967bfa55c143821e1d4af982dd6b6a7e2fc0aed7488e5db23ed3e884ea6328ba"
+    },
+    "shutdown": {
+      "bytes": 10350,
+      "path": "evidence/generated/p10_5_shutdown_build_summary.json",
+      "sha256": "3f19f3f82fab2c3ad6cdf1a34455c67992ee62df92d743b643407b647613b969"
+    },
+    "xsim": {
+      "bytes": 21633,
+      "path": "evidence/generated/p10_5_xsim/summary.json",
+      "sha256": "afe8efe8c301b9b411100c5c6dfdf2b1eec2f241a304690cb363c04d52a982cb"
+    }
+  },
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "expected_build_ids": {
+    "fixed": "0x50353546",
+    "rotating": "0x50353552"
+  },
+  "generated_at_utc": "2026-08-09T13:16:33.526278+00:00",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "hardware_actions_executed": false,
+  "maximum_continuous_module_runtime_seconds": 1800,
+  "maximum_lane_mask": 15,
+  "maximum_single_formal_run_seconds": 1800,
+  "minimum_interstage_cooldown_ratio": 0.5,
+  "no_hardware": true,
+  "offline_gates": {
+    "no_hardware_static": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_no_hardware_calls.py"
+      ],
+      "log": {
+        "bytes": 31,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/no_hardware_static.log",
+        "sha256": "22a36fafd58a794d360a159b85137bb06f7478d2aaad089567ffebfbc8d60a5c"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_1r_baseline": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_1r_existing.py"
+      ],
+      "log": {
+        "bytes": 254,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_1r_baseline.log",
+        "sha256": "339e769a2706755be6d3adab99567a0abbe0ae1e464e4e4643d7b2de29f43385"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_2_baseline": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_2_existing.py"
+      ],
+      "log": {
+        "bytes": 181,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_2_baseline.log",
+        "sha256": "181d803018fc436d877ae8daa2d7dedce9e8d7fcfd8103d1c72d21fb4794dbbf"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_3_baseline": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_3_existing.py"
+      ],
+      "log": {
+        "bytes": 59,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_3_baseline.log",
+        "sha256": "fb8913559f07aa9619f9f728431e132760c09e212c8ad56d6dd29180b60bedb2"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_4_baseline": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/prepare_p10_5_offline.py"
+      ],
+      "log": {
+        "bytes": 55,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_4_baseline.log",
+        "sha256": "4ee34dfe542273f21dd1803b2a065c706cc7c5639e9749bc69bcf8ccf3b510f9"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_5_config": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_p10_5_config.py",
+        "--verify"
+      ],
+      "log": {
+        "bytes": 108,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_config.log",
+        "sha256": "4b679cac4bd84f3e571fd5b4a6ec5c0313ac0349a6f91fc451b3cd3148410b4b"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_5_firmware_unit": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-m",
+        "unittest",
+        "tests.test_p10_5_firmware_contract"
+      ],
+      "log": {
+        "bytes": 103,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_firmware_unit.log",
+        "sha256": "6273232de4d3ef7acd4ecafa5c86beeeb974f56586b21089a2990b3f72facbe6"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_5_model": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/model_p10_5_dual_direction.py"
+      ],
+      "log": {
+        "bytes": 121,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_model.log",
+        "sha256": "6a212c8076dc3b1315b856b74e2639321c0f1f7936bbc8872152889088dbef63"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_5_offline": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/finalize_p10_5_offline.py"
+      ],
+      "log": {
+        "bytes": 64,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_offline.log",
+        "sha256": "ebf717f8d3f2381093083b0d9bf67f96d2be61bc9c64d6539edd072b3cd84580"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_5_runner_unit": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-m",
+        "unittest",
+        "tests.test_p10_5_hardware"
+      ],
+      "log": {
+        "bytes": 107,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_runner_unit.log",
+        "sha256": "092f3ef0c082b5e2a61888b77b1f68ffbd0afb7284e19601ea6250cb7141c478"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p8c_safety": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p8c_existing.py"
+      ],
+      "log": {
+        "bytes": 25,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p8c_safety.log",
+        "sha256": "42040d278511b798595228f906f6eb59f51b8a15d979941ac27ff3b10ad4861b"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "register_map": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_register_headers.py",
+        "--verify"
+      ],
+      "log": {
+        "bytes": 149,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/register_map.log",
+        "sha256": "292c38db0a94e0809333dbf4ea62e8f6a7c6a8452dce83d72eb12487371e0b6c"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "state_requirements": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_p8a_consistency.py",
+        "--check"
+      ],
+      "log": {
+        "bytes": 183,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/state_requirements.log",
+        "sha256": "30d94a2fdbbc42c42202d87c3fc5ca3cb4f550daa10c5d8c7a6e65d623cbf933"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "tcl_complete": {
+      "command": [
+        "D:\\Xilinx\\Vivado\\2023.1\\tps\\win64\\git-2.16.2\\mingw64\\bin\\tclsh.exe",
+        "scripts/hw/check_tcl_complete.tcl",
+        "scripts/hw/p10_dual_xsdb_stage.tcl",
+        "scripts/hw/p10_3f_fault_forensics.tcl",
+        "scripts/hw/p10_program_dual_shutdown.tcl"
+      ],
+      "log": {
+        "bytes": 201,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/tcl_complete.log",
+        "sha256": "441b709d8dd87617efe7cc88e854494a87c82b75dc5f994b9bd97fcf4c45ee63"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "traceability": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_requirement_traceability.py",
+        "--check"
+      ],
+      "log": {
+        "bytes": 111,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/traceability.log",
+        "sha256": "44dff0fbdfbc50814da41d4e4c416cca8282cafcfa95c15c7f76abf48d6f4110"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    }
+  },
+  "offline_inputs": {
+    "actual_wiring": {
+      "bytes": 5507,
+      "path": "config/hardware/p10_3_actual_wiring.yaml",
+      "sha256": "c761fcd5f86a3b2d54a85cad93496019d3c92f828c454dce15f3d73b80773848"
+    },
+    "artifact_freezer": {
+      "bytes": 12420,
+      "path": "scripts/freeze_p10_5_artifacts.py",
+      "sha256": "f989ffdcf749e9feabe6586c1954372ec44ca59717a4f664fdd2acfcf955babe"
+    },
+    "authorization_builder": {
+      "bytes": 8691,
+      "path": "scripts/create_p10_5_authorization.py",
+      "sha256": "ea55a8f695ea2369ad00fcf9a9a368546787bf4cd97dc2459f72f4fbef8f0104"
+    },
+    "campaign_runner": {
+      "bytes": 55892,
+      "path": "scripts/run_p10_5_hardware.py",
+      "sha256": "31518b69040aa8904ce4c460c13ba3cee748e08721c3acddcc094589098d869d"
+    },
+    "capability_table": {
+      "bytes": 795,
+      "path": "config/generated/p10_5_capability_table.json",
+      "sha256": "5029753ef471f59376f27fe72cd85adf742df69eb8f68c09386d02ecb5ccfb88"
+    },
+    "dual_direction_config": {
+      "bytes": 1889,
+      "path": "config/p10_5_dual_direction.yaml",
+      "sha256": "fb79523627256fb10258e13bc5bbd1e1c0fab5214b916bbbac44aeb17e5a1db6"
+    },
+    "forensic_tcl": {
+      "bytes": 16654,
+      "path": "scripts/hw/p10_3f_fault_forensics.tcl",
+      "sha256": "facc17601507a710040159b050aa902dbb8b02225c9f8998c73c743b1e3ea377"
+    },
+    "goal": {
+      "bytes": 37470,
+      "path": "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md",
+      "sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36"
+    },
+    "module_inventory": {
+      "bytes": 28143,
+      "path": "config/hardware/tfdu_module_inventory.yaml",
+      "sha256": "f4a85f370acee9c2a3536265202afc4ec4cc9e109a262e6c1fd5f04cc1eb26d4"
+    },
+    "p10_4_closeout": {
+      "bytes": 522,
+      "path": "evidence/generated/p10_4_closeout.json",
+      "sha256": "a4504d3fa0eeb080c287c560e90955b7ddbb559486a21280118941ac3f053c9d"
+    },
+    "reference_model": {
+      "bytes": 2932,
+      "path": "evidence/generated/p10_5_reference_model.json",
+      "sha256": "a2cc1c2c84d84b28f85e7423e274251a6ef573e89ec95455de3cdcb0da21ef77"
+    },
+    "register_manifest": {
+      "bytes": 2045,
+      "path": "config/register_map/generated/ir_regs_manifest.json",
+      "sha256": "c15fc2a29b95de8e3b0f89e378ca41ddcaf49439489619b4b650080a50e36f0f"
+    },
+    "register_map": {
+      "bytes": 78818,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "723d1e35155a7d0184b787744a9cfd5c8d4574928572a4572f03df0ba16281d1"
+    },
+    "runtime_guard": {
+      "bytes": 9419,
+      "path": "scripts/p10_tfdu_runtime_guard.py",
+      "sha256": "6c90331dc94f20b9378f50f03e0222a2444c50e1e94933abb7366bf4ff74366a"
+    },
+    "runtime_rest_policy": {
+      "bytes": 1417,
+      "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
+      "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
+    },
+    "stage_tcl": {
+      "bytes": 132460,
+      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+      "sha256": "62d520c40476d6674d857e984c29d40d00fc09743afe704b4a7ddb10857af923"
+    },
+    "xsim_summary": {
+      "bytes": 21633,
+      "path": "evidence/generated/p10_5_xsim/summary.json",
+      "sha256": "afe8efe8c301b9b411100c5c6dfdf2b1eec2f241a304690cb363c04d52a982cb"
+    }
+  },
+  "old_hardware_pass_inherited": false,
+  "register_map": {
+    "hash_low": "0xA16281D1",
+    "version": "0x0A000005"
+  },
+  "schema_version": 1,
+  "scope": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
+  "shutdown_policy": {
+    "archive_before_independent_shutdown": true,
+    "clear_frozen_capture_before_shutdown_program": false,
+    "shutdown_before_every_stage": true,
+    "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
+    "verify_both_shutdown_markers": true
+  },
+  "source_commit": "613ca80e8f551dfdc2d521cc7611b8d7777fde1b",
+  "source_tree_clean": true,
+  "status": "PASS",
+  "test_id": "P10_5-IMMUTABLE-ARTIFACT-FREEZE",
+  "user_hold_points": 0
+}
