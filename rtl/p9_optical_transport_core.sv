@@ -565,6 +565,24 @@ module p9_optical_transport_core #(
   assign auto_migration_trigger_scheduled_count_o =
       auto_migration_trigger_scheduled_count_q;
 
+  // Direction-context abort is protocol state, not a physical safety kill.
+  // Keep these registers synchronously reset so that neither one can become
+  // an asynchronously-reset control feeding the inferred payload BRAM ports
+  // (Vivado REQP-1839).  The independent full-shutdown/Txd-kill path remains
+  // asynchronous and does not wait on these context flags.
+  always @(posedge clk) begin : p10_5_direction_context_lifecycle
+    if (!rst_n) begin
+      tx_context_aborted_q <= 1'b0;
+      rx_context_aborted_q <= 1'b0;
+    end else if (start_object_i) begin
+      tx_context_aborted_q <= 1'b0;
+      rx_context_aborted_q <= 1'b0;
+    end else if (object_active_q && object_dual_direction_q) begin
+      if (abort_tx_context_i) tx_context_aborted_q <= 1'b1;
+      if (abort_rx_context_i) rx_context_aborted_q <= 1'b1;
+    end
+  end
+
   // AXI-stream ingress and immutable selective-repeat payload store.
   (* ram_style="block" *) reg [7:0] tx_store [0:LANE_COUNT-1][0:STORE_BYTES-1];
   reg [31:0] tx_slot_crc [0:WINDOW_SIZE-1];
@@ -2845,8 +2863,6 @@ module p9_optical_transport_core #(
       object_rx_path_q <= 0;
       object_rx_id_q <= 0;
       object_rx_initial_sequence_q <= 0;
-      tx_context_aborted_q <= 0;
-      rx_context_aborted_q <= 0;
       object_lane_mask_q <= {{(LANE_COUNT-1){1'b0}}, 1'b1};
       object_lane_weights_q <= {LANE_COUNT{8'h01}};
       object_rate_q <= 2;
@@ -2931,8 +2947,6 @@ module p9_optical_transport_core #(
                 cfg_rx_object_id_i : cfg_object_id_i;
             object_rx_initial_sequence_q <= requested_dual_direction ?
                 cfg_rx_initial_sequence_i : cfg_initial_sequence_i;
-            tx_context_aborted_q <= 0;
-            rx_context_aborted_q <= 0;
             object_lane_mask_q <= cfg_lane_mask_i;
             object_lane_weights_q <= cfg_lane_weights_i;
             object_rate_q <= cfg_rate_select_i;
@@ -2942,10 +2956,6 @@ module p9_optical_transport_core #(
             object_initial_sequence_q <= cfg_initial_sequence_i;
             session_reset_pulse_q <= 1;
           end
-        end
-        if (object_active_q && object_dual_direction_q) begin
-          if (abort_tx_context_i) tx_context_aborted_q <= 1;
-          if (abort_rx_context_i) rx_context_aborted_q <= 1;
         end
         if (ingress_error_pulse_q && object_active_q) begin
           object_active_q <= 0;
