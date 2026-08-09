@@ -666,6 +666,10 @@ def parse_p105_result(path: Path, role: str) -> dict[str, Any]:
         "launch_barrier_waited": words[216],
         "launch_release_seen": words[217],
         "launch_wait_ticks": u64(words, 218),
+        "launch_rx_object_prestarted": words[220],
+        "launch_tx_descriptors_held": words[221],
+        "launch_tx_descriptors_released": words[222],
+        "launch_prestart_context_status": words[223],
     }
 
 
@@ -696,6 +700,12 @@ def result_errors(label: str, case: P105Case, result: dict[str, Any]) -> list[st
             result["launch_barrier_waited"] == 1 and
             result["launch_release_seen"] == 1 and
             0 < result["launch_wait_ticks"] <= launch_limit_ticks,
+        "RX-first TX-deferred launch":
+            result["launch_rx_object_prestarted"] == 1 and
+            result["launch_tx_descriptors_held"] > 0 and
+            result["launch_tx_descriptors_released"] ==
+                result["launch_tx_descriptors_held"] and
+            (result["launch_prestart_context_status"] & 0x8F) == 0x09,
     }
     errors += [f"{label}:{role}: {name}" for name, passed in checks.items() if not passed]
     for name in ("partial_commit", "duplicate_commit", "stale_commit",

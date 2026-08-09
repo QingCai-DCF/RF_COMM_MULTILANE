@@ -150,6 +150,9 @@ class P10_5HardwareTests(unittest.TestCase):
         self.assertLess(wait_pair, release_pair)
         self.assertIn("P10_5_PAIR_PRIMED", source)
         self.assertIn("P10_5_PAIRED_RELEASE_SKEW_US", source)
+        self.assertIn("($pl_status & 0x207) == 0x205", source)
+        self.assertIn("($context_status & 0x8F) == 0x09", source)
+        self.assertIn("$submitted_low == $tx_held", source)
         self.assertNotIn("P10_5_PAIRED_LAUNCH_SKEW_US", source)
 
     def test_all_hardware_tcl_guards_admit_p10_5_marker(self) -> None:

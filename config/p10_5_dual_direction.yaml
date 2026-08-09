@@ -34,7 +34,7 @@ runtime:
   ring_depth: 32
   buffer_count: 4
   descriptor_batch: 8
-  initial_launch_barrier: HOST_RELEASE_AFTER_BOTH_ENDPOINTS_PRIMED
+  initial_launch_barrier: RX_ACTIVE_TX_DESCRIPTORS_HELD_UNTIL_HOST_RELEASE
   host_launch_release_mask: '0x80000000'
   launch_barrier_timeout_ms: 60000
 control:

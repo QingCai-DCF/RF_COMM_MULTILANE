@@ -59,7 +59,7 @@ def render(data: dict[str, Any]) -> dict[str, str]:
             as_int(runtime["descriptor_batch"]) != 8:
         raise ValueError("P10.5 autonomous runtime contract is not the frozen SG design")
     if runtime["initial_launch_barrier"] != \
-            "HOST_RELEASE_AFTER_BOTH_ENDPOINTS_PRIMED" or \
+            "RX_ACTIVE_TX_DESCRIPTORS_HELD_UNTIL_HOST_RELEASE" or \
             as_int(runtime["host_launch_release_mask"]) != 0x80000000 or \
             as_int(runtime["launch_barrier_timeout_ms"]) != 60000:
         raise ValueError("P10.5 autonomous runtime launch barrier is not fail closed")
@@ -198,7 +198,7 @@ def validate_masks(active, f_to_r, r_to_f, require_both=True):
 - Per-direction selective-repeat/SACK: `{per['outstanding']}` / `{per['sack_window']}`
 - ACK: CRC-protected DATA piggyback with bounded control-only fallback
 - Autonomous runtime: mailbox command `{runtime['autonomous_dual_stream_command']}`, simultaneous MM2S/S2MM, up to `0x{as_int(runtime['maximum_stream_bytes']):08X}` bytes per direction
-- Initial launch: both endpoints publish RX/TX-context `PRIMED`; the host then releases both with mailbox mask `0x{as_int(runtime['host_launch_release_mask']):08X}` within `{runtime['launch_barrier_timeout_ms']}` ms
+- Initial launch: both endpoints activate RX with every initial TX descriptor CPU-held, publish `PRIMED`, then release both TX queues with mailbox mask `0x{as_int(runtime['host_launch_release_mask']):08X}` within `{runtime['launch_barrier_timeout_ms']}` ms
 - Safety: one active-high `GLOBAL_PERMIT` per endpoint; no direction or lane permit was added
 - Compatibility: legacy half-duplex remains the reset/default mode
 """

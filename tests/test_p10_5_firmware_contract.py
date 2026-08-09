@@ -21,7 +21,7 @@ class P10_5FirmwareContractTests(unittest.TestCase):
         self.assertEqual(cfg.RUNTIME_DESCRIPTOR_BATCH, 8)
         self.assertEqual(
             cfg.INITIAL_LAUNCH_BARRIER,
-            "HOST_RELEASE_AFTER_BOTH_ENDPOINTS_PRIMED",
+            "RX_ACTIVE_TX_DESCRIPTORS_HELD_UNTIL_HOST_RELEASE",
         )
         self.assertEqual(cfg.HOST_LAUNCH_RELEASE_MASK, 0x80000000)
         self.assertEqual(cfg.LAUNCH_BARRIER_TIMEOUT_MS, 60_000)
@@ -54,8 +54,8 @@ class P10_5FirmwareContractTests(unittest.TestCase):
         ]
         self.assertIn("if (local_tx != 0U)", prepare)
         self.assertIn("if (local_rx != 0U)", prepare)
-        self.assertIn("p10_1_submit_chain(\n        1U", prepare)
-        self.assertIn("p10_1_submit_chain(\n        0U", prepare)
+        self.assertRegex(prepare, r"p10_1_submit_chain\(\s+1U")
+        self.assertRegex(prepare, r"p10_1_submit_chain\(\s+0U")
         self.assertIn("p10_5_program_dual_object_context", extension)
         self.assertIn("p10_5_commit_role_masks", extension)
 
@@ -70,6 +70,8 @@ class P10_5FirmwareContractTests(unittest.TestCase):
         )
         self.assertIn("p10_5_launch_barrier_waited) == 216U * 4U", header)
         self.assertIn("p10_5_launch_wait_ticks_high) == 219U * 4U", header)
+        self.assertIn("p10_5_launch_rx_object_prestarted) == 220U * 4U", header)
+        self.assertIn("p10_5_launch_prestart_context_status) == 223U * 4U", header)
         self.assertIn("sizeof(p10_1_runtime_result_t) <= 2048U", header)
 
     def test_first_dual_object_waits_for_host_paired_release(self) -> None:
@@ -91,9 +93,14 @@ class P10_5FirmwareContractTests(unittest.TestCase):
             extension.index("for (uint32_t ordinal = 0U;") :
             extension.index("Expensive CRC/SHA finalization happens only")
         ]
-        wait_at = object_loop.index("p10_5_wait_for_paired_launch_release")
         start_at = object_loop.index("p10_5_start_direction_stream()")
-        self.assertLess(wait_at, start_at)
+        wait_at = object_loop.index("p10_5_wait_for_paired_launch_release")
+        release_at = object_loop.index("p10_1_submit_deferred_tx_slot")
+        self.assertLess(start_at, wait_at)
+        self.assertLess(wait_at, release_at)
+        self.assertIn("dual_mode != 0U", object_loop)
+        self.assertIn("slots[index].tx_submitted != 0U", object_loop)
+        self.assertIn("slots[index].rx_submitted == 0U", object_loop)
         self.assertIn("m->protocol_fault_flags & UINT32_C(0x0007ffff)", runtime)
 
     def test_duration_mode_stops_at_object_boundary_and_reclaims_prefetch(self) -> None:

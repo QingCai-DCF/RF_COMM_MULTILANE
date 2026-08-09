@@ -608,6 +608,8 @@ static void p10_1_configure_object(volatile p9_mailbox_t *mailbox,
 
 typedef struct p10_1_runtime_buffer_slot {
   uint32_t valid;
+  uint32_t tx_submitted;
+  uint32_t rx_submitted;
   uint32_t ordinal;
   uint32_t bytes;
   uint32_t descriptor_count;
@@ -620,7 +622,7 @@ static int p10_1_prepare_slot(
     volatile p10_1_runtime_result_t *result,
     p10_1_runtime_buffer_slot_t *slot,
     uint32_t slot_index, uint32_t ordinal, uint32_t local_tx,
-    uint32_t local_rx, uint32_t hash_on_prepare,
+    uint32_t local_rx, uint32_t hash_on_prepare, uint32_t defer_tx,
     p9_sha256_context_t *input_sha_context, uint32_t *input_crc_state,
     uint64_t *prepare_ticks) {
   uint64_t stream_offset = (uint64_t)ordinal * result->object_bytes;
@@ -630,12 +632,15 @@ static int p10_1_prepare_slot(
   uint64_t phase_start;
   int status;
 
-  if ((local_tx | local_rx) == 0U || slot->valid != 0U ||
-      stream_offset >= result->total_bytes ||
+  if ((local_tx | local_rx) == 0U ||
+      (defer_tx != 0U && (local_tx == 0U || local_rx == 0U)) ||
+      slot->valid != 0U || stream_offset >= result->total_bytes ||
       current == 0U)
     return P10_1_RUNTIME_STATUS_BAD_ARGUMENT;
 
   slot->ordinal = ordinal;
+  slot->tx_submitted = 0U;
+  slot->rx_submitted = 0U;
   slot->bytes = current;
   slot->descriptor_count =
       p10_1_descriptor_count(current, result->descriptor_bytes);
@@ -658,11 +663,14 @@ static int p10_1_prepare_slot(
 
   if (local_tx != 0U) {
     p9_cache_flush((UINTPTR)slot->tx_buffer, current);
-    status = p10_1_submit_chain(
-        1U, (UINTPTR)slot->tx_buffer, current, result->descriptor_bytes,
-        slot->token_base, result);
-    if (status != P10_1_RUNTIME_STATUS_OK)
-      return status;
+    if (defer_tx == 0U) {
+      status = p10_1_submit_chain(
+          1U, (UINTPTR)slot->tx_buffer, current, result->descriptor_bytes,
+          slot->token_base, result);
+      if (status != P10_1_RUNTIME_STATUS_OK)
+        return status;
+      slot->tx_submitted = 1U;
+    }
   }
   if (local_rx != 0U) {
     memset(slot->rx_buffer, 0x5a ^ (uint8_t)ordinal, current);
@@ -672,10 +680,27 @@ static int p10_1_prepare_slot(
         slot->token_base, result);
     if (status != P10_1_RUNTIME_STATUS_OK)
       return status;
+    slot->rx_submitted = 1U;
   }
   slot->valid = 1U;
   result->objects_submitted++;
   return P10_1_RUNTIME_STATUS_OK;
+}
+
+static int p10_1_submit_deferred_tx_slot(
+    volatile p10_1_runtime_result_t *result,
+    p10_1_runtime_buffer_slot_t *slot) {
+  int status;
+  if (slot->valid == 0U || slot->tx_submitted != 0U ||
+      slot->rx_submitted == 0U || slot->bytes == 0U ||
+      slot->descriptor_count == 0U)
+    return P10_1_RUNTIME_STATUS_DMA_CHAIN;
+  status = p10_1_submit_chain(
+      1U, (UINTPTR)slot->tx_buffer, slot->bytes,
+      result->descriptor_bytes, slot->token_base, result);
+  if (status == P10_1_RUNTIME_STATUS_OK)
+    slot->tx_submitted = 1U;
+  return status;
 }
 
 static int p10_1_validate_stream_args(
@@ -1511,10 +1536,22 @@ static int p10_1_command_autonomous_stream(
   for (uint32_t ordinal = 0U; ordinal < initial_slot_count; ++ordinal) {
     status = p10_1_prepare_slot(
         result, &slots[ordinal], ordinal, ordinal, local_tx, local_rx,
-        duration_mode == 0U,
+        duration_mode == 0U, dual_mode != 0U,
         &input_sha_context, &input_crc_state, &prepare_ticks);
     if (status != P10_1_RUNTIME_STATUS_OK)
       goto stream_fail_v2;
+  }
+  if (dual_mode != 0U) {
+    uint32_t held_descriptors = 0U;
+    for (uint32_t index = 0U; index < initial_slot_count; ++index) {
+      if (slots[index].valid == 0U || slots[index].tx_submitted != 0U ||
+          slots[index].rx_submitted == 0U) {
+        status = P10_1_RUNTIME_STATUS_DMA_CHAIN;
+        goto stream_fail_v2;
+      }
+      held_descriptors += slots[index].descriptor_count;
+    }
+    result->p10_5_launch_tx_descriptors_held = held_descriptors;
   }
   next_prepare_ordinal = initial_slot_count;
 
@@ -1557,20 +1594,45 @@ static int p10_1_command_autonomous_stream(
       if (ordinal != 0U && local_tx != 0U)
         usleep(2000U);
       if (dual_mode != 0U) {
-        if (ordinal == 0U) {
-          status = p10_5_wait_for_paired_launch_release(mailbox, result);
-          if (status != P10_1_RUNTIME_STATUS_OK)
-            goto stream_fail_v2;
-        }
         status = p10_5_start_direction_stream();
         if (status != P9_RUNTIME_OK) {
           status = P10_1_RUNTIME_STATUS_PL_OBJECT;
           goto stream_fail_v2;
         }
+        object_started_ticks = p9_time_now();
+        if (ordinal == 0U) {
+          uint32_t context_status =
+              p9_pl_read(IR_REG_P10_5_CONTEXT_STATUS);
+          result->p10_5_launch_prestart_context_status = context_status;
+          result->p10_5_launch_rx_object_prestarted =
+              (context_status & UINT32_C(0x0000008f)) ==
+                      UINT32_C(0x00000009) ?
+                  1U : 0U;
+          if (result->p10_5_launch_rx_object_prestarted == 0U ||
+              result->p10_5_launch_tx_descriptors_held == 0U) {
+            status = P10_1_RUNTIME_STATUS_PL_OBJECT;
+            goto stream_fail_v2;
+          }
+          status = p10_5_wait_for_paired_launch_release(mailbox, result);
+          if (status != P10_1_RUNTIME_STATUS_OK)
+            goto stream_fail_v2;
+          for (uint32_t index = 0U; index < initial_slot_count; ++index) {
+            status = p10_1_submit_deferred_tx_slot(result, &slots[index]);
+            if (status != P10_1_RUNTIME_STATUS_OK)
+              goto stream_fail_v2;
+            result->p10_5_launch_tx_descriptors_released +=
+                slots[index].descriptor_count;
+          }
+          if (result->p10_5_launch_tx_descriptors_released !=
+              result->p10_5_launch_tx_descriptors_held) {
+            status = P10_1_RUNTIME_STATUS_DMA_CHAIN;
+            goto stream_fail_v2;
+          }
+        }
       } else {
         p9_pl_write(IR_REG_P9_CONTROL, IR_P9_CONTROL_START_OBJECT_MASK);
+        object_started_ticks = p9_time_now();
       }
-      object_started_ticks = p9_time_now();
 
       if (direction_fault_test != 0U && ordinal == 0U &&
           (flags & P10_5_RUNTIME_FLAG_DMA_TX_BACKPRESSURE) != 0U &&
@@ -1630,7 +1692,7 @@ static int p10_1_command_autonomous_stream(
       status = p10_1_prepare_slot(
           result, &slots[refill_index], refill_index,
           next_prepare_ordinal, local_tx, local_rx,
-          duration_mode == 0U, &input_sha_context,
+          duration_mode == 0U, 0U, &input_sha_context,
           &input_crc_state, &prepare_ticks);
       if (status != P10_1_RUNTIME_STATUS_OK)
         goto stream_fail_v2;
@@ -1790,6 +1852,11 @@ static int p10_1_command_autonomous_stream(
       return P9_RUNTIME_OK;
     }
 
+    if ((local_tx != 0U && slot->tx_submitted == 0U) ||
+        (local_rx != 0U && slot->rx_submitted == 0U)) {
+      status = P10_1_RUNTIME_STATUS_DMA_CHAIN;
+      goto stream_fail_v2;
+    }
     status = p10_1_collect_chain(
         local_tx, slot->descriptor_count, slot->token_base,
         mailbox->timeout_ms, slot->bytes, result);

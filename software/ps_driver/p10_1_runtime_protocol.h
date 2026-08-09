@@ -280,7 +280,14 @@ typedef struct p10_1_runtime_result {
   volatile uint32_t p10_5_launch_release_seen;
   volatile uint32_t p10_5_launch_wait_ticks_low;
   volatile uint32_t p10_5_launch_wait_ticks_high;
-  volatile uint32_t reserved[8];
+  /* RX-first/TX-deferred first-object launch proof.  START_OBJECT is active
+   * on both endpoints while the complete initial TX descriptor queue remains
+   * CPU-owned.  The queue is submitted only after the paired host release. */
+  volatile uint32_t p10_5_launch_rx_object_prestarted;
+  volatile uint32_t p10_5_launch_tx_descriptors_held;
+  volatile uint32_t p10_5_launch_tx_descriptors_released;
+  volatile uint32_t p10_5_launch_prestart_context_status;
+  volatile uint32_t reserved[4];
 } p10_1_runtime_result_t;
 
 _Static_assert(offsetof(p10_1_runtime_result_t, service_state) == 4U * 4U,
@@ -321,6 +328,12 @@ _Static_assert(offsetof(p10_1_runtime_result_t,
 _Static_assert(offsetof(p10_1_runtime_result_t,
                         p10_5_launch_wait_ticks_high) == 219U * 4U,
                "P10.5 launch-barrier evidence tail length changed");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        p10_5_launch_rx_object_prestarted) == 220U * 4U,
+               "P10.5 RX-first launch evidence tail moved");
+_Static_assert(offsetof(p10_1_runtime_result_t,
+                        p10_5_launch_prestart_context_status) == 223U * 4U,
+               "P10.5 RX-first launch evidence tail length changed");
 _Static_assert(sizeof(p10_1_runtime_result_t) <= 2048U,
                "P10.1 result must fit the reserved two-KiB OCM window");
 
