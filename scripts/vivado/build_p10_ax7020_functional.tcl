@@ -44,6 +44,7 @@ create_project $project_name "$build_dir/project" \
 set rtl_sources [list \
   "$root_dir/rtl/generated/tfdu_safety_config.svh" \
   "$root_dir/rtl/generated/ir_register_map_defs.svh" \
+  "$root_dir/rtl/generated/p10_5_dual_direction_pkg.sv" \
   "$root_dir/rtl/ir_seq_math_pkg.sv" \
   "$root_dir/rtl/ir_health_weighted_scheduler.sv" \
   "$root_dir/rtl/ir_selective_repeat_tx.sv" \
