@@ -552,9 +552,12 @@ proc p105_capability {label expected_active expected_f2r expected_r2f} {
     if {$expected_active != 0} {
       set expected_local_tx [expr {$role eq "fixed" ? $expected_f2r : $expected_r2f}]
       set expected_local_rx [expr {$role eq "fixed" ? $expected_r2f : $expected_f2r}]
+      # Bits 0/1/2 prove active dual mode, a committed epoch, and the required
+      # quiet post-object boundary.  Bit 4 is intentionally live-only and is
+      # therefore zero after the preceding finite CASE has completed.
       if {$active != $expected_active || $f2r != $expected_f2r ||
           $r2f != $expected_r2f || $local_tx != $expected_local_tx ||
-          $local_rx != $expected_local_rx || ($role_status & 0x13) != 0x13 ||
+          $local_rx != $expected_local_rx || ($role_status & 0x07) != 0x07 ||
           $role_epoch == 0} {
         close $out
         error "P10.5 committed role-mask readback mismatch"
@@ -691,8 +694,7 @@ proc p10_case_dict {fields} {
   return $d
 }
 
-proc p10_publish_case {role d sequence} {
-  p10_write32 $role 0x0002000C 2
+proc p10_stage_case {role d sequence} {
   foreach spec {
     {0x00020014 command} {0x00020024 flags} {0x00020028 lane}
     {0x0002002C direction} {0x00020030 rate} {0x00020034 weights}
@@ -706,6 +708,23 @@ proc p10_publish_case {role d sequence} {
     p10_write32 $role [lindex $spec 0] [dict get $d [lindex $spec 1]]
   }
   p10_write32 $role 0x00020018 $sequence
+  if {[p10_read32 $role 0x00020018] != $sequence ||
+      [p10_read32 $role 0x00020014] != [dict get $d command] ||
+      [p10_read32 $role 0x00020028] != [dict get $d lane]} {
+    error "P10 staged command readback mismatch for $role"
+  }
+}
+
+proc p10_submit_staged_case {role sequence} {
+  if {[p10_read32 $role 0x00020018] != $sequence} {
+    error "P10 staged command sequence changed before submit for $role"
+  }
+  p10_write32 $role 0x0002000C 2
+}
+
+proc p10_publish_case {role d sequence} {
+  p10_stage_case $role $d $sequence
+  p10_submit_staged_case $role $sequence
 }
 
 proc p10_sender_role {direction} {
@@ -1124,8 +1143,26 @@ proc p10_execute_case {d {window "NA"}} {
       }
     }
   } else {
-    p10_publish_case fixed $d $sequence
-    p10_publish_case rotating $d $sequence
+    # Commands 14/15 make both endpoints TX+RX peers.  Populate and verify
+    # both complete mailboxes while neither service is SUBMITTED, then release
+    # them with only two adjacent writes.  This removes the former full-mailbox
+    # JTAG skew that could exceed the 50-ms PL retransmission timeout and cause
+    # an artificial first-window retry burst on the endpoint released first.
+    if {$command in {14 15}} {
+      p10_stage_case fixed $d $sequence
+      p10_stage_case rotating $d $sequence
+      set launch_first_us [clock microseconds]
+      p10_submit_staged_case rotating $sequence
+      p10_submit_staged_case fixed $sequence
+      set launch_skew_us [expr {[clock microseconds] - $launch_first_us}]
+      p10_say "P10_5_PAIRED_LAUNCH_SKEW_US=[dict get $d label]:$launch_skew_us"
+      if {$launch_skew_us > 25000} {
+        error "P10.5 paired launch skew exceeded 25 ms"
+      }
+    } else {
+      p10_publish_case fixed $d $sequence
+      p10_publish_case rotating $d $sequence
+    }
   }
 
   set terminal [p10_wait_pair_terminal $sequence [dict get $d timeout]]

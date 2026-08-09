@@ -92,19 +92,24 @@ class P10_5HardwareTests(unittest.TestCase):
             parsed = campaign.parse_p105_result(path, "fixed")
         self.assertEqual(parsed["dual_mode"], 0)
         self.assertEqual(parsed["diagnostic_stall_delta"], 39)
-        evidence = campaign.aggregate_capability_evidence([{
-            "details": [{
-                "fixed": {"piggyback_tx": 2, "piggyback_rx": 3,
-                          "control_only_ack": 0, "tx_bytes": 4, "rx_bytes": 5},
-                "rotating": {"piggyback_tx": 1, "piggyback_rx": 1,
-                             "control_only_ack": 7, "tx_bytes": 8,
-                             "rx_bytes": 9},
-            }]
-        }])
+        pair = {
+            "fixed": {"piggyback_tx": 2, "piggyback_rx": 3,
+                      "control_only_ack": 0, "tx_bytes": 4, "rx_bytes": 5},
+            "rotating": {"piggyback_tx": 1, "piggyback_rx": 1,
+                         "control_only_ack": 7, "tx_bytes": 8,
+                         "rx_bytes": 9},
+        }
+        evidence = campaign.aggregate_capability_evidence([
+            {"stage": "capability", "details": [pair]},
+            {"stage": "two_plus_two", "details": [pair] * 6},
+        ])
         self.assertTrue(evidence["ack_piggyback_tx_observed"])
         self.assertTrue(evidence["ack_piggyback_rx_observed"])
         self.assertTrue(evidence["control_only_ack_fallback_observed"])
         self.assertTrue(evidence["two_plus_two_tx_executed"])
+        pre_two_plus_two = campaign.aggregate_capability_evidence([
+            {"stage": "capability", "details": [pair]}])
+        self.assertFalse(pre_two_plus_two["two_plus_two_tx_executed"])
 
     def test_runner_has_no_runtime_cap_or_network_path(self) -> None:
         source = (ROOT / "scripts/run_p10_5_hardware.py").read_text(
@@ -121,6 +126,19 @@ class P10_5HardwareTests(unittest.TestCase):
         self.assertIn('elseif {$kind eq "P105_CAPABILITY"}', source)
         self.assertIn("P10 CASE requires exactly 29 fields", source)
         self.assertIn("if {[llength $argv] ni {16 18 20}}", source)
+        self.assertIn("($role_status & 0x07) != 0x07", source)
+        self.assertNotIn("($role_status & 0x13) != 0x13", source)
+        stage_fixed = source.index("p10_stage_case fixed $d $sequence")
+        stage_rotating = source.index("p10_stage_case rotating $d $sequence",
+                                      stage_fixed)
+        submit_rotating = source.index(
+            "p10_submit_staged_case rotating $sequence", stage_rotating)
+        submit_fixed = source.index(
+            "p10_submit_staged_case fixed $sequence", submit_rotating)
+        self.assertLess(stage_fixed, stage_rotating)
+        self.assertLess(stage_rotating, submit_rotating)
+        self.assertLess(submit_rotating, submit_fixed)
+        self.assertIn("P10_5_PAIRED_LAUNCH_SKEW_US", source)
 
     def test_all_hardware_tcl_guards_admit_p10_5_marker(self) -> None:
         paths = (

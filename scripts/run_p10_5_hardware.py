@@ -887,13 +887,18 @@ def aggregate_capability_evidence(stages: list[dict[str, Any]]) -> dict[str, Any
     piggyback_tx = max([0] + [int(x.get("piggyback_tx", 0)) for x in results])
     piggyback_rx = max([0] + [int(x.get("piggyback_rx", 0)) for x in results])
     control_only = max([0] + [int(x.get("control_only_ack", 0)) for x in results])
-    tx_executed = any(int(x.get("tx_bytes", 0)) > 0 for x in results)
-    rx_executed = any(int(x.get("rx_bytes", 0)) > 0 for x in results)
+    two_plus_two_pairs = [pair for stage in stages
+                          if stage.get("stage") == "two_plus_two"
+                          for pair in stage.get("details", [])]
+    two_plus_two_tx_executed = len(two_plus_two_pairs) == 6 and all(
+        int(pair.get(role, {}).get("tx_bytes", 0)) > 0 and
+        int(pair.get(role, {}).get("rx_bytes", 0)) > 0
+        for pair in two_plus_two_pairs for role in ("fixed", "rotating"))
     return {
         "ack_piggyback_tx_observed": piggyback_tx > 0,
         "ack_piggyback_rx_observed": piggyback_rx > 0,
         "control_only_ack_fallback_observed": control_only > 0,
-        "two_plus_two_tx_executed": tx_executed and rx_executed,
+        "two_plus_two_tx_executed": two_plus_two_tx_executed,
         "maximum_piggyback_tx_count": piggyback_tx,
         "maximum_piggyback_rx_count": piggyback_rx,
         "maximum_control_only_ack_count": control_only,
