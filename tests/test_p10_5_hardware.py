@@ -122,6 +122,19 @@ class P10_5HardwareTests(unittest.TestCase):
         self.assertIn("P10 CASE requires exactly 29 fields", source)
         self.assertIn("if {[llength $argv] ni {16 18 20}}", source)
 
+    def test_all_hardware_tcl_guards_admit_p10_5_marker(self) -> None:
+        paths = (
+            campaign.STAGE_TCL,
+            campaign.FORENSIC_TCL,
+            ROOT / "scripts/hw/p10_program_dual_shutdown.tcl",
+        )
+        for path in paths:
+            with self.subTest(path=path.name):
+                source = path.read_text(encoding="utf-8")
+                self.assertIn("P10_5_IMMUTABLE_AUTHORIZED", source)
+        forensic = campaign.FORENSIC_TCL.read_text(encoding="utf-8")
+        self.assertIn(r"^p10_(3f|4|5)_", forensic)
+
     def test_measured_runtime_drives_cooldown_without_hiding_overrun(self) -> None:
         policy = load_policy(campaign.RUNTIME_REST_POLICY)
         fake = FakeTime()

@@ -376,14 +376,15 @@ set rc [catch {
   if {$p10ff_mode ni {capture abort_capture commit clear}} {
     error "invalid P10.3F forensic mode"
   }
-  if {![regexp {^p10_(3f|4)_[A-Za-z0-9_.-]+$} $p10ff_run_id]} {
-    error "unsafe P10.3F/P10.4 run ID"
+  if {![regexp {^p10_(3f|4|5)_[A-Za-z0-9_.-]+$} $p10ff_run_id]} {
+    error "unsafe P10.3F/P10.4/P10.5 run ID"
   }
   if {![file isfile $p10ff_auth]} { error "P10.3F current-run authorization missing" }
   if {![info exists ::env(RF_COMM_P10_HW_AUTH)] ||
       $::env(RF_COMM_P10_HW_AUTH) ni {
-        P10_3F_IMMUTABLE_AUTHORIZED P10_4_IMMUTABLE_AUTHORIZED}} {
-    error "P10.3F/P10.4 immutable current-run environment marker required"
+        P10_3F_IMMUTABLE_AUTHORIZED P10_4_IMMUTABLE_AUTHORIZED
+        P10_5_IMMUTABLE_AUTHORIZED}} {
+    error "P10.3F/P10.4/P10.5 immutable current-run environment marker required"
   }
   if {$p10ff_fixed_serial eq $p10ff_rotating_serial} {
     error "P10.3F board serials are ambiguous"

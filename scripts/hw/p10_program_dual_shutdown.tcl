@@ -141,7 +141,7 @@ set rc [catch {
   if {![info exists ::env(RF_COMM_P10_HW_AUTH)] ||
       $::env(RF_COMM_P10_HW_AUTH) ni {
         P10_FASTTRACK_IMMUTABLE_AUTHORIZED P10_3F_IMMUTABLE_AUTHORIZED
-        P10_4_IMMUTABLE_AUTHORIZED}} {
+        P10_4_IMMUTABLE_AUTHORIZED P10_5_IMMUTABLE_AUTHORIZED}} {
     error "P10 immutable current-run environment marker required"
   }
   foreach required [list $authorization_file $fixed_bit $rotating_bit] {
