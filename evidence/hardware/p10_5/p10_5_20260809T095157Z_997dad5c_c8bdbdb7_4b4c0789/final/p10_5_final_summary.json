@@ -1,0 +1,366 @@
+{
+  "SHUTDOWN_FIXED": "FAIL",
+  "SHUTDOWN_ROTATING": "FAIL",
+  "TWO_PLUS_TWO_TX_EXECUTED": false,
+  "active_lane_mask": 15,
+  "application_goodput_bps": {},
+  "artifact_source_commit": "997dad5c3d69e0adeec3316404389504f82a5df2",
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_5/997dad5c3d69e0adeec3316404389504f82a5df2/d5bdc3140244afe88293713fe6a8d87ca9d2352362993ae005b923d1fb61e999/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "d5bdc3140244afe88293713fe6a8d87ca9d2352362993ae005b923d1fb61e999"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_5/997dad5c3d69e0adeec3316404389504f82a5df2/c8bdbdb795f7776fab07d2635e498b93d86a9999988dca977d4a9425ebc01074/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "c8bdbdb795f7776fab07d2635e498b93d86a9999988dca977d4a9425ebc01074"
+    },
+    {
+      "bytes": 1411543,
+      "kind": "xsa",
+      "path": "artifacts/p10_5/997dad5c3d69e0adeec3316404389504f82a5df2/8242afd2cdcc1a5603a0b509c2f9637835b3334dd364bcaae673cad1c6862a2b/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "8242afd2cdcc1a5603a0b509c2f9637835b3334dd364bcaae673cad1c6862a2b"
+    },
+    {
+      "bytes": 1970295,
+      "kind": "bsp",
+      "path": "artifacts/p10_5/997dad5c3d69e0adeec3316404389504f82a5df2/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a"
+    },
+    {
+      "bytes": 650832,
+      "kind": "elf",
+      "path": "artifacts/p10_5/997dad5c3d69e0adeec3316404389504f82a5df2/acee254b7f6a0e11dc57ba5620913743e235f3039159c92056dbb7ccbfb299b3/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "acee254b7f6a0e11dc57ba5620913743e235f3039159c92056dbb7ccbfb299b3"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_5/997dad5c3d69e0adeec3316404389504f82a5df2/f0f02b2588d5f5e0f20a7f709980cb1d2273147220287e396bda173b2369c9f5/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "f0f02b2588d5f5e0f20a7f709980cb1d2273147220287e396bda173b2369c9f5"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_5/997dad5c3d69e0adeec3316404389504f82a5df2/4b4c07892e731dd9dd9f837e82ba148c34d15d571c91b3cdafc2fc44fc0d3bbf/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "4b4c07892e731dd9dd9f837e82ba148c34d15d571c91b3cdafc2fc44fc0d3bbf"
+    },
+    {
+      "bytes": 1419627,
+      "kind": "xsa",
+      "path": "artifacts/p10_5/997dad5c3d69e0adeec3316404389504f82a5df2/7b7c800742a9fd6c95a0cfb3503a70a0d9cc3174bc7e7fdd9ecc8914f212baea/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "7b7c800742a9fd6c95a0cfb3503a70a0d9cc3174bc7e7fdd9ecc8914f212baea"
+    },
+    {
+      "bytes": 1970378,
+      "kind": "bsp",
+      "path": "artifacts/p10_5/997dad5c3d69e0adeec3316404389504f82a5df2/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c"
+    },
+    {
+      "bytes": 651480,
+      "kind": "elf",
+      "path": "artifacts/p10_5/997dad5c3d69e0adeec3316404389504f82a5df2/2e966793ac17c3b2d11d8ad553364bcb3cdbb88fd71105e82f05b9b3ebb63e41/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2e966793ac17c3b2d11d8ad553364bcb3cdbb88fd71105e82f05b9b3ebb63e41"
+    }
+  ],
+  "automation_only": true,
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "capability_evidence": {
+    "ack_piggyback_rx_observed": false,
+    "ack_piggyback_tx_observed": false,
+    "control_only_ack_fallback_observed": false,
+    "maximum_control_only_ack_count": 0,
+    "maximum_piggyback_rx_count": 0,
+    "maximum_piggyback_tx_count": 0,
+    "two_plus_two_tx_executed": false
+  },
+  "counters": {
+    "crc_bad": 0,
+    "descriptor_leak": 0,
+    "double_completion": 0,
+    "duplicate_commit": 0,
+    "integrity_errors": 0,
+    "partial_commit": 0,
+    "retry_exhausted": 0,
+    "sha_mismatch": 0,
+    "stale_commit": 0,
+    "tx_timeouts": 0
+  },
+  "current_run_hardware_authorization": false,
+  "errors": [
+    "initial dual shutdown unconfirmed",
+    "finally dual shutdown unconfirmed"
+  ],
+  "f_to_r_lane_mask": 3,
+  "forensics": [],
+  "formal_committed_bytes": {
+    "F_TO_R": null,
+    "R_TO_F": null
+  },
+  "generated_at_utc": "2026-08-09T09:53:56+00:00",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "hardware_actions_executed": true,
+  "hardware_moved": false,
+  "maximum_lane_mask": 15,
+  "maximum_single_formal_run_seconds": 1800,
+  "minimum_interstage_cooldown_ratio": 0.5,
+  "module_binding": {
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0019",
+    "F3": "B0020",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0023",
+    "R3": "B0025"
+  },
+  "module_replaced": false,
+  "network_used": false,
+  "operating_mode": "SPLIT_LANE_SIMULTANEOUS_BIDIRECTIONAL",
+  "p11_status": "NOT_STARTED",
+  "r_to_f_lane_mask": 12,
+  "run_id": "p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789",
+  "runtime_rest_ledger": {
+    "active_stage": null,
+    "conservative_module_accounting": [
+      "F0",
+      "F1",
+      "F2",
+      "F3",
+      "R0",
+      "R1",
+      "R2",
+      "R3"
+    ],
+    "cooldown_ratio": 0.5,
+    "maximum_continuous_runtime_seconds": 1800.0,
+    "policy_id": "P10_TFDU_RUNTIME_REST_2026_08_08",
+    "schema_version": 1,
+    "stages": [],
+    "status": "PASS"
+  },
+  "schema_version": 1,
+  "scope": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
+  "shutdowns": [
+    {
+      "SHUTDOWN_FIXED": "FAIL",
+      "SHUTDOWN_ROTATING": "FAIL",
+      "attempts": [
+        {
+          "attempt": 1,
+          "markers": {
+            "P10_DUAL_SHUTDOWN_ERROR": "P10 immutable current-run environment marker required",
+            "P10_DUAL_SHUTDOWN_RESULT": "FAIL",
+            "SHUTDOWN_EXIT": "1",
+            "SHUTDOWN_FIXED": "FAIL",
+            "SHUTDOWN_ROTATING": "FAIL",
+            "TFDU_SHUTDOWN_PROGRAMMED": "0"
+          },
+          "process": {
+            "command": [
+              "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+              "-mode",
+              "batch",
+              "-nolog",
+              "-nojournal",
+              "-notrace",
+              "-source",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\scripts\\hw\\p10_program_dual_shutdown.tcl",
+              "-tclargs",
+              "localhost:3121",
+              "localhost:3121/xilinx_tcf/Digilent/210249855178",
+              "localhost:3121/xilinx_tcf/Digilent/210512180081",
+              "210249855178",
+              "210512180081",
+              "xc7z020clg400-2",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\config\\p10_5_current_run_hardware_authorization.json",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\artifacts\\p10_5\\997dad5c3d69e0adeec3316404389504f82a5df2\\d5bdc3140244afe88293713fe6a8d87ca9d2352362993ae005b923d1fb61e999\\p10_ax7020_fixed_shutdown.bit",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\artifacts\\p10_5\\997dad5c3d69e0adeec3316404389504f82a5df2\\f0f02b2588d5f5e0f20a7f709980cb1d2273147220287e396bda173b2369c9f5\\p10_ax7020_rotating_shutdown.bit",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789\\shutdown\\initial\\attempt_1.result.txt"
+            ],
+            "elapsed_seconds": 12.533794299932197,
+            "returncode": 31,
+            "stderr": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/initial/attempt_1.stderr.log",
+            "stdout": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/initial/attempt_1.stdout.log",
+            "timed_out": false,
+            "timeout_seconds": 180
+          },
+          "result": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/initial/attempt_1.result.txt",
+          "status": "FAIL"
+        },
+        {
+          "attempt": 2,
+          "markers": {
+            "P10_DUAL_SHUTDOWN_ERROR": "P10 immutable current-run environment marker required",
+            "P10_DUAL_SHUTDOWN_RESULT": "FAIL",
+            "SHUTDOWN_EXIT": "1",
+            "SHUTDOWN_FIXED": "FAIL",
+            "SHUTDOWN_ROTATING": "FAIL",
+            "TFDU_SHUTDOWN_PROGRAMMED": "0"
+          },
+          "process": {
+            "command": [
+              "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+              "-mode",
+              "batch",
+              "-nolog",
+              "-nojournal",
+              "-notrace",
+              "-source",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\scripts\\hw\\p10_program_dual_shutdown.tcl",
+              "-tclargs",
+              "localhost:3121",
+              "localhost:3121/xilinx_tcf/Digilent/210249855178",
+              "localhost:3121/xilinx_tcf/Digilent/210512180081",
+              "210249855178",
+              "210512180081",
+              "xc7z020clg400-2",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\config\\p10_5_current_run_hardware_authorization.json",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\artifacts\\p10_5\\997dad5c3d69e0adeec3316404389504f82a5df2\\d5bdc3140244afe88293713fe6a8d87ca9d2352362993ae005b923d1fb61e999\\p10_ax7020_fixed_shutdown.bit",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\artifacts\\p10_5\\997dad5c3d69e0adeec3316404389504f82a5df2\\f0f02b2588d5f5e0f20a7f709980cb1d2273147220287e396bda173b2369c9f5\\p10_ax7020_rotating_shutdown.bit",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789\\shutdown\\initial\\attempt_2.result.txt"
+            ],
+            "elapsed_seconds": 5.851800400065258,
+            "returncode": 31,
+            "stderr": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/initial/attempt_2.stderr.log",
+            "stdout": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/initial/attempt_2.stdout.log",
+            "timed_out": false,
+            "timeout_seconds": 180
+          },
+          "result": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/initial/attempt_2.result.txt",
+          "status": "FAIL"
+        }
+      ],
+      "label": "initial",
+      "status": "FAIL",
+      "test_id": "P10-DUAL-SHUTDOWN"
+    },
+    {
+      "SHUTDOWN_FIXED": "FAIL",
+      "SHUTDOWN_ROTATING": "FAIL",
+      "attempts": [
+        {
+          "attempt": 1,
+          "markers": {
+            "P10_DUAL_SHUTDOWN_ERROR": "P10 immutable current-run environment marker required",
+            "P10_DUAL_SHUTDOWN_RESULT": "FAIL",
+            "SHUTDOWN_EXIT": "1",
+            "SHUTDOWN_FIXED": "FAIL",
+            "SHUTDOWN_ROTATING": "FAIL",
+            "TFDU_SHUTDOWN_PROGRAMMED": "0"
+          },
+          "process": {
+            "command": [
+              "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+              "-mode",
+              "batch",
+              "-nolog",
+              "-nojournal",
+              "-notrace",
+              "-source",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\scripts\\hw\\p10_program_dual_shutdown.tcl",
+              "-tclargs",
+              "localhost:3121",
+              "localhost:3121/xilinx_tcf/Digilent/210249855178",
+              "localhost:3121/xilinx_tcf/Digilent/210512180081",
+              "210249855178",
+              "210512180081",
+              "xc7z020clg400-2",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\config\\p10_5_current_run_hardware_authorization.json",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\artifacts\\p10_5\\997dad5c3d69e0adeec3316404389504f82a5df2\\d5bdc3140244afe88293713fe6a8d87ca9d2352362993ae005b923d1fb61e999\\p10_ax7020_fixed_shutdown.bit",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\artifacts\\p10_5\\997dad5c3d69e0adeec3316404389504f82a5df2\\f0f02b2588d5f5e0f20a7f709980cb1d2273147220287e396bda173b2369c9f5\\p10_ax7020_rotating_shutdown.bit",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789\\shutdown\\finally\\attempt_1.result.txt"
+            ],
+            "elapsed_seconds": 5.849163000006229,
+            "returncode": 31,
+            "stderr": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/finally/attempt_1.stderr.log",
+            "stdout": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/finally/attempt_1.stdout.log",
+            "timed_out": false,
+            "timeout_seconds": 180
+          },
+          "result": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/finally/attempt_1.result.txt",
+          "status": "FAIL"
+        },
+        {
+          "attempt": 2,
+          "markers": {
+            "P10_DUAL_SHUTDOWN_ERROR": "P10 immutable current-run environment marker required",
+            "P10_DUAL_SHUTDOWN_RESULT": "FAIL",
+            "SHUTDOWN_EXIT": "1",
+            "SHUTDOWN_FIXED": "FAIL",
+            "SHUTDOWN_ROTATING": "FAIL",
+            "TFDU_SHUTDOWN_PROGRAMMED": "0"
+          },
+          "process": {
+            "command": [
+              "D:\\Xilinx\\Vivado\\2023.1\\bin\\vivado.bat",
+              "-mode",
+              "batch",
+              "-nolog",
+              "-nojournal",
+              "-notrace",
+              "-source",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\scripts\\hw\\p10_program_dual_shutdown.tcl",
+              "-tclargs",
+              "localhost:3121",
+              "localhost:3121/xilinx_tcf/Digilent/210249855178",
+              "localhost:3121/xilinx_tcf/Digilent/210512180081",
+              "210249855178",
+              "210512180081",
+              "xc7z020clg400-2",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\config\\p10_5_current_run_hardware_authorization.json",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\artifacts\\p10_5\\997dad5c3d69e0adeec3316404389504f82a5df2\\d5bdc3140244afe88293713fe6a8d87ca9d2352362993ae005b923d1fb61e999\\p10_ax7020_fixed_shutdown.bit",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\artifacts\\p10_5\\997dad5c3d69e0adeec3316404389504f82a5df2\\f0f02b2588d5f5e0f20a7f709980cb1d2273147220287e396bda173b2369c9f5\\p10_ax7020_rotating_shutdown.bit",
+              "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\evidence\\hardware\\p10_5\\p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789\\shutdown\\finally\\attempt_2.result.txt"
+            ],
+            "elapsed_seconds": 5.849949499825016,
+            "returncode": 31,
+            "stderr": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/finally/attempt_2.stderr.log",
+            "stdout": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/finally/attempt_2.stdout.log",
+            "timed_out": false,
+            "timeout_seconds": 180
+          },
+          "result": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/shutdown/finally/attempt_2.result.txt",
+          "status": "FAIL"
+        }
+      ],
+      "label": "finally",
+      "status": "FAIL",
+      "test_id": "P10-DUAL-SHUTDOWN"
+    }
+  ],
+  "spi_used": false,
+  "stages": [],
+  "status": "FAIL",
+  "stretch_4p8mbps": {},
+  "test_id": "P10_5-FINAL",
+  "user_hold_points": 0,
+  "wiring_changed": false
+}

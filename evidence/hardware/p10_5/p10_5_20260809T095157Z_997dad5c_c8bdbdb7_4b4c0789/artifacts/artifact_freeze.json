@@ -1,4 +1,21 @@
 {
+  "acceptance_eligible": true,
+  "allowed_hardware_stages": [
+    "safe_start",
+    "capability",
+    "one_plus_one",
+    "two_plus_one",
+    "two_plus_two",
+    "role_commit",
+    "performance",
+    "streaming_64m_1",
+    "streaming_64m_2",
+    "streaming_64m_3",
+    "streaming_64m_4",
+    "streaming_64m_5",
+    "faults",
+    "formal_30min"
+  ],
   "allowed_plan_sha256": {
     "capability": "e03cc311a7c70a1cc6dd30dcd029f9fba6306abf86a2fcfd29d6f7eca39a0244",
     "faults": "8509e1ca5e760f7eecc6593217ceac620f2b023fe612aac5cdaaab31edfa88ea",
@@ -15,24 +32,6 @@
     "two_plus_one": "9b5423894049e52d98d2e0b2edabf7a2934623d8ec86632818c03f0c4e8e9fc3",
     "two_plus_two": "cdb3459a984ea6b87e3f0c06308246218740277f8e280cfe48e081b1397314fd"
   },
-  "allowed_stages": [
-    "safe_start",
-    "capability",
-    "one_plus_one",
-    "two_plus_one",
-    "two_plus_two",
-    "role_commit",
-    "performance",
-    "streaming_64m_1",
-    "streaming_64m_2",
-    "streaming_64m_3",
-    "streaming_64m_4",
-    "streaming_64m_5",
-    "faults",
-    "formal_30min"
-  ],
-  "artifact_freeze": "evidence/generated/p10_5_artifact_freeze.json",
-  "artifact_freeze_sha256": "c020f0780cb2e9deb621533633d40f2fb3c6133bcdc5186e995c444b61576c10",
   "artifacts": [
     {
       "bytes": 369449,
@@ -115,88 +114,252 @@
       "sha256": "2e966793ac17c3b2d11d8ad553364bcb3cdbb88fd71105e82f05b9b3ebb63e41"
     }
   ],
-  "authorization_id": "P10_5-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "7b04d1d85fdc2990dadac11ec179033ea15d1154",
-  "authorization_source": [
-    "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md",
-    "direct user submission of the P10.5 Goal dated 2026-08-09"
-  ],
-  "authorization_source_semantics": "Submitting the Goal explicitly authorizes its complete bounded P10.5 hardware campaign without further confirmation after immutable offline freeze.",
-  "authorized": false,
-  "board_binding": {
-    "fixed": "AX7020-F/JTAG:210249855178",
-    "rotating": "AX7020-R/JTAG:210512180081"
+  "automation_only": true,
+  "branch": "p10.5/dual-direction-2plus2",
+  "build_evidence": {
+    "functional": {
+      "bytes": 29969,
+      "path": "evidence/generated/p10_5_functional_build_summary.json",
+      "sha256": "74141428c35eda0bc743080827ce469d0c5955aeaba77e4a589c64761b96843c"
+    },
+    "ps_runtime": {
+      "bytes": 16441,
+      "path": "evidence/generated/p10_5_ps_runtime_build_summary.json",
+      "sha256": "a6b0afab76b03e8b1a5e8c5676873ae67dc3fc0ddb48acca6880a91f24421ea7"
+    },
+    "shutdown": {
+      "bytes": 10350,
+      "path": "evidence/generated/p10_5_shutdown_build_summary.json",
+      "sha256": "53fb72755ff97fa4619b3c4540516a46d85320177a083aee615e9dc0cfbd9ae4"
+    },
+    "xsim": {
+      "bytes": 21633,
+      "path": "evidence/generated/p10_5_xsim/summary.json",
+      "sha256": "848f8af37515a2a91013f6eac7f50a0c4628752e1ed4abcbddeb6f15468066ab"
+    }
   },
-  "consumed": true,
-  "consumed_at_utc": "2026-08-09T09:53:56+00:00",
-  "created_at_utc": "2026-08-09T09:51:57.989827+00:00",
   "current_run_hardware_authorization": false,
   "errors": [],
-  "ethernet_allowed": false,
-  "external_instrumentation_allowed": false,
-  "fixed_jtag_serial": "210249855178",
+  "expected_build_ids": {
+    "fixed": "0x50353546",
+    "rotating": "0x50353552"
+  },
+  "generated_at_utc": "2026-08-09T09:50:23.594210+00:00",
   "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
   "hardware_actions_executed": false,
-  "hardware_configuration_inputs": {
-    "actual_wiring": {
-      "bytes": 5507,
-      "path": "config/hardware/p10_3_actual_wiring.yaml",
-      "sha256": "c761fcd5f86a3b2d54a85cad93496019d3c92f828c454dce15f3d73b80773848"
-    },
-    "dual_direction_config": {
-      "bytes": 1889,
-      "path": "config/p10_5_dual_direction.yaml",
-      "sha256": "fb79523627256fb10258e13bc5bbd1e1c0fab5214b916bbbac44aeb17e5a1db6"
-    },
-    "module_inventory": {
-      "bytes": 28143,
-      "path": "config/hardware/tfdu_module_inventory.yaml",
-      "sha256": "f4a85f370acee9c2a3536265202afc4ec4cc9e109a262e6c1fd5f04cc1eb26d4"
-    },
-    "runtime_rest_policy": {
-      "bytes": 1417,
-      "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
-      "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
-    }
-  },
-  "host_runtime_inputs": {
-    "campaign_runner": {
-      "bytes": 55597,
-      "path": "scripts/run_p10_5_hardware.py",
-      "sha256": "3f743477c40243825dfe1b09d2dcf52d1d746c30fd9eff7fd9f854a637b01b2c"
-    },
-    "forensic_tcl": {
-      "bytes": 16605,
-      "path": "scripts/hw/p10_3f_fault_forensics.tcl",
-      "sha256": "37f11e4ba5808ecff5866aae1304be165d725ba1a2f1306118e570a49c4b1fd6"
-    },
-    "runtime_guard": {
-      "bytes": 9419,
-      "path": "scripts/p10_tfdu_runtime_guard.py",
-      "sha256": "6c90331dc94f20b9378f50f03e0222a2444c50e1e94933abb7366bf4ff74366a"
-    },
-    "stage_tcl": {
-      "bytes": 130774,
-      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
-      "sha256": "519344736928052c9dbda50e620e60ada559906750e925a83e76d5c762f16296"
-    }
-  },
   "maximum_continuous_module_runtime_seconds": 1800,
   "maximum_lane_mask": 15,
   "maximum_single_formal_run_seconds": 1800,
   "minimum_interstage_cooldown_ratio": 0.5,
-  "module_binding": {
-    "F0": "A0019",
-    "F1": "B0012",
-    "F2": "B0019",
-    "F3": "B0020",
-    "R0": "A0010",
-    "R1": "A0017",
-    "R2": "B0023",
-    "R3": "B0025"
-  },
-  "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
   "no_hardware": true,
+  "offline_gates": {
+    "no_hardware_static": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_no_hardware_calls.py"
+      ],
+      "log": {
+        "bytes": 31,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/no_hardware_static.log",
+        "sha256": "22a36fafd58a794d360a159b85137bb06f7478d2aaad089567ffebfbc8d60a5c"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_1r_baseline": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_1r_existing.py"
+      ],
+      "log": {
+        "bytes": 254,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_1r_baseline.log",
+        "sha256": "339e769a2706755be6d3adab99567a0abbe0ae1e464e4e4643d7b2de29f43385"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_2_baseline": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_2_existing.py"
+      ],
+      "log": {
+        "bytes": 181,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_2_baseline.log",
+        "sha256": "181d803018fc436d877ae8daa2d7dedce9e8d7fcfd8103d1c72d21fb4794dbbf"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_3_baseline": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p10_3_existing.py"
+      ],
+      "log": {
+        "bytes": 59,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_3_baseline.log",
+        "sha256": "fb8913559f07aa9619f9f728431e132760c09e212c8ad56d6dd29180b60bedb2"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_4_baseline": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/prepare_p10_5_offline.py"
+      ],
+      "log": {
+        "bytes": 55,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_4_baseline.log",
+        "sha256": "4ee34dfe542273f21dd1803b2a065c706cc7c5639e9749bc69bcf8ccf3b510f9"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_5_config": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_p10_5_config.py",
+        "--verify"
+      ],
+      "log": {
+        "bytes": 108,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_config.log",
+        "sha256": "4b679cac4bd84f3e571fd5b4a6ec5c0313ac0349a6f91fc451b3cd3148410b4b"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_5_firmware_unit": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-m",
+        "unittest",
+        "tests.test_p10_5_firmware_contract"
+      ],
+      "log": {
+        "bytes": 103,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_firmware_unit.log",
+        "sha256": "1683faffcdfbe110d76dbff5223ec6c50e28683becee8feb448717707418bee4"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_5_model": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/model_p10_5_dual_direction.py"
+      ],
+      "log": {
+        "bytes": 121,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_model.log",
+        "sha256": "6a212c8076dc3b1315b856b74e2639321c0f1f7936bbc8872152889088dbef63"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_5_offline": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/finalize_p10_5_offline.py"
+      ],
+      "log": {
+        "bytes": 64,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_offline.log",
+        "sha256": "ebf717f8d3f2381093083b0d9bf67f96d2be61bc9c64d6539edd072b3cd84580"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p10_5_runner_unit": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-m",
+        "unittest",
+        "tests.test_p10_5_hardware"
+      ],
+      "log": {
+        "bytes": 106,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_runner_unit.log",
+        "sha256": "37b97ae0fb4829536396d7806265324ff6659addb08f1bb23b5a87f3dc9b9e04"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "p8c_safety": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/verify_p8c_existing.py"
+      ],
+      "log": {
+        "bytes": 25,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/p8c_safety.log",
+        "sha256": "42040d278511b798595228f906f6eb59f51b8a15d979941ac27ff3b10ad4861b"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "register_map": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_register_headers.py",
+        "--verify"
+      ],
+      "log": {
+        "bytes": 149,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/register_map.log",
+        "sha256": "292c38db0a94e0809333dbf4ea62e8f6a7c6a8452dce83d72eb12487371e0b6c"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "state_requirements": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_p8a_consistency.py",
+        "--check"
+      ],
+      "log": {
+        "bytes": 183,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/state_requirements.log",
+        "sha256": "30d94a2fdbbc42c42202d87c3fc5ca3cb4f550daa10c5d8c7a6e65d623cbf933"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "tcl_complete": {
+      "command": [
+        "D:\\Xilinx\\Vivado\\2023.1\\tps\\win64\\git-2.16.2\\mingw64\\bin\\tclsh.exe",
+        "scripts/hw/check_tcl_complete.tcl",
+        "scripts/hw/p10_dual_xsdb_stage.tcl",
+        "scripts/hw/p10_3f_fault_forensics.tcl",
+        "scripts/hw/p10_program_dual_shutdown.tcl"
+      ],
+      "log": {
+        "bytes": 201,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/tcl_complete.log",
+        "sha256": "441b709d8dd87617efe7cc88e854494a87c82b75dc5f994b9bd97fcf4c45ee63"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "traceability": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_requirement_traceability.py",
+        "--check"
+      ],
+      "log": {
+        "bytes": 111,
+        "path": "evidence/generated/p10_5_artifact_freeze_raw/traceability.log",
+        "sha256": "44dff0fbdfbc50814da41d4e4c416cca8282cafcfa95c15c7f76abf48d6f4110"
+      },
+      "returncode": 0,
+      "status": "PASS"
+    }
+  },
   "offline_inputs": {
     "actual_wiring": {
       "bytes": 5507,
@@ -284,35 +447,10 @@
       "sha256": "848f8af37515a2a91013f6eac7f50a0c4628752e1ed4abcbddeb6f15468066ab"
     }
   },
-  "p11_allowed": false,
-  "primary_partition": {
-    "active": 15,
-    "f_to_r": 3,
-    "r_to_f": 12
-  },
+  "old_hardware_pass_inherited": false,
   "register_map": {
     "hash_low": "0xA16281D1",
     "version": "0x0A000005"
-  },
-  "result": "evidence/hardware/p10_5/p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789/final/p10_5_final_summary.json",
-  "rotating_jtag_serial": "210512180081",
-  "run_id": "p10_5_20260809T095157Z_997dad5c_c8bdbdb7_4b4c0789",
-  "runtime_rest_policy": {
-    "conservative_modules": [
-      "F0",
-      "F1",
-      "F2",
-      "F3",
-      "R0",
-      "R1",
-      "R2",
-      "R3"
-    ],
-    "maximum_continuous_runtime_seconds": 1800,
-    "minimum_cooldown_ratio": 0.5,
-    "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
-    "policy_id": "P10_TFDU_RUNTIME_REST_2026_08_08",
-    "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
   },
   "schema_version": 1,
   "scope": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
@@ -324,23 +462,8 @@
     "verify_both_shutdown_markers": true
   },
   "source_commit": "997dad5c3d69e0adeec3316404389504f82a5df2",
-  "spi_allowed": false,
-  "stage_runtime_limits_seconds": {
-    "capability": 1,
-    "faults": 600,
-    "formal_30min": 1800,
-    "one_plus_one": 120,
-    "performance": 300,
-    "role_commit": 40,
-    "safe_start": 1,
-    "streaming_64m_1": 600,
-    "streaming_64m_2": 600,
-    "streaming_64m_3": 600,
-    "streaming_64m_4": 600,
-    "streaming_64m_5": 600,
-    "two_plus_one": 480,
-    "two_plus_two": 180
-  },
-  "status": "CONSUMED_AFTER_P10_5_FAIL",
-  "two_hour_test_allowed": false
+  "source_tree_clean": true,
+  "status": "PASS",
+  "test_id": "P10_5-IMMUTABLE-ARTIFACT-FREEZE",
+  "user_hold_points": 0
 }
