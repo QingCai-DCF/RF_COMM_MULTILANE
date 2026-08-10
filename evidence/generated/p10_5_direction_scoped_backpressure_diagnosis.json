@@ -1,0 +1,93 @@
+{
+  "artifact_impact": {
+    "bitstream_or_xsa_change": false,
+    "bsp_or_elf_change": false,
+    "classification": "HOST_ACCEPTANCE_HARNESS_ONLY",
+    "complete_campaign_rerun_required": true,
+    "old_hardware_pass_inherited": false
+  },
+  "current_run_hardware_authorization": false,
+  "diagnosis_hardware_actions_executed": false,
+  "direct_evidence": {
+    "all_tcl_fault_cases_passed": true,
+    "application_goodput_bps": {
+      "F_TO_R": 4292171.093333334,
+      "R_TO_F": 4292171.093333334
+    },
+    "fault_abort_f2r": "PASS",
+    "fault_abort_r2f": "PASS",
+    "fault_backpressure_f2r": {
+      "injected_fixed": {
+        "diagnostic_after": 131074,
+        "diagnostic_before": 2,
+        "diagnostic_stall_delta": 3196992
+      },
+      "unaffected_rotating": {
+        "diagnostic_after": 0,
+        "diagnostic_before": 0,
+        "diagnostic_stall_delta": 0
+      }
+    },
+    "fault_backpressure_r2f": {
+      "injected_rotating": {
+        "diagnostic_after": 131074,
+        "diagnostic_before": 2,
+        "diagnostic_stall_delta": 3196994
+      },
+      "unaffected_fixed": {
+        "diagnostic_after": 0,
+        "diagnostic_before": 0,
+        "diagnostic_stall_delta": 0
+      }
+    },
+    "formal_30min_executed": false,
+    "hard_integrity_counters_zero": true,
+    "runtime_rest": "PASS",
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "stage_count_completed": 13,
+    "stage_count_required": 14
+  },
+  "evidence_checkpoint": "e22aadb4571920640c2c1ebde679ec210ed24a03",
+  "evidence_files": {
+    "fault_observations": {
+      "path": "evidence/hardware/p10_5/p10_5_20260810T101302Z_e1f8c01a_4015142e_79607d01/stages/faults/dumps/observations.psv",
+      "sha256": "e8dc7d4a0bbdb0e560a7dc0734bb56fb35fb30db72ed7fcb9fa1cbd9ced08627"
+    },
+    "fault_stage_markers": {
+      "path": "evidence/hardware/p10_5/p10_5_20260810T101302Z_e1f8c01a_4015142e_79607d01/stages/faults/xsdb.result.txt",
+      "sha256": "5c3c6fd6c184e26e8ebae84bf10f9c61489d4a8ccbf08357a18462f1a93ec144"
+    },
+    "final_summary": {
+      "path": "evidence/hardware/p10_5/p10_5_20260810T101302Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
+      "sha256": "777b4e0b06a95a91323f99ca6e60eb409d9df2b1cda35619a27a91b996b8bc0c"
+    },
+    "run_manifest": {
+      "path": "evidence/hardware/p10_5/p10_5_20260810T101302Z_e1f8c01a_4015142e_79607d01/final/run_evidence_sha256_manifest.json",
+      "sha256": "2872bc5c7682db9464b519dac7e1aa93180d83784dfe5421394e023d652d84bf"
+    }
+  },
+  "failed_run_id": "p10_5_20260810T101302Z_e1f8c01a_4015142e_79607d01",
+  "failed_run_status": "FAIL",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "post_fix_offline_replay": {
+    "endpoint_result_count": 40,
+    "errors": [],
+    "fault_pair_count": 20,
+    "runner_sha256": "bfe9c500dcb42aef45698b02b24e0a4b450f3278b55fe0dd736b7483bdba9fee",
+    "status": "PASS",
+    "test_sha256": "0bd12218a2980729bb2ea969406457ceb82d7c143783ef2370a4695ccddee6cf"
+  },
+  "remediation": {
+    "injected_endpoint_rule": "F_TO_R=fixed, R_TO_F=rotating",
+    "injected_endpoint_requires": "diagnostic arm clear before/after and positive local TX_AXIS_STALL delta",
+    "unaffected_endpoint_requires": "diagnostic arm clear before/after and zero injected stall delta",
+    "scope": "scripts/run_p10_5_hardware.py and its host unit tests"
+  },
+  "root_cause": "The host result validator required local DMA backpressure evidence from both endpoints even though firmware injects it only on the endpoint whose local TX direction equals the selected direction-fault target.",
+  "schema_version": 1,
+  "source_artifact_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+  "source_hardware_actions_executed": true,
+  "status": "DIAGNOSED_HOST_HARNESS_FALSE_NEGATIVE",
+  "test_id": "P10_5-DIRECTION-SCOPED-DMA-BACKPRESSURE-DIAGNOSIS"
+}

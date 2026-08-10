@@ -718,6 +718,32 @@ def transport_timeout_is_hard_failure(stage: str) -> bool:
     return stage == "formal_30min"
 
 
+def dma_backpressure_evidence_errors(
+        label: str, case: P105Case, result: dict[str, Any]) -> list[str]:
+    """Validate the one endpoint that actually executes a direction fault.
+
+    Firmware injects DMA TX backpressure only when the endpoint's local TX
+    direction equals ``direction_fault_target``.  F_TO_R therefore executes
+    on fixed and R_TO_F executes on rotating.  Requiring the peer endpoint to
+    report the same local diagnostic stall is both impossible and masks a
+    useful isolation check: the peer must remain unarmed with zero injected
+    stall delta.
+    """
+    if not case.flags & FLAG_DMA_BACKPRESSURE:
+        return []
+    role = result["role"]
+    injected_role = "rotating" if case.flags & FLAG_TARGET_R2F else "fixed"
+    armed_before = bool(result["diagnostic_before"] & 1)
+    armed_after = bool(result["diagnostic_after"] & 1)
+    stall_delta = result["diagnostic_stall_delta"]
+    if role == injected_role:
+        if armed_before or armed_after or stall_delta <= 0:
+            return [f"{label}:{role}: DMA backpressure evidence"]
+    elif armed_before or armed_after or stall_delta != 0:
+        return [f"{label}:{role}: unexpected DMA backpressure evidence"]
+    return []
+
+
 def result_errors(stage: str, label: str, case: P105Case,
                   result: dict[str, Any]) -> list[str]:
     role = result["role"]
@@ -806,10 +832,7 @@ def result_errors(stage: str, label: str, case: P105Case,
         if result["unaffected_progress"] <= 0 or \
                 result["affected_commit"] != (0 if abort else 1):
             errors.append(f"{label}:{role}: direction isolation evidence")
-        if case.flags & FLAG_DMA_BACKPRESSURE and (
-                result["diagnostic_stall_delta"] <= 0 or
-                result["diagnostic_after"] & 1):
-            errors.append(f"{label}:{role}: DMA backpressure evidence")
+        errors += dma_backpressure_evidence_errors(label, case, result)
     return errors
 
 

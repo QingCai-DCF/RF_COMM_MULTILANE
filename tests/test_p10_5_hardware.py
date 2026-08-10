@@ -164,6 +164,55 @@ class P10_5HardwareTests(unittest.TestCase):
         formal[-1]["details"][0]["rotating"]["tx_timeouts"] = 1
         self.assertFalse(campaign.formal_transport_timeout_zero(formal))
 
+    def test_dma_backpressure_evidence_is_direction_scoped(self) -> None:
+        faults = [x for x in campaign.build_plans()["faults"]
+                  if isinstance(x, campaign.P105Case)]
+        f2r = next(x for x in faults
+                   if x.label == "fault_backpressure_f2r")
+        r2f = next(x for x in faults
+                   if x.label == "fault_backpressure_r2f")
+
+        def evidence(role: str, stall: int = 0, before: int = 0,
+                     after: int = 0) -> dict[str, int | str]:
+            return {
+                "role": role,
+                "diagnostic_before": before,
+                "diagnostic_after": after,
+                "diagnostic_stall_delta": stall,
+            }
+
+        # Direct run evidence: F_TO_R injection executes on fixed, while the
+        # rotating peer remains unarmed and reports no injected stall delta.
+        self.assertEqual(campaign.dma_backpressure_evidence_errors(
+            f2r.label, f2r,
+            evidence("fixed", 3_196_992, 2, 0x00020002)), [])
+        self.assertEqual(campaign.dma_backpressure_evidence_errors(
+            f2r.label, f2r, evidence("rotating")), [])
+
+        # R_TO_F is symmetric: rotating executes the injection and fixed is
+        # the unaffected peer.
+        self.assertEqual(campaign.dma_backpressure_evidence_errors(
+            r2f.label, r2f,
+            evidence("rotating", 3_196_994, 2, 0x00020002)), [])
+        self.assertEqual(campaign.dma_backpressure_evidence_errors(
+            r2f.label, r2f, evidence("fixed")), [])
+
+        missing = campaign.dma_backpressure_evidence_errors(
+            f2r.label, f2r, evidence("fixed"))
+        self.assertEqual(missing,
+                         ["fault_backpressure_f2r:fixed: "
+                          "DMA backpressure evidence"])
+        leaked = campaign.dma_backpressure_evidence_errors(
+            f2r.label, f2r, evidence("rotating", 1))
+        self.assertEqual(leaked,
+                         ["fault_backpressure_f2r:rotating: "
+                          "unexpected DMA backpressure evidence"])
+        stale_arm = campaign.dma_backpressure_evidence_errors(
+            r2f.label, r2f, evidence("rotating", 1, before=1))
+        self.assertEqual(stale_arm,
+                         ["fault_backpressure_r2f:rotating: "
+                          "DMA backpressure evidence"])
+
     def test_runner_has_no_runtime_cap_or_network_path(self) -> None:
         source = (ROOT / "scripts/run_p10_5_hardware.py").read_text(
             encoding="utf-8")
