@@ -32,7 +32,7 @@
     "formal_30min"
   ],
   "artifact_freeze": "evidence/generated/p10_5_artifact_freeze.json",
-  "artifact_freeze_sha256": "53a7d718e5a884726652b30ce0991bd1c016606464568bf70bc5a03a060bfed5",
+  "artifact_freeze_sha256": "f598f5acf385ca4584fe6c167ff6d55432d93a4961d5756704e1c38a4f4e511a",
   "artifacts": [
     {
       "bytes": 369449,
@@ -116,21 +116,20 @@
     }
   ],
   "authorization_id": "P10_5-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "90d994e2f436f5a73ae525af5a64c26117e3aae5",
+  "authorization_parent_commit": "38b3ac65f65cd2905e0ff709e8dc0e543c19b13b",
   "authorization_source": [
     "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md",
     "direct user submission of the P10.5 Goal dated 2026-08-09"
   ],
   "authorization_source_semantics": "Submitting the Goal explicitly authorizes its complete bounded P10.5 hardware campaign without further confirmation after immutable offline freeze.",
-  "authorized": false,
+  "authorized": true,
   "board_binding": {
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
-  "consumed": true,
-  "consumed_at_utc": "2026-08-10T11:09:52+00:00",
-  "created_at_utc": "2026-08-10T10:13:02.691246+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "created_at_utc": "2026-08-10T11:18:41.638673+00:00",
+  "current_run_hardware_authorization": true,
   "errors": [],
   "ethernet_allowed": false,
   "external_instrumentation_allowed": false,
@@ -161,9 +160,9 @@
   },
   "host_runtime_inputs": {
     "campaign_runner": {
-      "bytes": 61512,
+      "bytes": 62579,
       "path": "scripts/run_p10_5_hardware.py",
-      "sha256": "c0ef2ec8c75bc5bbfb2da219f78a22a5c75bfe693d1189ba3605ef310a9d454c"
+      "sha256": "bfe9c500dcb42aef45698b02b24e0a4b450f3278b55fe0dd736b7483bdba9fee"
     },
     "forensic_tcl": {
       "bytes": 16654,
@@ -196,7 +195,7 @@
     "R3": "B0025"
   },
   "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
-  "no_hardware": true,
+  "no_hardware": false,
   "offline_inputs": {
     "ack_collision_design": {
       "bytes": 3091,
@@ -224,9 +223,9 @@
       "sha256": "ea55a8f695ea2369ad00fcf9a9a368546787bf4cd97dc2459f72f4fbef8f0104"
     },
     "campaign_runner": {
-      "bytes": 61512,
+      "bytes": 62579,
       "path": "scripts/run_p10_5_hardware.py",
-      "sha256": "c0ef2ec8c75bc5bbfb2da219f78a22a5c75bfe693d1189ba3605ef310a9d454c"
+      "sha256": "bfe9c500dcb42aef45698b02b24e0a4b450f3278b55fe0dd736b7483bdba9fee"
     },
     "capability_table": {
       "bytes": 1219,
@@ -271,7 +270,7 @@
     "reference_model": {
       "bytes": 3695,
       "path": "evidence/generated/p10_5_reference_model.json",
-      "sha256": "a25150e65b0c1e8e7e567821a7d33f837ef7458c870265c2c18b4b19e6cfff61"
+      "sha256": "853b22d9b84a47308069372126b1dfa5f885573616e1e2109c06852d6d44b180"
     },
     "register_manifest": {
       "bytes": 2045,
@@ -314,9 +313,8 @@
     "hash_low": "0xA16281D1",
     "version": "0x0A000005"
   },
-  "result": "evidence/hardware/p10_5/p10_5_20260810T101302Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
   "rotating_jtag_serial": "210512180081",
-  "run_id": "p10_5_20260810T101302Z_e1f8c01a_4015142e_79607d01",
+  "run_id": "p10_5_20260810T111841Z_e1f8c01a_4015142e_79607d01",
   "runtime_rest_policy": {
     "conservative_modules": [
       "F0",
@@ -361,6 +359,6 @@
     "two_plus_one": 480,
     "two_plus_two": 180
   },
-  "status": "CONSUMED_AFTER_P10_5_FAIL",
+  "status": "READY_FOR_EXACT_CURRENT_RUN",
   "two_hour_test_allowed": false
 }
