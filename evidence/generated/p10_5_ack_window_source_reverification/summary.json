@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "stage": "P10_5_ACK_WINDOW_SOURCE_REVERIFY",
+  "test_id": "P10_5-P8D-ACK-WINDOW-SOURCE-REVERIFICATION",
+  "profile": "P8D_MULTI_PROFILE_OFFLINE",
+  "verification_scope": "PORTABLE_FUNCTION_PASS / OFFLINE_RTL_SOFTWARE_MODEL",
+  "status": "PASS",
+  "generated_at_utc": "2026-08-10T02:03:01+00:00",
+  "verified_source_commit": "50e0bb91bed4ecb6066f765ecfd59912b967b025",
+  "source_worktree_clean": true,
+  "NO_HARDWARE_ACTIONS_EXECUTED": true,
+  "CURRENT_RUN_HARDWARE_AUTHORIZATION": false,
+  "hardware_scope_promoted": false,
+  "claim_boundary": "Refreshes only current-source P8D bindings affected by the P10.5 ACK aggregation and 32-frame window-boundary remediation.",
+  "requirements": {
+    "L2-ARQ-001": [
+      "tb_ir_selective_repeat_tx",
+      "tb_ir_data_plane_integration_2lane",
+      "tb_ir_data_plane_integration_8lane"
+    ],
+    "L2-ARQ-002": [
+      "tb_ir_selective_repeat_tx",
+      "tb_ir_data_plane_integration_2lane",
+      "tb_ir_data_plane_integration_8lane"
+    ],
+    "L2-SACK-002": [
+      "tb_ir_sack_ack_aggregation"
+    ],
+    "L2-STALE-001": [
+      "tb_ir_selective_repeat_tx",
+      "tb_ir_data_plane_integration_2lane",
+      "tb_ir_data_plane_integration_8lane"
+    ],
+    "L2-RETRY-001": [
+      "tb_ir_selective_repeat_tx",
+      "tb_ir_scheduler_migration"
+    ]
+  },
+  "bound_artifacts": [
+    {
+      "path": "config/p8d_data_plane.yaml",
+      "sha256": "7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732"
+    },
+    {
+      "path": "rtl/ir_ack_aggregator.sv",
+      "sha256": "32f5eea345589d7f9669316d070fed121072b8fe3fca4d0a9749e208dcf1a515"
+    },
+    {
+      "path": "rtl/ir_data_plane_top.sv",
+      "sha256": "7218e966b0967592f2c91caf9788df0beb9ba5b1dfe21ba35810dfc9f77397c2"
+    },
+    {
+      "path": "rtl/ir_health_weighted_scheduler.sv",
+      "sha256": "215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c"
+    },
+    {
+      "path": "rtl/ir_selective_repeat_rx.sv",
+      "sha256": "fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028"
+    },
+    {
+      "path": "rtl/ir_selective_repeat_tx.sv",
+      "sha256": "e4ba1ebaeeef7046ec01c42b9800e9e188bc581ca1afc3e430691711f9ddbd3c"
+    },
+    {
+      "path": "sim/tb/tb_ir_sack_ack_aggregation.sv",
+      "sha256": "a531442cf8328a7b81b3430c8221fad57871508ce8a1e253f6a55098e89d3b20"
+    }
+  ],
+  "canonical_config": {
+    "command": "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/generate_p8d_data_plane_config.py --verify --json-summary",
+    "returncode": 0,
+    "timed_out": false,
+    "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/canonical_config.log",
+    "log_sha256": "bf6c83d3ecd6e92de185c12edc872acc06650f60ed290e8f651b36678d5bae48"
+  },
+  "simulations": [
+    {
+      "top": "tb_ir_scheduler_migration",
+      "status": "PASS",
+      "sources": [
+        "rtl/ir_health_weighted_scheduler.sv",
+        "rtl/ir_retry_migration.sv",
+        "sim/tb/tb_ir_scheduler_migration.sv"
+      ],
+      "required_markers": [
+        "P8D_HEALTH_AWARE_WEIGHTED_SCHEDULER_PASS=1",
+        "P8D_SCHEDULER_FAIRNESS_PASS=1",
+        "P8D_RETRY_ALTERNATE_LANE_PASS=1",
+        "P8D_RETRY_MIGRATION_ACKED_BLOCK_PASS=1",
+        "TB_IR_SCHEDULER_MIGRATION_PASS=1"
+      ],
+      "missing_markers": [],
+      "fatal_detected": false,
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_health_weighted_scheduler.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_retry_migration.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\sim\\tb\\tb_ir_scheduler_migration.sv",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_scheduler_migration/compile.log",
+          "log_sha256": "e7d1a8f63947596d12468422d494b9efa8843b061a328e69d4aace4f4bf1acad"
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_scheduler_migration -debug typical -s tb_ir_scheduler_migration_snapshot",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_scheduler_migration/elaborate.log",
+          "log_sha256": "cafd4abd43a39805ce1a8b9b8cdbeac8792cd9cc3545c4fc151ae71980669e68"
+        },
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_scheduler_migration_snapshot -runall",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_scheduler_migration/run.log",
+          "log_sha256": "0954dffcf2abfa30d34b677e4078c44bc24c6921fcc2bdec8e0c993399c95fab"
+        }
+      }
+    },
+    {
+      "top": "tb_ir_selective_repeat_tx",
+      "status": "PASS",
+      "sources": [
+        "rtl/ir_seq_math_pkg.sv",
+        "rtl/ir_selective_repeat_tx.sv",
+        "sim/tb/tb_ir_selective_repeat_tx.sv"
+      ],
+      "required_markers": [
+        "P8D_GLOBAL_OUTSTANDING_32_PASS=1",
+        "P8D_RETRY_EXHAUSTION_BOUNDED_PASS=1",
+        "P8D_ACKED_FRAME_SINGLE_COMPLETION_PASS=1",
+        "TB_IR_SELECTIVE_REPEAT_TX_PASS=1"
+      ],
+      "missing_markers": [],
+      "fatal_detected": false,
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_seq_math_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_selective_repeat_tx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\sim\\tb\\tb_ir_selective_repeat_tx.sv",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_selective_repeat_tx/compile.log",
+          "log_sha256": "d355241ea8f1d6d81c34a47b1c372317e5ee70c3235685bec49197398f0eb753"
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_selective_repeat_tx -debug typical -s tb_ir_selective_repeat_tx_snapshot",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_selective_repeat_tx/elaborate.log",
+          "log_sha256": "7ecbfbcf49c22ad201fbd801655fe61a791e66738e5148a0ae025c12aa08e073"
+        },
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_selective_repeat_tx_snapshot -runall",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_selective_repeat_tx/run.log",
+          "log_sha256": "f4015631e7c87a2b1574a3143e6a1d4125b006aafb8707d1f97c89153ecf1baf"
+        }
+      }
+    },
+    {
+      "top": "tb_ir_sack_ack_aggregation",
+      "status": "PASS",
+      "sources": [
+        "rtl/ir_seq_math_pkg.sv",
+        "rtl/ir_sack_codec.sv",
+        "rtl/ir_ack_aggregator.sv",
+        "sim/tb/tb_ir_sack_ack_aggregation.sv"
+      ],
+      "required_markers": [
+        "P8D_SACK_ENCODE_DECODE_PASS=1",
+        "P8D_ACK_AGGREGATION_BOUNDED_DELAY_PASS=1",
+        "TB_IR_SACK_ACK_AGGREGATION_PASS=1"
+      ],
+      "missing_markers": [],
+      "fatal_detected": false,
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_seq_math_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_sack_codec.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_ack_aggregator.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\sim\\tb\\tb_ir_sack_ack_aggregation.sv",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_sack_ack_aggregation/compile.log",
+          "log_sha256": "a09d41df49f968ec6c2c1cf61bfa051b1f335fe2e3e8b473fab3afef0e4ea126"
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_sack_ack_aggregation -debug typical -s tb_ir_sack_ack_aggregation_snapshot",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_sack_ack_aggregation/elaborate.log",
+          "log_sha256": "ebf2f66c109d6c594e898af2e194f95c9d3af09f0b9b616220eed8cff88f4ef8"
+        },
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_sack_ack_aggregation_snapshot -runall",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_sack_ack_aggregation/run.log",
+          "log_sha256": "e76fa5cf3dd41e59b7fa1e2ce22f43c93728f3c9a05d7725d8b4c98e1c32ea59"
+        }
+      }
+    },
+    {
+      "top": "tb_ir_data_plane_integration_2lane",
+      "status": "PASS",
+      "sources": [
+        "rtl/ir_seq_math_pkg.sv",
+        "rtl/ir_ack_aggregator.sv",
+        "rtl/ir_health_weighted_scheduler.sv",
+        "rtl/ir_selective_repeat_tx.sv",
+        "rtl/ir_selective_repeat_rx.sv",
+        "rtl/ir_data_plane_top.sv",
+        "sim/tb/p8d_data_plane_integration_common.sv",
+        "sim/tb/tb_ir_data_plane_integration_2lane.sv"
+      ],
+      "required_markers": [
+        "P8D_DATA_PLANE_GLOBAL_WINDOW_SAFETY_INTEGRATION_PASS=1",
+        "P8D_DATA_PLANE_DUPLICATE_APPLICATION_DELIVERY_ZERO_PASS=1",
+        "TB_IR_DATA_PLANE_INTEGRATION_2LANE_PASS=1"
+      ],
+      "missing_markers": [],
+      "fatal_detected": false,
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_seq_math_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_ack_aggregator.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_health_weighted_scheduler.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_selective_repeat_tx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_selective_repeat_rx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_data_plane_top.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\sim\\tb\\p8d_data_plane_integration_common.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\sim\\tb\\tb_ir_data_plane_integration_2lane.sv",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_data_plane_integration_2lane/compile.log",
+          "log_sha256": "4ebc8a2971101f1cda6f5e8a5126971efa1b93d0cfb1763c279de0baa98a0242"
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_data_plane_integration_2lane -debug typical -s tb_ir_data_plane_integration_2lane_snapshot",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_data_plane_integration_2lane/elaborate.log",
+          "log_sha256": "873c373ab62ce173f28efc7af8b628a3f9d1ae93222808dd4d7adcc38b358498"
+        },
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_data_plane_integration_2lane_snapshot -runall",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_data_plane_integration_2lane/run.log",
+          "log_sha256": "4c6fd4c147368173f72ea893fdd26f1f874869e42aae14e54ac735355d95c862"
+        }
+      }
+    },
+    {
+      "top": "tb_ir_data_plane_integration_8lane",
+      "status": "PASS",
+      "sources": [
+        "rtl/ir_seq_math_pkg.sv",
+        "rtl/ir_ack_aggregator.sv",
+        "rtl/ir_health_weighted_scheduler.sv",
+        "rtl/ir_selective_repeat_tx.sv",
+        "rtl/ir_selective_repeat_rx.sv",
+        "rtl/ir_data_plane_top.sv",
+        "sim/tb/p8d_data_plane_integration_common.sv",
+        "sim/tb/tb_ir_data_plane_integration_8lane.sv"
+      ],
+      "required_markers": [
+        "P8D_DATA_PLANE_GLOBAL_WINDOW_SAFETY_INTEGRATION_PASS=1",
+        "P8D_DATA_PLANE_DUPLICATE_APPLICATION_DELIVERY_ZERO_PASS=1",
+        "TB_IR_DATA_PLANE_INTEGRATION_8LANE_PASS=1"
+      ],
+      "missing_markers": [],
+      "fatal_detected": false,
+      "phases": {
+        "compile": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xvlog.bat --sv -i C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_seq_math_pkg.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_ack_aggregator.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_health_weighted_scheduler.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_selective_repeat_tx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_selective_repeat_rx.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\rtl\\ir_data_plane_top.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\sim\\tb\\p8d_data_plane_integration_common.sv C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5\\sim\\tb\\tb_ir_data_plane_integration_8lane.sv",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_data_plane_integration_8lane/compile.log",
+          "log_sha256": "daf9845fd22735533ee99951db16c37ba6695cd58a55e2e9cfc7d24fffd04586"
+        },
+        "elaborate": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xelab.bat tb_ir_data_plane_integration_8lane -debug typical -s tb_ir_data_plane_integration_8lane_snapshot",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_data_plane_integration_8lane/elaborate.log",
+          "log_sha256": "77fca6b69c190a62bf81ae7f65f09a2b7e06aeaa9d6e8c44c07096b9bf5d0489"
+        },
+        "run": {
+          "command": "D:\\Xilinx\\Vivado\\2023.1\\bin\\xsim.bat tb_ir_data_plane_integration_8lane_snapshot -runall",
+          "returncode": 0,
+          "timed_out": false,
+          "log": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z/tb_ir_data_plane_integration_8lane/run.log",
+          "log_sha256": "a424b90595163a1f4ca8130da4783f4004ac9eaf37712bb2f7b1c8de114aabb8"
+        }
+      }
+    }
+  ],
+  "raw_run": "evidence/generated/p10_5_ack_window_source_reverification/raw/20260810T020238.639798Z"
+}

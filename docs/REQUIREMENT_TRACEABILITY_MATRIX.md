@@ -59,15 +59,15 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `SYS-PERMIT-006` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-RECEIVE-ONLY-ACQUISITION` | `evidence/generated/p8c_receive_only_acquisition_summary.json` | Permit low allows controlled receive-only acquisition while every physical TX remains disabled. |
 | `PHY-SAFE-005` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-HISTORY-COOLDOWN` | `evidence/generated/p8e_p0_p8d_regression_summary.json` | Duty-history invalidation requires at least 1000 us all-TX-low cooldown before reuse. |
 | `PHY-SAFE-006` | `PASS` | P8C_MULTI_PROFILE_OFFLINE | `P8C` | `P8C-PHYSICAL-MODULE-ACCOUNTING` | `evidence/generated/p8c_physical_module_accounting_summary.json` | Rolling-duty state is bound to physical-module identity and survives lane, path, and permit transitions. |
-| `L2-ARQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` | Each endpoint direction uses bounded selective-repeat TX/RX windows. |
-| `L2-ARQ-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_5-LEGACY-ARQ-REVERIFICATION` | `evidence/generated/p10_5_xsim/summary.json` | The shared global outstanding window supports at least 32 frames. |
+| `L2-ARQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_5-P8D-ACK-WINDOW-SOURCE-REVERIFICATION` | `evidence/generated/p10_5_ack_window_source_reverification/summary.json` | Each endpoint direction uses bounded selective-repeat TX/RX windows. |
+| `L2-ARQ-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_5-P8D-ACK-WINDOW-SOURCE-REVERIFICATION` | `evidence/generated/p10_5_ack_window_source_reverification/summary.json` | The shared global outstanding window supports at least 32 frames. |
 | `L2-SEQ-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p8e_raw/r8d/p8d_selective_repeat_rtl_summary.json` | Sequence width is at least 16 bits and modular wrap is bit-exact. |
 | `L2-SACK-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | The negotiated SACK window supports at least 32 bits. |
-| `L2-SACK-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_5-LEGACY-SACK-REVERIFICATION` | `evidence/generated/p10_5_xsim/summary.json` | ACK aggregation has a bounded frame threshold and maximum delay. |
+| `L2-SACK-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_5-P8D-ACK-WINDOW-SOURCE-REVERIFICATION` | `evidence/generated/p10_5_ack_window_source_reverification/summary.json` | ACK aggregation has a bounded frame threshold and maximum delay. |
 | `L2-DUP-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-PYTHON-REFERENCE-CAMPAIGN` | `evidence/generated/p8e_precompletion_reverification_summary.json` | A duplicate logical frame never commits or completes twice. |
-| `L2-STALE-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P8D-SELECTIVE-REPEAT-RTL` | `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` | Stale session/path data and ACK records are rejected. |
+| `L2-STALE-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_5-P8D-ACK-WINDOW-SOURCE-REVERIFICATION` | `evidence/generated/p10_5_ack_window_source_reverification/summary.json` | Stale session/path data and ACK records are rejected. |
 | `L2-MIG-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | Only unacknowledged frames may migrate across eligible lanes or paths. |
-| `L2-RETRY-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | Retry count, timeout/backoff, and exhaustion are bounded. |
+| `L2-RETRY-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_5-P8D-ACK-WINDOW-SOURCE-REVERIFICATION` | `evidence/generated/p10_5_ack_window_source_reverification/summary.json` | Retry count, timeout/backoff, and exhaustion are bounded. |
 | `SCHED-001` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | Scheduling is health-aware and weighted across eligible lanes. |
 | `SCHED-002` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | A faulted lane does not block work on healthy eligible lanes. |
 | `SCHED-003` | `PASS` | P8D_MULTI_PROFILE_OFFLINE | `P8D` | `P10_3-P8D-RETRY-PATH-DIVERSITY-REVERIFICATION` | `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` | Scheduler fairness and starvation are explicitly bounded. |
@@ -485,15 +485,15 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-ARQ-001`
 
-- `rtl/ir_selective_repeat_tx.sv` — `48baa0852b5beed2fca7009dbc7dbc9facbe343e2a85ee72a0d36ed46c0ac25f`
+- `rtl/ir_selective_repeat_tx.sv` — `e4ba1ebaeeef7046ec01c42b9800e9e188bc581ca1afc3e430691711f9ddbd3c`
 - `rtl/ir_selective_repeat_rx.sv` — `fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028`
-- `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` — `d05dc4bb99e184cb3a45a1eacc9973e79f3fbf95be4bb8127c3fdca4cef33389`
+- `evidence/generated/p10_5_ack_window_source_reverification/summary.json` — `10d589a5d918a1e81d63cf416bce304309b4b2a59983e5018f152ba591c72e94`
 
 ### `L2-ARQ-002`
 
 - `config/p8d_data_plane.yaml` — `7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732`
 - `rtl/ir_data_plane_top.sv` — `7218e966b0967592f2c91caf9788df0beb9ba5b1dfe21ba35810dfc9f77397c2`
-- `evidence/generated/p10_5_xsim/summary.json` — `425fd46b142548f9f78d5bea40b07a8ccc523e32640376c3fb357a38a810a12f`
+- `evidence/generated/p10_5_ack_window_source_reverification/summary.json` — `10d589a5d918a1e81d63cf416bce304309b4b2a59983e5018f152ba591c72e94`
 
 ### `L2-SEQ-001`
 
@@ -509,9 +509,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-SACK-002`
 
-- `rtl/ir_ack_aggregator.sv` — `1d271fa5f807fe2afc6844e4723bd9c192d4e882de97866063c1dcd0a6aed58d`
-- `sim/tb/tb_ir_sack_ack_aggregation.sv` — `926ef09ea677487e14a9defd87419208bbfd97fee947527e3552e9ed9ad1c075`
-- `evidence/generated/p10_5_xsim/summary.json` — `425fd46b142548f9f78d5bea40b07a8ccc523e32640376c3fb357a38a810a12f`
+- `rtl/ir_ack_aggregator.sv` — `32f5eea345589d7f9669316d070fed121072b8fe3fca4d0a9749e208dcf1a515`
+- `sim/tb/tb_ir_sack_ack_aggregation.sv` — `a531442cf8328a7b81b3430c8221fad57871508ce8a1e253f6a55098e89d3b20`
+- `evidence/generated/p10_5_ack_window_source_reverification/summary.json` — `10d589a5d918a1e81d63cf416bce304309b4b2a59983e5018f152ba591c72e94`
 
 ### `L2-DUP-001`
 
@@ -521,9 +521,9 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-STALE-001`
 
-- `rtl/ir_selective_repeat_tx.sv` — `48baa0852b5beed2fca7009dbc7dbc9facbe343e2a85ee72a0d36ed46c0ac25f`
+- `rtl/ir_selective_repeat_tx.sv` — `e4ba1ebaeeef7046ec01c42b9800e9e188bc581ca1afc3e430691711f9ddbd3c`
 - `rtl/ir_selective_repeat_rx.sv` — `fd3ab2a4588951e217e70cb1a548354affcb5f76f7183e3257599aada8124028`
-- `evidence/generated/p9_final_source_p8d_19bdeced/p8d_selective_repeat_rtl_summary.json` — `d05dc4bb99e184cb3a45a1eacc9973e79f3fbf95be4bb8127c3fdca4cef33389`
+- `evidence/generated/p10_5_ack_window_source_reverification/summary.json` — `10d589a5d918a1e81d63cf416bce304309b4b2a59983e5018f152ba591c72e94`
 
 ### `L2-MIG-001`
 
@@ -534,10 +534,10 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `L2-RETRY-001`
 
-- `rtl/ir_selective_repeat_tx.sv` — `48baa0852b5beed2fca7009dbc7dbc9facbe343e2a85ee72a0d36ed46c0ac25f`
+- `rtl/ir_selective_repeat_tx.sv` — `e4ba1ebaeeef7046ec01c42b9800e9e188bc581ca1afc3e430691711f9ddbd3c`
 - `rtl/ir_health_weighted_scheduler.sv` — `215d1e5bbe050892c370280c0a417c695bb21dd17ac85bb23e3fa0c726e8863c`
 - `config/p8d_data_plane.yaml` — `7254ea226e2d369f3c2e4532059736eee63a30f6f90deedc317ba419fd47f732`
-- `evidence/generated/p10_3_retry_path_diversity_source_reverification/summary.json` — `0efd167d9ae11f82d4658f8c53477a0151a17d50daeb3f6d6919f95f47a215a9`
+- `evidence/generated/p10_5_ack_window_source_reverification/summary.json` — `10d589a5d918a1e81d63cf416bce304309b4b2a59983e5018f152ba591c72e94`
 
 ### `SCHED-001`
 
