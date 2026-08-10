@@ -16,7 +16,7 @@
   "blocking_condition": "P10-SAFETY-POWERUP-001",
   "campaign": "p10_5",
   "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-08-10T00:16:41.946932+00:00",
+  "generated_at_utc": "2026-08-10T03:41:02.919048+00:00",
   "hardware_actions_executed": false,
   "hardware_admission": false,
   "native_crypto_protocol_test": "PASS",
@@ -27,19 +27,19 @@
       "artifacts": {
         "bsp": {
           "bytes": 1970295,
-          "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip",
+          "path": "artifacts/p10_5/a2f7148efc3643a096f59f0a7730e3bcd7adb486/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip",
           "read_only": true,
           "sha256": "9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a"
         },
         "elf": {
           "bytes": 665256,
-          "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/28910e6005f1fb5b1f718c24714966617e123efacc5fde34731a71041521fbb0/p10_fixed_runtime.elf",
+          "path": "artifacts/p10_5/a2f7148efc3643a096f59f0a7730e3bcd7adb486/28910e6005f1fb5b1f718c24714966617e123efacc5fde34731a71041521fbb0/p10_fixed_runtime.elf",
           "read_only": true,
           "sha256": "28910e6005f1fb5b1f718c24714966617e123efacc5fde34731a71041521fbb0"
         }
       },
       "build_log": "evidence/generated/vitis/p10_5_4lane_runtime/fixed/p10_fixed_runtime_build.log",
-      "build_log_sha256": "7a0e755403b4d8d5757d402602a6f298f689847892ed4e0588a635f9aa82b8af",
+      "build_log_sha256": "13b12e47e02ced250878fba8be3499f8fe35d8d47e3e02ec20a760dea9929934",
       "errors": [],
       "inspection": {
         "elf_end_address": "0x0001E0A0",
@@ -68,7 +68,7 @@
       },
       "role": "fixed",
       "role_value": 1,
-      "source_bundle_sha256": "50b92b274a147a054af53d1e442c3fefc2dce3a3c3880e210405f910a5377130",
+      "source_bundle_sha256": "3e1e6c9841ddf1f1cadbb76da0ee0a4f9ad242b2ce1916e04fa32aa2507ebc8e",
       "source_sha256": {
         "board_profiles/ax7020_fixed_4lane/p10_5_runtime_role.h": "1485b71b3fa7be2fe92cebee276592adefd550d46a53fae12689f1b27de576eb",
         "config/generated/p10_5_capability_table.json": "ee35ed09a3f2172de3ef2c4ca4b8098b7c2b712f427722fe1ec5e5d5c7616429",
@@ -85,7 +85,7 @@
         "docs/hardware/P10_3_AS_WIRED_RECORD.md": "669ba80ec21b0af1cb19e0ffeb8a03f4dae8921452df1ee966deca3f20f5985f",
         "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md": "7f8efdfc03662fa668a042ace129e2592747d8fc92784d5566ba11f91b98bfc8",
         "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json": "ae082a2f1c0a6d09bf5cbeaba1010582560df1cd7defac489c35ca34712c5e48",
-        "evidence/generated/vivado/p10_5_4lane/fixed/p10_ax7020_fixed_functional.xsa": "ad8dd71d8dbd9045f475d2f0ade68873ddeeb3baff2b7232b7b1b8295c8286f7",
+        "evidence/generated/vivado/p10_5_4lane/fixed/p10_ax7020_fixed_functional.xsa": "7b65c6aae8bd5c1c59d48bd3214ea32fdfadb6a72932b673fac6657e70fe1d8a",
         "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
         "scripts/archive_p10_fault_forensics.py": "45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c",
         "scripts/build_p10_ps_runtime.py": "dd60bfc136b3a8d6e335b6476a5e4524944db2ad5ddd63f57a44ace82f8f866e",
@@ -127,26 +127,26 @@
       },
       "xsa": {
         "path": "evidence/generated/vivado/p10_5_4lane/fixed/p10_ax7020_fixed_functional.xsa",
-        "sha256": "ad8dd71d8dbd9045f475d2f0ade68873ddeeb3baff2b7232b7b1b8295c8286f7"
+        "sha256": "7b65c6aae8bd5c1c59d48bd3214ea32fdfadb6a72932b673fac6657e70fe1d8a"
       }
     },
     {
       "artifacts": {
         "bsp": {
           "bytes": 1970378,
-          "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip",
+          "path": "artifacts/p10_5/a2f7148efc3643a096f59f0a7730e3bcd7adb486/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip",
           "read_only": true,
           "sha256": "48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c"
         },
         "elf": {
           "bytes": 666104,
-          "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/f74b71c53ab21df695e2ae3439e560b0f5efcbfc865300e988a1a80118691065/p10_rotating_runtime.elf",
+          "path": "artifacts/p10_5/a2f7148efc3643a096f59f0a7730e3bcd7adb486/f74b71c53ab21df695e2ae3439e560b0f5efcbfc865300e988a1a80118691065/p10_rotating_runtime.elf",
           "read_only": true,
           "sha256": "f74b71c53ab21df695e2ae3439e560b0f5efcbfc865300e988a1a80118691065"
         }
       },
       "build_log": "evidence/generated/vitis/p10_5_4lane_runtime/rotating/p10_rotating_runtime_build.log",
-      "build_log_sha256": "d72b6fc10d5eccb827092c0c591d67e9ee094b0e7f523c4d8f26e021e89f60d6",
+      "build_log_sha256": "d23b94158a418c7fef6f27b1488b50b173ec2878acc4e478fd2f5b835b5c587d",
       "errors": [],
       "inspection": {
         "elf_end_address": "0x0001E0A0",
@@ -175,7 +175,7 @@
       },
       "role": "rotating",
       "role_value": 2,
-      "source_bundle_sha256": "33f2ea4e07ce28e5d273fee6b545cb3389d934d0ec0c0a7def417e27bc137f63",
+      "source_bundle_sha256": "29eba5e411b2a06260e8e5504fe8934f2c1669e76a8cde0774c3bea28f85c791",
       "source_sha256": {
         "board_profiles/ax7020_rotating_4lane/p10_5_runtime_role.h": "d3b3f9369a7110436b949f5df69fe9312e519c9618dc0c0541eea7a917bf64c5",
         "config/generated/p10_5_capability_table.json": "ee35ed09a3f2172de3ef2c4ca4b8098b7c2b712f427722fe1ec5e5d5c7616429",
@@ -192,7 +192,7 @@
         "docs/hardware/P10_3_AS_WIRED_RECORD.md": "669ba80ec21b0af1cb19e0ffeb8a03f4dae8921452df1ee966deca3f20f5985f",
         "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md": "7f8efdfc03662fa668a042ace129e2592747d8fc92784d5566ba11f91b98bfc8",
         "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json": "ae082a2f1c0a6d09bf5cbeaba1010582560df1cd7defac489c35ca34712c5e48",
-        "evidence/generated/vivado/p10_5_4lane/rotating/p10_ax7020_rotating_functional.xsa": "3e04f13f046abd68cf349c1494cf35945254e81584fbc093030949dca140be56",
+        "evidence/generated/vivado/p10_5_4lane/rotating/p10_ax7020_rotating_functional.xsa": "ee7dd96c4ebd66f107f1483a617de519069e78795a90e061feae6596081cb69a",
         "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
         "scripts/archive_p10_fault_forensics.py": "45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c",
         "scripts/build_p10_ps_runtime.py": "dd60bfc136b3a8d6e335b6476a5e4524944db2ad5ddd63f57a44ace82f8f866e",
@@ -234,12 +234,12 @@
       },
       "xsa": {
         "path": "evidence/generated/vivado/p10_5_4lane/rotating/p10_ax7020_rotating_functional.xsa",
-        "sha256": "3e04f13f046abd68cf349c1494cf35945254e81584fbc093030949dca140be56"
+        "sha256": "ee7dd96c4ebd66f107f1483a617de519069e78795a90e061feae6596081cb69a"
       }
     }
   ],
   "schema_version": 1,
-  "source_commit": "4254f3eaefa57eff88fc4d3e0df39740c5da0d58",
+  "source_commit": "a2f7148efc3643a096f59f0a7730e3bcd7adb486",
   "source_worktree_dirty": false,
   "status": "PASS",
   "test_id": "P10_5-AX7020-DUAL-DIRECTION-4LANE-PS-RUNTIME-BUILD"
