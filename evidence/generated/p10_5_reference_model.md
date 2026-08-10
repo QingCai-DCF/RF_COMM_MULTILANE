@@ -9,7 +9,7 @@
 - 1+1 ordered pairs: `12`
 - 2+1 / 1+2 cases: `12` / `12`
 - Directed 2+2 partitions: `6`
-- Modeled per-direction goodput: `4537313` bit/s
+- Modeled per-direction goodput: `4488755` bit/s
 - 4.0 Mbit/s feasibility: `PASS`
 - 4.8 Mbit/s stretch: `FAIL_NONBLOCKING`
 

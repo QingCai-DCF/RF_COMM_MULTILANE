@@ -13,18 +13,21 @@
     "guard_cycles": 17984,
     "hard_1ms_high_cycles_exclusive": 12800,
     "hard_target": "PASS",
+    "inter_object_rx_lead_us": 5000,
+    "internal_object_bytes": 262144,
     "maximum_1ms_high_cycles": 11512,
     "maximum_continuous_high_cycles": 8,
     "maximum_continuous_high_us": 0.125,
     "payload_bytes": 247,
-    "per_direction_application_bps": 4537313,
+    "per_direction_application_bps": 4488755,
     "per_lane_application_bps": 2268657,
     "stretch_4p8mbps": "FAIL_NONBLOCKING",
     "target_1ms_high_cycles": 11520,
     "target_bps": 4000000,
-    "vnext_data_header_bytes": 40
+    "vnext_data_header_bytes": 40,
+    "wire_limited_per_direction_application_bps": 4537313
   },
-  "config_sha256": "875b75fc1b6170076d2a549d12d56a6e46d01a632718cb82774dfc5991b48be3",
+  "config_sha256": "b6ff7dc3f9f097012a56bc8b4092515292e09115358586929afaba731c1feadc",
   "current_run_hardware_authorization_used": false,
   "dma": {
     "backpressure_events": 7548,
@@ -41,7 +44,7 @@
     "protocol": 100000,
     "role_reset": 25000
   },
-  "generated_config_sha256": "0644ac298cde5728532fb60b29ccc581797e4afca9f71a254b5004e34ba79322",
+  "generated_config_sha256": "60a3fa2166a33935a14981f90734863297639d1c325a9d39843a360dd9a34dc2",
   "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
   "hardware_actions_executed": false,
   "invariants": {
@@ -68,6 +71,16 @@
       "0xA/0x5",
       "0xC/0x3"
     ]
+  },
+  "object_boundaries": {
+    "cross_direction_session_overlap": 0,
+    "host_per_object_actions": 0,
+    "inter_object_rx_lead_us": 5000,
+    "maximum_stream_objects": 7168,
+    "optical_ready_round_trips": 0,
+    "tx_release_policy": "ONE_OBJECT_AFTER_LOCAL_RX_ACTIVE",
+    "unique_f_to_r_sessions": 7168,
+    "unique_r_to_f_sessions": 7168
   },
   "protocol": {
     "allocations": 30994,
@@ -107,8 +120,8 @@
     20260809,
     22002200
   ],
-  "source_commit": "59528c015400ddedfaddcb78e57f4a53db904e3f",
+  "source_commit": "4254f3eaefa57eff88fc4d3e0df39740c5da0d58",
   "status": "PASS",
   "test_id": "P10_5_DUAL_DIRECTION_REFERENCE_MODEL",
-  "timestamp_utc": "2026-08-09T23:01:49.906237+00:00"
+  "timestamp_utc": "2026-08-10T00:42:51.533509+00:00"
 }
