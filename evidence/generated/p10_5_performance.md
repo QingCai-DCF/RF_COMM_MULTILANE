@@ -2,5 +2,5 @@
 
 - Status: `FAIL`
 - test_id: `P10_5-PERFORMANCE`
-- run_id: `p10_5_20260810T005649Z_4254f3ea_0465f6da_35edea20`
-- artifact_source_commit: `4254f3eaefa57eff88fc4d3e0df39740c5da0d58`
+- run_id: `p10_5_20260810T040830Z_43cdde9f_e201ac59_e118ba87`
+- artifact_source_commit: `43cdde9f23600b2bff9a7f14f4c520876c50b070`
