@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-NONFORMAL-TIMEOUT-GATE-DIAGNOSIS",
+  "status": "PASS",
+  "scope": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "artifact_source_commit": "eefca40c115babbfc08f9c06c6bb118534641c04",
+  "failed_run_id": "p10_5_20260810T064401Z_eefca40c_78726594_498ca074",
+  "failed_run_summary": "evidence/hardware/p10_5/p10_5_20260810T064401Z_eefca40c_78726594_498ca074/final/p10_5_final_summary.json",
+  "failed_run_summary_sha256": "63ca37a9dba28fed272f116e1e98079ef4204f003bac20a6a935cb8995c9ca1a",
+  "failed_run_status": "FAIL",
+  "failed_run_shutdown": {
+    "fixed": "PASS",
+    "rotating": "PASS"
+  },
+  "classification": "HOST_ACCEPTANCE_POLICY_MISMATCH",
+  "observations": {
+    "one_plus_one_case_count": 12,
+    "all_cases_tx_rx_positive": true,
+    "all_cases_application_commit_positive": true,
+    "all_integrity_and_exhaustion_counters_zero": true,
+    "bounded_recovery_events": [
+      {
+        "label": "oneplusone_f0_r1",
+        "role": "fixed",
+        "tx_timeouts": 1,
+        "tx_retries": 1,
+        "tx_bytes": 262144,
+        "rx_bytes": 262144,
+        "application_committed": 2621440,
+        "crc_bad": 0,
+        "sha_mismatch": 0,
+        "integrity_errors": 0,
+        "retry_exhausted": 0
+      },
+      {
+        "label": "oneplusone_f1_r0",
+        "role": "fixed",
+        "tx_timeouts": 1,
+        "tx_retries": 1,
+        "tx_bytes": 262144,
+        "rx_bytes": 262144,
+        "application_committed": 2621440,
+        "crc_bad": 0,
+        "sha_mismatch": 0,
+        "integrity_errors": 0,
+        "retry_exhausted": 0
+      },
+      {
+        "label": "oneplusone_f3_r2",
+        "role": "fixed",
+        "tx_timeouts": 1,
+        "tx_retries": 1,
+        "tx_bytes": 262144,
+        "rx_bytes": 262144,
+        "application_committed": 2621440,
+        "crc_bad": 0,
+        "sha_mismatch": 0,
+        "integrity_errors": 0,
+        "retry_exhausted": 0
+      }
+    ]
+  },
+  "goal_requirement_reconciliation": {
+    "section_33_one_plus_one": "Requires TX execution, positive commit in both directions, zero CRC/SHA errors, zero same-module/cross-lane acceptance, and zero deadlock; it does not require tx_timeouts=0.",
+    "section_40_formal_30min": "Explicitly requires transport timeout=0 for the 1800-second formal window.",
+    "decision": "Keep non-formal tx_timeouts and retries as diagnostic counters while preserving retry exhaustion, integrity, commit, safety, and terminal-service checks as hard gates. Enforce tx_timeouts=0 as a hard gate for formal_30min only."
+  },
+  "remediation": {
+    "rtl_changed": false,
+    "firmware_changed": false,
+    "artifacts_changed": false,
+    "hardware_runner_changed": true,
+    "unit_test_added": true,
+    "old_run_evidence_modified": false,
+    "old_hardware_pass_inherited": false
+  },
+  "post_remediation_offline_replay": {
+    "source": "immutable one_plus_one stage evidence from the failed run",
+    "case_count": 12,
+    "maximum_tx_timeouts": 1,
+    "reevaluated_stage_status": "PASS",
+    "reevaluated_errors": [],
+    "hardware_result_claimed": false
+  },
+  "artifact_binding": {
+    "fixed_functional_bit_sha256": "78726594e923b12eb45043f3c468aed1c23601eb07d553716cbb0f4ba10cb539",
+    "rotating_functional_bit_sha256": "498ca0744a4ed521824f5eb1e7da06ac9bab0a826edeb92dcf3e1ce0380702ae",
+    "fixed_shutdown_bit_sha256": "f5cbde1b3a0695ef3cc3aa7a3489d15b3416e98a0993f4dbb263444b6f7ad540",
+    "rotating_shutdown_bit_sha256": "d6eee65b31f36cd7dedea988d275421410d113b0383b4dbdb93d14283e0191b8",
+    "fixed_elf_sha256": "05b6b416a420568760ec02b276b6dfa5afd045c79079edf79c8a888c7611455a",
+    "rotating_elf_sha256": "a16770e195f30d9a51a8c0693e6b31cf0b340cc01817923d6fd9404793c68082"
+  },
+  "hardware_actions_executed_by_remediation": false,
+  "current_run_hardware_authorization": false,
+  "generated_at_utc": "2026-08-10T06:56:06.0308709Z",
+  "errors": []
+}

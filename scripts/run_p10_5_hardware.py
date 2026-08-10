@@ -692,7 +692,13 @@ def parse_p105_result(path: Path, role: str) -> dict[str, Any]:
     }
 
 
-def result_errors(label: str, case: P105Case, result: dict[str, Any]) -> list[str]:
+def transport_timeout_is_hard_failure(stage: str) -> bool:
+    """The Goal requires a zero transport-timeout count only for formal."""
+    return stage == "formal_30min"
+
+
+def result_errors(stage: str, label: str, case: P105Case,
+                  result: dict[str, Any]) -> list[str]:
     role = result["role"]
     errors: list[str] = []
     expected_local_tx = case.f2r if role == "fixed" else case.r2f
@@ -712,7 +718,6 @@ def result_errors(label: str, case: P105Case, result: dict[str, Any]) -> list[st
         "role epoch": result["role_epoch"] > 0,
         "timer crosscheck": result["timer_crosscheck"] == 1,
         "direction reject": result["direction_reject"] == 0,
-        "transport timeout": result["tx_timeouts"] == 0,
         "physical TX evidence": result["tx_bytes"] > 0,
         "physical RX evidence": result["rx_bytes"] > 0,
         "paired launch barrier":
@@ -734,6 +739,8 @@ def result_errors(label: str, case: P105Case, result: dict[str, Any]) -> list[st
                 result["deferred_tx_objects_released"],
     }
     errors += [f"{label}:{role}: {name}" for name, passed in checks.items() if not passed]
+    if transport_timeout_is_hard_failure(stage) and result["tx_timeouts"] != 0:
+        errors.append(f"{label}:{role}: formal transport timeout is nonzero")
     for name in ("partial_commit", "duplicate_commit", "stale_commit",
                  "descriptor_leak", "double_completion", "integrity_errors",
                  "crc_bad", "sha_mismatch", "retry_exhausted",
@@ -874,7 +881,7 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
                 if not inside(path, stage_dir):
                     raise ValueError("P10.5 result path escaped stage")
                 result = parse_p105_result(path, role)
-                errors += result_errors(label, case, result)
+                errors += result_errors(stage, label, case, result)
                 pair[role] = {key: value for key, value in result.items() if key != "words"}
             if pair["fixed"]["role_epoch"] != pair["rotating"]["role_epoch"]:
                 errors.append(f"{label}: endpoint role epochs differ")
@@ -933,6 +940,16 @@ def aggregate_counters(stages: list[dict[str, Any]]) -> dict[str, int]:
     return {name: max([0] + [int(pair[role].get(name, 0))
                              for stage in stages for pair in stage.get("details", [])
                              for role in ("fixed", "rotating")]) for name in names}
+
+
+def formal_transport_timeout_zero(stages: list[dict[str, Any]]) -> bool:
+    formal = next((stage for stage in stages
+                   if stage.get("stage") == "formal_30min"), None)
+    if formal is None or not formal.get("details"):
+        return False
+    return all(int(pair.get(role, {}).get("tx_timeouts", -1)) == 0
+               for pair in formal["details"]
+               for role in ("fixed", "rotating"))
 
 
 def aggregate_capability_evidence(stages: list[dict[str, Any]]) -> dict[str, Any]:
@@ -1144,14 +1161,17 @@ def main(argv: list[str] | None = None) -> int:
         x["status"] == "PASS" for x in stage_results)
     counters = aggregate_counters(stage_results)
     capabilities = aggregate_capability_evidence(stage_results)
-    hard_zero = all(value == 0 for value in counters.values())
+    integrity_hard_zero = all(value == 0 for name, value in counters.items()
+                              if name != "tx_timeouts")
+    formal_timeout_zero = formal_transport_timeout_zero(stage_results)
     feature_pass = all(bool(capabilities[key]) for key in (
         "ack_piggyback_tx_observed", "ack_piggyback_rx_observed",
         "control_only_ack_fallback_observed", "two_plus_two_tx_executed"))
     runtime_ledger = runtime_guard.public_ledger()
     runtime_pass = runtime_ledger.get("status") == "PASS"
-    status = "PASS" if all_shutdown and all_stages and hard_zero and feature_pass and \
-        runtime_pass and not campaign_errors else "FAIL"
+    status = "PASS" if all_shutdown and all_stages and integrity_hard_zero and \
+        formal_timeout_zero and feature_pass and runtime_pass and \
+        not campaign_errors else "FAIL"
     performance = next((x for x in stage_results if x["stage"] == "performance"), {})
     perf_pair = (performance.get("details") or [{}])[0]
     goodput = perf_pair.get("application_goodput_bps", {})
@@ -1180,7 +1200,11 @@ def main(argv: list[str] | None = None) -> int:
         "formal_committed_bytes": {
             "F_TO_R": formal_pair.get("rotating", {}).get("application_committed"),
             "R_TO_F": formal_pair.get("fixed", {}).get("application_committed")},
-        "counters": counters, "capability_evidence": capabilities,
+        "counters": counters,
+        "nonformal_transport_timeouts_are_diagnostic": True,
+        "formal_transport_timeout_zero": formal_timeout_zero,
+        "integrity_hard_counters_zero": integrity_hard_zero,
+        "capability_evidence": capabilities,
         "TWO_PLUS_TWO_TX_EXECUTED": capabilities["two_plus_two_tx_executed"],
         "stages": stage_results,
         "runtime_rest_ledger": runtime_ledger, "forensics": forensics,

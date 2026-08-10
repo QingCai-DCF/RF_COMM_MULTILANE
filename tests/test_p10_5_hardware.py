@@ -138,6 +138,31 @@ class P10_5HardwareTests(unittest.TestCase):
             {"stage": "capability", "details": [pair]}])
         self.assertFalse(pre_two_plus_two["two_plus_two_tx_executed"])
 
+    def test_transport_timeout_policy_is_formal_only(self) -> None:
+        for stage in campaign.STAGES:
+            self.assertEqual(
+                campaign.transport_timeout_is_hard_failure(stage),
+                stage == "formal_30min",
+            )
+        nonformal = [{
+            "stage": "one_plus_one",
+            "details": [{
+                "fixed": {"tx_timeouts": 1},
+                "rotating": {"tx_timeouts": 0},
+            }],
+        }]
+        self.assertFalse(campaign.formal_transport_timeout_zero(nonformal))
+        formal = nonformal + [{
+            "stage": "formal_30min",
+            "details": [{
+                "fixed": {"tx_timeouts": 0},
+                "rotating": {"tx_timeouts": 0},
+            }],
+        }]
+        self.assertTrue(campaign.formal_transport_timeout_zero(formal))
+        formal[-1]["details"][0]["rotating"]["tx_timeouts"] = 1
+        self.assertFalse(campaign.formal_transport_timeout_zero(formal))
+
     def test_runner_has_no_runtime_cap_or_network_path(self) -> None:
         source = (ROOT / "scripts/run_p10_5_hardware.py").read_text(
             encoding="utf-8")
