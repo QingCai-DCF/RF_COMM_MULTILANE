@@ -26,6 +26,11 @@ class P10_5FirmwareContractTests(unittest.TestCase):
         self.assertEqual(cfg.HOST_LAUNCH_RELEASE_MASK, 0x80000000)
         self.assertEqual(cfg.LAUNCH_BARRIER_TIMEOUT_MS, 60_000)
         self.assertEqual(cfg.INTER_OBJECT_RX_LEAD_US, 5_000)
+        self.assertEqual(cfg.CONTROL_COLLISION_BACKOFF_CYCLES, 32_000)
+        self.assertEqual(
+            cfg.CONTROL_COLLISION_POLICY,
+            "FIXED_PRIORITY_THEN_ROTATING_TOKEN_OR_BOUNDED_ESCAPE",
+        )
         self.assertEqual(
             cfg.OBJECT_SESSION_POLICY,
             "DIRECTION_BIT_PLUS_OBJECT_DERIVED_EPOCH",
@@ -208,6 +213,27 @@ class P10_5FirmwareContractTests(unittest.TestCase):
             aggregator,
         )
         self.assertIn("end else if (ack_valid_o && ack_ready_i) begin", aggregator)
+
+    def test_control_only_ack_tail_collision_is_role_ordered_and_bounded(self) -> None:
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        peripheral = (ROOT / "rtl/p9_axi_dma_peripheral.sv").read_text(
+            encoding="utf-8"
+        )
+        quarantine = (
+            ROOT / "rtl/p10_4_connector_ack_rx_quarantine.sv"
+        ).read_text(encoding="utf-8")
+        self.assertIn("p10_5_control_ack_received_pulse_q", core)
+        self.assertIn("p10_5_rotating_control_token_q", core)
+        self.assertIn("p10_5_rotating_control_token_guard_q", core)
+        self.assertIn("p10_5_rotating_control_token_ready", core)
+        self.assertIn("P10_5_CONTROL_FALLBACK_MAX_WAIT_CYCLES", core)
+        self.assertIn("p10_5_control_fallback_role_ready", core)
+        self.assertIn("ack_connector_safe_lane_mask", core)
+        self.assertIn("P10_5_CONTROL_COLLISION_BACKOFF_CYCLES", peripheral)
+        self.assertIn("paired_ack_txd_o", quarantine)
+        self.assertNotIn("P10_5", quarantine)
 
     def test_window_boundary_never_admits_uncopied_payload(self) -> None:
         tx = (ROOT / "rtl/ir_selective_repeat_tx.sv").read_text(

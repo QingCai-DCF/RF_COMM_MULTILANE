@@ -1441,6 +1441,10 @@ module p9_axi_dma_peripheral #(
     // Preserve the historical P9 monolithic defaults while P10.1R role-bound
     // endpoints use the directly measured guard selection.
     .ACK_TURNAROUND_GUARD_CYCLES(DEPLOYMENT_ROLE == 0 ? 37_120 : 4_352),
+    .ACK_MAX_DELAY_CYCLES(P10_5_DUAL_CAPABLE != 0 ?
+                          P10_5_ACK_MAX_DELAY_CYCLES : 64_000),
+    .CONTROL_COLLISION_BACKOFF_CYCLES(P10_5_DUAL_CAPABLE != 0 ?
+        P10_5_CONTROL_COLLISION_BACKOFF_CYCLES : 0),
     .RX_MIN_POST_TX_GUARD_CYCLES(DEPLOYMENT_ROLE == 0 ? 36_864 : 4_096),
     .DEPLOYMENT_ROLE(DEPLOYMENT_ROLE),
     .P10_5_DUAL_CAPABLE(P10_5_DUAL_CAPABLE)

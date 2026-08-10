@@ -14,7 +14,9 @@
     "ring_depth": 32
   },
   "capability": "CAP_SIMULTANEOUS_BIDIRECTIONAL_V1",
-  "config_sha256": "b6ff7dc3f9f097012a56bc8b4092515292e09115358586929afaba731c1feadc",
+  "config_sha256": "24f200aca983191633f87d0974fb4034cbdbaa88c5c45a2742172e9744304d46",
+  "control_only_ack_collision_backoff_cycles": 32000,
+  "control_only_ack_collision_policy": "FIXED_PRIORITY_THEN_ROTATING_TOKEN_OR_BOUNDED_ESCAPE",
   "control_only_ack_support": true,
   "legacy_half_duplex_support": true,
   "mask_width": 4,

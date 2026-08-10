@@ -117,6 +117,8 @@ P10_5_PROVENANCE = [
     ROOT / "config/generated/p10_5_capability_table.json",
     ROOT / "software/ps_driver/p10_5_dual_direction_config.h",
     ROOT / "docs/design/P10_5_DUAL_DIRECTION_CAPABILITY.md",
+    ROOT / "docs/design/P10_5_CONTROL_ACK_COLLISION_AVOIDANCE.md",
+    ROOT / "evidence/generated/p10_5_ack_collision_diagnosis.json",
     ROOT / "scripts/generate_p10_5_config.py",
     ROOT / "scripts/model_p10_5_dual_direction.py",
 ]

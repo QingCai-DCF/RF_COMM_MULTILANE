@@ -50,6 +50,14 @@ def render(data: dict[str, Any]) -> dict[str, str]:
         raise ValueError("P10.5 primary direction masks must be nonzero, disjoint subsets")
     if as_int(per["sack_window"]) != 32 or as_int(per["outstanding"]) != 32:
         raise ValueError("P10.5 freezes the verified 32-frame SR/SACK context per direction")
+    if ctrl["collision_policy"] != \
+            "FIXED_PRIORITY_THEN_ROTATING_TOKEN_OR_BOUNDED_ESCAPE" or \
+            as_int(ctrl["collision_backoff_cycles"]) < 1 or \
+            as_int(ctrl["collision_backoff_cycles"]) >= \
+            as_int(per["ack_max_delay_cycles"]) or \
+            as_int(ctrl["starvation_limit_cycles"]) != \
+            as_int(per["ack_max_delay_cycles"]):
+        raise ValueError("P10.5 control-only ACK collision policy is not fail-bounded")
     if as_int(runtime["autonomous_dual_stream_command"]) != 15 or \
             as_int(runtime["maximum_stream_bytes"]) > 0x7FFFFFFF or \
             as_int(runtime["internal_object_bytes"]) != 262144 or \
@@ -82,6 +90,7 @@ package p10_5_dual_direction_pkg;
   localparam int P10_5_SACK_BITS = {as_int(per['sack_window'])};
   localparam int P10_5_ACK_THRESHOLD = {as_int(per['ack_threshold'])};
   localparam int P10_5_ACK_MAX_DELAY_CYCLES = {as_int(per['ack_max_delay_cycles'])};
+  localparam int P10_5_CONTROL_COLLISION_BACKOFF_CYCLES = {as_int(ctrl['collision_backoff_cycles'])};
   localparam logic P10_5_PIGGYBACK_ENABLE = 1'b{1 if ctrl['piggyback_enable'] else 0};
   localparam logic P10_5_CONTROL_ONLY_ACK_ENABLE = 1'b{1 if ctrl['control_only_ack_fallback'] else 0};
   typedef enum logic {{ P10_5_DIR_F_TO_R = 1'b0, P10_5_DIR_R_TO_F = 1'b1 }} p10_5_direction_t;
@@ -106,6 +115,7 @@ endpackage
 #define P10_5_SACK_BITS UINT32_C({as_int(per['sack_window'])})
 #define P10_5_ACK_THRESHOLD UINT32_C({as_int(per['ack_threshold'])})
 #define P10_5_ACK_MAX_DELAY_CYCLES UINT32_C({as_int(per['ack_max_delay_cycles'])})
+#define P10_5_CONTROL_COLLISION_BACKOFF_CYCLES UINT32_C({as_int(ctrl['collision_backoff_cycles'])})
 #define P10_5_TARGET_GOODPUT_BPS UINT32_C({as_int(perf['application_goodput_bps_per_direction'])})
 #define P10_5_FORMAL_RUNTIME_SECONDS UINT32_C({as_int(data['formal_runtime_seconds'])})
 #define P10_5_AUTONOMOUS_DUAL_STREAM_COMMAND UINT32_C({as_int(runtime['autonomous_dual_stream_command'])})
@@ -136,6 +146,8 @@ OUTSTANDING = {as_int(per['outstanding'])}
 SACK_BITS = {as_int(per['sack_window'])}
 ACK_THRESHOLD = {as_int(per['ack_threshold'])}
 ACK_MAX_DELAY_CYCLES = {as_int(per['ack_max_delay_cycles'])}
+CONTROL_COLLISION_BACKOFF_CYCLES = {as_int(ctrl['collision_backoff_cycles'])}
+CONTROL_COLLISION_POLICY = "{ctrl['collision_policy']}"
 TARGET_GOODPUT_BPS = {as_int(perf['application_goodput_bps_per_direction'])}
 FORMAL_RUNTIME_SECONDS = {as_int(data['formal_runtime_seconds'])}
 AUTONOMOUS_DUAL_STREAM_COMMAND = {as_int(runtime['autonomous_dual_stream_command'])}
@@ -176,6 +188,10 @@ def validate_masks(active, f_to_r, r_to_f, require_both=True):
         "per_direction_sack_width": per["sack_window"],
         "piggyback_support": bool(ctrl["piggyback_enable"]),
         "control_only_ack_support": bool(ctrl["control_only_ack_fallback"]),
+        "control_only_ack_collision_policy": ctrl["collision_policy"],
+        "control_only_ack_collision_backoff_cycles": as_int(
+            ctrl["collision_backoff_cycles"]
+        ),
         "role_epoch_support": True,
         "legacy_half_duplex_support": True,
         "primary_masks": {"active": active, "f_to_r": f2r, "r_to_f": r2f},
@@ -205,6 +221,7 @@ def validate_masks(active, f_to_r, r_to_f, require_both=True):
 - Primary masks: active `0x{active:X}`, F→R `0x{f2r:X}`, R→F `0x{r2f:X}`
 - Per-direction selective-repeat/SACK: `{per['outstanding']}` / `{per['sack_window']}`
 - ACK: CRC-protected DATA piggyback with bounded control-only fallback
+- Control-only ACK collision policy: `{ctrl['collision_policy']}`; fixed uses the early slot at ACK max-delay minus `{ctrl['collision_backoff_cycles']}` cycles, while rotating responds after the fixed token plus the existing post-TX receiver-recovery guard or escapes at the unchanged ACK max-delay bound
 - Autonomous runtime: mailbox command `{runtime['autonomous_dual_stream_command']}`, simultaneous MM2S/S2MM, up to `0x{as_int(runtime['maximum_stream_bytes']):08X}` bytes per direction
 - Initial launch: both endpoints activate RX with every initial TX descriptor CPU-held, publish `PRIMED`, then release only both object-0 TX chains with mailbox mask `0x{as_int(runtime['host_launch_release_mask']):08X}` within `{runtime['launch_barrier_timeout_ms']}` ms
 - Object boundaries: every object keeps its TX descriptors CPU-held until its local RX context is active; objects after the paired first launch apply a `{runtime['inter_object_rx_lead_us']}`-us receiver-lead interval and use a direction-separated, object-derived session epoch before releasing only that object's TX chain

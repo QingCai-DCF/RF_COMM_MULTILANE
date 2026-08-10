@@ -26,6 +26,7 @@ ACK_EVENTS = 50_000
 DMA_EVENTS = 50_000
 ROLE_EVENTS = 25_000
 MODULUS = 1 << 16
+P10_5_ENDPOINT_ACK_RECOVERY_GUARD_CYCLES = 4_352
 
 
 def load_config() -> Any:
@@ -343,6 +344,18 @@ def protocol_model() -> dict[str, Any]:
 
 
 def ack_control_model() -> dict[str, Any]:
+    if CFG.CONTROL_COLLISION_POLICY != \
+            "FIXED_PRIORITY_THEN_ROTATING_TOKEN_OR_BOUNDED_ESCAPE":
+        raise AssertionError("unexpected control-only ACK collision policy")
+    fixed_early_slot = (
+        CFG.ACK_MAX_DELAY_CYCLES - CFG.CONTROL_COLLISION_BACKOFF_CYCLES
+    )
+    rotating_token_response = (
+        fixed_early_slot + P10_5_ENDPOINT_ACK_RECOVERY_GUARD_CYCLES
+    )
+    rotating_escape = CFG.ACK_MAX_DELAY_CYCLES
+    if not (0 < fixed_early_slot < rotating_token_response < rotating_escape):
+        raise AssertionError("role-ordered control ACK slots are not bounded")
     piggyback = fallback = pending = age = max_age = 0
     for seed, count in zip(SEEDS, distribute(ACK_EVENTS)):
         rng = random.Random(seed ^ 0xA55A)
@@ -364,9 +377,20 @@ def ack_control_model() -> dict[str, Any]:
                     age = 0
     if not piggyback or not fallback or max_age > 64:
         raise AssertionError("ACK piggyback/fallback liveness failure")
-    return {"events": ACK_EVENTS, "piggyback": piggyback,
-            "control_only_fallback": fallback, "max_abstract_ack_age": max_age,
-            "deadlock": 0}
+    return {
+        "events": ACK_EVENTS,
+        "piggyback": piggyback,
+        "control_only_fallback": fallback,
+        "max_abstract_ack_age": max_age,
+        "deadlock": 0,
+        "collision_policy": CFG.CONTROL_COLLISION_POLICY,
+        "ack_max_delay_cycles": CFG.ACK_MAX_DELAY_CYCLES,
+        "fixed_early_slot_cycles": fixed_early_slot,
+        "rotating_token_response_cycles": rotating_token_response,
+        "rotating_escape_cycles": rotating_escape,
+        "endpoint_ack_recovery_guard_cycles":
+            P10_5_ENDPOINT_ACK_RECOVERY_GUARD_CYCLES,
+    }
 
 
 def dma_model() -> dict[str, Any]:

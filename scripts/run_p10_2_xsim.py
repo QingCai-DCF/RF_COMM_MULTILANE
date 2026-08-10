@@ -104,6 +104,9 @@ P10_5_TESTS = (
     ("tb_p10_5_dual_direction_l2", "TB_P10_5_DUAL_DIRECTION_L2=PASS",
      [*CORE, "sim/tb/tb_p10_5_dual_direction.sv"],
      "tb_p10_5_dual_direction"),
+    ("tb_p10_5_adjacent_1plus1", "TB_P10_5_ADJACENT_1PLUS1=PASS",
+     [*CORE, "sim/tb/tb_p10_5_dual_direction.sv"],
+     "tb_p10_5_adjacent_1plus1"),
     ("tb_p10_5_ack_piggyback", "TB_P10_5_ACK_PIGGYBACK=PASS",
      [*CORE, "sim/tb/tb_p10_5_dual_direction.sv"],
      "tb_p10_5_dual_direction"),
@@ -287,6 +290,8 @@ def main() -> int:
                 "scripts/generate_p10_5_config.py",
                 "scripts/model_p10_5_dual_direction.py",
                 "docs/design/P10_5_DUAL_DIRECTION_CAPABILITY.md",
+                "docs/design/P10_5_CONTROL_ACK_COLLISION_AVOIDANCE.md",
+                "evidence/generated/p10_5_ack_collision_diagnosis.json",
             ])
         source_files = sorted(set(source_files))
     summary = {

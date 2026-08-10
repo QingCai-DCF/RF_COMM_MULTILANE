@@ -1,10 +1,13 @@
 `timescale 1ns/1ps
 `default_nettype none
 
-module tb_p10_5_dual_direction;
+module tb_p10_5_dual_direction #(
+  parameter bit ADJACENT_ONLY = 1'b0
+);
   localparam integer LANE_COUNT = 4;
   localparam integer MAX_OBJECT_BYTES = 10000;
   localparam integer CREDIT_REOPEN_BYTES = 8500;
+  localparam integer ADJACENT_OBJECT_BYTES = 496;
 
   logic f_clk = 0;
   logic r_clk = 0;
@@ -27,6 +30,8 @@ module tb_p10_5_dual_direction;
   logic [31:0] f_tx_object, f_rx_object, r_tx_object, r_rx_object;
   logic [15:0] f_tx_initial, f_rx_initial, r_tx_initial, r_rx_initial;
   logic [15:0] f_role_cfg, r_role_cfg;
+  logic [3:0] f_cfg_tx_mask, f_cfg_rx_mask;
+  logic [3:0] r_cfg_tx_mask, r_cfg_rx_mask;
 
   logic f_s_valid, r_s_valid;
   wire f_s_ready, r_s_ready;
@@ -55,6 +60,7 @@ module tb_p10_5_dual_direction;
   wire f_input_complete, r_input_complete, f_output_complete, r_output_complete;
   wire [31:0] f_input_bytes, r_input_bytes, f_output_bytes, r_output_bytes;
   wire [31:0] f_crc_bad, r_crc_bad, f_retry_exhausted, r_retry_exhausted;
+  wire [31:0] f_retry_count, r_retry_count, f_timeout_count, r_timeout_count;
   wire [255:0] f_tx_high_max, r_tx_high_max, f_duty_high_max, r_duty_high_max;
   wire f_dual_active, r_dual_active;
   wire [3:0] f_tx_mask, f_rx_mask, r_tx_mask, r_rx_mask;
@@ -70,6 +76,8 @@ module tb_p10_5_dual_direction;
   logic [7:0] f_received [0:MAX_OBJECT_BYTES-1];
   logic [7:0] r_received [0:MAX_OBJECT_BYTES-1];
   integer simultaneous_physical_cycles;
+  integer f_retry_before_adjacent, r_retry_before_adjacent;
+  integer f_timeout_before_adjacent, r_timeout_before_adjacent;
 
   function automatic [7:0] payload_pattern(input integer index,
                                             input integer seed);
@@ -136,9 +144,9 @@ module tb_p10_5_dual_direction;
     end else begin
       if ((|f_a_txd) && (|r_b_txd))
         simultaneous_physical_cycles <= simultaneous_physical_cycles + 1;
-      if (|(f_a_txd & 4'hc))
+      if (|(f_a_txd & f_cfg_rx_mask))
         $fatal(1, "fixed transmitted on LOCAL_RX_MASK: %x", f_a_txd);
-      if (|(r_b_txd & 4'h3))
+      if (|(r_b_txd & r_cfg_rx_mask))
         $fatal(1, "rotating transmitted on LOCAL_RX_MASK: %x", r_b_txd);
       if (|(f_a_txd & r_b_txd))
         $fatal(1, "same physical lane TX/RX role overlap");
@@ -149,21 +157,22 @@ module tb_p10_5_dual_direction;
     .CLK_HZ(64_000_000), .LANE_COUNT(4), .WINDOW_SIZE(32), .SACK_BITS(32),
     .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(1_000_000),
     .ACK_FRAME_THRESHOLD(8), .ACK_MAX_DELAY_CYCLES(64_000),
+    .CONTROL_COLLISION_BACKOFF_CYCLES(32_000),
     .DEPLOYMENT_ROLE(1), .P10_5_DUAL_CAPABLE(1)
   ) fixed_endpoint (
     .clk(f_clk), .rst_n, .receiver_enable_i(f_receiver_enable),
     .arm_request_i(f_arm), .disarm_request_i(f_disarm),
     .full_shutdown_request_i(f_shutdown), .forensic_fault_hold_i(1'b0),
     .clear_counters_i(f_clear), .start_object_i(f_start),
-    .abort_object_i(f_abort), .cfg_lane_mask_i(4'hf),
+    .abort_object_i(f_abort), .cfg_lane_mask_i(f_cfg_tx_mask | f_cfg_rx_mask),
     .cfg_lane_weights_i(32'h0101_0101), .cfg_rate_select_i(2'd2),
     .cfg_direction_i(1'b0), .cfg_session_epoch_i(f_tx_session),
     .cfg_path_epoch_i(f_tx_path), .cfg_object_id_i(f_tx_object),
     .cfg_initial_sequence_i(f_tx_initial), .cfg_fault_flags_i(32'd0),
     .cfg_drop_data_count_i(8'd0), .cfg_drop_ack_count_i(8'd0),
     .cfg_lane_unavailable_i(4'd0),
-    .cfg_p10_5_dual_direction_i(1'b1), .cfg_tx_lane_mask_i(4'h3),
-    .cfg_rx_lane_mask_i(4'hc), .cfg_role_epoch_i(f_role_cfg),
+    .cfg_p10_5_dual_direction_i(1'b1), .cfg_tx_lane_mask_i(f_cfg_tx_mask),
+    .cfg_rx_lane_mask_i(f_cfg_rx_mask), .cfg_role_epoch_i(f_role_cfg),
     .cfg_rx_session_epoch_i(f_rx_session), .cfg_rx_path_epoch_i(f_rx_path),
     .cfg_rx_object_id_i(f_rx_object),
     .cfg_rx_initial_sequence_i(f_rx_initial),
@@ -188,6 +197,7 @@ module tb_p10_5_dual_direction;
     .output_complete_o(f_output_complete), .input_byte_count_o(f_input_bytes),
     .output_byte_count_o(f_output_bytes),
     .physical_crc_bad_o(f_crc_bad),
+    .tx_retry_count_o(f_retry_count), .tx_timeout_count_o(f_timeout_count),
     .tx_retry_exhausted_count_o(f_retry_exhausted),
     .tx_high_max_flat_o(f_tx_high_max), .duty_high_max_flat_o(f_duty_high_max),
     .p10_5_dual_direction_active_o(f_dual_active),
@@ -206,21 +216,22 @@ module tb_p10_5_dual_direction;
     .CLK_HZ(64_000_000), .LANE_COUNT(4), .WINDOW_SIZE(32), .SACK_BITS(32),
     .MAX_PAYLOAD_BYTES(247), .STORE_ADDR_WIDTH(13), .RTO_CYCLES(1_000_000),
     .ACK_FRAME_THRESHOLD(8), .ACK_MAX_DELAY_CYCLES(64_000),
+    .CONTROL_COLLISION_BACKOFF_CYCLES(32_000),
     .DEPLOYMENT_ROLE(2), .P10_5_DUAL_CAPABLE(1)
   ) rotating_endpoint (
     .clk(r_clk), .rst_n, .receiver_enable_i(r_receiver_enable),
     .arm_request_i(r_arm), .disarm_request_i(r_disarm),
     .full_shutdown_request_i(r_shutdown), .forensic_fault_hold_i(1'b0),
     .clear_counters_i(r_clear), .start_object_i(r_start),
-    .abort_object_i(r_abort), .cfg_lane_mask_i(4'hf),
+    .abort_object_i(r_abort), .cfg_lane_mask_i(r_cfg_tx_mask | r_cfg_rx_mask),
     .cfg_lane_weights_i(32'h0101_0101), .cfg_rate_select_i(2'd2),
     .cfg_direction_i(1'b1), .cfg_session_epoch_i(r_tx_session),
     .cfg_path_epoch_i(r_tx_path), .cfg_object_id_i(r_tx_object),
     .cfg_initial_sequence_i(r_tx_initial), .cfg_fault_flags_i(32'd0),
     .cfg_drop_data_count_i(8'd0), .cfg_drop_ack_count_i(8'd0),
     .cfg_lane_unavailable_i(4'd0),
-    .cfg_p10_5_dual_direction_i(1'b1), .cfg_tx_lane_mask_i(4'hc),
-    .cfg_rx_lane_mask_i(4'h3), .cfg_role_epoch_i(r_role_cfg),
+    .cfg_p10_5_dual_direction_i(1'b1), .cfg_tx_lane_mask_i(r_cfg_tx_mask),
+    .cfg_rx_lane_mask_i(r_cfg_rx_mask), .cfg_role_epoch_i(r_role_cfg),
     .cfg_rx_session_epoch_i(r_rx_session), .cfg_rx_path_epoch_i(r_rx_path),
     .cfg_rx_object_id_i(r_rx_object),
     .cfg_rx_initial_sequence_i(r_rx_initial),
@@ -245,6 +256,7 @@ module tb_p10_5_dual_direction;
     .output_complete_o(r_output_complete), .input_byte_count_o(r_input_bytes),
     .output_byte_count_o(r_output_bytes),
     .physical_crc_bad_o(r_crc_bad),
+    .tx_retry_count_o(r_retry_count), .tx_timeout_count_o(r_timeout_count),
     .tx_retry_exhausted_count_o(r_retry_exhausted),
     .tx_high_max_flat_o(r_tx_high_max), .duty_high_max_flat_o(r_duty_high_max),
     .p10_5_dual_direction_active_o(r_dual_active),
@@ -260,7 +272,7 @@ module tb_p10_5_dual_direction;
   );
 
   task automatic stream_fixed(input integer length, input integer seed);
-    integer offset, count, lane;
+    integer offset, count, lane, ready_wait;
     logic [31:0] word_value;
     logic [3:0] keep_value;
     begin
@@ -278,7 +290,14 @@ module tb_p10_5_dual_direction;
         f_s_data = word_value;
         f_s_keep = keep_value;
         f_s_last = offset + count == length;
-        do @(posedge f_clk); while (!f_s_ready);
+        ready_wait = 0;
+        do begin
+          @(posedge f_clk);
+          ready_wait = ready_wait + 1;
+          if (ready_wait >= 200_000)
+            $fatal(1, "fixed AXI ingress stalled active=%0b fail=%0b error=%08x bytes=%0d",
+                   f_object_active, f_object_fail, f_object_error, f_input_bytes);
+        end while (!f_s_ready);
         @(negedge f_clk);
         f_s_valid = 0;
         f_s_last = 0;
@@ -288,7 +307,7 @@ module tb_p10_5_dual_direction;
   endtask
 
   task automatic stream_rotating(input integer length, input integer seed);
-    integer offset, count, lane;
+    integer offset, count, lane, ready_wait;
     logic [31:0] word_value;
     logic [3:0] keep_value;
     begin
@@ -306,7 +325,14 @@ module tb_p10_5_dual_direction;
         r_s_data = word_value;
         r_s_keep = keep_value;
         r_s_last = offset + count == length;
-        do @(posedge r_clk); while (!r_s_ready);
+        ready_wait = 0;
+        do begin
+          @(posedge r_clk);
+          ready_wait = ready_wait + 1;
+          if (ready_wait >= 200_000)
+            $fatal(1, "rotating AXI ingress stalled active=%0b fail=%0b error=%08x bytes=%0d",
+                   r_object_active, r_object_fail, r_object_error, r_input_bytes);
+        end while (!r_s_ready);
         @(negedge r_clk);
         r_s_valid = 0;
         r_s_last = 0;
@@ -448,10 +474,10 @@ module tb_p10_5_dual_direction;
   endtask
 
   task automatic set_contexts(input [31:0] f_object,
-                              input [31:0] r_object);
+                               input [31:0] r_object);
     begin
-      f_tx_session = 32'h1111_0001;
-      f_rx_session = 32'h8222_0001;
+      f_tx_session = 32'h1111_0000 | {16'd0, f_object[15:0]};
+      f_rx_session = 32'h8222_0000 | {16'd0, r_object[15:0]};
       r_tx_session = f_rx_session;
       r_rx_session = f_tx_session;
       f_tx_path = 16'h0101;
@@ -466,6 +492,81 @@ module tb_p10_5_dual_direction;
       f_rx_initial = 16'h0020;
       r_tx_initial = 16'h0020;
       r_rx_initial = 16'h0020;
+    end
+  endtask
+
+  task automatic run_adjacent_one_plus_one;
+    integer adjacent_case;
+    integer f_tx_lane;
+    integer r_tx_lane;
+    begin
+      // Hardware-realistic adjacent 1+1: local TX and local RX occupy the two
+      // modules of one connector.  Exercise both orientations on J10 and J11,
+      // then repeat the first topology with fresh object/session identities.
+      // P10.4 quarantine remains enabled throughout.
+      f_retry_before_adjacent = f_retry_count;
+      r_retry_before_adjacent = r_retry_count;
+      f_timeout_before_adjacent = f_timeout_count;
+      r_timeout_before_adjacent = r_timeout_count;
+      for (adjacent_case = 0; adjacent_case < 5;
+           adjacent_case = adjacent_case + 1) begin
+        case (adjacent_case)
+          0, 4: begin f_tx_lane = 0; r_tx_lane = 1; end
+          1:    begin f_tx_lane = 1; r_tx_lane = 0; end
+          2:    begin f_tx_lane = 2; r_tx_lane = 3; end
+          default: begin f_tx_lane = 3; r_tx_lane = 2; end
+        endcase
+        f_cfg_tx_mask = 4'b0001 << f_tx_lane;
+        f_cfg_rx_mask = 4'b0001 << r_tx_lane;
+        r_cfg_tx_mask = 4'b0001 << r_tx_lane;
+        r_cfg_rx_mask = 4'b0001 << f_tx_lane;
+        set_contexts(32'h0000_0100 + adjacent_case,
+                     32'h8000_0180 + adjacent_case);
+        clear_capture();
+        pulse_starts();
+        repeat (4) @(posedge f_clk); #1;
+        if (!f_object_active || !r_object_active ||
+            f_object_fail || r_object_fail)
+          $fatal(1, "adjacent 1+1 case %0d start failed active=%0b/%0b fail=%0b/%0b error=%08x/%08x",
+                 adjacent_case, f_object_active, r_object_active,
+                 f_object_fail, r_object_fail, f_object_error, r_object_error);
+        fork
+          stream_fixed(ADJACENT_OBJECT_BYTES, 8'h19 + adjacent_case);
+          stream_rotating(ADJACENT_OBJECT_BYTES, 8'h91 + adjacent_case);
+        join
+        wait_both_done(4_000_000);
+        if (f_tx_mask != f_cfg_tx_mask || f_rx_mask != f_cfg_rx_mask ||
+            r_tx_mask != r_cfg_tx_mask || r_rx_mask != r_cfg_rx_mask)
+          $fatal(1, "adjacent 1+1 case %0d role state mismatch", adjacent_case);
+        if (f_input_bytes != ADJACENT_OBJECT_BYTES ||
+            f_output_bytes != ADJACENT_OBJECT_BYTES ||
+            r_input_bytes != ADJACENT_OBJECT_BYTES ||
+            r_output_bytes != ADJACENT_OBJECT_BYTES ||
+            f_capture_count != ADJACENT_OBJECT_BYTES ||
+            r_capture_count != ADJACENT_OBJECT_BYTES)
+          $fatal(1, "adjacent 1+1 case %0d byte accounting mismatch",
+                 adjacent_case);
+      end
+      // A control-only ACK can deliberately preempt reverse DATA on the same
+      // connector and force a bounded SR retry.  The acceptance contract is
+      // progress without deadlock/exhaustion or integrity error, not zero
+      // retries under this deliberately adversarial topology.
+      if ((f_retry_count - f_retry_before_adjacent) > 5 ||
+          (r_retry_count - r_retry_before_adjacent) > 5 ||
+          (f_timeout_count - f_timeout_before_adjacent) !=
+              (f_retry_count - f_retry_before_adjacent) ||
+          (r_timeout_count - r_timeout_before_adjacent) !=
+              (r_retry_count - r_retry_before_adjacent) ||
+          f_retry_exhausted != 0 || r_retry_exhausted != 0 ||
+          f_crc_bad != 0 || r_crc_bad != 0 ||
+          simultaneous_physical_cycles == 0)
+        $fatal(1, "adjacent 1+1 connector matrix was not bounded retry_delta=%0d/%0d timeout_delta=%0d/%0d exhaust=%0d/%0d crc=%0d/%0d fallback=%0d/%0d",
+               f_retry_count - f_retry_before_adjacent,
+               r_retry_count - r_retry_before_adjacent,
+               f_timeout_count - f_timeout_before_adjacent,
+               r_timeout_count - r_timeout_before_adjacent,
+               f_retry_exhausted, r_retry_exhausted, f_crc_bad, r_crc_bad,
+               f_fallback, r_fallback);
     end
   endtask
 
@@ -484,6 +585,10 @@ module tb_p10_5_dual_direction;
     capture_clear = 0;
     f_role_cfg = 1;
     r_role_cfg = 1;
+    f_cfg_tx_mask = 4'h3;
+    f_cfg_rx_mask = 4'hc;
+    r_cfg_tx_mask = 4'hc;
+    r_cfg_rx_mask = 4'h3;
     set_contexts(32'h0000_00a1, 32'h8000_00b2);
 
     repeat (10) @(posedge f_clk);
@@ -518,6 +623,19 @@ module tb_p10_5_dual_direction;
     repeat (4) @(posedge f_clk); #1;
     if (!f_armed || !r_armed || f_tx_kill || r_tx_kill)
       $fatal(1, "arm failed");
+
+    if (ADJACENT_ONLY) begin
+      run_adjacent_one_plus_one();
+      f_receiver_enable = 0; r_receiver_enable = 0;
+      f_shutdown = 1; r_shutdown = 1;
+      repeat (6) @(posedge f_clk); #1;
+      if (f_a_sd != 4'hf || r_b_sd != 4'hf || f_a_txd != 0 || r_b_txd != 0 ||
+          f_armed || r_armed || !f_tx_kill || !r_tx_kill)
+        $fatal(1, "adjacent 1+1 final shutdown did not fail closed");
+      $display("TB_P10_5_ADJACENT_1PLUS1=PASS fallback=%0d/%0d",
+               f_fallback, r_fallback);
+      $finish;
+    end
 
     // A CRC-valid vNext frame with a stale role generation is observed but
     // cannot advance either RX window, ACK state, DMA output, or object.
@@ -660,6 +778,13 @@ module tb_p10_5_dual_direction;
         f_retry_exhausted != 0 || r_retry_exhausted != 0)
       $fatal(1, "dual protocol integrity counters nonzero");
 
+    run_adjacent_one_plus_one();
+
+    f_cfg_tx_mask = 4'h3;
+    f_cfg_rx_mask = 4'hc;
+    r_cfg_tx_mask = 4'hc;
+    r_cfg_rx_mask = 4'h3;
+
     // Abort only F-to-R: fixed TX context and rotating RX context.  The
     // opposite R-to-F stream, ACK path, DMA ingress and DMA egress must finish.
     clear_capture();
@@ -717,6 +842,10 @@ module tb_p10_5_dual_direction;
              simultaneous_physical_cycles);
     $finish;
   end
+endmodule
+
+module tb_p10_5_adjacent_1plus1;
+  tb_p10_5_dual_direction #(.ADJACENT_ONLY(1'b1)) u_test();
 endmodule
 
 `default_nettype wire

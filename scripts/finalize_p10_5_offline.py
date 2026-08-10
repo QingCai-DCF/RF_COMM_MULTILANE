@@ -28,6 +28,7 @@ P10_5_TESTS = {
     "tb_p10_5_role_mask_commit",
     "tb_p10_5_half_duplex_compatibility",
     "tb_p10_5_dual_direction_l2",
+    "tb_p10_5_adjacent_1plus1",
     "tb_p10_5_ack_piggyback",
     "tb_p10_5_control_only_ack",
     "tb_p10_5_bidirectional_dma",
@@ -214,9 +215,17 @@ def main() -> int:
         "piggyback_enable": config["control"]["piggyback_enable"],
         "control_only_ack_fallback": config["control"]["control_only_ack_fallback"],
         "starvation_limit_cycles": config["control"]["starvation_limit_cycles"],
+        "collision_policy": config["control"]["collision_policy"],
+        "collision_backoff_cycles": config["control"]["collision_backoff_cycles"],
         "model": model.get("ack_control", {}),
         "piggyback_xsim": xsim_results.get("tb_p10_5_ack_piggyback", {}).get("status"),
         "fallback_xsim": xsim_results.get("tb_p10_5_control_only_ack", {}).get("status"),
+        "adjacent_one_plus_one_xsim": xsim_results.get(
+            "tb_p10_5_adjacent_1plus1", {}
+        ).get("status"),
+        "collision_diagnosis": record(
+            GENERATED / "p10_5_ack_collision_diagnosis.json"
+        ),
         "deadlock": model.get("ack_control", {}).get("deadlock"),
         "errors": errors,
     })

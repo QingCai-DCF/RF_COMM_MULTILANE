@@ -133,3 +133,13 @@ evidence/generated/p10_4_* -text -eol -whitespace
 evidence/generated/p10_4_*/** -text -eol -whitespace
 evidence/generated/vivado/p10_4_*/** -text -eol -whitespace
 evidence/generated/vitis/p10_4_*/** -text -eol -whitespace
+
+# Preserve byte-exact P10.5 content-addressed artifacts, raw XSIM/Vivado/Vitis
+# output, and hardware evidence. SHA256 records bind vendor whitespace and
+# line endings, so checkpoint creation must not normalize those bytes.
+artifacts/p10_5/** -text -eol -whitespace
+evidence/hardware/p10_5/** -text -eol -whitespace
+evidence/generated/p10_5_* -text -eol -whitespace
+evidence/generated/p10_5_*/** -text -eol -whitespace
+evidence/generated/vivado/p10_5_*/** -text -eol -whitespace
+evidence/generated/vitis/p10_5_*/** -text -eol -whitespace

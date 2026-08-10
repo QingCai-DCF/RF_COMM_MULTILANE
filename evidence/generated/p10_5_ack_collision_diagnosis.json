@@ -1,0 +1,99 @@
+{
+  "current_run_hardware_authorization": false,
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "hardware_acceptance_inherited": false,
+  "hardware_actions_executed_by_remediation": false,
+  "hardware_failure": {
+    "artifact_source_commit": "43cdde9f23600b2bff9a7f14f4c520876c50b070",
+    "crc_bad": 0,
+    "final_summary": {
+      "path": "evidence/hardware/p10_5/p10_5_20260810T040830Z_43cdde9f_e201ac59_e118ba87/final/p10_5_final_summary.json",
+      "sha256": "97f88746651c6a11266df7b065de5f8981fe085c3b9c3eb0baf340c2f86d0e9b"
+    },
+    "fixed_shutdown": "PASS",
+    "integrity_errors": 0,
+    "rotating_shutdown": "PASS",
+    "run_id": "p10_5_20260810T040830Z_43cdde9f_e201ac59_e118ba87",
+    "stage": "one_plus_one",
+    "status": "FAIL",
+    "test_case": "oneplusone_f0_r1",
+    "tx_timeouts": {
+      "fixed": 74,
+      "rotating": 105
+    }
+  },
+  "next_hardware_requirement": "NEW_IMMUTABLE_ARTIFACT_BUNDLE_AND_EXACT_CURRENT_RUN_AUTHORIZATION",
+  "post_fix_xsim": {
+    "cases": [
+      "F_TX_0_R_TX_1",
+      "F_TX_1_R_TX_0",
+      "F_TX_2_R_TX_3",
+      "F_TX_3_R_TX_2",
+      "F_TX_0_R_TX_1_NEW_SESSIONS"
+    ],
+    "control_only_fallback_count": {
+      "fixed": 5,
+      "rotating": 7
+    },
+    "crc_bad": 0,
+    "log": {
+      "path": "evidence/generated/p10_5_xsim_adjacent_remediation_v4/raw/20260810T050722.568122Z/tb_p10_5_adjacent_1plus1.log",
+      "sha256": "d8509861d328a949c61655ac71f7fba24b73719e6dca3b974cf9680cfce573b8"
+    },
+    "retry_count_delta": {
+      "fixed": 2,
+      "rotating": 0
+    },
+    "retry_exhausted": 0,
+    "status": "PASS",
+    "summary": {
+      "path": "evidence/generated/p10_5_xsim_adjacent_remediation_v4/summary.json",
+      "sha256": "1c570639dbb13c661471894de762ebc42ebc56675b43d1249b71a64eab6604c5"
+    }
+  },
+  "pre_fix_xsim": {
+    "bytes_delivered_each_direction": 2000,
+    "control_only_fallback_count": {
+      "fixed": 4,
+      "rotating": 4
+    },
+    "crc_bad": 0,
+    "log": {
+      "path": "evidence/generated/p10_5_xsim_diagnosis_adjacent_valid/raw/20260810T044448.879186Z/tb_p10_5_adjacent_1plus1.log",
+      "sha256": "1a9cd406c597041d0bf33cc37788086cf29ac13f5cd07697e7cd5ef0ec43554c"
+    },
+    "outstanding_frames": {
+      "fixed": 1,
+      "rotating": 1
+    },
+    "status": "FAIL",
+    "summary": {
+      "path": "evidence/generated/p10_5_xsim_diagnosis_adjacent_valid/summary.json",
+      "sha256": "9cb4794403a125a2c1ee8dd7b4f8818f1c1465d57e0db711d3cb32e78b857c70"
+    },
+    "timed_out": true
+  },
+  "remediation": {
+    "ack_max_delay_cycles": 64000,
+    "connector_safe_ack_lane_preference": true,
+    "fixed_early_slot_cycles": 32000,
+    "p10_4_connector_quarantine_unchanged": true,
+    "policy": "FIXED_PRIORITY_THEN_ROTATING_TOKEN_OR_BOUNDED_ESCAPE",
+    "rotating_escape_cycles": 64000,
+    "rotating_token_response_guard_cycles": 4352,
+    "safety_paths_unchanged": true
+  },
+  "root_cause": {
+    "classification": "DETERMINISTIC_CONTROL_ACK_SELF_QUARANTINE",
+    "mechanism": "Symmetric control-only ACK fallbacks occupied both connector-mate TX modules in the same slot; the unchanged P10.4 local ACK/RX quarantine then rejected both peer ACKs in lockstep.",
+    "not_classified_as": [
+      "OPTICAL_PATH_FAILURE",
+      "DMA_CORRUPTION",
+      "CRC_FAILURE",
+      "SAFETY_FAULT"
+    ]
+  },
+  "schema_version": 1,
+  "status": "ROOT_CAUSE_REPRODUCED_AND_OFFLINE_REMEDIATED",
+  "test_id": "P10_5-ACK-COLLISION-DIAGNOSIS"
+}

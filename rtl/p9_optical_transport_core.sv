@@ -18,6 +18,11 @@ module p9_optical_transport_core #(
   // parameter boundary below.
   parameter integer ACK_FRAME_THRESHOLD = 32,
   parameter integer ACK_MAX_DELAY_CYCLES = 64_000,
+  // Split-lane bidirectional endpoints can reach a symmetric tail where both
+  // sides need a control-only ACK at the same instant.  The fixed role uses an
+  // early slot this far before ACK_MAX_DELAY_CYCLES; rotating responds to its
+  // token after receiver recovery or escapes at the unchanged maximum bound.
+  parameter integer CONTROL_COLLISION_BACKOFF_CYCLES = 32_000,
   // Independent P10.1R endpoints use a proved frame-boundary schedule.  At
   // 64 MHz and 4 Mbit/s, a maximum DATA frame occupies 1,116 32-cycle symbol
   // slots.  A 17,984-cycle (562-slot) post-frame guard bounds every 1 ms
@@ -290,6 +295,12 @@ module p9_optical_transport_core #(
     if (DEPLOYMENT_ROLE != ROLE_P9_DUAL &&
         (ACK_MAX_DELAY_CYCLES < 1 || ACK_MAX_DELAY_CYCLES >= RTO_CYCLES))
       $error("endpoint ACK fallback must be positive and below the retransmission timeout");
+    if (P10_5_DUAL_CAPABLE != 0 &&
+        (CONTROL_COLLISION_BACKOFF_CYCLES < 1 ||
+         CONTROL_COLLISION_BACKOFF_CYCLES >= ACK_MAX_DELAY_CYCLES ||
+         CONTROL_COLLISION_BACKOFF_CYCLES <
+             EFFECTIVE_ACK_TURNAROUND_GUARD_CYCLES))
+      $error("P10.5 ACK slot separation must cover recovery and remain below max delay");
     if (DEPLOYMENT_ROLE != ROLE_P9_DUAL && CLK_HZ != 64_000_000)
       $error("P10.1R frame-boundary duty proof requires the canonical 64 MHz clock");
     if (DEPLOYMENT_ROLE != ROLE_P9_DUAL &&
@@ -790,12 +801,16 @@ module p9_optical_transport_core #(
   wire [15:0] dp_local_ack_credit;
   reg dp_ack_piggyback_commit_q;
   reg p10_5_ack_dirty_q;
+  reg p10_5_rotating_control_token_q;
+  reg [31:0] p10_5_rotating_control_token_guard_q;
   wire [5:0] dp_rx_credit;
   reg [5:0] p10_5_rx_credit_d_q;
   reg [31:0] p10_5_control_fallback_wait_q;
   wire p10_5_credit_reopen_event = object_dual_direction_q &&
       p10_5_rx_credit_d_q == 0 && dp_rx_credit != 0;
   localparam integer P10_5_CONTROL_FALLBACK_GRACE_CYCLES =
+      ACK_MAX_DELAY_CYCLES - CONTROL_COLLISION_BACKOFF_CYCLES;
+  localparam integer P10_5_CONTROL_FALLBACK_MAX_WAIT_CYCLES =
       ACK_MAX_DELAY_CYCLES;
   wire p10_5_duplicate_reack_event = object_dual_direction_q &&
       dp_ack_control_pipe_q[1] && !dp_rx_accept_delayed_q;
@@ -805,6 +820,19 @@ module p9_optical_transport_core #(
           P10_5_CONTROL_FALLBACK_GRACE_CYCLES-1;
   wire p10_5_immediate_control_event =
       p10_5_duplicate_reack_event || p10_5_credit_reopen_event;
+  wire p10_5_rotating_control_token_ready =
+      p10_5_rotating_control_token_q &&
+      p10_5_rotating_control_token_guard_q >=
+          EFFECTIVE_ACK_TURNAROUND_GUARD_CYCLES-1;
+  wire p10_5_control_fallback_role_ready = local_is_a ||
+      p10_5_rotating_control_token_ready ||
+      p10_5_control_fallback_wait_q >=
+          P10_5_CONTROL_FALLBACK_MAX_WAIT_CYCLES-1;
+  wire p10_5_control_fallback_due = object_dual_direction_q &&
+      p10_5_ack_dirty_q &&
+      p10_5_control_fallback_wait_q >=
+          P10_5_CONTROL_FALLBACK_GRACE_CYCLES-1 &&
+      p10_5_control_fallback_role_ready;
   wire dp_local_ack_snapshot_stale = endpoint_mode &&
       (dp_local_ack_base != rx_base_sequence_o ||
        dp_local_ack_bitmap != rx_sack_bitmap_o ||
@@ -1083,6 +1111,7 @@ module p9_optical_transport_core #(
   reg [LANE_WIDTH-1:0] ack_lane_q;
   reg [31:0] ack_wait_q;
   reg ack_received_pulse_q;
+  reg p10_5_control_ack_received_pulse_q;
   reg [5:0] endpoint_tx_burst_count_q;
   reg endpoint_waiting_for_ack_q;
   reg [31:0] endpoint_wait_ack_timer_q;
@@ -1156,8 +1185,26 @@ module p9_optical_transport_core #(
   wire [LANE_COUNT-1:0] ack_schedulable_lane_mask =
       schedulable_lane_mask & ack_frame_duty_ready &
       {LANE_COUNT{local_receiver && !rx_context_aborted_q}};
+  // Prefer a TX module whose connector mate is not a selected local RX lane.
+  // This avoids connector-local ACK quarantine whenever the configured split
+  // provides such a lane.  The fallback retains liveness for adjacent 1+1,
+  // where role-ordered control ACKs prevent simultaneous self-quarantine.
+  wire [LANE_COUNT-1:0] ack_connector_safe_lane_mask;
+  genvar ack_preference_lane;
+  generate
+    for (ack_preference_lane = 0; ack_preference_lane < LANE_COUNT;
+         ack_preference_lane = ack_preference_lane + 1) begin : g_ack_preference
+      localparam integer CONNECTOR_PEER_LANE = ack_preference_lane ^ 1;
+      assign ack_connector_safe_lane_mask[ack_preference_lane] =
+          ack_schedulable_lane_mask[ack_preference_lane] &&
+          !selected_rx_lane_mask[CONNECTOR_PEER_LANE];
+    end
+  endgenerate
+  wire [LANE_COUNT-1:0] ack_preferred_lane_mask =
+      ack_connector_safe_lane_mask != 0 ? ack_connector_safe_lane_mask :
+                                           ack_schedulable_lane_mask;
   wire [LANE_WIDTH-1:0] ack_selected_lane =
-      first_set_lane(ack_schedulable_lane_mask);
+      first_set_lane(ack_preferred_lane_mask);
   genvar eligibility_lane;
   generate
     for (eligibility_lane = 0; eligibility_lane < LANE_COUNT;
@@ -1278,6 +1325,8 @@ module p9_optical_transport_core #(
       p10_5_control_ack_fallback_count_q <= 0;
       dp_ack_piggyback_commit_q <= 0;
       p10_5_ack_dirty_q <= 0;
+      p10_5_rotating_control_token_q <= 0;
+      p10_5_rotating_control_token_guard_q <= 0;
       p10_5_control_fallback_wait_q <= 0;
       endpoint_tx_burst_count_q <= 0;
       endpoint_waiting_for_ack_q <= 0;
@@ -1324,13 +1373,28 @@ module p9_optical_transport_core #(
       dp_ack_piggyback_commit_q <= 0;
       if (dp_rx_accept_pulse || dp_rx_delivery_delayed_q)
         p10_5_ack_dirty_q <= 1;
+      if (!object_dual_direction_q || !p10_5_ack_dirty_q || local_is_a)
+        p10_5_rotating_control_token_q <= 0;
+      else if (p10_5_control_ack_received_pulse_q)
+        // A valid fixed-role control ACK proves the peer has left its own TX
+        // serializer.  The response guard below still allows the fixed
+        // connector-mate receiver to finish its post-TX recovery interval.
+        p10_5_rotating_control_token_q <= 1;
+      if (!object_dual_direction_q || !p10_5_ack_dirty_q || local_is_a ||
+          !p10_5_rotating_control_token_q) begin
+        p10_5_rotating_control_token_guard_q <= 0;
+      end else if (p10_5_rotating_control_token_guard_q <
+                   EFFECTIVE_ACK_TURNAROUND_GUARD_CYCLES) begin
+        p10_5_rotating_control_token_guard_q <=
+            p10_5_rotating_control_token_guard_q + 1'b1;
+      end
       // Time from the first cumulative-state change not yet carried by a
       // reverse DATA piggyback. This is the Goal's ACK max-delay bound, not a
       // second delay that starts only after the aggregator presents VALID.
       if (!object_dual_direction_q || !p10_5_ack_dirty_q) begin
         p10_5_control_fallback_wait_q <= 0;
       end else if (p10_5_control_fallback_wait_q <
-                   P10_5_CONTROL_FALLBACK_GRACE_CYCLES) begin
+                   P10_5_CONTROL_FALLBACK_MAX_WAIT_CYCLES) begin
         p10_5_control_fallback_wait_q <=
             p10_5_control_fallback_wait_q + 1'b1;
       end
@@ -1636,6 +1700,8 @@ module p9_optical_transport_core #(
               p10_5_ack_dirty_q <=
                   dp_rx_accept_pulse || dp_rx_delivery_delayed_q;
               p10_5_control_fallback_wait_q <= 0;
+              p10_5_rotating_control_token_q <= 0;
+              p10_5_rotating_control_token_guard_q <= 0;
               p10_5_piggyback_ack_tx_count_q <=
                   p10_5_piggyback_ack_tx_count_q + 1'b1;
             end
@@ -1677,9 +1743,8 @@ module p9_optical_transport_core #(
             end else if (dp_local_ack_valid && !dp_local_ack_ready_q &&
                          !(object_dual_direction_q && dp_attempt_valid &&
                            dp_attempt_ready) &&
-                         (!object_dual_direction_q ||
-                          p10_5_control_fallback_wait_q >=
-                          P10_5_CONTROL_FALLBACK_GRACE_CYCLES-1) &&
+                          (!object_dual_direction_q ||
+                           p10_5_control_fallback_due) &&
                          (object_dual_direction_q || !endpoint_mode ||
                           endpoint_turnaround_ack_eligible)) begin
               if (dp_local_ack_snapshot_stale) begin
@@ -1747,6 +1812,10 @@ module p9_optical_transport_core #(
                     dp_rx_accept_pulse || dp_rx_delivery_delayed_q;
               if (object_dual_direction_q)
                 p10_5_control_fallback_wait_q <= 0;
+              if (object_dual_direction_q)
+                p10_5_rotating_control_token_q <= 0;
+              if (object_dual_direction_q)
+                p10_5_rotating_control_token_guard_q <= 0;
               if (object_dual_direction_q)
                 p10_5_control_ack_fallback_count_q <=
                     p10_5_control_ack_fallback_count_q + 1'b1;
@@ -2694,12 +2763,14 @@ module p9_optical_transport_core #(
       dp_peer_ack_width_q <= 6'd32;
       dp_peer_ack_credit_q <= WINDOW_SIZE;
       ack_received_pulse_q <= 0;
+      p10_5_control_ack_received_pulse_q <= 0;
       p10_5_piggyback_ack_rx_count_q <= 0;
       p10_5_direction_reject_count_q <= 0;
       p10_5_role_epoch_reject_count_q <= 0;
     end else begin
       dp_peer_ack_valid_q <= 0;
       ack_received_pulse_q <= 0;
+      p10_5_control_ack_received_pulse_q <= 0;
       if (clear_counters_i) begin
         p10_5_piggyback_ack_rx_count_q <= 0;
         p10_5_direction_reject_count_q <= 0;
@@ -2750,6 +2821,7 @@ module p9_optical_transport_core #(
           dp_peer_ack_width_q <= 6'd32;
           dp_peer_ack_credit_q <= rx_ack_credit[ack_rx_lane];
           ack_received_pulse_q <= 1;
+          p10_5_control_ack_received_pulse_q <= 1;
         end
         if (piggy_event &&
             rx_piggyback_ack_session[ack_rx_lane] == object_session_q) begin

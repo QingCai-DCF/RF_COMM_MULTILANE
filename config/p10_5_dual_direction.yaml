@@ -45,6 +45,8 @@ control:
   piggyback_enable: true
   control_only_ack_fallback: true
   starvation_limit_cycles: 64000
+  collision_policy: FIXED_PRIORITY_THEN_ROTATING_TOKEN_OR_BOUNDED_ESCAPE
+  collision_backoff_cycles: 32000
 wire:
   legacy_data_magic: '0xA531'
   vnext_data_magic: '0xA535'
