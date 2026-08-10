@@ -1,5 +1,5 @@
 {
-  "acceptance_eligible": false,
+  "acceptance_eligible": true,
   "allowed_hardware_stages": [
     "safe_start",
     "capability",
@@ -33,7 +33,88 @@
     "two_plus_two": "cdb3459a984ea6b87e3f0c06308246218740277f8e280cfe48e081b1397314fd"
   },
   "artifact_source_commit": "4254f3eaefa57eff88fc4d3e0df39740c5da0d58",
-  "artifacts": [],
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/64144fbbccc6eb2987e5b2718c6b7a0db3e660570700017b53a4c9ecb8005e17/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "64144fbbccc6eb2987e5b2718c6b7a0db3e660570700017b53a4c9ecb8005e17"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/0465f6da3015dcc2138e6d2c19f176472608ec5c910b02c23b73c2b8211c4ba2/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "0465f6da3015dcc2138e6d2c19f176472608ec5c910b02c23b73c2b8211c4ba2"
+    },
+    {
+      "bytes": 1421221,
+      "kind": "xsa",
+      "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/ad8dd71d8dbd9045f475d2f0ade68873ddeeb3baff2b7232b7b1b8295c8286f7/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "ad8dd71d8dbd9045f475d2f0ade68873ddeeb3baff2b7232b7b1b8295c8286f7"
+    },
+    {
+      "bytes": 1970295,
+      "kind": "bsp",
+      "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a"
+    },
+    {
+      "bytes": 665256,
+      "kind": "elf",
+      "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/28910e6005f1fb5b1f718c24714966617e123efacc5fde34731a71041521fbb0/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "28910e6005f1fb5b1f718c24714966617e123efacc5fde34731a71041521fbb0"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/f7d295030180ded0581b4b718ab64bd69a9103544b75179d21db5646fa218187/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "f7d295030180ded0581b4b718ab64bd69a9103544b75179d21db5646fa218187"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/35edea207be33eb5f7e9a3c33fdcc17069a1dd661c343fed9585727eb4965981/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "35edea207be33eb5f7e9a3c33fdcc17069a1dd661c343fed9585727eb4965981"
+    },
+    {
+      "bytes": 1431058,
+      "kind": "xsa",
+      "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/3e04f13f046abd68cf349c1494cf35945254e81584fbc093030949dca140be56/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "3e04f13f046abd68cf349c1494cf35945254e81584fbc093030949dca140be56"
+    },
+    {
+      "bytes": 1970378,
+      "kind": "bsp",
+      "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c"
+    },
+    {
+      "bytes": 666104,
+      "kind": "elf",
+      "path": "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/f74b71c53ab21df695e2ae3439e560b0f5efcbfc865300e988a1a80118691065/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "f74b71c53ab21df695e2ae3439e560b0f5efcbfc865300e988a1a80118691065"
+    }
+  ],
   "automation_only": true,
   "branch": "p10.5/dual-direction-2plus2",
   "build_evidence": {
@@ -59,19 +140,15 @@
     }
   },
   "current_run_hardware_authorization": false,
-  "errors": [
-    "offline gate failed: p10_4_baseline",
-    "offline gate failed: state_requirements",
-    "offline gate failed: traceability"
-  ],
+  "errors": [],
   "expected_build_ids": {
     "fixed": "0x50353546",
     "rotating": "0x50353552"
   },
-  "generated_at_utc": "2026-08-10T00:49:25.476079+00:00",
+  "generated_at_utc": "2026-08-10T00:55:56.507155+00:00",
   "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
   "hardware_actions_executed": false,
-  "harness_commit": "9fca5e6e79373dff842c024d39d5639cd3705a49",
+  "harness_commit": "68dffd7bd63424e657aae620f114a779fc2db89d",
   "maximum_continuous_module_runtime_seconds": 1800,
   "maximum_lane_mask": 15,
   "maximum_single_formal_run_seconds": 1800,
@@ -138,10 +215,10 @@
       "log": {
         "bytes": 55,
         "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_4_baseline.log",
-        "sha256": "9faf8ce93766a65d3b04a0dcb0af2754ef583a6fd1393cfdc201e85cacaad39c"
+        "sha256": "4ee34dfe542273f21dd1803b2a065c706cc7c5639e9749bc69bcf8ccf3b510f9"
       },
-      "returncode": 1,
-      "status": "FAIL"
+      "returncode": 0,
+      "status": "PASS"
     },
     "p10_5_config": {
       "command": [
@@ -247,12 +324,12 @@
         "--check"
       ],
       "log": {
-        "bytes": 456,
+        "bytes": 183,
         "path": "evidence/generated/p10_5_artifact_freeze_raw/state_requirements.log",
-        "sha256": "cf2d4361ce70d246508c92e1c13555ef2cf59950476dde52631b8c859f4aa897"
+        "sha256": "30d94a2fdbbc42c42202d87c3fc5ca3cb4f550daa10c5d8c7a6e65d623cbf933"
       },
-      "returncode": 1,
-      "status": "FAIL"
+      "returncode": 0,
+      "status": "PASS"
     },
     "tcl_complete": {
       "command": [
@@ -277,12 +354,12 @@
         "--check"
       ],
       "log": {
-        "bytes": 314,
+        "bytes": 111,
         "path": "evidence/generated/p10_5_artifact_freeze_raw/traceability.log",
-        "sha256": "1e889e75021728d67466f3ce3adca1d5b14d774574fb25ab2ac3026becf5c138"
+        "sha256": "44dff0fbdfbc50814da41d4e4c416cca8282cafcfa95c15c7f76abf48d6f4110"
       },
-      "returncode": 1,
-      "status": "FAIL"
+      "returncode": 0,
+      "status": "PASS"
     }
   },
   "offline_inputs": {
@@ -334,12 +411,12 @@
     "p10_4_closeout": {
       "bytes": 522,
       "path": "evidence/generated/p10_4_closeout.json",
-      "sha256": "f32b1a3de5623281d2826521be6551d71c9dc5fc6c9acfc7ab9d5603b0fbc3d1"
+      "sha256": "a4504d3fa0eeb080c287c560e90955b7ddbb559486a21280118941ac3f053c9d"
     },
     "reference_model": {
       "bytes": 3412,
       "path": "evidence/generated/p10_5_reference_model.json",
-      "sha256": "bc3ec59cc248d13efa79a1e1d14c073fdec52541d93e28f1a5d6e65250c3e4ee"
+      "sha256": "dbc7ff2b5dd6f2381e356c3cd4325d7254010444dcdfe5f92b855aea02e348dc"
     },
     "register_manifest": {
       "bytes": 2045,
@@ -384,12 +461,18 @@
     "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/ad8dd71d8dbd9045f475d2f0ade68873ddeeb3baff2b7232b7b1b8295c8286f7/p10_ax7020_fixed_functional.xsa",
     "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/f74b71c53ab21df695e2ae3439e560b0f5efcbfc865300e988a1a80118691065/p10_rotating_runtime.elf",
     "artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/f7d295030180ded0581b4b718ab64bd69a9103544b75179d21db5646fa218187/p10_ax7020_rotating_shutdown.bit",
+    "config/project_requirements.yaml",
+    "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
     "evidence/generated/p10_5_ack_piggyback.json",
     "evidence/generated/p10_5_ack_piggyback.md",
     "evidence/generated/p10_5_architecture.json",
     "evidence/generated/p10_5_architecture.md",
+    "evidence/generated/p10_5_artifact_freeze.json",
+    "evidence/generated/p10_5_artifact_freeze.md",
     "evidence/generated/p10_5_capability.json",
     "evidence/generated/p10_5_capability.md",
+    "evidence/generated/p10_5_diagnostics/20260810T010000Z_freeze_requirement_hash_mismatch/p10_5_artifact_freeze.json",
+    "evidence/generated/p10_5_diagnostics/20260810T010000Z_freeze_requirement_hash_mismatch/p10_5_artifact_freeze.md",
     "evidence/generated/p10_5_direction_contexts.json",
     "evidence/generated/p10_5_direction_contexts.md",
     "evidence/generated/p10_5_dma_concurrency.json",
@@ -400,6 +483,8 @@
     "evidence/generated/p10_5_ps_runtime_build_summary.md",
     "evidence/generated/p10_5_reference_model.json",
     "evidence/generated/p10_5_reference_model.md",
+    "evidence/generated/p10_5_repo_intake.json",
+    "evidence/generated/p10_5_repo_intake.md",
     "evidence/generated/p10_5_role_mask.json",
     "evidence/generated/p10_5_role_mask.md",
     "evidence/generated/p10_5_shutdown_build_summary.json",
@@ -586,7 +671,7 @@
   },
   "source_commit": "4254f3eaefa57eff88fc4d3e0df39740c5da0d58",
   "source_tree_clean": true,
-  "status": "FAIL",
+  "status": "PASS",
   "test_id": "P10_5-IMMUTABLE-ARTIFACT-FREEZE",
   "user_hold_points": 0
 }
