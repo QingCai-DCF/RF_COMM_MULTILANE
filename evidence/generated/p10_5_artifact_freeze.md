@@ -2,7 +2,7 @@
 
 - Status: `PASS`
 - Artifact source commit: `eefca40c115babbfc08f9c06c6bb118534641c04`
-- Harness commit: `428e2ce4b2d3fcf5cfdf460af7827412d20ba9be`
+- Harness commit: `3c2f36a86b55d648e316b31d9a34da9dad601531`
 - Hardware actions executed: `false`
 
 ## Artifacts
