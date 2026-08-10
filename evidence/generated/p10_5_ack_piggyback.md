@@ -2,6 +2,6 @@
 
 - Status: `PASS`
 - test_id: `P10_5-ACK-OFFLINE`
-- source_commit: `eefca40c115babbfc08f9c06c6bb118534641c04`
+- source_commit: `428e2ce4b2d3fcf5cfdf460af7827412d20ba9be`
 - hardware_actions_executed: `False`
 - current_run_hardware_authorization: `False`
