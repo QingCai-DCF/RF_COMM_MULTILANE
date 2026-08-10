@@ -1,19 +1,13 @@
 # P10.5 immutable artifact freeze
 
-- Status: `PASS`
-- Artifact source commit: `4254f3eaefa57eff88fc4d3e0df39740c5da0d58`
-- Harness commit: `68dffd7bd63424e657aae620f114a779fc2db89d`
+- Status: `FAIL`
+- Artifact source commit: `NONE`
+- Harness commit: `34c9201bb47dbdee36fb8027c0a057100c11a6f1`
 - Hardware actions executed: `false`
 
 ## Artifacts
 
-- `fixed:shutdown_bitstream` `64144fbbccc6eb2987e5b2718c6b7a0db3e660570700017b53a4c9ecb8005e17` `artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/64144fbbccc6eb2987e5b2718c6b7a0db3e660570700017b53a4c9ecb8005e17/p10_ax7020_fixed_shutdown.bit`
-- `fixed:functional_bitstream` `0465f6da3015dcc2138e6d2c19f176472608ec5c910b02c23b73c2b8211c4ba2` `artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/0465f6da3015dcc2138e6d2c19f176472608ec5c910b02c23b73c2b8211c4ba2/p10_ax7020_fixed_functional.bit`
-- `fixed:xsa` `ad8dd71d8dbd9045f475d2f0ade68873ddeeb3baff2b7232b7b1b8295c8286f7` `artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/ad8dd71d8dbd9045f475d2f0ade68873ddeeb3baff2b7232b7b1b8295c8286f7/p10_ax7020_fixed_functional.xsa`
-- `fixed:bsp` `9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a` `artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip`
-- `fixed:elf` `28910e6005f1fb5b1f718c24714966617e123efacc5fde34731a71041521fbb0` `artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/28910e6005f1fb5b1f718c24714966617e123efacc5fde34731a71041521fbb0/p10_fixed_runtime.elf`
-- `rotating:shutdown_bitstream` `f7d295030180ded0581b4b718ab64bd69a9103544b75179d21db5646fa218187` `artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/f7d295030180ded0581b4b718ab64bd69a9103544b75179d21db5646fa218187/p10_ax7020_rotating_shutdown.bit`
-- `rotating:functional_bitstream` `35edea207be33eb5f7e9a3c33fdcc17069a1dd661c343fed9585727eb4965981` `artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/35edea207be33eb5f7e9a3c33fdcc17069a1dd661c343fed9585727eb4965981/p10_ax7020_rotating_functional.bit`
-- `rotating:xsa` `3e04f13f046abd68cf349c1494cf35945254e81584fbc093030949dca140be56` `artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/3e04f13f046abd68cf349c1494cf35945254e81584fbc093030949dca140be56/p10_ax7020_rotating_functional.xsa`
-- `rotating:bsp` `48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c` `artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip`
-- `rotating:elf` `f74b71c53ab21df695e2ae3439e560b0f5efcbfc865300e988a1a80118691065` `artifacts/p10_5/4254f3eaefa57eff88fc4d3e0df39740c5da0d58/f74b71c53ab21df695e2ae3439e560b0f5efcbfc865300e988a1a80118691065/p10_rotating_runtime.elf`
+
+## Errors
+
+- build-summary source mismatch: ['a2f7148efc3643a096f59f0a7730e3bcd7adb486', 'b1b8a864c42b01a31786c96c286e29bece55cf11']
