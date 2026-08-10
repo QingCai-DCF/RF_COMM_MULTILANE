@@ -50,10 +50,16 @@
   "current_run_hardware_authorization": false,
   "errors": [],
   "git_status": [
-    "M evidence/generated/p10_5_ack_piggyback.json",
+    "M config/project_requirements.yaml",
+    " M docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+    " M evidence/generated/p10_4_closeout.json",
+    " M evidence/generated/p10_4_closeout.md",
+    " M evidence/generated/p10_5_ack_piggyback.json",
     " M evidence/generated/p10_5_ack_piggyback.md",
     " M evidence/generated/p10_5_architecture.json",
     " M evidence/generated/p10_5_architecture.md",
+    " M evidence/generated/p10_5_artifact_freeze.json",
+    " M evidence/generated/p10_5_artifact_freeze.md",
     " M evidence/generated/p10_5_capability.json",
     " M evidence/generated/p10_5_capability.md",
     " M evidence/generated/p10_5_direction_contexts.json",
@@ -61,13 +67,16 @@
     " M evidence/generated/p10_5_dma_concurrency.json",
     " M evidence/generated/p10_5_dma_concurrency.md",
     " M evidence/generated/p10_5_reference_model.json",
+    " M evidence/generated/p10_5_repo_intake.json",
+    " M evidence/generated/p10_5_repo_intake.md",
     " M evidence/generated/p10_5_role_mask.json",
     " M evidence/generated/p10_5_role_mask.md",
     " M evidence/generated/p10_5_xsim.json",
-    " M evidence/generated/p10_5_xsim.md"
+    " M evidence/generated/p10_5_xsim.md",
+    "?? evidence/generated/p10_5_diagnostics/20260810T010000Z_freeze_requirement_hash_mismatch/"
   ],
   "hardware_actions_executed": false,
-  "head": "59528c015400ddedfaddcb78e57f4a53db904e3f",
+  "head": "9fca5e6e79373dff842c024d39d5639cd3705a49",
   "inputs": {
     "AGENTS": {
       "path": "AGENTS.md",
@@ -103,7 +112,7 @@
     },
     "requirements": {
       "path": "config/project_requirements.yaml",
-      "sha256": "a42991891a5bf8ebc8ff55028b59a686828bfab090c741e8ada3ef8849a3d06e"
+      "sha256": "9aaede12cc1f381d36f1addab93a303af3b009a0906eeb0e63e89de322bd4fb3"
     },
     "rotating_profile": {
       "path": "board_profiles/ax7020_rotating_4lane/profile.yaml",
@@ -120,7 +129,7 @@
   "p10_4_final_commit": "7987e6385b65fa2c7ed7d3a008c1ecbdf323ffa8",
   "schema_version": 1,
   "source_audit_package_sha256": "6c351c7f7fdcac9d1a2cead7548b940d0345c6e1cc7e48d7e3783c7c38e3c904",
-  "start_timestamp_utc": "2026-08-09T23:02:35.489332+00:00",
+  "start_timestamp_utc": "2026-08-10T00:53:07.739556+00:00",
   "status": "PASS",
   "test_id": "P10_5-REPO-INTAKE",
   "tool_versions": {
