@@ -400,7 +400,7 @@ def stage_runtime_limit(stage: str) -> int:
     return {
         "safe_start": 1, "capability": 10, "one_plus_one": 120,
         "two_plus_one": 480, "two_plus_two": 180, "role_commit": 40,
-        "performance": 300, "faults": 600, "formal_30min": 1800,
+        "performance": 300, "faults": 900, "formal_30min": 1800,
     }.get(stage, 600)
 
 
@@ -626,6 +626,27 @@ def load_rows(path: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def observation_active_runtime_seconds(rows: list[dict[str, Any]]) -> float:
+    """Conservatively sum every non-shutdown hardware case interval.
+
+    Firmware result timers can remain unset when a case fails or times out.
+    The XSDB observation timestamps bracket the actual armed case and are
+    therefore the fail-closed runtime/rest source for those paths.
+    """
+    active_ms = 0
+    for row in rows:
+        if int(row["command"]) == 10:
+            continue
+        started_ms = int(row["started_ms"])
+        finished_ms = int(row["finished_ms"])
+        if started_ms < 0 or finished_ms < started_ms:
+            raise ValueError(
+                f"invalid observation runtime for {row.get('label', '<unlabeled>')}"
+            )
+        active_ms += finished_ms - started_ms
+    return active_ms / 1000.0
+
+
 def parse_words(path: Path, count: int) -> list[int]:
     data = path.read_bytes()
     if len(data) != count * 4:
@@ -836,6 +857,11 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
         errors.append("normal stage forensic archive is failed or frozen")
     obs_path = stage_dir / "dumps/observations.psv"
     rows = load_rows(obs_path) if obs_path.is_file() else []
+    try:
+        observation_runtime = observation_active_runtime_seconds(rows)
+    except (KeyError, TypeError, ValueError) as exc:
+        errors.append(f"observation active-runtime evidence: {exc}")
+        observation_runtime = 0.0
     expected_labels = [x.label for x in items if isinstance(x, P105Case)]
     for item in items:
         if isinstance(item, tuple) and item and item[0] == "CASE":
@@ -895,6 +921,7 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
             details.append(pair)
         except (OSError, ValueError, KeyError, ZeroDivisionError, struct.error) as exc:
             errors.append(f"{label}: P10.5 result parse: {exc}")
+    active_runtime = max(active_runtime, observation_runtime)
     capabilities, capability_errors = parse_capability_files(stage_dir)
     errors += capability_errors
     if stage == "capability" and len(capabilities) != 4:
@@ -929,6 +956,7 @@ def evaluate_stage(stage: str, stage_dir: Path, process: dict[str, Any],
         "process": process, "markers": markers, "errors": errors,
         "details": details, "capability_readbacks": capabilities,
         "observations": rel(obs_path) if obs_path.is_file() else None,
+        "observation_active_runtime_seconds": observation_runtime,
         "active_runtime_seconds": active_runtime if active_runtime > 0 else 0.001,
     }
 

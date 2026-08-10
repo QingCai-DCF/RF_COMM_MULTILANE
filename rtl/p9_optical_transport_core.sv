@@ -1398,9 +1398,16 @@ module p9_optical_transport_core #(
         p10_5_control_fallback_wait_q <=
             p10_5_control_fallback_wait_q + 1'b1;
       end
-      if (p10_5_immediate_control_event)
+      if (p10_5_immediate_control_event) begin
+        // Reconstruct cumulative-ACK liveness independently of the
+        // aggregator VALID bit. A previously scheduled DATA piggyback can be
+        // canceled by a direction-scoped local TX abort after dirty was
+        // cleared; the peer's duplicate DATA (or reopened credit) must then
+        // re-arm control-only fallback for the still-live RX context.
+        p10_5_ack_dirty_q <= 1;
         p10_5_control_fallback_wait_q <=
             P10_5_CONTROL_FALLBACK_GRACE_CYCLES;
+      end
       if (clear_counters_i) begin
         dropped_data_count_q <= 0;
         dropped_ack_count_q <= 0;

@@ -5,9 +5,13 @@ module tb_p10_5_dual_direction #(
   parameter bit ADJACENT_ONLY = 1'b0
 );
   localparam integer LANE_COUNT = 4;
-  localparam integer MAX_OBJECT_BYTES = 10000;
+  localparam integer MAX_OBJECT_BYTES = 14000;
   localparam integer CREDIT_REOPEN_BYTES = 8500;
   localparam integer ADJACENT_OBJECT_BYTES = 496;
+  // 52 full 247-byte fragments reproduces the hardware fault boundary where
+  // a direction-scoped TX abort can cancel an in-flight DATA piggyback while
+  // the opposite RX context still owes a cumulative ACK.
+  localparam integer ABORT_REACK_BYTES = 12844;
 
   logic f_clk = 0;
   logic r_clk = 0;
@@ -812,6 +816,54 @@ module tb_p10_5_dual_direction #(
     for (index = 0; index < 800; index = index + 1)
       if (f_received[index] !== payload_pattern(index, 8'hea))
         $fatal(1, "post-abort R-to-F payload mismatch index=%0d", index);
+
+    // Symmetric direction-scoped abort at the hardware-observed 52-fragment
+    // boundary.  Rotating TX is aborted while rotating RX must keep receiving
+    // fixed DATA.  Any ACK that had been carried only by the canceled rotating
+    // DATA piggyback must be reconstructed by duplicate-DATA re-ACK fallback;
+    // otherwise fixed exhausts retries with a partially advanced ACK base.
+    clear_capture();
+    set_contexts(32'h0000_00e5, 32'h8000_00f6);
+    pulse_starts();
+    repeat (4) @(posedge f_clk); #1;
+    if (!f_object_active || !r_object_active ||
+        f_object_fail || r_object_fail)
+      $fatal(1, "symmetric direction abort start failed");
+    fork
+      stream_fixed(ABORT_REACK_BYTES, 8'h6d);
+      stream_rotating(ABORT_REACK_BYTES, 8'hd6);
+    join
+    watchdog = 0;
+    while (((fixed_endpoint.tx_next_sequence_o - 16'h0020) != 52 ||
+            (rotating_endpoint.tx_next_sequence_o - 16'h0020) != 52) &&
+           watchdog < 100_000) begin
+      @(posedge f_clk); #1;
+      watchdog = watchdog + 1;
+    end
+    if ((fixed_endpoint.tx_next_sequence_o - 16'h0020) != 52 ||
+        (rotating_endpoint.tx_next_sequence_o - 16'h0020) != 52)
+      $fatal(1, "symmetric abort did not reach exact 52-fragment boundary next=%0d/%0d",
+             fixed_endpoint.tx_next_sequence_o,
+             rotating_endpoint.tx_next_sequence_o);
+    if (fixed_endpoint.tx_ack_base_o == fixed_endpoint.tx_next_sequence_o)
+      $fatal(1, "symmetric abort boundary completed before abort");
+    @(negedge f_clk); f_abort_rx = 1;
+    @(negedge r_clk); r_abort_tx = 1;
+    @(posedge f_clk); @(negedge f_clk); f_abort_rx = 0;
+    @(posedge r_clk); @(negedge r_clk); r_abort_tx = 0;
+    wait_both_done(8_000_000);
+    if (f_tx_aborted || !f_rx_aborted || !r_tx_aborted || r_rx_aborted)
+      $fatal(1, "symmetric direction-scoped abort state mismatch");
+    if (r_output_bytes != ABORT_REACK_BYTES ||
+        r_capture_count != ABORT_REACK_BYTES || !r_capture_last)
+      $fatal(1, "symmetric abort opposite direction did not survive bytes=%0d/%0d last=%0b",
+             r_output_bytes, r_capture_count, r_capture_last);
+    for (index = 0; index < ABORT_REACK_BYTES; index = index + 1)
+      if (r_received[index] !== payload_pattern(index, 8'h6d))
+        $fatal(1, "symmetric post-abort F-to-R payload mismatch index=%0d", index);
+    if (f_retry_exhausted != 0 || r_retry_exhausted != 0)
+      $fatal(1, "symmetric abort exhausted retries fixed=%0d rotating=%0d",
+             f_retry_exhausted, r_retry_exhausted);
 
     for (lane_index = 0; lane_index < 4; lane_index = lane_index + 1) begin
       if (f_tx_high_max[32*lane_index +: 32] > 64 ||

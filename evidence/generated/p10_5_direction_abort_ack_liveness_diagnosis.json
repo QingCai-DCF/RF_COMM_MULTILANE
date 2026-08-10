@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-DIRECTION-ABORT-ACK-LIVENESS-DIAGNOSIS",
+  "status": "OFFLINE_REMEDIATED_PENDING_NEW_ARTIFACT_HARDWARE",
+  "generated_at_utc": "2026-08-10T08:46:27.475028+00:00",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "pre_remediation_head": "b49554e24d930529b415a75eee70ac4db6029015",
+  "pre_remediation_core_git_blob": "bb5e6524c32f23b66f19364df0ffcbd87c1e6cb1",
+  "hardware_acceptance_inherited": false,
+  "hardware_actions_executed_by_remediation": false,
+  "current_run_hardware_authorization": false,
+  "failed_hardware_run": {
+    "run_id": "p10_5_20260810T070056Z_eefca40c_78726594_498ca074",
+    "artifact_source_commit": "eefca40c115babbfc08f9c06c6bb118534641c04",
+    "failed_stage": "faults",
+    "failed_case": "fault_abort_r2f",
+    "status": "FAIL",
+    "final_summary": {
+      "path": "evidence/hardware/p10_5/p10_5_20260810T070056Z_eefca40c_78726594_498ca074/final/p10_5_final_summary.json",
+      "sha256": "eec2807797f4dc3db266b6da4bfb8fe29813e0043524ed9210c19eddc6fb9ed9"
+    },
+    "observations": {
+      "path": "evidence/hardware/p10_5/p10_5_20260810T070056Z_eefca40c_78726594_498ca074/stages/faults/dumps/observations.psv",
+      "sha256": "095897c6add57c876e05a923778a0e7d1a0854b0ffd6a1014e482159855ae94c",
+      "non_shutdown_case_count": 11,
+      "summed_active_runtime_seconds": 617.53,
+      "fault_abort_r2f_active_runtime_seconds": 600.403
+    },
+    "fixed": {
+      "service_state": 8,
+      "status": 260,
+      "context_status": 133,
+      "tx_bytes": 12844,
+      "rx_bytes": 5432,
+      "tx_next_sequence": 52,
+      "tx_ack_base": 21,
+      "tx_outstanding": 31,
+      "tx_attempts": 276,
+      "tx_retries": 224,
+      "tx_timeouts": 225,
+      "retry_exhausted": 1,
+      "application_committed": 0,
+      "object_error": "0x50090004",
+      "frozen_binary": {
+        "path": "evidence/hardware/p10_5/p10_5_20260810T070056Z_eefca40c_78726594_498ca074/forensics/faults/fixed.p10ff.bin",
+        "sha256": "3aa394fc03456c8b966b1a2eadc5087ab88d8db2906281ee324d475d92f441df"
+      },
+      "parsed_snapshot": {
+        "path": "evidence/hardware/p10_5/p10_5_20260810T070056Z_eefca40c_78726594_498ca074/forensics/faults/fixed.p10ff.json",
+        "sha256": "38d329de9efad92314fb70c166653ede7fdf7a4bbdc910859d7f9ce4a6d2d34e"
+      }
+    },
+    "rotating": {
+      "service_state": 8,
+      "status": 259,
+      "context_status": 11,
+      "tx_bytes": 12844,
+      "rx_bytes": 12844,
+      "control_only_ack_count": 3,
+      "application_committed": 0,
+      "object_error": "0x50090001",
+      "frozen_binary": {
+        "path": "evidence/hardware/p10_5/p10_5_20260810T070056Z_eefca40c_78726594_498ca074/forensics/faults/rotating.p10ff.bin",
+        "sha256": "533b5259ccf4bc974a87f0bfb5217c2a20092fe34f8704cecc20b3fddc28bdf8"
+      },
+      "parsed_snapshot": {
+        "path": "evidence/hardware/p10_5/p10_5_20260810T070056Z_eefca40c_78726594_498ca074/forensics/faults/rotating.p10ff.json",
+        "sha256": "7228830cda931020c95d23c8ec86ff9d7dedbd25d00eafa8be4e1ec402613dca"
+      }
+    },
+    "shutdown": {
+      "fixed": "PASS",
+      "rotating": "PASS",
+      "fixed_snapshot_tx_kill": true,
+      "fixed_snapshot_effective_full_shutdown": true,
+      "rotating_snapshot_tx_kill": true,
+      "rotating_snapshot_effective_full_shutdown": true
+    }
+  },
+  "root_cause": {
+    "classification": "CANCELED_DATA_PIGGYBACK_DROPPED_ACK_DIRTY_LIVENESS",
+    "mechanism": "A direction-scoped local TX abort canceled a scheduled DATA piggyback after ACK dirty had been cleared. Duplicate DATA raised the immediate re-ACK event and ACK aggregator but did not restore dirty, while control-only scheduling required dirty. The unaffected peer therefore stopped receiving cumulative ACK progress and exhausted the remaining 31-frame window.",
+    "not_classified_as": [
+      "UNKNOWN_OPTICAL_CONNECTIVITY",
+      "CRC_CORRUPTION",
+      "DMA_DATA_CORRUPTION",
+      "WIRING_OR_MODULE_FAILURE",
+      "SAFETY_KILL_FAILURE"
+    ]
+  },
+  "remediation": {
+    "rtl": "p10_5_immediate_control_event now restores p10_5_ack_dirty_q before moving the fallback timer to the grace boundary",
+    "safety_paths_changed": false,
+    "global_permit_architecture_changed": false,
+    "direction_context_isolation_changed": false,
+    "runtime_rest": "sum all non-shutdown XSDB observation intervals and take max with firmware timers",
+    "fault_stage_planned_runtime_seconds": 900,
+    "maximum_continuous_module_runtime_seconds": 1800,
+    "minimum_cooldown_ratio": 0.5
+  },
+  "offline_regression": {
+    "hardware_boundary_bytes": 12844,
+    "physical_fragment_bytes": 247,
+    "fragment_count": 52,
+    "pre_fix_boundary_proxy": {
+      "status": "PASS_DID_NOT_REPRODUCE_EXACT_CANCELLATION_PHASE",
+      "path": "evidence/generated/p10_5_ack_liveness_remediation/pre_fix_xsim/summary.json",
+      "sha256": "74a2b7dc4b1ebaa262e0afc1450edd4b9dd9e0cfb36ab584e02845a8fd3d98ec"
+    },
+    "post_fix_direction_abort": {
+      "status": "PASS",
+      "path": "evidence/generated/p10_5_ack_liveness_remediation/post_fix_xsim/summary.json",
+      "sha256": "0557bc7355a563bda5af8dba1e9cf07a9afc353ebd2b643a8deaae24b047fdf6"
+    },
+    "invalid_harness_attempts": [
+      {
+        "path": "evidence/generated/p10_5_ack_liveness_remediation/pre_fix_redirty_xsim/summary.json",
+        "sha256": "9d973251441c6d8180ccc0b5ee45df431cce9e277f3004e2657dcc7c46fc5079",
+        "classification": "INVALID_XSIM_ELABORATION_FORCE_EXPERIMENT_NOT_DESIGN_EVIDENCE"
+      },
+      {
+        "path": "evidence/generated/p10_5_ack_liveness_remediation/pre_fix_redirty_xsim_v2/summary.json",
+        "sha256": "6dfc563526e7a186355c5ca980da10fdc7d6f5a4cd4586e156eab241d15ad062",
+        "classification": "INVALID_XSIM_ELABORATION_HIERARCHICAL_DEPOSIT_EXPERIMENT_NOT_DESIGN_EVIDENCE"
+      }
+    ]
+  },
+  "runtime_accounting_correction": {
+    "old_recorded_active_runtime_seconds": 12.026811,
+    "old_required_cooldown_seconds": 6.014,
+    "correct_observation_active_runtime_seconds": 617.53,
+    "correct_required_cooldown_seconds": 308.765,
+    "old_ledger_classification": "UNDERCOUNTED_FAILED_CASE_NOT_REUSED_AS_NEW_PASS"
+  },
+  "next_requirement": "NEW_SOURCE_COMMIT_COMPLETE_OFFLINE_GATES_NEW_IMMUTABLE_ARTIFACT_BUNDLE_NEW_CURRENT_RUN_AUTHORIZATION_FULL_HARDWARE_CAMPAIGN"
+}
+

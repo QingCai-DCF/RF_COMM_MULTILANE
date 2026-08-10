@@ -62,7 +62,9 @@ P10_5_PROVENANCE = [
     "software/ps_driver/p10_5_dual_direction_config.h",
     "docs/design/P10_5_DUAL_DIRECTION_CAPABILITY.md",
     "docs/design/P10_5_CONTROL_ACK_COLLISION_AVOIDANCE.md",
+    "docs/design/P10_5_DIRECTION_ABORT_ACK_LIVENESS.md",
     "evidence/generated/p10_5_ack_collision_diagnosis.json",
+    "evidence/generated/p10_5_direction_abort_ack_liveness_diagnosis.json",
     "scripts/generate_p10_5_config.py",
     "scripts/model_p10_5_dual_direction.py",
 ]

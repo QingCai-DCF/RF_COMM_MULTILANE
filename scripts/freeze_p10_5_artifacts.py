@@ -38,6 +38,8 @@ OFFLINE_INPUTS = {
     "xsim_summary": GENERATED / "p10_5_xsim/summary.json",
     "ack_collision_diagnosis": GENERATED / "p10_5_ack_collision_diagnosis.json",
     "ack_collision_design": ROOT / "docs/design/P10_5_CONTROL_ACK_COLLISION_AVOIDANCE.md",
+    "direction_abort_ack_liveness_diagnosis": GENERATED / "p10_5_direction_abort_ack_liveness_diagnosis.json",
+    "direction_abort_ack_liveness_design": ROOT / "docs/design/P10_5_DIRECTION_ABORT_ACK_LIVENESS.md",
     "actual_wiring": campaign.AS_WIRED,
     "module_inventory": campaign.MODULE_INVENTORY,
     "runtime_rest_policy": campaign.RUNTIME_REST_POLICY,

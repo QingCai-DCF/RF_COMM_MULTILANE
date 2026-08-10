@@ -75,6 +75,7 @@ class P10_5HardwareTests(unittest.TestCase):
             self.assertEqual((case.f2r, case.r2f), (0x3, 0xC))
         formal = plans["formal_30min"][0]
         self.assertEqual(formal.duration_ms, 1_800_000)
+        self.assertEqual(campaign.stage_runtime_limit("faults"), 900)
         self.assertEqual(campaign.stage_runtime_limit("formal_30min"), 1800)
         self.assertLessEqual(max(campaign.stage_runtime_limit(x)
                                  for x in campaign.STAGES), 1800)
@@ -167,10 +168,40 @@ class P10_5HardwareTests(unittest.TestCase):
         source = (ROOT / "scripts/run_p10_5_hardware.py").read_text(
             encoding="utf-8")
         self.assertIn('measured = float(result["active_runtime_seconds"])', source)
+        self.assertIn(
+            "active_runtime = max(active_runtime, observation_runtime)", source
+        )
         self.assertNotIn('measured = min(', source)
         self.assertIn('"network_used": False', source)
         self.assertIn('"spi_used": False', source)
         self.assertNotIn("socket.", source)
+
+    def test_failed_case_observation_runtime_drives_rest_accounting(self) -> None:
+        rows = [
+            {
+                "label": "clean_before_failure",
+                "command": 15,
+                "started_ms": 1_000,
+                "finished_ms": 13_000,
+            },
+            {
+                "label": "fault_abort_r2f",
+                "command": 15,
+                "started_ms": 20_000,
+                "finished_ms": 620_403,
+            },
+            {
+                "label": "shutdown",
+                "command": 10,
+                "started_ms": 621_000,
+                "finished_ms": 622_000,
+            },
+        ]
+        self.assertAlmostEqual(
+            campaign.observation_active_runtime_seconds(rows),
+            612.403,
+            places=3,
+        )
 
     def test_tcl_has_read_only_capability_and_exact_plan_parser(self) -> None:
         source = campaign.STAGE_TCL.read_text(encoding="utf-8")

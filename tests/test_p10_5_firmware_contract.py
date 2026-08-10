@@ -203,6 +203,20 @@ class P10_5FirmwareContractTests(unittest.TestCase):
             "!object_dual_direction_q || !p10_5_ack_dirty_q", core
         )
 
+    def test_duplicate_or_credit_event_reconstructs_ack_dirty_state(self) -> None:
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        start = core.index("if (p10_5_immediate_control_event) begin")
+        block = core[start:core.index("if (clear_counters_i)", start)]
+        dirty = block.index("p10_5_ack_dirty_q <= 1;")
+        timer = block.index(
+            "p10_5_control_fallback_wait_q <=\n"
+            "            P10_5_CONTROL_FALLBACK_GRACE_CYCLES;"
+        )
+        self.assertLess(dirty, timer)
+        self.assertIn("end", block[timer:])
+
     def test_piggyback_consumes_old_aggregation_events(self) -> None:
         aggregator = (ROOT / "rtl/ir_ack_aggregator.sv").read_text(
             encoding="utf-8"

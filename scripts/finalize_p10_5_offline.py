@@ -226,6 +226,9 @@ def main() -> int:
         "collision_diagnosis": record(
             GENERATED / "p10_5_ack_collision_diagnosis.json"
         ),
+        "direction_abort_ack_liveness_diagnosis": record(
+            GENERATED / "p10_5_direction_abort_ack_liveness_diagnosis.json"
+        ),
         "deadlock": model.get("ack_control", {}).get("deadlock"),
         "errors": errors,
     })
