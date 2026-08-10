@@ -1,10 +1,16 @@
 {
   "ack_control": {
+    "ack_max_delay_cycles": 64000,
+    "collision_policy": "FIXED_PRIORITY_THEN_ROTATING_TOKEN_OR_BOUNDED_ESCAPE",
     "control_only_fallback": 312,
     "deadlock": 0,
+    "endpoint_ack_recovery_guard_cycles": 4352,
     "events": 50000,
+    "fixed_early_slot_cycles": 32000,
     "max_abstract_ack_age": 64,
-    "piggyback": 6150
+    "piggyback": 6150,
+    "rotating_escape_cycles": 64000,
+    "rotating_token_response_cycles": 36352
   },
   "airtime": {
     "clock_hz": 64000000,
@@ -27,7 +33,7 @@
     "vnext_data_header_bytes": 40,
     "wire_limited_per_direction_application_bps": 4537313
   },
-  "config_sha256": "b6ff7dc3f9f097012a56bc8b4092515292e09115358586929afaba731c1feadc",
+  "config_sha256": "24f200aca983191633f87d0974fb4034cbdbaa88c5c45a2742172e9744304d46",
   "current_run_hardware_authorization_used": false,
   "dma": {
     "backpressure_events": 7548,
@@ -44,7 +50,7 @@
     "protocol": 100000,
     "role_reset": 25000
   },
-  "generated_config_sha256": "60a3fa2166a33935a14981f90734863297639d1c325a9d39843a360dd9a34dc2",
+  "generated_config_sha256": "0c351a1aea27a1272be5d46247b664300363c4346f09515d584121298ed2cf82",
   "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
   "hardware_actions_executed": false,
   "invariants": {
@@ -120,8 +126,8 @@
     20260809,
     22002200
   ],
-  "source_commit": "4429a1050c35bda0f9f241a20570e990f67c4627",
+  "source_commit": "eefca40c115babbfc08f9c06c6bb118534641c04",
   "status": "PASS",
   "test_id": "P10_5_DUAL_DIRECTION_REFERENCE_MODEL",
-  "timestamp_utc": "2026-08-10T04:05:45.302331+00:00"
+  "timestamp_utc": "2026-08-10T05:47:00.185079+00:00"
 }

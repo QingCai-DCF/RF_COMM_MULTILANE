@@ -1,0 +1,408 @@
+#-----------------------------------------------------------
+# xsim v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Mon Aug 10 13:55:52 2026
+# Process ID: 19884
+# Current directory: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/evidence/generated/p10_5_xsim/raw/20260810T054823.159078Z/tb_p10_5_adjacent_1plus1_work
+# Command line: xsim.exe -mode tcl -source {xsim.dir/tb_p10_5_adjacent_1plus1_snapshot/xsim_script.tcl}
+# Log file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/evidence/generated/p10_5_xsim/raw/20260810T054823.159078Z/tb_p10_5_adjacent_1plus1_work/xsim.log
+# Journal file: C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/evidence/generated/p10_5_xsim/raw/20260810T054823.159078Z/tb_p10_5_adjacent_1plus1_work\xsim.jou
+# Running On: DESKTOP-PU0AECA, OS: Windows, CPU Frequency: 3418 MHz, CPU Physical cores: 20, Host memory: 34187 MB
+#-----------------------------------------------------------
+source xsim.dir/tb_p10_5_adjacent_1plus1_snapshot/xsim_script.tcl
+# xsim {tb_p10_5_adjacent_1plus1_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+P10_5_WAIT watchdog=50000 active=1/1 complete=1/0/1/0 bytes=496/244/496/244 outstanding=3/3 phase=0/0 piggy=0/0 fallback=0/0
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0001 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001000100100
+P10_5_FIXED_RX admission=1111 raw=0/1111/0/0 preamble=0/1/0/0 good=1 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=1 ready=0000 sched=0010 duty_empty=1101 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001000100100
+P10_5_ROT_RX admission=1111 raw=1113/0/0/0 preamble=1/0/0/0 good=1 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=100000 active=1/1 complete=1/0/1/0 bytes=496/492/496/492 outstanding=2/2 phase=0/0 piggy=1/1 fallback=0/0
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0001 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001001001001
+P10_5_FIXED_RX admission=1111 raw=0/2229/0/0 preamble=0/2/0/0 good=2 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=1 ready=0000 sched=0010 duty_empty=1101 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001001001001
+P10_5_ROT_RX admission=1111 raw=2229/0/0/0 preamble=2/0/0/0 good=2 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=150000 active=1/1 complete=1/1/1/1 bytes=496/496/496/496 outstanding=1/1 phase=3/0 piggy=2/2 fallback=1/0
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0001 duty_empty=1110 schedule=1111 busy=0001 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx010010011001
+P10_5_FIXED_RX admission=1100 raw=0/2426/0/0 preamble=0/3/0/0 good=3 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1101 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx010010011001
+P10_5_ROT_RX admission=1111 raw=2432/0/0/0 preamble=3/0/0/0 good=3 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=50000 active=1/1 complete=1/0/1/0 bytes=496/244/496/0 outstanding=3/3 phase=0/0 piggy=2/2 fallback=1/1
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0000 sched=0010 duty_empty=1100 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001000100100
+P10_5_FIXED_RX admission=1111 raw=1114/2527/0/0 preamble=1/4/0/0 good=4 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0000 sched=0001 duty_empty=1100 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001000100100
+P10_5_ROT_RX admission=1111 raw=2527/1115/0/0 preamble=4/0/0/0 good=3 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=100000 active=1/1 complete=1/0/1/0 bytes=496/492/496/0 outstanding=3/2 phase=0/0 piggy=3/2 fallback=1/1
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0000 sched=0010 duty_empty=1101 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001001000100
+P10_5_FIXED_RX admission=1111 raw=2228/2527/0/0 preamble=2/4/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0000 sched=0001 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001001001001
+P10_5_ROT_RX admission=1111 raw=2527/2233/0/0 preamble=4/1/0/0 good=4 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=150000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=2/1 phase=3/0 piggy=4/3 fallback=2/1
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0000 sched=0010 duty_empty=1101 schedule=1111 busy=0010 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=31 reset=0 abort=0 state=xxxx010010010100
+P10_5_FIXED_RX admission=1100 raw=2424/2527/0/0 preamble=3/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx010010011001
+P10_5_ROT_RX admission=1111 raw=2527/2437/0/0 preamble=4/2/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=200000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1101 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=250000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=300000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=350000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=400000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=450000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=500000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=550000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=600000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=650000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=700000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=750000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=800000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=850000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=900000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=950000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2532/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=1000000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0000 sched=0010 duty_empty=1101 schedule=1111 busy=0010 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1101 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/2537/0/0 preamble=4/3/0/0 good=5 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=1050000 active=1/1 complete=1/1/1/1 bytes=496/496/496/496 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0000 sched=0010 duty_empty=1101 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=1100000 active=1/1 complete=1/1/1/1 bytes=496/496/496/496 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1101 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=1150000 active=1/1 complete=1/1/1/1 bytes=496/496/496/496 outstanding=1/0 phase=0/0 piggy=4/3 fallback=2/2
+P10_5_FIXED_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2527/2527/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=0 ready=0001 sched=0001 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/0/0 preamble=4/4/0/0 good=6 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=50000 active=1/1 complete=1/0/1/0 bytes=496/244/496/244 outstanding=3/3 phase=0/0 piggy=4/3 fallback=2/3
+P10_5_FIXED_SCHED attempt=0 lane=2 ready=0000 sched=0100 duty_empty=1011 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001000100100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/0/1114 preamble=5/4/0/1 good=7 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=3 ready=0000 sched=1000 duty_empty=0110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001000100100
+P10_5_ROT_RX admission=1111 raw=2527/3646/1113/0 preamble=4/4/1/0 good=7 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=100000 active=1/1 complete=1/0/1/0 bytes=496/492/496/492 outstanding=2/2 phase=0/0 piggy=5/4 fallback=2/3
+P10_5_FIXED_SCHED attempt=0 lane=2 ready=0000 sched=0100 duty_empty=1011 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001001001001
+P10_5_FIXED_RX admission=1111 raw=2629/2527/0/2228 preamble=5/4/0/2 good=8 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=3 ready=0000 sched=1000 duty_empty=0111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001001001001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2223/0 preamble=4/4/2/0 good=8 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=150000 active=1/1 complete=1/1/1/1 bytes=496/496/496/496 outstanding=1/1 phase=3/0 piggy=6/5 fallback=3/3
+P10_5_FIXED_SCHED attempt=0 lane=2 ready=0000 sched=0100 duty_empty=1011 schedule=1111 busy=0100 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx010010011001
+P10_5_FIXED_RX admission=0011 raw=2629/2527/0/2422 preamble=5/4/0/3 good=9 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=0111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx010010011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2428/0 preamble=4/4/3/0 good=9 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=50000 active=1/1 complete=1/0/1/0 bytes=496/244/496/0 outstanding=3/3 phase=0/0 piggy=6/5 fallback=3/4
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=0000 sched=1000 duty_empty=0011 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001000100100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/1109/2524 preamble=5/4/1/4 good=10 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0000 sched=0100 duty_empty=0011 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001000100100
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/1112 preamble=4/4/4/0 good=9 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=100000 active=1/1 complete=1/0/1/0 bytes=496/492/496/0 outstanding=3/2 phase=0/0 piggy=7/5 fallback=3/4
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=0000 sched=1000 duty_empty=0111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001001000100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2222/2524 preamble=5/4/2/4 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0000 sched=0100 duty_empty=1011 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001001001001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2220 preamble=4/4/4/1 good=10 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=150000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=2/1 phase=3/0 piggy=8/6 fallback=4/4
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=0000 sched=1000 duty_empty=0111 schedule=1111 busy=1000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=31 reset=0 abort=0 state=xxxx010010010100
+P10_5_FIXED_RX admission=0011 raw=2629/2527/2417/2524 preamble=5/4/3/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1011 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx010010011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2422 preamble=4/4/4/2 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=200000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=0111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1011 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=250000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=300000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=350000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=400000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=450000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=500000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=550000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=600000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=650000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=700000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=750000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=800000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=850000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=900000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=950000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2515 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=1000000 active=1/1 complete=1/1/1/0 bytes=496/496/496/0 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=0000 sched=1000 duty_empty=0111 schedule=1111 busy=1000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=0111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/2520 preamble=4/4/4/3 good=11 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=1050000 active=1/1 complete=1/1/1/1 bytes=496/496/496/496 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=0000 sched=1000 duty_empty=0111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/3625 preamble=4/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=1100000 active=1/1 complete=1/1/1/1 bytes=496/496/496/496 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=0111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/3625 preamble=4/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=1150000 active=1/1 complete=1/1/1/1 bytes=496/496/496/496 outstanding=1/0 phase=0/0 piggy=8/6 fallback=4/5
+P10_5_FIXED_SCHED attempt=0 lane=3 ready=1000 sched=1000 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=30 reset=0 abort=0 state=xxxx100110010100
+P10_5_FIXED_RX admission=1111 raw=2629/2527/2519/2524 preamble=5/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=2 ready=0100 sched=0100 duty_empty=1111 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx100110011001
+P10_5_ROT_RX admission=1111 raw=2527/3646/2521/3625 preamble=4/4/4/4 good=12 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=50000 active=1/1 complete=1/0/1/0 bytes=496/244/496/244 outstanding=3/3 phase=0/0 piggy=8/6 fallback=4/6
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0001 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001000100100
+P10_5_FIXED_RX admission=1111 raw=2629/3639/2620/2524 preamble=5/5/5/4 good=13 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=1 ready=0000 sched=0010 duty_empty=1001 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001000100100
+P10_5_ROT_RX admission=1111 raw=3643/3646/2521/3625 preamble=5/4/4/4 good=13 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=100000 active=1/1 complete=1/0/1/0 bytes=496/492/496/492 outstanding=2/2 phase=0/0 piggy=9/7 fallback=4/6
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0001 duty_empty=1110 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001001001001
+P10_5_FIXED_RX admission=1111 raw=2629/4756/2620/2524 preamble=5/6/5/4 good=14 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=1 ready=0000 sched=0010 duty_empty=1101 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=1 inflight=1 req=0/0 decision=1/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx001001001001
+P10_5_ROT_RX admission=1111 raw=4757/3646/2521/3625 preamble=6/4/4/4 good=14 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_WAIT watchdog=150000 active=1/1 complete=1/1/1/1 bytes=496/496/496/496 outstanding=1/1 phase=3/0 piggy=10/8 fallback=5/6
+P10_5_FIXED_SCHED attempt=0 lane=0 ready=0000 sched=0001 duty_empty=1110 schedule=1111 busy=0001 pending=0000 kill=0 armed=1 phy=00001111 faults=00000000
+P10_5_FIXED_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=0 credit=32 reset=0 abort=0 state=xxxx010010011001
+P10_5_FIXED_RX admission=1100 raw=2629/4953/2620/2524 preamble=5/7/5/4 good=15 bad=0 crc=0 symbol=0 pulses=0000
+P10_5_ROT_SCHED attempt=0 lane=1 ready=0010 sched=0010 duty_empty=1101 schedule=1111 busy=0000 pending=0000 kill=0 armed=1 phy=11110000 faults=00000000
+P10_5_ROT_DP txvalid=0 inflight=0 req=0/1 decision=0/1/0 live=1 credit=32 reset=0 abort=0 state=xxxx010010011001
+P10_5_ROT_RX admission=1111 raw=4961/3646/2521/3625 preamble=7/4/4/4 good=15 bad=0 crc=0 symbol=0 pulses=0000
+TB_P10_5_ADJACENT_1PLUS1=PASS fallback=5/7
+$finish called at time : 45131287655 ps : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_p10_5_dual_direction.sv" Line 637
+run: Time (s): cpu = 00:00:00 ; elapsed = 00:01:23 . Memory (MB): peak = 211.812 ; gain = 0.000
+exit
+INFO: xsimkernel Simulation Memory Usage: 17212 KB (Peak: 17212 KB), Simulation CPU Usage: 82827 ms
+INFO: [Common 17-206] Exiting xsim at Mon Aug 10 13:57:17 2026...

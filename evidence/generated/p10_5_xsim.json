@@ -2,10 +2,10 @@
   "compile_elaborate_run_return_code_zero": true,
   "current_run_hardware_authorization": false,
   "errors": [],
-  "generated_at_utc": "2026-08-10T04:05:45.413002+00:00",
+  "generated_at_utc": "2026-08-10T06:17:30.938003+00:00",
   "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
   "hardware_actions_executed": false,
-  "legacy_and_p10_5_test_count": 30,
+  "legacy_and_p10_5_test_count": 31,
   "network_used": false,
   "required_p10_5_tests": [
     "tb_p10_5_1plus1_mask_matrix",
@@ -13,6 +13,7 @@
     "tb_p10_5_2plus1_mask_matrix",
     "tb_p10_5_2plus2_partitions",
     "tb_p10_5_ack_piggyback",
+    "tb_p10_5_adjacent_1plus1",
     "tb_p10_5_bidirectional_dma",
     "tb_p10_5_control_only_ack",
     "tb_p10_5_direction_abort_isolation",
@@ -29,6 +30,7 @@
     "tb_p10_5_2plus1_mask_matrix",
     "tb_p10_5_2plus2_partitions",
     "tb_p10_5_ack_piggyback",
+    "tb_p10_5_adjacent_1plus1",
     "tb_p10_5_bidirectional_dma",
     "tb_p10_5_control_only_ack",
     "tb_p10_5_direction_abort_isolation",
@@ -40,12 +42,12 @@
     "tb_p10_5_role_mask_commit"
   ],
   "schema_version": 1,
-  "source_commit": "4429a1050c35bda0f9f241a20570e990f67c4627",
+  "source_commit": "eefca40c115babbfc08f9c06c6bb118534641c04",
   "status": "PASS",
   "suite": {
-    "bytes": 21633,
+    "bytes": 22357,
     "path": "evidence/generated/p10_5_xsim/summary.json",
-    "sha256": "27c49f8253ef8eab0ebb1a11f038d22c5730e9431d09235ce9bc9cfdeeec008c"
+    "sha256": "ac64b4ba3aca69270d6cfe76f4c6d7a567af0a3bf4b238bc0515cea301ec4e5b"
   },
   "test_id": "P10_5-XSIM-OFFLINE"
 }

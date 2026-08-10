@@ -15,7 +15,9 @@
       "ring_depth": 32
     },
     "capability": "CAP_SIMULTANEOUS_BIDIRECTIONAL_V1",
-    "config_sha256": "b6ff7dc3f9f097012a56bc8b4092515292e09115358586929afaba731c1feadc",
+    "config_sha256": "24f200aca983191633f87d0974fb4034cbdbaa88c5c45a2742172e9744304d46",
+    "control_only_ack_collision_backoff_cycles": 32000,
+    "control_only_ack_collision_policy": "FIXED_PRIORITY_THEN_ROTATING_TOKEN_OR_BOUNDED_ESCAPE",
     "control_only_ack_support": true,
     "legacy_half_duplex_support": true,
     "mask_width": 4,
@@ -35,13 +37,13 @@
     "schema_version": 1
   },
   "capability_table": {
-    "bytes": 1070,
+    "bytes": 1219,
     "path": "config/generated/p10_5_capability_table.json",
-    "sha256": "ee35ed09a3f2172de3ef2c4ca4b8098b7c2b712f427722fe1ec5e5d5c7616429"
+    "sha256": "0a1b4ff9812181e88740b71fe6ce1461764f2a981772088a11cfdf227d9c2560"
   },
   "current_run_hardware_authorization": false,
   "errors": [],
-  "generated_at_utc": "2026-08-10T04:05:45.410895+00:00",
+  "generated_at_utc": "2026-08-10T06:17:30.935528+00:00",
   "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
   "hardware_actions_executed": false,
   "hardware_readback_pending": true,
@@ -52,7 +54,7 @@
     "sha256": "c15fc2a29b95de8e3b0f89e378ca41ddcaf49439489619b4b650080a50e36f0f"
   },
   "schema_version": 1,
-  "source_commit": "4429a1050c35bda0f9f241a20570e990f67c4627",
+  "source_commit": "eefca40c115babbfc08f9c06c6bb118534641c04",
   "status": "PASS",
   "test_id": "P10_5-CAP-001-OFFLINE"
 }
