@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "policy_id": "P10_TFDU_RUNTIME_REST_2026_08_08",
+  "maximum_continuous_runtime_seconds": 1800.0,
+  "cooldown_ratio": 0.5,
+  "conservative_module_accounting": [
+    "F0",
+    "F1",
+    "F2",
+    "F3",
+    "R0",
+    "R1",
+    "R2",
+    "R3"
+  ],
+  "status": "PASS",
+  "active_stage": null,
+  "stages": [
+    {
+      "stage": "safe_start",
+      "modules": [
+        "F0",
+        "F1",
+        "F2",
+        "F3",
+        "R0",
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "planned_runtime_seconds": 1.0,
+      "start_utc": "2026-08-10T11:43:08.690+00:00",
+      "shutdown_verified": true,
+      "shutdown_verified_utc": "2026-08-10T11:43:50.961+00:00",
+      "measured_runtime_seconds": 0.339,
+      "wall_runtime_seconds": 42.27097,
+      "runtime_measurement_source": "hardware_stage_active_evidence",
+      "runtime_limit_status": "PASS",
+      "required_cooldown_seconds": 0.17,
+      "cooldown_completed_utc": "2026-08-10T11:43:51.131+00:00",
+      "actual_cooldown_seconds": 0.170288,
+      "cooldown_status": "PASS",
+      "status": "PASS"
+    },
+    {
+      "stage": "capability",
+      "modules": [
+        "F0",
+        "F1",
+        "F2",
+        "F3",
+        "R0",
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "planned_runtime_seconds": 10.0,
+      "start_utc": "2026-08-10T11:44:05.982+00:00",
+      "shutdown_verified": true,
+      "shutdown_verified_utc": "2026-08-10T11:44:57.097+00:00",
+      "measured_runtime_seconds": 9.423,
+      "wall_runtime_seconds": 51.115047,
+      "runtime_measurement_source": "hardware_stage_active_evidence",
+      "runtime_limit_status": "PASS",
+      "required_cooldown_seconds": 4.712,
+      "cooldown_completed_utc": "2026-08-10T11:45:01.809+00:00",
+      "actual_cooldown_seconds": 4.712512,
+      "cooldown_status": "PASS",
+      "status": "PASS"
+    },
+    {
+      "stage": "one_plus_one",
+      "modules": [
+        "F0",
+        "F1",
+        "F2",
+        "F3",
+        "R0",
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "planned_runtime_seconds": 120.0,
+      "start_utc": "2026-08-10T11:45:16.224+00:00",
+      "shutdown_verified": true,
+      "shutdown_verified_utc": "2026-08-10T11:46:24.951+00:00",
+      "measured_runtime_seconds": 22.038,
+      "wall_runtime_seconds": 68.727106,
+      "runtime_measurement_source": "hardware_stage_active_evidence",
+      "runtime_limit_status": "PASS",
+      "required_cooldown_seconds": 11.019,
+      "cooldown_completed_utc": "2026-08-10T11:46:35.970+00:00",
+      "actual_cooldown_seconds": 11.019343,
+      "cooldown_status": "PASS",
+      "status": "PASS"
+    }
+  ]
+}
