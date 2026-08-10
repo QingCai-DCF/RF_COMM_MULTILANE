@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-FAIL-CLOSED-LANE3-REVERSE",
+  "status": "FAIL",
+  "failure_class": "FAIL_CLOSED_PHYSICAL_CONNECTIVITY_REQUIRED",
+  "scope": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "artifact_source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+  "blocking_run_id": "p10_5_20260810T114211Z_e1f8c01a_4015142e_79607d01",
+  "corroborating_run_id": "p10_5_20260810T111841Z_e1f8c01a_4015142e_79607d01",
+  "blocking_stage": "one_plus_one",
+  "blocking_case": "oneplusone_f0_r3",
+  "blocking_direction": "R3_TO_F3",
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "module_binding": {
+    "F3": "B0020",
+    "R3": "B0025"
+  },
+  "blocking_run_raw_counts": {
+    "f0_to_r0_control_direction": {
+      "fixed_f0_physical_tx": 284280,
+      "rotating_r0_raw_rx": 284280,
+      "status": "PASS_RAW_PHYSICAL_ONLY"
+    },
+    "r3_to_f3": {
+      "rotating_r3_physical_tx": 284852,
+      "fixed_f3_raw_rx": 0,
+      "status": "FAIL_NO_RX_ACTIVITY"
+    }
+  },
+  "corroborating_run_raw_counts": {
+    "f3_to_r3": {
+      "fixed_f3_physical_tx": 12847821,
+      "rotating_r3_raw_rx": 12847821,
+      "status": "PASS_RAW_PHYSICAL_ONLY"
+    },
+    "r3_to_f3": {
+      "rotating_r3_physical_tx": 427200,
+      "fixed_f3_raw_rx": 0,
+      "status": "FAIL_NO_RX_ACTIVITY"
+    }
+  },
+  "protocol_failure": {
+    "fixed_object_error": "0x50090004",
+    "rotating_object_error": "0x50090004",
+    "meaning": "retry exhaustion",
+    "safety_faults": 0,
+    "crc_bad": 0,
+    "sha_mismatch": 0,
+    "descriptor_leak": 0,
+    "continuous_high_violation": 0,
+    "rolling_duty_hard_fault": 0
+  },
+  "completed_evidence": {
+    "p10_4_immutable_closeout": "PASS",
+    "offline_dual_direction_architecture": "PASS",
+    "xsim": "PASS_31_OF_31",
+    "immutable_artifact_freeze": "PASS",
+    "real_two_plus_two_tx_executed_in_run_101302": true,
+    "primary_per_direction_goodput_bps_in_run_101302": 4292171.093333334,
+    "five_by_bidirectional_64m_in_run_101302": "PASS",
+    "fault_vectors_offline_revalidated_after_host_fix": "PASS_20_OF_20"
+  },
+  "not_completed": [
+    "complete current-run 1+1 matrix",
+    "complete current-run 2+1 and 1+2 matrix",
+    "complete current-run all 2+2 partitions",
+    "complete current-run direction-isolated fault stage",
+    "30-minute formal 2+2"
+  ],
+  "shutdown": {
+    "blocking_run_fixed": "PASS",
+    "blocking_run_rotating": "PASS",
+    "blocking_run_shutdown_exit": 0,
+    "blocking_run_tfdu_shutdown_programmed": true,
+    "corroborating_run_fixed": "PASS",
+    "corroborating_run_rotating": "PASS"
+  },
+  "hardware_actions_executed": true,
+  "current_run_hardware_authorization": false,
+  "new_tx_prohibited_after_blocker": true,
+  "p11_status": "NOT_STARTED",
+  "pass_tag_allowed": false,
+  "recommended_tag": "p10.5-2plus2-dual-direction-investigated",
+  "boundary": "The repeated FPGA-visible raw result proves a current R3-to-F3 connectivity blocker for the exact stationary artifact and wiring. It is not an external electrical/optical measurement and does not identify whether the module, alignment, wiring, or receiver electrical path is the physical root cause.",
+  "next_recommended_stage": "P10_5_REMEDIATION"
+}
