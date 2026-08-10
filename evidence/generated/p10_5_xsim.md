@@ -2,6 +2,6 @@
 
 - Status: `PASS`
 - test_id: `P10_5-XSIM-OFFLINE`
-- source_commit: `5b1b01c6199eb829bc17e2928e5751dfbcb805ff`
+- source_commit: `b1b8a864c42b01a31786c96c286e29bece55cf11`
 - hardware_actions_executed: `False`
 - current_run_hardware_authorization: `False`

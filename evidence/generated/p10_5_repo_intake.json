@@ -49,9 +49,13 @@
   "current_authorization": "P10.5 Goal standing authorization; hardware materialization deferred until immutable artifact freeze",
   "current_run_hardware_authorization": false,
   "errors": [],
-  "git_status": [],
+  "git_status": [
+    "M evidence/generated/p10_5_xsim/summary.json",
+    " M evidence/generated/p10_5_xsim/summary.md",
+    "?? evidence/generated/p10_5_xsim/raw/20260810T030016.911603Z/"
+  ],
   "hardware_actions_executed": false,
-  "head": "5b1b01c6199eb829bc17e2928e5751dfbcb805ff",
+  "head": "b1b8a864c42b01a31786c96c286e29bece55cf11",
   "inputs": {
     "AGENTS": {
       "path": "AGENTS.md",
@@ -104,7 +108,7 @@
   "p10_4_final_commit": "7987e6385b65fa2c7ed7d3a008c1ecbdf323ffa8",
   "schema_version": 1,
   "source_audit_package_sha256": "6c351c7f7fdcac9d1a2cead7548b940d0345c6e1cc7e48d7e3783c7c38e3c904",
-  "start_timestamp_utc": "2026-08-10T02:06:34.389795+00:00",
+  "start_timestamp_utc": "2026-08-10T03:19:35.157406+00:00",
   "status": "PASS",
   "test_id": "P10_5-REPO-INTAKE",
   "tool_versions": {
