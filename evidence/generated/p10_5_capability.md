@@ -2,6 +2,6 @@
 
 - Status: `PASS`
 - test_id: `P10_5-CAP-001-OFFLINE`
-- source_commit: `e1f8c01ab084571627380367422f0bda2c0aed87`
+- source_commit: `be0bcd122ef966030d52b7070f6a4d677db3da8e`
 - hardware_actions_executed: `False`
 - current_run_hardware_authorization: `False`
