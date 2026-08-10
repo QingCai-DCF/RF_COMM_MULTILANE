@@ -2431,7 +2431,9 @@ module p9_optical_transport_core #(
   reg [31:0] rx_pending_object [0:LANE_COUNT-1];
   (* ram_style="block" *) reg [7:0] rx_store [0:STORE_BYTES-1];
   reg rx_final_slot [0:WINDOW_SIZE-1];
-  typedef enum reg [1:0] {RXC_IDLE, RXC_PRIME, RXC_COPY, RXC_PULSE} rxc_state_t;
+  typedef enum reg [2:0] {
+    RXC_IDLE, RXC_CLASSIFY, RXC_PRIME, RXC_COPY, RXC_PULSE
+  } rxc_state_t;
   rxc_state_t rxc_state_q;
   reg [LANE_WIDTH-1:0] rxc_lane_q;
   reg [7:0] rxc_read_index_q;
@@ -2443,14 +2445,13 @@ module p9_optical_transport_core #(
   integer staging_lane;
 
   // The output backend may retire the current base on the same edge that the
-  // copy coordinator classifies a newly completed physical frame. Account for
-  // that retirement up front; otherwise the sequence at base+WINDOW_SIZE is
-  // classified as future in RXC_IDLE, skips the BRAM copy, and can become
-  // admissible one cycle later after the base advances. The copied flag is a
-  // second fail-closed invariant: an in-window frame is never submitted as L1
-  // valid unless its payload was actually committed to the reorder store.
-  wire [15:0] rxc_effective_base = rx_base_sequence_o +
-      ((dp_delivery_valid && dp_delivery_ready_q) ? 16'd1 : 16'd0);
+  // copy coordinator classifies a newly completed physical frame.  Express
+  // that one-entry shift as a boundary predicate instead of adding one to the
+  // base before every modular subtraction.  The former expression cascaded
+  // two 16-bit carry chains into the RX copy FSM and could not close 64 MHz.
+  // RXC_CLASSIFY also registers the selected lane before the window decision,
+  // keeping the fail-closed payload-copy invariant off that selection tree.
+  wire rxc_base_retiring = dp_delivery_valid && dp_delivery_ready_q;
 
   always @(posedge clk) begin : rx_lane_staging_memories
     for (staging_lane = 0; staging_lane < LANE_COUNT;
@@ -2483,6 +2484,7 @@ module p9_optical_transport_core #(
     reg event_final;
     reg [31:0] event_object;
     reg [15:0] receive_distance;
+    reg receive_in_window;
     reg [LANE_WIDTH-1:0] selected_lane;
     reg [15:0] selected_distance;
     integer pending_count;
@@ -2585,11 +2587,11 @@ module p9_optical_transport_core #(
             for (rx_lane = 0; rx_lane < LANE_COUNT; rx_lane = rx_lane + 1) begin
               if (rx_pending[rx_lane]) begin
                 pending_count = pending_count + 1;
-                if ((rx_pending_sequence[rx_lane] - rxc_effective_base) >=
+                if ((rx_pending_sequence[rx_lane] - rx_base_sequence_o) >=
                     selected_distance) begin
                   selected_lane = rx_lane[LANE_WIDTH-1:0];
                   selected_distance =
-                      rx_pending_sequence[rx_lane] - rxc_effective_base;
+                      rx_pending_sequence[rx_lane] - rx_base_sequence_o;
                 end
               end
             end
@@ -2597,23 +2599,35 @@ module p9_optical_transport_core #(
               rxc_lane_q <= selected_lane;
               rxc_read_index_q <= 0;
               rxc_write_index_q <= 0;
-              rxc_base_q <= rx_pending_sequence[selected_lane][ENTRY_WIDTH-1:0] *
-                            MAX_PAYLOAD_BYTES;
-              receive_distance =
-                  rx_pending_sequence[selected_lane] - rxc_effective_base;
-              if (rx_pending_l1[selected_lane] &&
-                  rx_pending_session[selected_lane] ==
-                  (object_dual_direction_q ? object_rx_session_q :
-                                             object_session_q) &&
-                  receive_distance < WINDOW_SIZE &&
-                  rx_pending_length[selected_lane] != 0) begin
-                rxc_payload_copied_q <= 1;
-                rxc_state_q <= RXC_PRIME;
-              end else begin
-                rxc_payload_copied_q <= 0;
-                rxc_state_q <= RXC_PULSE;
-              end
+              rxc_payload_copied_q <= 0;
+              rxc_state_q <= RXC_CLASSIFY;
               if (reorder_hold_q) reorder_hold_q <= 0;
+            end
+          end
+          RXC_CLASSIFY: begin
+            rxc_base_q <=
+                rx_pending_sequence[rxc_lane_q][ENTRY_WIDTH-1:0] *
+                MAX_PAYLOAD_BYTES;
+            receive_distance =
+                rx_pending_sequence[rxc_lane_q] - rx_base_sequence_o;
+            // After a same-edge base retirement, distance zero names the
+            // just-retired entry and distance WINDOW_SIZE becomes newly
+            // admissible.  All other distances retain their normal meaning.
+            receive_in_window =
+                (!rxc_base_retiring && receive_distance < WINDOW_SIZE) ||
+                (rxc_base_retiring && receive_distance != 0 &&
+                 receive_distance <= WINDOW_SIZE);
+            if (rx_pending_l1[rxc_lane_q] &&
+                rx_pending_session[rxc_lane_q] ==
+                (object_dual_direction_q ? object_rx_session_q :
+                                           object_session_q) &&
+                receive_in_window &&
+                rx_pending_length[rxc_lane_q] != 0) begin
+              rxc_payload_copied_q <= 1;
+              rxc_state_q <= RXC_PRIME;
+            end else begin
+              rxc_payload_copied_q <= 0;
+              rxc_state_q <= RXC_PULSE;
             end
           end
           RXC_PRIME: begin
@@ -2633,14 +2647,18 @@ module p9_optical_transport_core #(
           end
           RXC_PULSE: if (dp_rx_frame_ready) begin
             receive_distance =
-                rx_pending_sequence[rxc_lane_q] - rxc_effective_base;
+                rx_pending_sequence[rxc_lane_q] - rx_base_sequence_o;
+            receive_in_window =
+                (!rxc_base_retiring && receive_distance < WINDOW_SIZE) ||
+                (rxc_base_retiring && receive_distance != 0 &&
+                 receive_distance <= WINDOW_SIZE);
             dp_rx_frame_valid_q <= 1;
             dp_rx_l1_valid_q <= rx_pending_l1[rxc_lane_q] &&
                 (rxc_payload_copied_q ||
                  rx_pending_session[rxc_lane_q] !=
                      (object_dual_direction_q ? object_rx_session_q :
                                                 object_session_q) ||
-                 receive_distance >= WINDOW_SIZE);
+                 !receive_in_window);
             dp_rx_session_q <= rx_pending_session[rxc_lane_q];
             dp_rx_sequence_q <= rx_pending_sequence[rxc_lane_q];
             dp_rx_path_q <= rx_pending_path[rxc_lane_q];

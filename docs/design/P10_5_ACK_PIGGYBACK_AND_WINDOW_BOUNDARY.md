@@ -57,6 +57,22 @@ Three coupled RTL defects were exposed.
   or still-future frames remain observable to the selective-repeat classifier
   without gaining admission.
 
+The first implementation expressed that same-edge retirement as
+`effective_base = base + 1` before each modular subtraction. Routed evidence
+at source `2b5eded212a17c3b3af63100ab385a82b0c7c04c` showed that this cascaded
+two 16-bit carry chains into the receive-copy FSM: fixed WNS was `-1.551 ns`
+and rotating WNS was `-1.834 ns`. The failed routed reports and the already
+successful shutdown artifacts remain immutable evidence.
+
+The timing remediation preserves the boundary semantics without the extra
+adder. A registered `RXC_CLASSIFY` stage separates pending-lane selection from
+window admission, and a boundary predicate handles the only changed cases:
+when the base retires on the same edge, distance zero is the retired entry and
+distance `WINDOW_SIZE` is newly admissible. The copied-payload fail-closed
+check remains authoritative. Focused `tb_p10_5_control_only_ack` regression
+again crosses the first modulo-32 slot reuse with exact byte equality before a
+new routed build is admitted.
+
 These changes are monitoring/control-plane and bounded-window corrections.
 They do not alter the single `GLOBAL_PERMIT`, SD/Mode, final Txd kill, exact
 sliding-duty guard, stuck-high guard, lane-role masks, module wiring, or

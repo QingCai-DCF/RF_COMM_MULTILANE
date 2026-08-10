@@ -222,7 +222,13 @@ class P10_5FirmwareContractTests(unittest.TestCase):
             tx,
         )
         self.assertIn("(allocation_span < WINDOW_SIZE)", tx)
-        self.assertIn("wire [15:0] rxc_effective_base", core)
+        self.assertIn("wire rxc_base_retiring", core)
+        self.assertIn("RXC_CLASSIFY", core)
+        self.assertIn(
+            "rxc_base_retiring && receive_distance != 0 &&",
+            core,
+        )
+        self.assertIn("receive_distance <= WINDOW_SIZE", core)
         self.assertIn("rxc_payload_copied_q", core)
         self.assertIn(
             "rxc_payload_copied_q ||\n                 "
