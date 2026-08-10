@@ -1,12 +1,12 @@
 {
   "artifact_source_commit": "eefca40c115babbfc08f9c06c6bb118534641c04",
   "authorization": "config/p10_5_current_run_hardware_authorization.json",
-  "authorization_sha256": "9ea0e01d32964a2a53dd587a5efb1430dba6895c8f2b4b2713e76abf368b9d7f",
-  "current_run_hardware_authorization": true,
+  "consumed": true,
+  "current_run_hardware_authorization": false,
   "errors": [],
-  "hardware_actions_executed": false,
+  "hardware_actions_executed": true,
   "run_id": "p10_5_20260810T064401Z_eefca40c_78726594_498ca074",
   "schema_version": 1,
-  "status": "READY_FOR_EXACT_CURRENT_RUN",
+  "status": "CONSUMED_AFTER_P10_5_FAIL",
   "test_id": "P10_5-AUTHORIZATION"
 }

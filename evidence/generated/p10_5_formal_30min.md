@@ -2,5 +2,5 @@
 
 - Status: `FAIL`
 - test_id: `P10_5-FORMAL_30MIN`
-- run_id: `p10_5_20260810T040830Z_43cdde9f_e201ac59_e118ba87`
-- artifact_source_commit: `43cdde9f23600b2bff9a7f14f4c520876c50b070`
+- run_id: `p10_5_20260810T064401Z_eefca40c_78726594_498ca074`
+- artifact_source_commit: `eefca40c115babbfc08f9c06c6bb118534641c04`
