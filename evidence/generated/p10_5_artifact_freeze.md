@@ -1,13 +1,19 @@
 # P10.5 immutable artifact freeze
 
-- Status: `FAIL`
-- Artifact source commit: `NONE`
-- Harness commit: `34c9201bb47dbdee36fb8027c0a057100c11a6f1`
+- Status: `PASS`
+- Artifact source commit: `43cdde9f23600b2bff9a7f14f4c520876c50b070`
+- Harness commit: `4429a1050c35bda0f9f241a20570e990f67c4627`
 - Hardware actions executed: `false`
 
 ## Artifacts
 
-
-## Errors
-
-- build-summary source mismatch: ['a2f7148efc3643a096f59f0a7730e3bcd7adb486', 'b1b8a864c42b01a31786c96c286e29bece55cf11']
+- `fixed:shutdown_bitstream` `cbeb747c0cd549c0bc4785f4f877f48879db0ea45a09ef32dea1a383fda2d3ca` `artifacts/p10_5/43cdde9f23600b2bff9a7f14f4c520876c50b070/cbeb747c0cd549c0bc4785f4f877f48879db0ea45a09ef32dea1a383fda2d3ca/p10_ax7020_fixed_shutdown.bit`
+- `fixed:functional_bitstream` `e201ac59ac1ca13cf031aff730e905c7a86421a2fa3b929d8c6ef418cafd660a` `artifacts/p10_5/43cdde9f23600b2bff9a7f14f4c520876c50b070/e201ac59ac1ca13cf031aff730e905c7a86421a2fa3b929d8c6ef418cafd660a/p10_ax7020_fixed_functional.bit`
+- `fixed:xsa` `7b65c6aae8bd5c1c59d48bd3214ea32fdfadb6a72932b673fac6657e70fe1d8a` `artifacts/p10_5/43cdde9f23600b2bff9a7f14f4c520876c50b070/7b65c6aae8bd5c1c59d48bd3214ea32fdfadb6a72932b673fac6657e70fe1d8a/p10_ax7020_fixed_functional.xsa`
+- `fixed:bsp` `9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a` `artifacts/p10_5/43cdde9f23600b2bff9a7f14f4c520876c50b070/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip`
+- `fixed:elf` `28910e6005f1fb5b1f718c24714966617e123efacc5fde34731a71041521fbb0` `artifacts/p10_5/43cdde9f23600b2bff9a7f14f4c520876c50b070/28910e6005f1fb5b1f718c24714966617e123efacc5fde34731a71041521fbb0/p10_fixed_runtime.elf`
+- `rotating:shutdown_bitstream` `3f4bdadbeeff05c1f0ae0025efba7de57b0875013821c6d62edddef6bfec9925` `artifacts/p10_5/43cdde9f23600b2bff9a7f14f4c520876c50b070/3f4bdadbeeff05c1f0ae0025efba7de57b0875013821c6d62edddef6bfec9925/p10_ax7020_rotating_shutdown.bit`
+- `rotating:functional_bitstream` `e118ba87f14cb8d6c9c8813bdd18558599c05f3252069d757f46b3b9efe72018` `artifacts/p10_5/43cdde9f23600b2bff9a7f14f4c520876c50b070/e118ba87f14cb8d6c9c8813bdd18558599c05f3252069d757f46b3b9efe72018/p10_ax7020_rotating_functional.bit`
+- `rotating:xsa` `ee7dd96c4ebd66f107f1483a617de519069e78795a90e061feae6596081cb69a` `artifacts/p10_5/43cdde9f23600b2bff9a7f14f4c520876c50b070/ee7dd96c4ebd66f107f1483a617de519069e78795a90e061feae6596081cb69a/p10_ax7020_rotating_functional.xsa`
+- `rotating:bsp` `48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c` `artifacts/p10_5/43cdde9f23600b2bff9a7f14f4c520876c50b070/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip`
+- `rotating:elf` `f74b71c53ab21df695e2ae3439e560b0f5efcbfc865300e988a1a80118691065` `artifacts/p10_5/43cdde9f23600b2bff9a7f14f4c520876c50b070/f74b71c53ab21df695e2ae3439e560b0f5efcbfc865300e988a1a80118691065/p10_rotating_runtime.elf`
