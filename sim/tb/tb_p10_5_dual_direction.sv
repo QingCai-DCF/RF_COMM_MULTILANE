@@ -605,10 +605,21 @@ module tb_p10_5_dual_direction;
              f_fallback, r_fallback, f_fallback_before_credit_reopen,
              r_fallback_before_credit_reopen);
     for (index = 0; index < CREDIT_REOPEN_BYTES; index = index + 1) begin
-      if (f_received[index] !== payload_pattern(index, 8'ha5))
-        $fatal(1, "credit-reopen R-to-F mismatch index=%0d", index);
+      if (f_received[index] !== payload_pattern(index, 8'ha5)) begin
+        $display("CREDIT_REOPEN_R2F_STORE tx2_0=%02x tx3_0=%02x rx0=%02x temp2_0=%02x temp3_0=%02x tx_next=%0d rx_base=%0d",
+                 rotating_endpoint.tx_store[2][0],
+                 rotating_endpoint.tx_store[3][0],
+                 fixed_endpoint.rx_store[0],
+                 fixed_endpoint.rx_temp[2][0],
+                 fixed_endpoint.rx_temp[3][0],
+                 rotating_endpoint.tx_next_sequence_o,
+                 fixed_endpoint.rx_base_sequence_o);
+        $fatal(1, "credit-reopen R-to-F mismatch index=%0d actual=%02x expected=%02x",
+               index, f_received[index], payload_pattern(index, 8'ha5));
+      end
       if (r_received[index] !== payload_pattern(index, 8'h5a))
-        $fatal(1, "credit-reopen F-to-R mismatch index=%0d", index);
+        $fatal(1, "credit-reopen F-to-R mismatch index=%0d actual=%02x expected=%02x",
+               index, r_received[index], payload_pattern(index, 8'h5a));
     end
 
     clear_capture();

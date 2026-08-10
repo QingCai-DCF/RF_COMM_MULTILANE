@@ -791,6 +791,20 @@ module p9_optical_transport_core #(
   reg dp_ack_piggyback_commit_q;
   reg p10_5_ack_dirty_q;
   wire [5:0] dp_rx_credit;
+  reg [5:0] p10_5_rx_credit_d_q;
+  reg [31:0] p10_5_control_fallback_wait_q;
+  wire p10_5_credit_reopen_event = object_dual_direction_q &&
+      p10_5_rx_credit_d_q == 0 && dp_rx_credit != 0;
+  localparam integer P10_5_CONTROL_FALLBACK_GRACE_CYCLES =
+      ACK_MAX_DELAY_CYCLES;
+  wire p10_5_duplicate_reack_event = object_dual_direction_q &&
+      dp_ack_control_pipe_q[1] && !dp_rx_accept_delayed_q;
+  wire p10_5_dirty_timeout_event = object_dual_direction_q &&
+      p10_5_ack_dirty_q &&
+      p10_5_control_fallback_wait_q ==
+          P10_5_CONTROL_FALLBACK_GRACE_CYCLES-1;
+  wire p10_5_immediate_control_event =
+      p10_5_duplicate_reack_event || p10_5_credit_reopen_event;
   wire dp_local_ack_snapshot_stale = endpoint_mode &&
       (dp_local_ack_base != rx_base_sequence_o ||
        dp_local_ack_bitmap != rx_sack_bitmap_o ||
@@ -895,10 +909,8 @@ module p9_optical_transport_core #(
     // A validated physical DATA event that was not newly accepted forces a
     // cumulative response.  New frames participate in bounded aggregation;
     // duplicates force a re-ACK so reverse-path ACK loss is recoverable.
-    .ack_control_event_i((dp_ack_control_pipe_q[1] &&
-                          !dp_rx_accept_delayed_q) ||
-                         (object_dual_direction_q &&
-                          dp_rx_delivery_delayed_q)),
+    .ack_control_event_i(p10_5_immediate_control_event ||
+                         p10_5_dirty_timeout_event),
     .ack_direction_boundary_i(endpoint_mode &&
                               endpoint_turnaround_ack_eligible),
     .ack_explicit_request_i(!endpoint_mode && input_complete_q &&
@@ -969,6 +981,7 @@ module p9_optical_transport_core #(
       dp_turnaround_sequence_pipe_q[1] <= 16'd0;
       dp_rx_accept_delayed_q <= 1'b0;
       dp_rx_delivery_delayed_q <= 1'b0;
+      p10_5_rx_credit_d_q <= WINDOW_SIZE;
     end else if (start_object_i || abort_object_i || disarm_request_i ||
                  full_shutdown_request_i || any_safety_fault) begin
       dp_ack_control_pipe_q <= 2'b00;
@@ -977,6 +990,7 @@ module p9_optical_transport_core #(
       dp_turnaround_sequence_pipe_q[1] <= 16'd0;
       dp_rx_accept_delayed_q <= 1'b0;
       dp_rx_delivery_delayed_q <= 1'b0;
+      p10_5_rx_credit_d_q <= WINDOW_SIZE;
     end else begin
       dp_ack_control_pipe_q <= {
           dp_ack_control_pipe_q[0],
@@ -991,9 +1005,10 @@ module p9_optical_transport_core #(
           dp_turnaround_sequence_pipe_q[0];
       dp_rx_accept_delayed_q <= dp_rx_accept_pulse;
       // The RX reorder window updates base/SACK/credit on this handshake.
-      // Delay the control request one cycle so the immutable ACK snapshot is
-      // captured from the post-delivery state rather than the stale state.
+      // Delay delivery observation one cycle so dirty/credit logic sees the
+      // post-delivery base, SACK, and receiver-credit state.
       dp_rx_delivery_delayed_q <= dp_delivery_valid && dp_delivery_ready_q;
+      p10_5_rx_credit_d_q <= dp_rx_credit;
     end
   end
 
@@ -1263,6 +1278,7 @@ module p9_optical_transport_core #(
       p10_5_control_ack_fallback_count_q <= 0;
       dp_ack_piggyback_commit_q <= 0;
       p10_5_ack_dirty_q <= 0;
+      p10_5_control_fallback_wait_q <= 0;
       endpoint_tx_burst_count_q <= 0;
       endpoint_waiting_for_ack_q <= 0;
       endpoint_wait_ack_timer_q <= 0;
@@ -1306,7 +1322,21 @@ module p9_optical_transport_core #(
     end else begin
       dp_local_ack_ready_q <= 0;
       dp_ack_piggyback_commit_q <= 0;
-      if (dp_rx_accept_pulse) p10_5_ack_dirty_q <= 1;
+      if (dp_rx_accept_pulse || dp_rx_delivery_delayed_q)
+        p10_5_ack_dirty_q <= 1;
+      // Time from the first cumulative-state change not yet carried by a
+      // reverse DATA piggyback. This is the Goal's ACK max-delay bound, not a
+      // second delay that starts only after the aggregator presents VALID.
+      if (!object_dual_direction_q || !p10_5_ack_dirty_q) begin
+        p10_5_control_fallback_wait_q <= 0;
+      end else if (p10_5_control_fallback_wait_q <
+                   P10_5_CONTROL_FALLBACK_GRACE_CYCLES) begin
+        p10_5_control_fallback_wait_q <=
+            p10_5_control_fallback_wait_q + 1'b1;
+      end
+      if (p10_5_immediate_control_event)
+        p10_5_control_fallback_wait_q <=
+            P10_5_CONTROL_FALLBACK_GRACE_CYCLES;
       if (clear_counters_i) begin
         dropped_data_count_q <= 0;
         dropped_ack_count_q <= 0;
@@ -1424,6 +1454,7 @@ module p9_optical_transport_core #(
         endpoint_turnaround_boundary_sequence_q <= 0;
         endpoint_turnaround_settle_timer_q <= 0;
         p10_5_ack_dirty_q <= 0;
+        p10_5_control_fallback_wait_q <= 0;
         for (copy_lane = 0; copy_lane < LANE_COUNT; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
           lane_auto_migration_pending_q[copy_lane] <= 0;
@@ -1453,6 +1484,7 @@ module p9_optical_transport_core #(
         endpoint_turnaround_boundary_sequence_q <= 0;
         endpoint_turnaround_settle_timer_q <= 0;
         p10_5_ack_dirty_q <= 0;
+        p10_5_control_fallback_wait_q <= 0;
         for (copy_lane = 0; copy_lane < LANE_COUNT; copy_lane = copy_lane + 1) begin
           lane_start_pending[copy_lane] <= 0;
           lane_auto_migration_pending_q[copy_lane] <= 0;
@@ -1467,6 +1499,7 @@ module p9_optical_transport_core #(
         phase_guard_q <= 0;
         dp_local_ack_ready_q <= dp_local_ack_valid;
         p10_5_ack_dirty_q <= 0;
+        p10_5_control_fallback_wait_q <= 0;
         for (copy_lane = 0; copy_lane < LANE_COUNT;
              copy_lane = copy_lane + 1)
           if (lane_frame_ack[copy_lane])
@@ -1488,6 +1521,7 @@ module p9_optical_transport_core #(
         endpoint_turnaround_boundary_sequence_q <= 0;
         endpoint_turnaround_settle_timer_q <= 0;
         p10_5_ack_dirty_q <= 0;
+        p10_5_control_fallback_wait_q <= 0;
       end else begin
         for (copy_lane = 0; copy_lane < LANE_COUNT;
              copy_lane = copy_lane + 1) begin
@@ -1596,10 +1630,12 @@ module p9_optical_transport_core #(
               dp_ack_piggyback_commit_q <= 1;
               if (dp_local_ack_valid) dp_local_ack_ready_q <= 1;
               // The DATA header snapshots the pre-edge ACK state. Preserve
-              // dirty when this same edge accepts another RX entry. Ordered
-              // delivery independently schedules a post-delivery snapshot
-              // through dp_rx_delivery_delayed_q.
-              p10_5_ack_dirty_q <= dp_rx_accept_pulse;
+              // dirty when this same edge accepts another RX entry or retires
+              // one from the reorder window. The shared dirty-age timer emits
+              // bounded control-only fallback if no later DATA can carry it.
+              p10_5_ack_dirty_q <=
+                  dp_rx_accept_pulse || dp_rx_delivery_delayed_q;
+              p10_5_control_fallback_wait_q <= 0;
               p10_5_piggyback_ack_tx_count_q <=
                   p10_5_piggyback_ack_tx_count_q + 1'b1;
             end
@@ -1641,6 +1677,9 @@ module p9_optical_transport_core #(
             end else if (dp_local_ack_valid && !dp_local_ack_ready_q &&
                          !(object_dual_direction_q && dp_attempt_valid &&
                            dp_attempt_ready) &&
+                         (!object_dual_direction_q ||
+                          p10_5_control_fallback_wait_q >=
+                          P10_5_CONTROL_FALLBACK_GRACE_CYCLES-1) &&
                          (object_dual_direction_q || !endpoint_mode ||
                           endpoint_turnaround_ack_eligible)) begin
               if (dp_local_ack_snapshot_stale) begin
@@ -1650,10 +1689,12 @@ module p9_optical_transport_core #(
                 // snapshot without transmitting it; the held direction
                 // boundary immediately requests a fresh cumulative ACK.
                 dp_local_ack_ready_q <= 1;
+                p10_5_control_fallback_wait_q <= 0;
               end else if (drop_ack_remaining_q != 0) begin
                 drop_ack_remaining_q <= drop_ack_remaining_q - 1'b1;
                 dropped_ack_count_q <= dropped_ack_count_q + 1'b1;
                 dp_local_ack_ready_q <= 1;
+                p10_5_control_fallback_wait_q <= 0;
               end else begin
                 phase_q <= PH_ACK_GUARD;
                 phase_guard_q <= object_dual_direction_q ? 0 :
@@ -1700,9 +1741,12 @@ module p9_optical_transport_core #(
               lane_start_pending[ack_selected_lane] <= 1;
               if (object_dual_direction_q)
                 // Clear only at snapshot capture. A same-edge RX acceptance
-                // reasserts dirty; a delivery uses its independent delayed
-                // control request. Both survive the later start handshake.
-                p10_5_ack_dirty_q <= dp_rx_accept_pulse;
+                // or delivery reasserts dirty and restarts the bounded
+                // fallback interval; both survive the later start handshake.
+                p10_5_ack_dirty_q <=
+                    dp_rx_accept_pulse || dp_rx_delivery_delayed_q;
+              if (object_dual_direction_q)
+                p10_5_control_fallback_wait_q <= 0;
               if (object_dual_direction_q)
                 p10_5_control_ack_fallback_count_q <=
                     p10_5_control_ack_fallback_count_q + 1'b1;
@@ -2393,9 +2437,20 @@ module p9_optical_transport_core #(
   reg [7:0] rxc_read_index_q;
   reg [7:0] rxc_write_index_q;
   reg [STORE_ADDR_WIDTH-1:0] rxc_base_q;
+  reg rxc_payload_copied_q;
   reg [7:0] rx_temp_read_q [0:LANE_COUNT-1];
   reg reorder_hold_q;
   integer staging_lane;
+
+  // The output backend may retire the current base on the same edge that the
+  // copy coordinator classifies a newly completed physical frame. Account for
+  // that retirement up front; otherwise the sequence at base+WINDOW_SIZE is
+  // classified as future in RXC_IDLE, skips the BRAM copy, and can become
+  // admissible one cycle later after the base advances. The copied flag is a
+  // second fail-closed invariant: an in-window frame is never submitted as L1
+  // valid unless its payload was actually committed to the reorder store.
+  wire [15:0] rxc_effective_base = rx_base_sequence_o +
+      ((dp_delivery_valid && dp_delivery_ready_q) ? 16'd1 : 16'd0);
 
   always @(posedge clk) begin : rx_lane_staging_memories
     for (staging_lane = 0; staging_lane < LANE_COUNT;
@@ -2437,6 +2492,7 @@ module p9_optical_transport_core #(
       rxc_read_index_q <= 0;
       rxc_write_index_q <= 0;
       rxc_base_q <= 0;
+      rxc_payload_copied_q <= 0;
       dp_rx_frame_valid_q <= 0;
       dp_rx_l1_valid_q <= 0;
       dp_rx_turnaround_q <= 0;
@@ -2499,6 +2555,7 @@ module p9_optical_transport_core #(
 
       if (start_object_i) begin
         rxc_state_q <= RXC_IDLE;
+        rxc_payload_copied_q <= 0;
         reorder_hold_q <= cfg_fault_flags_i[6];
         for (rx_lane = 0; rx_lane < LANE_COUNT; rx_lane = rx_lane + 1) begin
           rx_pending[rx_lane] <= 0;
@@ -2508,6 +2565,7 @@ module p9_optical_transport_core #(
       end else if (abort_object_i || disarm_request_i ||
                    full_shutdown_request_i || rx_context_aborted_q) begin
         rxc_state_q <= RXC_IDLE;
+        rxc_payload_copied_q <= 0;
         reorder_hold_q <= 0;
         for (rx_lane = 0; rx_lane < LANE_COUNT; rx_lane = rx_lane + 1) begin
           rx_pending[rx_lane] <= 0;
@@ -2527,11 +2585,11 @@ module p9_optical_transport_core #(
             for (rx_lane = 0; rx_lane < LANE_COUNT; rx_lane = rx_lane + 1) begin
               if (rx_pending[rx_lane]) begin
                 pending_count = pending_count + 1;
-                if ((rx_pending_sequence[rx_lane] - rx_base_sequence_o) >=
+                if ((rx_pending_sequence[rx_lane] - rxc_effective_base) >=
                     selected_distance) begin
                   selected_lane = rx_lane[LANE_WIDTH-1:0];
                   selected_distance =
-                      rx_pending_sequence[rx_lane] - rx_base_sequence_o;
+                      rx_pending_sequence[rx_lane] - rxc_effective_base;
                 end
               end
             end
@@ -2541,16 +2599,20 @@ module p9_optical_transport_core #(
               rxc_write_index_q <= 0;
               rxc_base_q <= rx_pending_sequence[selected_lane][ENTRY_WIDTH-1:0] *
                             MAX_PAYLOAD_BYTES;
-              receive_distance = rx_pending_sequence[selected_lane] - rx_base_sequence_o;
+              receive_distance =
+                  rx_pending_sequence[selected_lane] - rxc_effective_base;
               if (rx_pending_l1[selected_lane] &&
                   rx_pending_session[selected_lane] ==
                   (object_dual_direction_q ? object_rx_session_q :
                                              object_session_q) &&
                   receive_distance < WINDOW_SIZE &&
-                  rx_pending_length[selected_lane] != 0)
+                  rx_pending_length[selected_lane] != 0) begin
+                rxc_payload_copied_q <= 1;
                 rxc_state_q <= RXC_PRIME;
-              else
+              end else begin
+                rxc_payload_copied_q <= 0;
                 rxc_state_q <= RXC_PULSE;
+              end
               if (reorder_hold_q) reorder_hold_q <= 0;
             end
           end
@@ -2570,8 +2632,15 @@ module p9_optical_transport_core #(
             end
           end
           RXC_PULSE: if (dp_rx_frame_ready) begin
+            receive_distance =
+                rx_pending_sequence[rxc_lane_q] - rxc_effective_base;
             dp_rx_frame_valid_q <= 1;
-            dp_rx_l1_valid_q <= rx_pending_l1[rxc_lane_q];
+            dp_rx_l1_valid_q <= rx_pending_l1[rxc_lane_q] &&
+                (rxc_payload_copied_q ||
+                 rx_pending_session[rxc_lane_q] !=
+                     (object_dual_direction_q ? object_rx_session_q :
+                                                object_session_q) ||
+                 receive_distance >= WINDOW_SIZE);
             dp_rx_session_q <= rx_pending_session[rxc_lane_q];
             dp_rx_sequence_q <= rx_pending_sequence[rxc_lane_q];
             dp_rx_path_q <= rx_pending_path[rxc_lane_q];
@@ -2579,6 +2648,7 @@ module p9_optical_transport_core #(
             dp_rx_payload_length_q <= rx_pending_length[rxc_lane_q];
             dp_rx_turnaround_q <= rx_pending_turnaround[rxc_lane_q];
             rx_pending[rxc_lane_q] <= 0;
+            rxc_payload_copied_q <= 0;
             rxc_state_q <= RXC_IDLE;
           end
           default: rxc_state_q <= RXC_IDLE;

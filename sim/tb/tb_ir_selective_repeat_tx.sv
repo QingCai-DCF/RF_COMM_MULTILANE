@@ -179,6 +179,37 @@ module tb_ir_selective_repeat_tx;
     check_expect(outstanding == 1 && tx_ack_base == 16'd1,
                  "old-base duplicate SACK preserves the live hole");
 
+    // Reclaiming sequence zero creates a bounded interval in which its RAM
+    // slot is free but the cumulative base has not yet advanced. Occupancy
+    // alone must never allow sequence 32 to reuse that slot while its distance
+    // from the registered base is still the full 32-frame window.
+    session_reset = 1'b1; @(posedge clk); #1; session_reset = 1'b0;
+    for (int entry = 0; entry < 32; entry++) allocate_one(100 + entry);
+    send_ack(session_epoch, 16'd0, 32'h0000_0001);
+    begin : wait_reclaim_before_base_advance
+      int cycles;
+      cycles = 0;
+      while (!(outstanding == 31 && tx_ack_base == 0) && cycles < 160) begin
+        @(posedge clk); #1; cycles = cycles + 1;
+      end
+      check_expect(outstanding == 31 && tx_ack_base == 0,
+                   "test observes reclaim before cumulative-base advance");
+    end
+    check_expect(!allocate_ready,
+                 "sequence span blocks modulo-slot reuse at full window distance");
+    begin : wait_base_advance
+      int cycles;
+      cycles = 0;
+      while (tx_ack_base != 1 && cycles < 160) begin
+        @(posedge clk); #1; cycles = cycles + 1;
+      end
+      check_expect(tx_ack_base == 1 && allocate_ready,
+                   "allocation reopens only after cumulative base advances");
+    end
+    allocate_one(132);
+    check_expect(allocated_sequence == 32,
+                 "first safe modulo-slot reuse allocates sequence 32");
+
     send_ack(session_epoch - 1, 16'd32, 32'd0);
     wait_counter(3, 1, 80);
     check_expect(stale_ack_count == 1, "stale-session ACK is rejected");

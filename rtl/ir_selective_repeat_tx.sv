@@ -95,6 +95,7 @@ module ir_selective_repeat_tx #(
   logic timer_exhausts;
 
   logic allocation_fire;
+  logic [15:0] allocation_span;
   logic attempt_fire;
   logic attempt_candidate_live;
   logic [PAYLOAD_META_WIDTH-1:0] attempt_payload_metadata;
@@ -168,10 +169,12 @@ module ir_selective_repeat_tx #(
   end
 
   assign allocation_fire = allocate_valid_i && allocate_ready_o;
+  assign allocation_span = seq_distance(tx_next_sequence_o, tx_ack_base_o);
   assign outstanding_high_watermark_o =
       (outstanding_count_o > outstanding_high_watermark_q) ?
       outstanding_count_o : outstanding_high_watermark_q;
   assign allocate_ready_o = (outstanding_count_o < WINDOW_SIZE) &&
+                            (allocation_span < WINDOW_SIZE) &&
                             !entry_valid[tx_next_sequence_o[INDEX_WIDTH-1:0]];
 
   assign scan_entry_index = attempt_scan_sequence[INDEX_WIDTH-1:0];

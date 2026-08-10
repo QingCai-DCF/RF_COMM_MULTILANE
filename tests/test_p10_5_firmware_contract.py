@@ -184,15 +184,50 @@ class P10_5FirmwareContractTests(unittest.TestCase):
             core,
         )
         self.assertIn(
-            "object_dual_direction_q &&\n                          "
-            "dp_rx_delivery_delayed_q",
+            "p10_5_credit_reopen_event",
             core,
         )
         self.assertIn(
-            "p10_5_ack_dirty_q <= dp_rx_accept_pulse;", core
+            "dp_rx_accept_pulse || dp_rx_delivery_delayed_q", core
         )
-        self.assertNotIn(
-            "wire p10_5_ack_state_changed", core
+        self.assertIn(
+            "P10_5_CONTROL_FALLBACK_GRACE_CYCLES", core
+        )
+        self.assertIn("p10_5_dirty_timeout_event", core)
+        self.assertIn(
+            "!object_dual_direction_q || !p10_5_ack_dirty_q", core
+        )
+
+    def test_piggyback_consumes_old_aggregation_events(self) -> None:
+        aggregator = (ROOT / "rtl/ir_ack_aggregator.sv").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("if (effective_piggyback_commit) begin", aggregator)
+        self.assertIn(
+            "pending_frames <= (rx_accept_i || control_event_i ||",
+            aggregator,
+        )
+        self.assertIn("end else if (ack_valid_o && ack_ready_i) begin", aggregator)
+
+    def test_window_boundary_never_admits_uncopied_payload(self) -> None:
+        tx = (ROOT / "rtl/ir_selective_repeat_tx.sv").read_text(
+            encoding="utf-8"
+        )
+        core = (ROOT / "rtl/p9_optical_transport_core.sv").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "allocation_span = seq_distance(tx_next_sequence_o, "
+            "tx_ack_base_o)",
+            tx,
+        )
+        self.assertIn("(allocation_span < WINDOW_SIZE)", tx)
+        self.assertIn("wire [15:0] rxc_effective_base", core)
+        self.assertIn("rxc_payload_copied_q", core)
+        self.assertIn(
+            "rxc_payload_copied_q ||\n                 "
+            "rx_pending_session[rxc_lane_q] !=",
+            core,
         )
 
 

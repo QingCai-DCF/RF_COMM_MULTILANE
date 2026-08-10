@@ -87,7 +87,24 @@ module ir_ack_aggregator #(
           timer_expiry_count_o <= 32'd0;
           ack_frames_sent_o <= 32'd0;
         end
-        if ((ack_valid_o && ack_ready_i) || effective_piggyback_commit) begin
+        if (effective_piggyback_commit) begin
+          // A P10.5 piggyback snapshots the live cumulative ACK/SACK/credit
+          // state at DATA-frame admission. It therefore covers every event
+          // accumulated before this edge, including an older presented
+          // control-only snapshot. Retaining those events would emit a
+          // redundant control ACK after nearly every piggyback and repeatedly
+          // interrupt the simultaneous opposite-direction DATA carrier. Only
+          // a receive/control event on this same edge is newer than the
+          // piggyback snapshot and must remain pending.
+          ack_valid_o <= 1'b0;
+          pending_frames <= (rx_accept_i || control_event_i ||
+                             direction_boundary_i) ?
+              {{(FRAME_COUNT_WIDTH-1){1'b0}}, 1'b1} : '0;
+          if (rx_accept_i)
+            aggregation_count_o <= aggregation_count_o + 1'b1;
+          delay_counter <= 32'd0;
+          ack_frames_sent_o <= ack_frames_sent_o + 1'b1;
+        end else if (ack_valid_o && ack_ready_i) begin
           ack_valid_o <= 1'b0;
           // pending_frames counts receive/control events that occurred after
           // the currently presented immutable ACK snapshot. They must survive

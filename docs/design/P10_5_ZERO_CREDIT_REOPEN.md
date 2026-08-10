@@ -47,31 +47,35 @@ after the immutable control header had been captured.
 For a live P10.5 RX context:
 
 1. RX acceptance marks the cumulative ACK state dirty;
-2. ordered AXI delivery is delayed by one PL cycle before it requests a
-   control snapshot,
-   so the snapshot observes the post-delivery base/SACK/credit values;
-3. a piggyback clears dirty only if no RX acceptance occurred on the capture
-   edge; a delivery cannot be lost because its delayed control request is
-   independent of the dirty flag;
-4. a control-only ACK clears dirty when its immutable header is captured, not
-   later when serialization begins; any intervening change therefore remains
-   pending;
-5. when peer credit is zero and no DATA can carry a piggyback, the delayed
-   delivery request forces a fresh control-only ACK and reopens the peer.
+2. ordered AXI delivery marks the live cumulative state dirty for the next
+   opposite-direction DATA piggyback; it does not force a control-only frame
+   after every fragment;
+3. a piggyback clears dirty only if no RX acceptance or ordered delivery
+   occurred on the capture edge; either same-edge change restarts the bounded
+   fallback timer;
+4. a zero-to-nonzero receiver-credit transition is detected from the
+   post-delivery state and forces a fresh cumulative snapshot, so stale zero
+   credit cannot deadlock both directions;
+5. a control-only ACK clears dirty when its immutable header is captured, not
+   later when serialization begins; any intervening change remains pending,
+   and the fallback scheduler gives reverse application DATA a bounded chance
+   to carry the snapshot first.
 
 The fix does not change `GLOBAL_PERMIT`, SD, Mode, final Txd kill, duty/stuck
 guards, lane-role masks, object admission, or the shutdown wrapper.
 
 ## Direct regression
 
-`tb_p10_5_dual_direction` now backpressures both AXI receive consumers until
+`tb_p10_5_dual_direction` backpressures both AXI receive consumers until
 both transmitted ACK streams advertise zero credit with all 32 reorder slots
 occupied. It then releases both consumers without admitting another optical
 DATA frame. PASS requires both control-only ACK counters to advance, both
 transmitters to resume, 8500 bytes to commit in each direction with exact byte
 equality, and `TB_P10_5_CREDIT_REOPEN=PASS`.
 
-The focused post-fix XSIM evidence is under
-`evidence/generated/p10_5_credit_reopen_xsim_v3`. Hardware acceptance remains
-pending a newly frozen artifact bundle and a new current-run authorization;
-the failed run above is immutable and receives no retroactive PASS.
+The original focused evidence remains under
+`evidence/generated/p10_5_credit_reopen_xsim_v3`. The later ACK/window
+remediation keeps this exact regression as a mandatory case. Hardware
+acceptance remains pending a newly frozen artifact bundle and a new
+current-run authorization; the failed run above is immutable and receives no
+retroactive PASS.

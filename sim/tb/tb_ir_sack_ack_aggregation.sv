@@ -3,6 +3,7 @@ module tb_ir_sack_ack_aggregation;
   logic clk=0; always #5 clk=~clk;
   logic rst_n, clear_counters, rx_accept, gap_blocked, control_event;
   logic direction_boundary, explicit_request, ack_valid, ack_ready;
+  logic piggyback_commit;
   logic [31:0] session_epoch, ack_session_epoch;
   logic [15:0] ack_base_in, ack_base_out, credit_in, credit_out, query_sequence;
   logic [31:0] bitmap_in, bitmap_out;
@@ -17,7 +18,7 @@ module tb_ir_sack_ack_aggregation;
   );
   ir_ack_aggregator #(
     .SACK_BITS(32), .FRAME_THRESHOLD(4), .MAX_DELAY_CYCLES(6),
-    .CREDIT_LOW_WATERMARK(2)
+    .CREDIT_LOW_WATERMARK(2), .P10_5_PIGGYBACK_CAPABLE(1'b1)
   ) aggregator (
     .clk, .rst_n, .clear_counters_i(clear_counters), .state_reset_i(1'b0),
     .rx_accept_i(rx_accept),
@@ -25,6 +26,7 @@ module tb_ir_sack_ack_aggregation;
     .sack_bitmap_i(bitmap_in), .sack_width_i(width_in), .receiver_credit_i(credit_in),
     .gap_blocked_i(gap_blocked), .control_event_i(control_event),
     .direction_boundary_i(direction_boundary), .explicit_request_i(explicit_request),
+    .piggyback_commit_i(piggyback_commit),
     .ack_valid_o(ack_valid), .ack_ready_i(ack_ready),
     .ack_session_epoch_o(ack_session_epoch), .ack_base_o(ack_base_out),
     .ack_bitmap_o(bitmap_out), .ack_width_o(width_out),
@@ -44,7 +46,8 @@ module tb_ir_sack_ack_aggregation;
 
   initial begin
     rst_n=0; clear_counters=0; rx_accept=0; gap_blocked=0; control_event=0;
-    direction_boundary=0; explicit_request=0; ack_ready=0; session_epoch=32'h55aa;
+    direction_boundary=0; explicit_request=0; ack_ready=0; piggyback_commit=0;
+    session_epoch=32'h55aa;
     ack_base_in=16'hfffe; bitmap_in=32'h0000_0005; width_in=6'd32;
     credit_in=16'd20; query_sequence=16'h0000;
     repeat(3) @(posedge clk); rst_n=1; @(posedge clk); #1;
@@ -83,6 +86,23 @@ module tb_ir_sack_ack_aggregation;
     check_expect(ack_valid, "low receiver credit triggers immediate cumulative ACK");
     consume_ack();
     check_expect(sent_count==4, "all aggregate ACKs complete once");
+
+    // A live P10.5 DATA piggyback covers every event accumulated before its
+    // admission edge. Those old events must not later regenerate a redundant
+    // control-only ACK. A same-edge RX event is newer than the snapshot and
+    // must still produce a later bounded ACK.
+    credit_in=16'd20; ack_base_in=16'h0200; bitmap_in=32'd0;
+    repeat(2) accept_frame();
+    piggyback_commit=1; @(posedge clk); #1; piggyback_commit=0;
+    repeat(7) @(posedge clk); #1;
+    check_expect(!ack_valid && sent_count==5,
+           "piggyback clears all older aggregation events");
+    rx_accept=1; piggyback_commit=1; @(posedge clk); #1;
+    rx_accept=0; piggyback_commit=0;
+    repeat(7) @(posedge clk); #1;
+    check_expect(ack_valid && sent_count==6,
+           "same-edge receive survives piggyback as a newer event");
+    consume_ack();
     $display("P8D_SACK_ENCODE_DECODE_PASS=1");
     $display("P8D_ACK_AGGREGATION_BOUNDED_DELAY_PASS=1");
     $display("TB_IR_SACK_ACK_AGGREGATION_PASS=1");
