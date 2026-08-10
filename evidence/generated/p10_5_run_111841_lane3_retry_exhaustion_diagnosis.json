@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-RUN-111841-LANE3-RETRY-EXHAUSTION-DIAGNOSIS",
+  "status": "FAIL_WITH_DIRECT_RAW_PHYSICAL_EVIDENCE",
+  "run_id": "p10_5_20260810T111841Z_e1f8c01a_4015142e_79607d01",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "artifact_source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+  "fixed_functional_bitstream_sha256": "4015142eb2a009d7924103b38c8b7fe61649d7da13c6ae354dff510438e3619d",
+  "rotating_functional_bitstream_sha256": "79607d0190d12c6160e0ff2d937a5ae0a8e208a85d0b5bd3f6f975de35b23205",
+  "failed_case": "oneplustwo_f1_rA",
+  "failed_case_masks": {
+    "active": "0xF",
+    "f_to_r": "0x1",
+    "r_to_f": "0xA"
+  },
+  "failure": {
+    "fixed_runtime_status": "0x104",
+    "rotating_runtime_status": "0x104",
+    "fixed_object_error": "0x50090004",
+    "rotating_object_error": "0x50090004",
+    "classification": "RETRY_EXHAUSTION",
+    "safety_fault": false,
+    "crc_or_sha_error": false,
+    "descriptor_leak": false
+  },
+  "direction_evidence": {
+    "F3_TO_R3": {
+      "status": "PASS_RAW_PHYSICAL_ONLY",
+      "source_case": "twoplusone_fA_r1",
+      "fixed_f3_physical_tx_count": 12847821,
+      "rotating_r3_raw_rx_count": 12847821
+    },
+    "R3_TO_F3": {
+      "status": "FAIL_NO_RX_ACTIVITY",
+      "source_case": "oneplustwo_f1_rA",
+      "rotating_r3_physical_tx_count": 427200,
+      "fixed_f3_raw_rx_count": 0
+    },
+    "R1_TO_F1": {
+      "status": "PARTIAL_RAW_ACTIVITY",
+      "source_case": "oneplustwo_f1_rA",
+      "rotating_r1_physical_tx_count": 496597,
+      "fixed_f1_raw_rx_count": 429044
+    }
+  },
+  "frozen_transport_state": {
+    "fixed": {
+      "tx_ack_base": 151,
+      "tx_next_sequence": 182,
+      "tx_outstanding": 31,
+      "tx_retries": 747,
+      "tx_timeouts": 748,
+      "tx_retry_exhausted": 1
+    },
+    "rotating": {
+      "tx_ack_base": 272,
+      "tx_next_sequence": 303,
+      "tx_outstanding": 17,
+      "tx_retries": 456,
+      "tx_timeouts": 457,
+      "tx_retry_exhausted": 1
+    }
+  },
+  "evidence_sha256": {
+    "fixed_fault_snapshot_binary": "b6f5745b153054c9eaf638ec5b1791f301bb558324e56cc907207a1fc3f20b6b",
+    "rotating_fault_snapshot_binary": "54d81095d943e6010459604c8d5cf7a72199e9bda72c3a0cd4acf7bba482a2a4",
+    "f3_to_r3_fixed_result": "a64839b81be00d6c00a6b43230179fe072f43ba777ffba1db22d67d5c3cafbd2",
+    "f3_to_r3_rotating_result": "9fa7b8dab6f2354cbb5187bfe940463192b3a00cf2ac62bfe5885af0656a14a6",
+    "r3_to_f3_fixed_result": "47393753724463966f0a7e7cea0e4548eb6ec6697075d9a21a3989f8e563d3d2",
+    "r3_to_f3_rotating_result": "3936d3e66dae4d4785edef2d664d9ae851ea8570ea036de298b7bee29a713af3",
+    "run_manifest": "c00138ab94fcee802ec66a05b3d2bb62a88abcb6735bd81fa58a3e3a6b2fd8f1"
+  },
+  "shutdown": {
+    "fixed": "PASS",
+    "rotating": "PASS",
+    "shutdown_exit": 0,
+    "tfdu_shutdown_programmed": true
+  },
+  "boundary": "Direct FPGA raw counters prove the direction-level result for this exact stationary artifact/run only; they are not an external electrical or optical measurement and do not establish a permanent module defect.",
+  "next_action": "Issue a new immutable authorization and use the complete P10.5 runner. Its early 1+1 matrix is the bounded fresh lane-matching recheck; continue the campaign only if it passes."
+}
