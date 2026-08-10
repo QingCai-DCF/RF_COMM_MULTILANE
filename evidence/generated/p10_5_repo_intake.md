@@ -2,7 +2,7 @@
 
 - Status: `PASS`
 - branch: `p10.5/dual-direction-2plus2`
-- head: `3c2f36a86b55d648e316b31d9a34da9dad601531`
+- head: `e1f8c01ab084571627380367422f0bda2c0aed87`
 - base_tag: `p10.4-autonomous-4lane-hardening-closed`
 - base_commit: `bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676`
 - hardware_actions_executed: `False`

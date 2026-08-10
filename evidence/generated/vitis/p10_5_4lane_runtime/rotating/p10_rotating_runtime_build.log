@@ -504,17 +504,17 @@ rtfiles -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
 
 "Running Make libs in ps7_cortexa9_0/libsrc/scuwdt_v2_4/src"
 
+"Running Make libs in ps7_cortexa9_0/libsrc/standalone_v8_1/src"
+
 make -C ps7_cortexa9_0/libsrc/scuwdt_v2_4/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" "A
 RCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostart
 files -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
 
-"Running Make libs in ps7_cortexa9_0/libsrc/standalone_v8_1/src"
+"Running Make libs in ps7_cortexa9_0/libsrc/uartps_v3_12/src"
 
 make -C ps7_cortexa9_0/libsrc/standalone_v8_1/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as
 " "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nos
 tartfiles -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
-
-"Running Make libs in ps7_cortexa9_0/libsrc/uartps_v3_12/src"
 
 make -C ps7_cortexa9_0/libsrc/uartps_v3_12/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" "
 ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostar

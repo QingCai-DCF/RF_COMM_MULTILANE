@@ -8,8 +8,10 @@
       "config/generated/p10_5_capability_table.json": "0a1b4ff9812181e88740b71fe6ce1461764f2a981772088a11cfdf227d9c2560",
       "config/p10_5_dual_direction.yaml": "24f200aca983191633f87d0974fb4034cbdbaa88c5c45a2742172e9744304d46",
       "docs/design/P10_5_CONTROL_ACK_COLLISION_AVOIDANCE.md": "6402016e736e1b808f4a375532469fec4e4618ff170ca88e6351ee6de0493463",
+      "docs/design/P10_5_DIRECTION_ABORT_ACK_LIVENESS.md": "8d0c515b9bb741071fb8dd0c8eb76d4ebf3cf459f3b33d11c31b1718fa8eb5c8",
       "docs/design/P10_5_DUAL_DIRECTION_CAPABILITY.md": "5386a1e2a2dc6311a51bc5fa7a8754531942fde5778e884d95cad9d3e8fa3cd0",
       "evidence/generated/p10_5_ack_collision_diagnosis.json": "be06fb105c23386f7ae8045c9e0a90ad4d7288a4b9b708fcf00b6872bd58f4d4",
+      "evidence/generated/p10_5_direction_abort_ack_liveness_diagnosis.json": "47a15fe2570bf80567da6907bedcec4cfa1a8383a92196afd715b4f75619cbf4",
       "scripts/generate_p10_5_config.py": "7b5a91d74f88514f0c1d6f16fad17b3405856e3ab207ac3c1f601d10b1aba48e",
       "scripts/model_p10_5_dual_direction.py": "52753a17cbe605592cd8ead556907685087896f60cbf0815ec195fbb13abe3e6",
       "software/ps_driver/p10_5_dual_direction_config.h": "c3ff86ca8bc5c46ba7562751bafa8454fcd093f60ec9fbbcf2173212ab86aac7"
@@ -18,7 +20,7 @@
   "blocking_condition": "P10-SAFETY-POWERUP-001",
   "campaign": "p10_5",
   "current_run_hardware_authorization": false,
-  "generated_at_utc": "2026-08-10T06:39:20.876219+00:00",
+  "generated_at_utc": "2026-08-10T10:05:54.506782+00:00",
   "hardware_actions_executed": false,
   "hardware_admission": false,
   "native_crypto_protocol_test": "PASS",
@@ -29,13 +31,13 @@
       "artifacts": {
         "bsp": {
           "bytes": 1970295,
-          "path": "artifacts/p10_5/eefca40c115babbfc08f9c06c6bb118534641c04/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip",
+          "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip",
           "read_only": true,
           "sha256": "9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a"
         },
         "elf": {
           "bytes": 665316,
-          "path": "artifacts/p10_5/eefca40c115babbfc08f9c06c6bb118534641c04/05b6b416a420568760ec02b276b6dfa5afd045c79079edf79c8a888c7611455a/p10_fixed_runtime.elf",
+          "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/05b6b416a420568760ec02b276b6dfa5afd045c79079edf79c8a888c7611455a/p10_fixed_runtime.elf",
           "read_only": true,
           "sha256": "05b6b416a420568760ec02b276b6dfa5afd045c79079edf79c8a888c7611455a"
         }
@@ -70,7 +72,7 @@
       },
       "role": "fixed",
       "role_value": 1,
-      "source_bundle_sha256": "fa438c8ab59a24dbe8c0a52735ec0592178ad04bb8f998c372b47c0151d88b3e",
+      "source_bundle_sha256": "cfcef6c04cf8811e649162bcdbc79aba1505649fadfafe9024ef8609016f17b0",
       "source_sha256": {
         "board_profiles/ax7020_fixed_4lane/p10_5_runtime_role.h": "1485b71b3fa7be2fe92cebee276592adefd550d46a53fae12689f1b27de576eb",
         "config/generated/p10_5_capability_table.json": "0a1b4ff9812181e88740b71fe6ce1461764f2a981772088a11cfdf227d9c2560",
@@ -84,15 +86,17 @@
         "docs/design/P10_3_FIRST_FAULT_FORENSICS.md": "5cd09cce4162539becdb0a8b6018de81d4390afaf86db7bcedfb542d58207371",
         "docs/design/P10_4_CONNECTOR_ACK_RX_QUARANTINE.md": "4752f5ce56e3c876322001080a0cb95fe631f94a24e572c1e605386799a1d263",
         "docs/design/P10_5_CONTROL_ACK_COLLISION_AVOIDANCE.md": "6402016e736e1b808f4a375532469fec4e4618ff170ca88e6351ee6de0493463",
+        "docs/design/P10_5_DIRECTION_ABORT_ACK_LIVENESS.md": "8d0c515b9bb741071fb8dd0c8eb76d4ebf3cf459f3b33d11c31b1718fa8eb5c8",
         "docs/design/P10_5_DUAL_DIRECTION_CAPABILITY.md": "5386a1e2a2dc6311a51bc5fa7a8754531942fde5778e884d95cad9d3e8fa3cd0",
         "docs/hardware/P10_3_AS_WIRED_RECORD.md": "669ba80ec21b0af1cb19e0ffeb8a03f4dae8921452df1ee966deca3f20f5985f",
         "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md": "7f8efdfc03662fa668a042ace129e2592747d8fc92784d5566ba11f91b98bfc8",
         "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json": "ae082a2f1c0a6d09bf5cbeaba1010582560df1cd7defac489c35ca34712c5e48",
         "evidence/generated/p10_5_ack_collision_diagnosis.json": "be06fb105c23386f7ae8045c9e0a90ad4d7288a4b9b708fcf00b6872bd58f4d4",
-        "evidence/generated/vivado/p10_5_4lane/fixed/p10_ax7020_fixed_functional.xsa": "e4e70c54a330ba144f399efacb5250275e38ae09cf6284b913443c11700a566c",
+        "evidence/generated/p10_5_direction_abort_ack_liveness_diagnosis.json": "47a15fe2570bf80567da6907bedcec4cfa1a8383a92196afd715b4f75619cbf4",
+        "evidence/generated/vivado/p10_5_4lane/fixed/p10_ax7020_fixed_functional.xsa": "1175a0be9dfba097592d7c9dfcf1a989df1a06134af7dbf4c30821a4dae62a30",
         "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
         "scripts/archive_p10_fault_forensics.py": "45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c",
-        "scripts/build_p10_ps_runtime.py": "0ff2964b5f7fd071dddfbcec26b0dba58510147422ebd31fc11d958c9ffcc985",
+        "scripts/build_p10_ps_runtime.py": "9d20f9c0a91f0fb96ede5c42bc44e907e2a8a0308a503f933748f8a2e30f5c20",
         "scripts/finalize_p10_3f_offline.py": "126a1b8dfdbcaf26e87a1e0880217eb2fd60c524d334d64fa1b47ee67a55a9f3",
         "scripts/freeze_p10_3f_artifacts.py": "000c2225a8a4885647d471368114d4f07110c795804d86b84f4cf12609392d28",
         "scripts/generate_p10_5_config.py": "7b5a91d74f88514f0c1d6f16fad17b3405856e3ab207ac3c1f601d10b1aba48e",
@@ -131,26 +135,26 @@
       },
       "xsa": {
         "path": "evidence/generated/vivado/p10_5_4lane/fixed/p10_ax7020_fixed_functional.xsa",
-        "sha256": "e4e70c54a330ba144f399efacb5250275e38ae09cf6284b913443c11700a566c"
+        "sha256": "1175a0be9dfba097592d7c9dfcf1a989df1a06134af7dbf4c30821a4dae62a30"
       }
     },
     {
       "artifacts": {
         "bsp": {
           "bytes": 1970378,
-          "path": "artifacts/p10_5/eefca40c115babbfc08f9c06c6bb118534641c04/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip",
+          "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip",
           "read_only": true,
           "sha256": "48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c"
         },
         "elf": {
           "bytes": 666164,
-          "path": "artifacts/p10_5/eefca40c115babbfc08f9c06c6bb118534641c04/a16770e195f30d9a51a8c0693e6b31cf0b340cc01817923d6fd9404793c68082/p10_rotating_runtime.elf",
+          "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/a16770e195f30d9a51a8c0693e6b31cf0b340cc01817923d6fd9404793c68082/p10_rotating_runtime.elf",
           "read_only": true,
           "sha256": "a16770e195f30d9a51a8c0693e6b31cf0b340cc01817923d6fd9404793c68082"
         }
       },
       "build_log": "evidence/generated/vitis/p10_5_4lane_runtime/rotating/p10_rotating_runtime_build.log",
-      "build_log_sha256": "d23b94158a418c7fef6f27b1488b50b173ec2878acc4e478fd2f5b835b5c587d",
+      "build_log_sha256": "efc9af692c598d04e440e3ca89077c8140601b2cebe74fa0258fd964a89df9bd",
       "errors": [],
       "inspection": {
         "elf_end_address": "0x0001E0A0",
@@ -179,7 +183,7 @@
       },
       "role": "rotating",
       "role_value": 2,
-      "source_bundle_sha256": "e873a7c5050bfc1659557faf39297492ec88a823fd1f8d9c44604fa663fda8c4",
+      "source_bundle_sha256": "d342e8cac688f2a1b53e171bdd59de7376d9c33e2b85ccdc23d2cb8ef6930d3a",
       "source_sha256": {
         "board_profiles/ax7020_rotating_4lane/p10_5_runtime_role.h": "d3b3f9369a7110436b949f5df69fe9312e519c9618dc0c0541eea7a917bf64c5",
         "config/generated/p10_5_capability_table.json": "0a1b4ff9812181e88740b71fe6ce1461764f2a981772088a11cfdf227d9c2560",
@@ -193,15 +197,17 @@
         "docs/design/P10_3_FIRST_FAULT_FORENSICS.md": "5cd09cce4162539becdb0a8b6018de81d4390afaf86db7bcedfb542d58207371",
         "docs/design/P10_4_CONNECTOR_ACK_RX_QUARANTINE.md": "4752f5ce56e3c876322001080a0cb95fe631f94a24e572c1e605386799a1d263",
         "docs/design/P10_5_CONTROL_ACK_COLLISION_AVOIDANCE.md": "6402016e736e1b808f4a375532469fec4e4618ff170ca88e6351ee6de0493463",
+        "docs/design/P10_5_DIRECTION_ABORT_ACK_LIVENESS.md": "8d0c515b9bb741071fb8dd0c8eb76d4ebf3cf459f3b33d11c31b1718fa8eb5c8",
         "docs/design/P10_5_DUAL_DIRECTION_CAPABILITY.md": "5386a1e2a2dc6311a51bc5fa7a8754531942fde5778e884d95cad9d3e8fa3cd0",
         "docs/hardware/P10_3_AS_WIRED_RECORD.md": "669ba80ec21b0af1cb19e0ffeb8a03f4dae8921452df1ee966deca3f20f5985f",
         "docs/hardware/P10_3_AX7020_ACTIVITY_LED_DESIGN.md": "7f8efdfc03662fa668a042ace129e2592747d8fc92784d5566ba11f91b98bfc8",
         "evidence/generated/p10_4_crc_bad_root_cause_diagnosis.json": "ae082a2f1c0a6d09bf5cbeaba1010582560df1cd7defac489c35ca34712c5e48",
         "evidence/generated/p10_5_ack_collision_diagnosis.json": "be06fb105c23386f7ae8045c9e0a90ad4d7288a4b9b708fcf00b6872bd58f4d4",
-        "evidence/generated/vivado/p10_5_4lane/rotating/p10_ax7020_rotating_functional.xsa": "85f6a38c95756ac635fb681086f3641041378f9f9ecd773539fa1aa079a4e93e",
+        "evidence/generated/p10_5_direction_abort_ack_liveness_diagnosis.json": "47a15fe2570bf80567da6907bedcec4cfa1a8383a92196afd715b4f75619cbf4",
+        "evidence/generated/vivado/p10_5_4lane/rotating/p10_ax7020_rotating_functional.xsa": "9a341a226b97d508de354e3e5b2552bcf0f6ef26258a56c8fb9c0b6faf1806c7",
         "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
         "scripts/archive_p10_fault_forensics.py": "45fc932350b609413a7c469c6cad27c8394ff6786804bee33081926e2ca87d3c",
-        "scripts/build_p10_ps_runtime.py": "0ff2964b5f7fd071dddfbcec26b0dba58510147422ebd31fc11d958c9ffcc985",
+        "scripts/build_p10_ps_runtime.py": "9d20f9c0a91f0fb96ede5c42bc44e907e2a8a0308a503f933748f8a2e30f5c20",
         "scripts/finalize_p10_3f_offline.py": "126a1b8dfdbcaf26e87a1e0880217eb2fd60c524d334d64fa1b47ee67a55a9f3",
         "scripts/freeze_p10_3f_artifacts.py": "000c2225a8a4885647d471368114d4f07110c795804d86b84f4cf12609392d28",
         "scripts/generate_p10_5_config.py": "7b5a91d74f88514f0c1d6f16fad17b3405856e3ab207ac3c1f601d10b1aba48e",
@@ -240,12 +246,12 @@
       },
       "xsa": {
         "path": "evidence/generated/vivado/p10_5_4lane/rotating/p10_ax7020_rotating_functional.xsa",
-        "sha256": "85f6a38c95756ac635fb681086f3641041378f9f9ecd773539fa1aa079a4e93e"
+        "sha256": "9a341a226b97d508de354e3e5b2552bcf0f6ef26258a56c8fb9c0b6faf1806c7"
       }
     }
   ],
   "schema_version": 1,
-  "source_commit": "eefca40c115babbfc08f9c06c6bb118534641c04",
+  "source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
   "source_worktree_dirty": false,
   "status": "PASS",
   "test_id": "P10_5-AX7020-DUAL-DIRECTION-4LANE-PS-RUNTIME-BUILD"

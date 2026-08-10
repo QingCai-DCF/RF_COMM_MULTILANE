@@ -10,9 +10,14 @@
   "control_only_ack_fallback": true,
   "current_run_hardware_authorization": false,
   "deadlock": 0,
+  "direction_abort_ack_liveness_diagnosis": {
+    "bytes": 6358,
+    "path": "evidence/generated/p10_5_direction_abort_ack_liveness_diagnosis.json",
+    "sha256": "47a15fe2570bf80567da6907bedcec4cfa1a8383a92196afd715b4f75619cbf4"
+  },
   "errors": [],
   "fallback_xsim": "PASS",
-  "generated_at_utc": "2026-08-10T06:57:53.634846+00:00",
+  "generated_at_utc": "2026-08-10T10:07:42.983616+00:00",
   "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
   "hardware_actions_executed": false,
   "model": {
@@ -32,7 +37,7 @@
   "piggyback_enable": true,
   "piggyback_xsim": "PASS",
   "schema_version": 1,
-  "source_commit": "3c2f36a86b55d648e316b31d9a34da9dad601531",
+  "source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
   "starvation_limit_cycles": 64000,
   "status": "PASS",
   "test_id": "P10_5-ACK-OFFLINE"
