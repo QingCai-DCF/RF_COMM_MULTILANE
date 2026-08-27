@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-R3-B0011-AUTHORIZATION-VALIDATION-PREFLIGHT",
+  "status": "FAIL_PRE_HARDWARE",
+  "run_id": "p10_5_20260827T101906Z_e1f8c01a_4015142e_79607d01",
+  "authorization_commit": "bd0720885dd35c5d85fc93ce996597815875cc8f",
+  "authorization_sha256": "dd895343864c6932fda6c7a92d6e0c86263698d44fb697b5696a5a33e63307c8",
+  "module_binding": {
+    "R3": "B0011"
+  },
+  "hardware_actions_executed": false,
+  "errors": [
+    "offline input changed: actual_wiring",
+    "offline input changed: authorization_builder",
+    "offline input changed: campaign_runner",
+    "offline input changed: module_inventory"
+  ],
+  "root_cause": "The authorization copied the prior artifact freeze's offline-input hashes even though the replacement identity records and audited host harness had legitimately changed after the target artifacts were built.",
+  "remediation": "Refreeze the byte-identical target artifacts against the current committed module identity records and host harness. Permit only semantic module-identity metadata changes; electrical wiring, topology, target source, constraints, firmware, register-map, and protocol configuration remain fail-closed.",
+  "shutdown_required": false,
+  "shutdown_reason": "Validation stopped before hw_server, JTAG, programming, ELF launch, or TFDU activity."
+}

@@ -1,4 +1,5 @@
 import hashlib
+import subprocess
 import struct
 import sys
 import tempfile
@@ -93,6 +94,10 @@ class P10_5HardwareTests(unittest.TestCase):
 
     def test_post_artifact_harness_allowlist_is_fail_closed(self) -> None:
         for path in (
+                "config/project_state.json",
+                "docs/hardware/P10_3_AS_WIRED_RECORD.md",
+                "reports/lane3_connectivity_probe_20260810T114211Z.md",
+                "scripts/create_p10_5_authorization.py",
                 "scripts/run_p10_5_hardware.py",
                 "tests/test_p10_5_hardware.py",
                 "evidence/hardware/p10_5/run/final.json",
@@ -105,6 +110,105 @@ class P10_5HardwareTests(unittest.TestCase):
                 "config/p10_5_dual_direction.yaml",
                 "scripts/build_p10_5_functional.py"):
             self.assertFalse(freezer.post_artifact_path_allowed(path), path)
+
+    def test_post_artifact_module_identity_only_change_is_admissible(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            wiring = root / "config/hardware/p10_3_actual_wiring.yaml"
+            inventory = root / "config/hardware/tfdu_module_inventory.yaml"
+            wiring.parent.mkdir(parents=True)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "config", "user.email", "test@example.invalid"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "config", "user.name", "P10.5 test"],
+                           cwd=root, check=True)
+            wiring.write_text(
+                "schema_version: 1\n"
+                "status: OLD\n"
+                "module_positions:\n"
+                "  R3: {endpoint: rotating, connector: J11, position: B, lane: 3, small_board_id: B0025}\n"
+                "signal_positions:\n"
+                "  B: {Mode: 22, SD: 24, Rxd: 26, Txd: 28}\n",
+                encoding="utf-8")
+            inventory.write_text(
+                "schema_version: 2\n"
+                "status: OLD\n"
+                "p10_3_current_installation:\n"
+                "  active_modules: [R3]\n"
+                "  lane_pairs: {lane3: F3-R3}\n"
+                "  old_f1_active: false\n"
+                "  old_f1_status: QUARANTINED_NOT_ACCEPTED\n"
+                "  modules:\n"
+                "    R3: {small_board_id: B0025, endpoint: 'AX7020-R/JTAG:210512180081', position: J11-B, inventory_status: OLD}\n",
+                encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            subprocess.run(["git", "commit", "-q", "-m", "before"],
+                           cwd=root, check=True)
+            before = subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+            wiring.write_text(wiring.read_text(encoding="utf-8")
+                              .replace("status: OLD", "status: PENDING")
+                              .replace("B0025", "B0011"), encoding="utf-8")
+            inventory.write_text(inventory.read_text(encoding="utf-8")
+                                 .replace("status: OLD", "status: PENDING")
+                                 .replace("B0025", "B0011")
+                                 .replace("inventory_status: OLD",
+                                          "inventory_status: PENDING"),
+                                 encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            subprocess.run(["git", "commit", "-q", "-m", "after"],
+                           cwd=root, check=True)
+            after = subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+            original_root = freezer.ROOT
+            freezer.ROOT = root
+            try:
+                changed, disallowed = freezer.post_artifact_changes(before, after)
+            finally:
+                freezer.ROOT = original_root
+        self.assertEqual(changed, [
+            "config/hardware/p10_3_actual_wiring.yaml",
+            "config/hardware/tfdu_module_inventory.yaml",
+        ])
+        self.assertEqual(disallowed, [])
+
+    def test_post_artifact_module_record_rejects_wiring_change(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            wiring = root / "config/hardware/p10_3_actual_wiring.yaml"
+            wiring.parent.mkdir(parents=True)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "config", "user.email", "test@example.invalid"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "config", "user.name", "P10.5 test"],
+                           cwd=root, check=True)
+            wiring.write_text(
+                "schema_version: 1\n"
+                "module_positions:\n"
+                "  R3: {endpoint: rotating, connector: J11, position: B, lane: 3, small_board_id: B0025}\n"
+                "signal_positions:\n"
+                "  B: {Mode: 22, SD: 24, Rxd: 26, Txd: 28}\n",
+                encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            subprocess.run(["git", "commit", "-q", "-m", "before"],
+                           cwd=root, check=True)
+            before = subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+            wiring.write_text(wiring.read_text(encoding="utf-8")
+                              .replace("Mode: 22", "Mode: 23"), encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            subprocess.run(["git", "commit", "-q", "-m", "after"],
+                           cwd=root, check=True)
+            after = subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+            original_root = freezer.ROOT
+            freezer.ROOT = root
+            try:
+                _, disallowed = freezer.post_artifact_changes(before, after)
+            finally:
+                freezer.ROOT = original_root
+        self.assertEqual(disallowed,
+                         ["config/hardware/p10_3_actual_wiring.yaml"])
 
     def test_result_parser_tail_and_capability_aggregation(self) -> None:
         words = [0] * 512

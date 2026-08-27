@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import os
@@ -12,6 +13,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 import run_p10_5_hardware as campaign
 
@@ -59,14 +62,22 @@ OFFLINE_INPUTS = {
 # constraints, board configuration, register-map, build-script, or other path
 # change remains fail-closed and requires a new complete artifact build.
 POST_ARTIFACT_ALLOWED_EXACT = {
+    "config/project_state.json",
     "config/p10_5_current_run_hardware_authorization.json",
     "config/project_requirements.yaml",
     "docs/REQUIREMENT_TRACEABILITY_MATRIX.md",
+    "docs/hardware/P10_3_AS_WIRED_RECORD.md",
+    "scripts/create_p10_5_authorization.py",
     "scripts/freeze_p10_5_artifacts.py",
     "scripts/run_p10_5_hardware.py",
     "tests/test_p10_5_hardware.py",
 }
-POST_ARTIFACT_ALLOWED_PREFIXES = ("artifacts/p10_5/", "evidence/")
+POST_ARTIFACT_ALLOWED_PREFIXES = (
+    "artifacts/p10_5/", "evidence/", "reports/")
+MODULE_IDENTITY_RECORD_PATHS = {
+    "config/hardware/p10_3_actual_wiring.yaml",
+    "config/hardware/tfdu_module_inventory.yaml",
+}
 TCLSH = Path(r"D:\Xilinx\Vivado\2023.1\tps\win64\git-2.16.2\mingw64\bin\tclsh.exe")
 GATES = {
     "p10_5_runner_unit": [sys.executable, "-m", "unittest", "tests.test_p10_5_hardware"],
@@ -121,14 +132,110 @@ def post_artifact_path_allowed(path: str) -> bool:
         for prefix in POST_ARTIFACT_ALLOWED_PREFIXES)
 
 
+def _yaml_at(commit: str, path: str) -> dict[str, Any]:
+    text = subprocess.check_output(
+        ["git", "show", f"{commit}:{path}"], cwd=ROOT, text=True,
+        encoding="utf-8", errors="strict")
+    value = yaml.safe_load(text)
+    if not isinstance(value, dict):
+        raise ValueError(f"YAML root is not a mapping: {path}")
+    return value
+
+
+def _actual_wiring_target_projection(value: dict[str, Any]) -> dict[str, Any]:
+    projected = copy.deepcopy(value)
+    for key in ("status", "recorded_at_local", "user_source"):
+        projected.pop(key, None)
+    for module in projected.get("module_positions", {}).values():
+        if isinstance(module, dict):
+            module.pop("small_board_id", None)
+    declaration = projected.get("physical_state_declaration", {})
+    if isinstance(declaration, dict):
+        for key in (
+                "pre_run_user_module_replacements",
+                "latest_pre_run_user_module_replacement", "replacement_source",
+                "replacement_power_state", "codex_physical_action_for_replacement"):
+            declaration.pop(key, None)
+    return projected
+
+
+def _module_inventory_target_projection(value: dict[str, Any]) -> dict[str, Any]:
+    projected = copy.deepcopy(value)
+    for key in ("status", "last_updated_at_utc", "quarantine",
+                "pending_electronic_intake", "evidence"):
+        projected.pop(key, None)
+    for key in list(projected):
+        if "_replacement_" in key:
+            projected.pop(key, None)
+    installation = projected.get("p10_3_current_installation", {})
+    if isinstance(installation, dict):
+        installation.pop("verification", None)
+        for module in installation.get("modules", {}).values():
+            if isinstance(module, dict):
+                module.pop("small_board_id", None)
+                module.pop("inventory_status", None)
+    return projected
+
+
+def _module_binding(value: dict[str, Any], path: str) -> dict[str, str]:
+    if path.endswith("p10_3_actual_wiring.yaml"):
+        modules = value.get("module_positions", {})
+    else:
+        installation = value.get("p10_3_current_installation", {})
+        modules = installation.get("modules", {}) if isinstance(installation, dict) else {}
+    if not isinstance(modules, dict) or not modules:
+        raise ValueError(f"module binding unavailable: {path}")
+    binding = {
+        str(name): str(item["small_board_id"])
+        for name, item in modules.items()
+        if isinstance(item, dict) and item.get("small_board_id")
+    }
+    if set(binding) != set(map(str, modules)) or len(set(binding.values())) != len(binding):
+        raise ValueError(f"module binding is incomplete or non-unique: {path}")
+    return binding
+
+
+def _module_identity_records_allowed(source: str, head: str,
+                                     changed: list[str]) -> bool:
+    relevant = MODULE_IDENTITY_RECORD_PATHS.intersection(changed)
+    if not relevant:
+        return True
+    try:
+        before = {path: _yaml_at(source, path) for path in relevant}
+        after = {path: _yaml_at(head, path) for path in relevant}
+        projections = {
+            "config/hardware/p10_3_actual_wiring.yaml":
+                _actual_wiring_target_projection,
+            "config/hardware/tfdu_module_inventory.yaml":
+                _module_inventory_target_projection,
+        }
+        if any(projections[path](before[path]) != projections[path](after[path])
+               for path in relevant):
+            return False
+        current_records = {
+            path: _yaml_at(head, path) for path in MODULE_IDENTITY_RECORD_PATHS}
+        bindings = [_module_binding(current_records[path], path)
+                    for path in sorted(MODULE_IDENTITY_RECORD_PATHS)]
+        return bindings[0] == bindings[1]
+    except (KeyError, OSError, subprocess.CalledProcessError,
+            UnicodeError, ValueError, yaml.YAMLError):
+        return False
+
+
 def post_artifact_changes(source: str, head: str) -> tuple[list[str], list[str]]:
     changed = subprocess.check_output(
         ["git", "diff", "--name-only", "--diff-filter=ACDMRTUXB",
          f"{source}..{head}"], cwd=ROOT, text=True
     ).splitlines()
     changed = [path.replace("\\", "/") for path in changed if path]
-    disallowed = [path for path in changed
-                  if not post_artifact_path_allowed(path)]
+    identity_records_allowed = _module_identity_records_allowed(
+        source, head, changed)
+    disallowed = [
+        path for path in changed
+        if not post_artifact_path_allowed(path)
+        and not (path in MODULE_IDENTITY_RECORD_PATHS
+                 and identity_records_allowed)
+    ]
     return changed, disallowed
 
 
