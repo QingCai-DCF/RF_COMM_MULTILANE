@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-DUAL-SHUTDOWN-ATOMIC-PREFLIGHT-REMEDIATION",
+  "status": "OFFLINE_VERIFIED",
+  "scope": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
+  "trigger": {
+    "failed_run_ids": [
+      "p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01",
+      "p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01"
+    ],
+    "fixed_target": "210249855178",
+    "rotating_target": "210512180081",
+    "observed_fixed_target_count": 1,
+    "observed_rotating_target_count": 0,
+    "campaign_stage_count_executed": 0,
+    "tx_executed": false
+  },
+  "diagnosis": {
+    "root_cause": "The dual-shutdown Tcl validated and programmed the fixed endpoint before validating that the rotating endpoint was present. A missing rotating JTAG target therefore caused a safe but unnecessary one-sided fixed shutdown programming action before the overall dual-target preflight failed.",
+    "safety_impact": "No transmitting bitstream was programmed and no TFDU TX was executed. Fixed shutdown was verified; rotating shutdown remained unconfirmable because its exact JTAG target was absent.",
+    "evidence_semantics_gap": "The final campaign summary collapsed per-endpoint shutdown results into one aggregate result, losing fixed=PASS and rotating=FAIL detail."
+  },
+  "remediation": {
+    "atomic_dual_target_preflight": "Both exact target paths, serials and xc7z020 device topologies must pass preflight before either shutdown bitstream is programmed.",
+    "fail_closed_behavior": "If either preflight fails, neither endpoint is programmed, both shutdown result fields are FAIL, TFDU_SHUTDOWN_PROGRAMMED is 0, and no campaign stage may start.",
+    "runtime_binding": "The shutdown Tcl path and SHA256 are now included in authorization host_runtime_inputs and immutable artifact-freeze offline_inputs.",
+    "per_endpoint_summary": "Final evidence preserves fixed and rotating shutdown results independently while retaining a strict combined all_shutdown gate."
+  },
+  "changed_inputs": {
+    "shutdown_tcl": {
+      "path": "scripts/hw/p10_program_dual_shutdown.tcl",
+      "sha256": "193759faff07e32f0efd15b281f777594290afb95ef9c980440a5cdc6d592b64"
+    },
+    "campaign_runner": {
+      "path": "scripts/run_p10_5_hardware.py",
+      "sha256": "4ffe9b657c1b8274a458e5c8d8ee223765aae6f61e3540f09fd8d0ae24d5c8e5"
+    },
+    "authorization_builder": {
+      "path": "scripts/create_p10_5_authorization.py",
+      "sha256": "a406fe0807e86c3695fc16b8b2c4ab5d33b9f3a4cc0a1dae4f517a74881db1ae"
+    },
+    "artifact_freezer": {
+      "path": "scripts/freeze_p10_5_artifacts.py",
+      "sha256": "a4044b217f2a01e5b44e3b85b95fac680ddcf7e69f09a6406788cf7b87ae5dba"
+    },
+    "regression_tests": {
+      "path": "tests/test_p10_5_hardware.py",
+      "sha256": "78b8a767c2d6f0e64da5d6299bdc83cc5e1c129ba3ac5bfcbcfc3edc98b02fa8"
+    }
+  },
+  "test_driven_evidence": {
+    "atomic_preflight_red": "With only the fixed target stubbed as present, the original script logged PROGRAM xc7z020_1.",
+    "atomic_preflight_green": "With the same one-target stub, the remediated script logs no PROGRAM call and emits TFDU_SHUTDOWN_PROGRAMMED=0, SHUTDOWN_FIXED=FAIL and SHUTDOWN_ROTATING=FAIL.",
+    "shutdown_binding_red": "shutdown_tcl was absent from authorization host_runtime_inputs and freeze offline_inputs.",
+    "shutdown_binding_green": "shutdown_tcl is present in both bindings and its post-artifact edit path is exact-allowlisted for immutable harness refreeze.",
+    "per_endpoint_summary_red": "A fixed PASS plus rotating FAIL aggregate was reported as fixed FAIL and rotating FAIL.",
+    "per_endpoint_summary_green": "The aggregate preserves fixed PASS and rotating FAIL while all_shutdown remains false."
+  },
+  "verification": {
+    "python_unittest": "PASS: 45 tests",
+    "tcl_completeness": "PASS: stage, forensic and dual-shutdown Tcl sources",
+    "json_syntax": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "hardware_actions_executed": false,
+  "current_run_hardware_authorization": false,
+  "campaign_disposition": "PENDING_EXACT_ROTATING_JTAG_TARGET; no new hardware authorization is created and no TX is attempted while rotating shutdown cannot be confirmed.",
+  "generated_at_utc": "2026-08-27T10:47:38.0236183Z"
+}

@@ -29,8 +29,14 @@ proc p10_safe_marker {value} {
   return [string map [list "\r" " " "\n" " " "=" "_" "|" "_"] $value]
 }
 
-proc p10_program_one_shutdown {role expected_target expected_serial bit_file} {
+proc p10_check_one_shutdown {role expected_target expected_serial bit_file program_now} {
   global p10_selected_target p10_target_open p10_result_lines
+
+  if {$program_now} {
+    set marker_prefix "P10_SHUTDOWN_${role}"
+  } else {
+    set marker_prefix "P10_PREFLIGHT_${role}"
+  }
 
   set matches {}
   foreach candidate [get_hw_targets -quiet *] {
@@ -62,7 +68,7 @@ proc p10_program_one_shutdown {role expected_target expected_serial bit_file} {
     catch {set name [get_property NAME $candidate]}
     catch {set idcode [get_property IDCODE $candidate]}
     set normalized [p10_normal_idcode $idcode]
-    lappend p10_result_lines "P10_SHUTDOWN_${role}_ENUM_DEVICE_${record_index}=$candidate|PART=$part|NAME=$name|IDCODE=$idcode|NORMALIZED=$normalized"
+    lappend p10_result_lines "${marker_prefix}_ENUM_DEVICE_${record_index}=$candidate|PART=$part|NAME=$name|IDCODE=$idcode|NORMALIZED=$normalized"
     incr record_index
     # Hardware Manager appends a process-local numeric suffix when the same
     # canonical device name is instantiated under a second open target (for
@@ -92,23 +98,29 @@ proc p10_program_one_shutdown {role expected_target expected_serial bit_file} {
   }
 
   set device [lindex $exact_devices 0]
-  current_hw_device $device
-  refresh_hw_device -update_hw_probes false $device
-  set_property PROGRAM.FILE $bit_file $device
-  program_hw_devices $device
+  if {$program_now} {
+    current_hw_device $device
+    refresh_hw_device -update_hw_probes false $device
+    set_property PROGRAM.FILE $bit_file $device
+    program_hw_devices $device
+  }
 
-  lappend p10_result_lines "P10_SHUTDOWN_${role}_TARGET=$p10_selected_target"
-  lappend p10_result_lines "P10_SHUTDOWN_${role}_SERIAL=$expected_serial"
-  lappend p10_result_lines "P10_SHUTDOWN_${role}_HW_OBJECT_COUNT=[llength $all_devices]"
-  lappend p10_result_lines "P10_SHUTDOWN_${role}_EXACT_FPGA_MATCH_COUNT=[llength $exact_devices]"
-  lappend p10_result_lines "P10_SHUTDOWN_${role}_AUXILIARY_DAP_COUNT=[llength $auxiliary_devices]"
-  lappend p10_result_lines "P10_SHUTDOWN_${role}_UNEXPECTED_HW_OBJECT_COUNT=[llength $unexpected_devices]"
-  lappend p10_result_lines "P10_SHUTDOWN_${role}_TXD_OUTPUT_INTENT=0"
-  lappend p10_result_lines "P10_SHUTDOWN_${role}_SD_REQUEST_ACTIVE=1"
-  lappend p10_result_lines "P10_SHUTDOWN_${role}_MODE_HIGH=1"
-  lappend p10_result_lines "P10_SHUTDOWN_${role}_ENDPOINT_ARMED=0"
-  lappend p10_result_lines "P10_SHUTDOWN_${role}_ACTIVE_TX_MASK=0"
-  lappend p10_result_lines "P10_SHUTDOWN_${role}=PASS"
+  lappend p10_result_lines "${marker_prefix}_TARGET=$p10_selected_target"
+  lappend p10_result_lines "${marker_prefix}_SERIAL=$expected_serial"
+  lappend p10_result_lines "${marker_prefix}_HW_OBJECT_COUNT=[llength $all_devices]"
+  lappend p10_result_lines "${marker_prefix}_EXACT_FPGA_MATCH_COUNT=[llength $exact_devices]"
+  lappend p10_result_lines "${marker_prefix}_AUXILIARY_DAP_COUNT=[llength $auxiliary_devices]"
+  lappend p10_result_lines "${marker_prefix}_UNEXPECTED_HW_OBJECT_COUNT=[llength $unexpected_devices]"
+  if {$program_now} {
+    lappend p10_result_lines "P10_SHUTDOWN_${role}_TXD_OUTPUT_INTENT=0"
+    lappend p10_result_lines "P10_SHUTDOWN_${role}_SD_REQUEST_ACTIVE=1"
+    lappend p10_result_lines "P10_SHUTDOWN_${role}_MODE_HIGH=1"
+    lappend p10_result_lines "P10_SHUTDOWN_${role}_ENDPOINT_ARMED=0"
+    lappend p10_result_lines "P10_SHUTDOWN_${role}_ACTIVE_TX_MASK=0"
+    lappend p10_result_lines "P10_SHUTDOWN_${role}=PASS"
+  } else {
+    lappend p10_result_lines "P10_PREFLIGHT_${role}=PASS"
+  }
 
   close_hw_target $p10_selected_target
   set p10_target_open 0
@@ -134,6 +146,8 @@ set p10_server_connected 0
 set p10_target_open 0
 set p10_selected_target ""
 set p10_result_lines {}
+set p10_fixed_preflight_status FAIL
+set p10_rotating_preflight_status FAIL
 set p10_fixed_status FAIL
 set p10_rotating_status FAIL
 
@@ -161,9 +175,16 @@ set rc [catch {
   connect_hw_server -url $server_url
   set p10_server_connected 1
 
-  p10_program_one_shutdown FIXED $fixed_target $fixed_serial $fixed_bit
+  # Validate both exact JTAG chains before programming either endpoint.  This
+  # prevents a missing second cable/device from causing a one-sided action.
+  p10_check_one_shutdown FIXED $fixed_target $fixed_serial "" 0
+  set p10_fixed_preflight_status PASS
+  p10_check_one_shutdown ROTATING $rotating_target $rotating_serial "" 0
+  set p10_rotating_preflight_status PASS
+
+  p10_check_one_shutdown FIXED $fixed_target $fixed_serial $fixed_bit 1
   set p10_fixed_status PASS
-  p10_program_one_shutdown ROTATING $rotating_target $rotating_serial $rotating_bit
+  p10_check_one_shutdown ROTATING $rotating_target $rotating_serial $rotating_bit 1
   set p10_rotating_status PASS
 } error_text error_options]
 
@@ -177,6 +198,10 @@ foreach line $p10_result_lines {
   puts $out $line
   puts $line
 }
+puts $out "P10_DUAL_PREFLIGHT_FIXED=$p10_fixed_preflight_status"
+puts $out "P10_DUAL_PREFLIGHT_ROTATING=$p10_rotating_preflight_status"
+puts "P10_DUAL_PREFLIGHT_FIXED=$p10_fixed_preflight_status"
+puts "P10_DUAL_PREFLIGHT_ROTATING=$p10_rotating_preflight_status"
 puts $out "SHUTDOWN_FIXED=$p10_fixed_status"
 puts $out "SHUTDOWN_ROTATING=$p10_rotating_status"
 puts "SHUTDOWN_FIXED=$p10_fixed_status"

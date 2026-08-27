@@ -45,6 +45,7 @@ REGISTER_MAP = ROOT / "config/register_map/ir_axi_regs.yaml"
 AS_WIRED = ROOT / "config/hardware/p10_3_actual_wiring.yaml"
 MODULE_INVENTORY = ROOT / "config/hardware/tfdu_module_inventory.yaml"
 RUNTIME_REST_POLICY = ROOT / "config/safety/p10_tfdu_runtime_rest_policy.yaml"
+SHUTDOWN_TCL = ROOT / "scripts/hw/p10_program_dual_shutdown.tcl"
 STAGE_TCL = ROOT / "scripts/hw/p10_dual_xsdb_stage.tcl"
 FORENSIC_TCL = ROOT / "scripts/hw/p10_3f_fault_forensics.tcl"
 HW_ROOT = ROOT / "evidence/hardware/p10_5"
@@ -421,6 +422,16 @@ def file_matches_head(path: Path) -> bool:
         return False
 
 
+def host_runtime_input_paths() -> dict[str, Path]:
+    return {
+        "campaign_runner": ROOT / "scripts/run_p10_5_hardware.py",
+        "shutdown_tcl": SHUTDOWN_TCL,
+        "stage_tcl": STAGE_TCL,
+        "forensic_tcl": FORENSIC_TCL,
+        "runtime_guard": ROOT / "scripts/p10_tfdu_runtime_guard.py",
+    }
+
+
 def validate_authorization(path: Path, run_id: str) -> tuple[
         dict[str, Any], dict[str, Path], list[str]]:
     errors = validate_plans()
@@ -504,12 +515,7 @@ def validate_authorization(path: Path, run_id: str) -> tuple[
         "dual_direction_config": CONFIG,
         "runtime_rest_policy": RUNTIME_REST_POLICY,
     }
-    expected_host = {
-        "campaign_runner": ROOT / "scripts/run_p10_5_hardware.py",
-        "stage_tcl": STAGE_TCL,
-        "forensic_tcl": FORENSIC_TCL,
-        "runtime_guard": ROOT / "scripts/p10_tfdu_runtime_guard.py",
-    }
+    expected_host = host_runtime_input_paths()
     for section, expected_paths in (
             ("hardware_configuration_inputs", expected_configuration),
             ("host_runtime_inputs", expected_host)):
@@ -1003,6 +1009,20 @@ def formal_transport_timeout_zero(stages: list[dict[str, Any]]) -> bool:
                for role in ("fixed", "rotating"))
 
 
+def aggregate_shutdown_evidence(shutdowns: list[dict[str, Any]]) -> dict[str, Any]:
+    fixed = bool(shutdowns) and all(
+        item.get("SHUTDOWN_FIXED") == "PASS" for item in shutdowns)
+    rotating = bool(shutdowns) and all(
+        item.get("SHUTDOWN_ROTATING") == "PASS" for item in shutdowns)
+    all_shutdown = fixed and rotating and all(
+        item.get("status") == "PASS" for item in shutdowns)
+    return {
+        "all_shutdown": all_shutdown,
+        "SHUTDOWN_FIXED": "PASS" if fixed else "FAIL",
+        "SHUTDOWN_ROTATING": "PASS" if rotating else "FAIL",
+    }
+
+
 def aggregate_capability_evidence(stages: list[dict[str, Any]]) -> dict[str, Any]:
     results = [pair[role] for stage in stages
                for pair in stage.get("details", [])
@@ -1205,9 +1225,8 @@ def main(argv: list[str] | None = None) -> int:
             except BaseException as exc:
                 campaign_errors.append(f"hw_server termination: {exc}")
 
-    all_shutdown = bool(shutdowns) and all(
-        x.get("status") == "PASS" and x.get("SHUTDOWN_FIXED") == "PASS" and
-        x.get("SHUTDOWN_ROTATING") == "PASS" for x in shutdowns)
+    shutdown_evidence = aggregate_shutdown_evidence(shutdowns)
+    all_shutdown = shutdown_evidence["all_shutdown"]
     all_stages = len(stage_results) == len(STAGES) and all(
         x["status"] == "PASS" for x in stage_results)
     counters = aggregate_counters(stage_results)
@@ -1270,8 +1289,8 @@ def main(argv: list[str] | None = None) -> int:
         "stages": stage_results,
         "runtime_rest_ledger": runtime_ledger, "forensics": forensics,
         "shutdowns": shutdowns,
-        "SHUTDOWN_FIXED": "PASS" if all_shutdown else "FAIL",
-        "SHUTDOWN_ROTATING": "PASS" if all_shutdown else "FAIL",
+        "SHUTDOWN_FIXED": shutdown_evidence["SHUTDOWN_FIXED"],
+        "SHUTDOWN_ROTATING": shutdown_evidence["SHUTDOWN_ROTATING"],
         "p11_status": "NOT_STARTED", "errors": campaign_errors,
         "generated_at_utc": utc_now(),
     }

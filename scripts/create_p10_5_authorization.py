@@ -167,10 +167,8 @@ def main(argv: list[str] | None = None) -> int:
             "runtime_rest_policy": metadata(campaign.RUNTIME_REST_POLICY),
         },
         "host_runtime_inputs": {
-            "campaign_runner": metadata(ROOT / "scripts/run_p10_5_hardware.py"),
-            "stage_tcl": metadata(campaign.STAGE_TCL),
-            "forensic_tcl": metadata(campaign.FORENSIC_TCL),
-            "runtime_guard": metadata(ROOT / "scripts/p10_tfdu_runtime_guard.py"),
+            name: metadata(path)
+            for name, path in campaign.host_runtime_input_paths().items()
         },
         "hardware_actions_executed": False,
         "created_at_utc": now.isoformat(), "errors": errors,

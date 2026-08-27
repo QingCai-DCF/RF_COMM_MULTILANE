@@ -50,6 +50,7 @@ OFFLINE_INPUTS = {
     "campaign_runner": ROOT / "scripts/run_p10_5_hardware.py",
     "authorization_builder": ROOT / "scripts/create_p10_5_authorization.py",
     "artifact_freezer": ROOT / "scripts/freeze_p10_5_artifacts.py",
+    "shutdown_tcl": campaign.SHUTDOWN_TCL,
     "stage_tcl": campaign.STAGE_TCL,
     "forensic_tcl": campaign.FORENSIC_TCL,
     "runtime_guard": ROOT / "scripts/p10_tfdu_runtime_guard.py",
@@ -69,6 +70,7 @@ POST_ARTIFACT_ALLOWED_EXACT = {
     "docs/hardware/P10_3_AS_WIRED_RECORD.md",
     "scripts/create_p10_5_authorization.py",
     "scripts/freeze_p10_5_artifacts.py",
+    "scripts/hw/p10_program_dual_shutdown.tcl",
     "scripts/run_p10_5_hardware.py",
     "tests/test_p10_5_hardware.py",
 }

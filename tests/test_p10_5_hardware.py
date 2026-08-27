@@ -98,6 +98,7 @@ class P10_5HardwareTests(unittest.TestCase):
                 "docs/hardware/P10_3_AS_WIRED_RECORD.md",
                 "reports/lane3_connectivity_probe_20260810T114211Z.md",
                 "scripts/create_p10_5_authorization.py",
+                "scripts/hw/p10_program_dual_shutdown.tcl",
                 "scripts/run_p10_5_hardware.py",
                 "tests/test_p10_5_hardware.py",
                 "evidence/hardware/p10_5/run/final.json",
@@ -404,6 +405,93 @@ class P10_5HardwareTests(unittest.TestCase):
                 self.assertIn("P10_5_IMMUTABLE_AUTHORIZED", source)
         forensic = campaign.FORENSIC_TCL.read_text(encoding="utf-8")
         self.assertIn(r"^p10_(3f|4|5)_", forensic)
+
+    def test_shutdown_wrapper_is_bound_as_a_host_runtime_input(self) -> None:
+        expected_shutdown = ROOT / "scripts/hw/p10_program_dual_shutdown.tcl"
+        input_paths = getattr(campaign, "host_runtime_input_paths", lambda: {})()
+        self.assertEqual(input_paths.get("shutdown_tcl"), expected_shutdown)
+        self.assertEqual(freezer.OFFLINE_INPUTS.get("shutdown_tcl"),
+                         expected_shutdown)
+
+    def test_shutdown_summary_preserves_per_endpoint_result(self) -> None:
+        shutdowns = [
+            {"status": "FAIL", "SHUTDOWN_FIXED": "PASS",
+             "SHUTDOWN_ROTATING": "FAIL"},
+            {"status": "FAIL", "SHUTDOWN_FIXED": "PASS",
+             "SHUTDOWN_ROTATING": "FAIL"},
+        ]
+        aggregate = getattr(campaign, "aggregate_shutdown_evidence", lambda _: {
+            "all_shutdown": False,
+            "SHUTDOWN_FIXED": "FAIL",
+            "SHUTDOWN_ROTATING": "FAIL",
+        })(shutdowns)
+        self.assertFalse(aggregate["all_shutdown"])
+        self.assertEqual(aggregate["SHUTDOWN_FIXED"], "PASS")
+        self.assertEqual(aggregate["SHUTDOWN_ROTATING"], "FAIL")
+
+    def test_dual_shutdown_does_not_program_one_side_before_both_preflight(self) -> None:
+        shutdown_tcl = ROOT / "scripts/hw/p10_program_dual_shutdown.tcl"
+        with tempfile.TemporaryDirectory() as temporary:
+            temp = Path(temporary)
+            authorization = temp / "authorization.json"
+            fixed_bit = temp / "fixed.bit"
+            rotating_bit = temp / "rotating.bit"
+            result = temp / "result.txt"
+            calls = temp / "calls.txt"
+            wrapper = temp / "stub.tcl"
+            authorization.write_text("{}\n", encoding="utf-8")
+            fixed_bit.write_bytes(b"fixed")
+            rotating_bit.write_bytes(b"rotating")
+            fixed_target = "localhost:3121/xilinx_tcf/Digilent/210249855178"
+            rotating_target = "localhost:3121/xilinx_tcf/Digilent/210512180081"
+            wrapper.write_text(
+                "set ::calls {}\n"
+                "set ::current_target {}\n"
+                "proc open_hw_manager {} {lappend ::calls open_hw_manager}\n"
+                "proc connect_hw_server {args} {lappend ::calls connect_hw_server}\n"
+                f"proc get_hw_targets {{args}} {{return [list {{{fixed_target}}}]}}\n"
+                "proc current_hw_target {target} {set ::current_target $target; lappend ::calls [list current_hw_target $target]}\n"
+                "proc open_hw_target {target} {lappend ::calls [list open_hw_target $target]}\n"
+                "proc get_hw_devices {args} {return [list arm_dap_0 xc7z020_1]}\n"
+                "proc get_property {property object} {\n"
+                "  if {$object eq \"arm_dap_0\"} {\n"
+                "    if {$property eq \"PART\"} {return arm_dap}\n"
+                "    if {$property eq \"NAME\"} {return arm_dap_0}\n"
+                "    if {$property eq \"IDCODE\"} {return 0x4BA00477}\n"
+                "  }\n"
+                "  if {$property eq \"PART\"} {return xc7z020}\n"
+                "  if {$property eq \"NAME\"} {return xc7z020_1}\n"
+                "  if {$property eq \"IDCODE\"} {return 0x23727093}\n"
+                "  return {}\n"
+                "}\n"
+                "proc current_hw_device {device} {lappend ::calls [list current_hw_device $device]}\n"
+                "proc refresh_hw_device {args} {lappend ::calls refresh_hw_device}\n"
+                "proc set_property {args} {lappend ::calls set_property}\n"
+                "proc program_hw_devices {device} {lappend ::calls [list PROGRAM $device]}\n"
+                "proc close_hw_target {target} {lappend ::calls [list close_hw_target $target]}\n"
+                "proc disconnect_hw_server {} {lappend ::calls disconnect_hw_server}\n"
+                "proc close_hw_manager {} {lappend ::calls close_hw_manager}\n"
+                "rename exit p10_real_exit\n"
+                "proc exit {code} {return -code error \"__P10_EXIT__$code\"}\n"
+                "set ::env(RF_COMM_P10_HW_AUTH) P10_5_IMMUTABLE_AUTHORIZED\n"
+                f"set argv [list localhost:3121 {{{fixed_target}}} {{{rotating_target}}} 210249855178 210512180081 xc7z020clg400-2 {{{authorization.as_posix()}}} {{{fixed_bit.as_posix()}}} {{{rotating_bit.as_posix()}}} {{{result.as_posix()}}}]\n"
+                f"catch {{source {{{shutdown_tcl.as_posix()}}}}} source_error\n"
+                f"set handle [open {{{calls.as_posix()}}} w]\n"
+                "foreach call $::calls {puts $handle $call}\n"
+                "close $handle\n"
+                "p10_real_exit 0\n",
+                encoding="utf-8")
+            completed = subprocess.run(
+                [str(freezer.TCLSH), str(wrapper)], cwd=ROOT, check=False,
+                text=True, encoding="utf-8", errors="replace",
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            call_log = calls.read_text(encoding="utf-8")
+            result_text = result.read_text(encoding="utf-8")
+        self.assertEqual(completed.returncode, 0, completed.stdout)
+        self.assertNotIn("PROGRAM", call_log)
+        self.assertIn("TFDU_SHUTDOWN_PROGRAMMED=0", result_text)
+        self.assertIn("SHUTDOWN_FIXED=FAIL", result_text)
+        self.assertIn("SHUTDOWN_ROTATING=FAIL", result_text)
 
     def test_measured_runtime_drives_cooldown_without_hiding_overrun(self) -> None:
         policy = load_policy(campaign.RUNTIME_REST_POLICY)
