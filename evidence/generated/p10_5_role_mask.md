@@ -2,6 +2,6 @@
 
 - Status: `PASS`
 - test_id: `P10_5-ROLE-OFFLINE`
-- source_commit: `15bba5a1e95d2db0d72d0ea8dc51fa38f13976fb`
+- source_commit: `5828b196a6049fdaecf3f39040da387f7360861b`
 - hardware_actions_executed: `False`
 - current_run_hardware_authorization: `False`
