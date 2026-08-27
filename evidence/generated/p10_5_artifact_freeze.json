@@ -145,10 +145,10 @@
     "fixed": "0x50353546",
     "rotating": "0x50353552"
   },
-  "generated_at_utc": "2026-08-27T10:32:17.822512+00:00",
+  "generated_at_utc": "2026-08-27T10:52:30.138478+00:00",
   "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
   "hardware_actions_executed": false,
-  "harness_commit": "5828b196a6049fdaecf3f39040da387f7360861b",
+  "harness_commit": "edafcc699e8f70ba201526072842d5b8f9b51894",
   "maximum_continuous_module_runtime_seconds": 1800,
   "maximum_lane_mask": 15,
   "maximum_single_formal_run_seconds": 1800,
@@ -244,7 +244,7 @@
       "log": {
         "bytes": 111,
         "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_firmware_unit.log",
-        "sha256": "ddbc5bf15c26bf2c15a86c04aa1c4eb9dbb31a4d245c800b95a5282be426a476"
+        "sha256": "3af354abd6afd2f4f662a367159a8b8107385935ded6c8a2b929734becedb43c"
       },
       "returncode": 0,
       "status": "PASS"
@@ -283,9 +283,9 @@
         "tests.test_p10_5_hardware"
       ],
       "log": {
-        "bytes": 114,
+        "bytes": 117,
         "path": "evidence/generated/p10_5_artifact_freeze_raw/p10_5_runner_unit.log",
-        "sha256": "e61e95d8e157501177731ba0307df84c58f4b3937aaf59b547502f88d7464f88"
+        "sha256": "b9404c8fe5bb470291afcc25186fb428d4b420566da0877de3c84f9b365a4a66"
       },
       "returncode": 0,
       "status": "PASS"
@@ -379,19 +379,19 @@
       "sha256": "ae07d866c9b86f48ef2c58e7ac32f56526d0526ea378662fa2b626b24b2893b1"
     },
     "artifact_freezer": {
-      "bytes": 19750,
+      "bytes": 19841,
       "path": "scripts/freeze_p10_5_artifacts.py",
-      "sha256": "54f5168b32f8d059cf6e69d3db9bb132b6e8164abc22368c478b301055758204"
+      "sha256": "a4044b217f2a01e5b44e3b85b95fac680ddcf7e69f09a6406788cf7b87ae5dba"
     },
     "authorization_builder": {
-      "bytes": 9272,
+      "bytes": 9099,
       "path": "scripts/create_p10_5_authorization.py",
-      "sha256": "3c72e180b5da4d7653ea7aa29e414a48f00646272d8987cf1ab3c7de7c7d3ca0"
+      "sha256": "a406fe0807e86c3695fc16b8b2c4ab5d33b9f3a4cc0a1dae4f517a74881db1ae"
     },
     "campaign_runner": {
-      "bytes": 63042,
+      "bytes": 63754,
       "path": "scripts/run_p10_5_hardware.py",
-      "sha256": "4e6c897bc13920eca63da75689e3674e3425a77329ac6c8ad973f95fadbe7b3f"
+      "sha256": "4ffe9b657c1b8274a458e5c8d8ee223765aae6f61e3540f09fd8d0ae24d5c8e5"
     },
     "capability_table": {
       "bytes": 1219,
@@ -436,7 +436,7 @@
     "reference_model": {
       "bytes": 3695,
       "path": "evidence/generated/p10_5_reference_model.json",
-      "sha256": "35861ac39c01d1cbcda2b4a9fa8c4b705b49c9f0f25e87ab43dc0fda4acd8483"
+      "sha256": "11c9925236a7957dbf10b227e9c3545998d8c7508d4c016d0691d1d8ff94eb0a"
     },
     "register_manifest": {
       "bytes": 2045,
@@ -457,6 +457,11 @@
       "bytes": 1417,
       "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
       "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
+    },
+    "shutdown_tcl": {
+      "bytes": 9171,
+      "path": "scripts/hw/p10_program_dual_shutdown.tcl",
+      "sha256": "193759faff07e32f0efd15b281f777594290afb95ef9c980440a5cdc6d592b64"
     },
     "stage_tcl": {
       "bytes": 140239,
@@ -513,6 +518,8 @@
     "evidence/generated/p10_5_direction_scoped_backpressure_diagnosis.md",
     "evidence/generated/p10_5_dma_concurrency.json",
     "evidence/generated/p10_5_dma_concurrency.md",
+    "evidence/generated/p10_5_dual_shutdown_atomic_preflight_remediation.json",
+    "evidence/generated/p10_5_dual_shutdown_atomic_preflight_remediation.md",
     "evidence/generated/p10_5_evidence_consistency.json",
     "evidence/generated/p10_5_evidence_consistency.md",
     "evidence/generated/p10_5_fail_closed_lane3_reverse.json",
@@ -539,6 +546,8 @@
     "evidence/generated/p10_5_role_commit.md",
     "evidence/generated/p10_5_role_mask.json",
     "evidence/generated/p10_5_role_mask.md",
+    "evidence/generated/p10_5_rotating_jtag_absent_fail_closed.json",
+    "evidence/generated/p10_5_rotating_jtag_absent_fail_closed.md",
     "evidence/generated/p10_5_run_111841_lane3_retry_exhaustion_diagnosis.json",
     "evidence/generated/p10_5_run_111841_lane3_retry_exhaustion_diagnosis.md",
     "evidence/generated/p10_5_safe_boot.json",
@@ -2386,10 +2395,73 @@
     "evidence/hardware/p10_5/p10_5_20260810T114211Z_e1f8c01a_4015142e_79607d01/stages/safe_start/xsdb.result.txt",
     "evidence/hardware/p10_5/p10_5_20260810T114211Z_e1f8c01a_4015142e_79607d01/stages/safe_start/xsdb.stderr.log",
     "evidence/hardware/p10_5/p10_5_20260810T114211Z_e1f8c01a_4015142e_79607d01/stages/safe_start/xsdb.stdout.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/artifacts/artifact_freeze.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/artifacts/as_wired.yaml",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/artifacts/derived_artifact_manifest.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/artifacts/fixed/ps7_init.tcl",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/artifacts/ir_axi_regs.yaml",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/artifacts/module_inventory.yaml",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/artifacts/p10_5_dual_direction.yaml",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/artifacts/rotating/ps7_init.tcl",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/artifacts/runtime_rest_policy.yaml",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/authorization/SCOPE_ATTESTATION.txt",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/authorization/goal.md",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/authorization/immutable_authorization.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.md",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/final/run_evidence_sha256_manifest.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/raw_logs/hw_server.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/raw_logs/hw_server.stderr.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/raw_logs/hw_server.stdout.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/runtime_rest/runtime_rest_ledger.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_1.result.txt",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_1.stderr.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_1.stdout.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_2.result.txt",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_2.stderr.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_2.stdout.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_1.result.txt",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_1.stderr.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_1.stdout.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_2.result.txt",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_2.stderr.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_2.stdout.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/artifacts/artifact_freeze.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/artifacts/as_wired.yaml",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/artifacts/derived_artifact_manifest.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/artifacts/fixed/ps7_init.tcl",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/artifacts/ir_axi_regs.yaml",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/artifacts/module_inventory.yaml",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/artifacts/p10_5_dual_direction.yaml",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/artifacts/rotating/ps7_init.tcl",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/artifacts/runtime_rest_policy.yaml",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/authorization/SCOPE_ATTESTATION.txt",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/authorization/goal.md",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/authorization/immutable_authorization.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.md",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/final/run_evidence_sha256_manifest.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/raw_logs/hw_server.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/raw_logs/hw_server.stderr.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/raw_logs/hw_server.stdout.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/runtime_rest/runtime_rest_ledger.json",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_1.result.txt",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_1.stderr.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_1.stdout.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_2.result.txt",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_2.stderr.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_2.stdout.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_1.result.txt",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_1.stderr.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_1.stdout.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_2.result.txt",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_2.stderr.log",
+    "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_2.stdout.log",
     "reports/lane3_connectivity_probe_20260810T111841Z.md",
     "reports/lane3_connectivity_probe_20260810T114211Z.md",
     "scripts/create_p10_5_authorization.py",
     "scripts/freeze_p10_5_artifacts.py",
+    "scripts/hw/p10_program_dual_shutdown.tcl",
     "scripts/run_p10_5_hardware.py",
     "tests/test_p10_5_hardware.py"
   ],
