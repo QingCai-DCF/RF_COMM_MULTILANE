@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-ROTATING-JTAG-ABSENT-FAIL-CLOSED",
+  "status": "FAIL_CLOSED",
+  "scope": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
+  "module_binding": {
+    "R3": "B0011"
+  },
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "failed_run_ids": [
+    "p10_5_20260827T103254Z_e1f8c01a_4015142e_79607d01",
+    "p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01"
+  ],
+  "latest_run": {
+    "final_summary": {
+      "path": "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
+      "sha256": "9b40929a88106589493949a9c46b0d3237520ac24bd20f93de12f79f6e52f40a"
+    },
+    "immutable_authorization": {
+      "path": "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/authorization/immutable_authorization.json",
+      "sha256": "96371a8b769404d94729ae1ba1dd5afa2f6b9c84e9a84712b35c09b9a080097a"
+    },
+    "initial_shutdown_attempt_2": {
+      "path": "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/initial/attempt_2.result.txt",
+      "sha256": "8ac2ec375d8b0a6d6648c6411a4bb84b5bee39084f857d5695d88f0309cdcd13"
+    },
+    "finally_shutdown_attempt_2": {
+      "path": "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/shutdown/finally/attempt_2.result.txt",
+      "sha256": "8ac2ec375d8b0a6d6648c6411a4bb84b5bee39084f857d5695d88f0309cdcd13"
+    }
+  },
+  "observations": {
+    "hardware_manager_fixed_exact_target_count": 1,
+    "hardware_manager_rotating_exact_target_count": 0,
+    "windows_present_digilent_serials": [
+      "210249855178"
+    ],
+    "windows_missing_expected_serials": [
+      "210512180081"
+    ],
+    "fixed_shutdown": "PASS",
+    "rotating_shutdown": "UNCONFIRMED_TARGET_ABSENT",
+    "campaign_stage_count_executed": 0,
+    "tx_executed": false
+  },
+  "hardware_actions_executed": true,
+  "hardware_action_scope": "hw_server start plus repeated shutdown-only programming of the fixed endpoint; no functional stage or TFDU TX was executed",
+  "current_run_hardware_authorization": false,
+  "root_cause_class": "EXPECTED_ROTATING_JTAG_TARGET_NOT_PRESENT_IN_WINDOWS_OR_HARDWARE_MANAGER",
+  "script_filter_fault_supported": false,
+  "reasoning": "The operating system enumerated only FTDI/Digilent serial 210249855178, and Hardware Manager independently found zero exact targets for 210512180081 in two immutable runs. This directly supports target absence rather than an R3/B0011 optical result or a campaign-stage protocol failure.",
+  "safety_outcome": "NO_NEW_TX_AND_FIXED_ENDPOINT_SHUTDOWN_VERIFIED; ROTATING_ENDPOINT_SHUTDOWN_NOT_VERIFIABLE",
+  "next_automatic_action": "NONE_UNTIL_THE_EXACT_ROTATING_JTAG_TARGET_IS_PRESENT; do not allocate another transmitting run while shutdown cannot be confirmed"
+}
