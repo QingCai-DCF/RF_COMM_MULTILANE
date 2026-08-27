@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-R3-B0011-BINDING-INITIAL-OFFLINE-GATE",
+  "status": "FAIL_WITH_ROOT_CAUSE_IDENTIFIED",
+  "hardware_actions_executed": false,
+  "current_run_hardware_authorization": false,
+  "module_change": {
+    "logical_module": "R3",
+    "removed_small_board_id": "B0025",
+    "installed_small_board_id": "B0011",
+    "identity_basis": "USER_REPORTED_NOT_INDEPENDENTLY_VERIFIED"
+  },
+  "failure": {
+    "failed_gates": [
+      "p8a_unit_tests",
+      "p8a_consistency",
+      "generate_plan_completion_audit",
+      "plan_completion_static"
+    ],
+    "root_cause": "config/project_state.json was intentionally updated for the current R3=B0011 binding, but three P8A requirement artifact bindings still carried the previous project-state SHA256 and byte count.",
+    "direct_errors": [
+      "P8A-STATE-001.artifact_hashes[0]: SHA256 mismatch for config/project_state.json",
+      "P8A-TRACE-001.artifact_hashes[1]: SHA256 mismatch for config/project_state.json",
+      "P8A-SCOPE-001.artifact_hashes[0]: SHA256 mismatch for config/project_state.json"
+    ],
+    "affected_state_sha256": "68bc2217a656087479ea2e7f26d1dc93951ac19cfa9c22a5bdf0f4d15c6f86f6",
+    "affected_state_bytes": 59054,
+    "offline_gate_summary_json_sha256_before_rerun": "212814e1ef90dc09f347cba16c22f66428c52c82858685a1f45ff2e98db9ce27",
+    "offline_gate_summary_md_sha256_before_rerun": "491adaa8ef310ae14e885529ec3002cc6208c424dd1b4e224f875620fefe9089",
+    "p8a_consistency_summary_json_sha256_before_rerun": "2a5549b352b08e52a8c9cee444c00c58f335eb0017cf86531125da13cf43f76d"
+  },
+  "remediation": "Update only the three stale requirement artifact bindings to the exact current project-state SHA256 and byte count, then rerun focused P8A checks before the complete offline gate.",
+  "scope_boundary": "This was an offline traceability failure. No JTAG, FPGA programming, ELF execution, TFDU drive, Ethernet, SPI, movement, rewiring, or external instrumentation occurred."
+}

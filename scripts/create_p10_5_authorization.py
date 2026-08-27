@@ -106,11 +106,21 @@ def main(argv: list[str] | None = None) -> int:
         "authorization_source": [
             "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md",
             "direct user submission of the P10.5 Goal dated 2026-08-09",
+            "direct user statement dated 2026-08-27: 我已将B0025换位换为新的B0011，请你继续目标",
         ],
         "authorization_source_semantics": (
             "Submitting the Goal explicitly authorizes its complete bounded P10.5 "
             "hardware campaign without further confirmation after immutable offline freeze."
         ),
+        "pre_run_user_module_replacement": {
+            "logical_module": "R3", "position": "AX7020-R/J11-B",
+            "removed_small_board_id": "B0025",
+            "installed_small_board_id": "B0011",
+            "identity_basis": "USER_REPORTED_NOT_INDEPENDENTLY_VERIFIED",
+            "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
+            "codex_physical_action": False,
+            "historical_b0025_evidence_preserved": True,
+        },
         "goal_sha256": campaign.GOAL_SHA256,
         "artifact_freeze": rel(FREEZE), "artifact_freeze_sha256": sha256(FREEZE),
         "source_commit": source,

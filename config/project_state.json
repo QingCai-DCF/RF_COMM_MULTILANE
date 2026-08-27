@@ -863,15 +863,23 @@
       "R0": "A0010",
       "R1": "A0017",
       "R2": "B0023",
-      "R3": "B0025"
+      "R3": "B0011"
     },
     "network_allowed": false,
     "operating_mode": "SPLIT_LANE_SIMULTANEOUS_BIDIRECTIONAL",
     "p10_4_two_plus_two_failure_preserved": true,
+    "pre_run_user_module_replacement": {
+      "codex_physical_action": false,
+      "installed_small_board_id": "B0011",
+      "logical_module": "R3",
+      "position": "AX7020-R/J11-B",
+      "removed_small_board_id": "B0025",
+      "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED"
+    },
     "p11_status": "NOT_STARTED",
     "r_to_f_lane_mask": "0xC",
     "standing_authorization": "GRANTED_BY_SUBMISSION_OF_P10_5_GOAL_PENDING_IMMUTABLE_ARTIFACT_MATERIALIZATION",
-    "status": "IN_PROGRESS",
+    "status": "IN_PROGRESS_PENDING_R3_B0011_REQUALIFICATION",
     "user_hold_points": 0,
     "wiring_changed": false
   },

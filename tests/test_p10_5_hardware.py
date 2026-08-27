@@ -40,6 +40,7 @@ class P10_5HardwareTests(unittest.TestCase):
         self.assertEqual(campaign.PRIMARY_R2F, 0xC)
         self.assertEqual(len(set(campaign.MODULE_BINDING.values())), 8)
         self.assertEqual(campaign.MODULE_BINDING["F2"], "B0019")
+        self.assertEqual(campaign.MODULE_BINDING["R3"], "B0011")
 
     def test_complete_disjoint_mask_matrices(self) -> None:
         plans = campaign.build_plans()

@@ -56,7 +56,7 @@ test_state_rejects_p7_regression (tests.test_p8a_consistency.P8AConsistencyTests
 test_state_requires_legacy_ab_l1_record (tests.test_p8a_consistency.P8AConsistencyTests.test_state_requires_legacy_ab_l1_record) ... ok
 
 ----------------------------------------------------------------------
-Ran 15 tests in 37.257s
+Ran 15 tests in 53.368s
 
 OK
 ```
@@ -2087,7 +2087,7 @@ run -all
 TB_TFDU_LANE_PHY_SMOKE_PASS=1
 $finish called at time : 605 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_tfdu_lane_phy_smoke.sv" Line 193
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug 10 02:17:24 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug 27 18:15:45 2026...
 
 ```
 
@@ -2138,7 +2138,7 @@ M2_4PPM_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_CODEC_PASS=1
 $finish called at time : 1685 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_tfdu_4ppm_codec.sv" Line 217
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug 10 02:17:29 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug 27 18:15:50 2026...
 
 ```
 
@@ -2186,7 +2186,7 @@ run -all
 TB_LANE0_FRAME_CRC_PASS=1
 $finish called at time : 145 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_lane0_frame_crc.sv" Line 195
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug 10 02:17:33 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug 27 18:15:55 2026...
 
 ```
 
@@ -2238,7 +2238,7 @@ M2_4PPM_MODEL_PREAMBLE_PATH_PASS=1
 TB_TFDU_4PPM_MODEL_INTEGRATION_PASS=1
 $finish called at time : 11705 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_tfdu_4ppm_model_integration.sv" Line 213
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug 10 02:17:38 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug 27 18:15:59 2026...
 
 ```
 
@@ -2286,7 +2286,7 @@ run -all
 TB_LANE0_ACK_ONLY_PASS=1
 $finish called at time : 425 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_lane0_ack_only.sv" Line 181
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug 10 02:17:42 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug 27 18:16:04 2026...
 
 ```
 
@@ -2334,7 +2334,7 @@ run -all
 TB_IR_AXI_REGS_NEW_PASS=1
 $finish called at time : 266 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_ir_axi_regs_new.sv" Line 177
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug 10 02:17:47 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug 27 18:16:09 2026...
 
 ```
 
@@ -2382,7 +2382,7 @@ run -all
 TB_IR_MULTILANE_SCHEDULER_PASS=1
 $finish called at time : 146 ns : File "C:/Users/user/Documents/RF_COMM_MULTILANE_P10_5/sim/tb/tb_ir_multilane_scheduler.sv" Line 129
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Aug 10 02:17:51 2026...
+INFO: [Common 17-206] Exiting xsim at Thu Aug 27 18:16:14 2026...
 
 ```
 

@@ -11,7 +11,7 @@ This record binds the user's current P10.3 installation to the frozen P10.2 inde
 | R0 | AX7020-R / J10-A | A0010 | J10-30 / T12 | J10-32 / T11 | J10-34 / B19 | J10-36 / C20 |
 | R1 | AX7020-R / J10-B | A0017 | J10-22 / V17 | J10-24 / T14 | J10-26 / U13 | J10-28 / V12 |
 | R2 | AX7020-R / J11-A | B0023 | J11-30 / G17 | J11-32 / H16 | J11-34 / H15 | J11-36 / K14 |
-| R3 | AX7020-R / J11-B | B0025 | J11-22 / L16 | J11-24 / M17 | J11-26 / D19 | J11-28 / E18 |
+| R3 | AX7020-R / J11-B | B0011 | J11-22 / L16 | J11-24 / M17 | J11-26 / D19 | J11-28 / E18 |
 
 All signal I/O uses `LVCMOS33` against 3.3 V VCCO. Mode is static high, SD is active-high shutdown, Txd is active high and must be low in configured reset/fault/shutdown, and Rxd is active low. Per-signal bank, series-resistor, pull, source-page and connector-orientation details remain authoritative in `config/hardware/p10_2_ax7020_4lane_wiring.yaml` and the frozen proposal whose SHA256 is `5f4a89b818b007af4863534759068dda529fe3c34501569ea4da89a42d8026fc`.
 
@@ -34,3 +34,5 @@ Run `p10_3_raw_20260804T124121Z_d4eef729_3d8cd207_a8459eef` passed raw connectiv
 On 2026-08-08 the user reported replacing F2=`B0008` with F2=`B0019` at AX7020-F/J11-A. Codex did not perform the replacement and does not claim its power state. All B0008 evidence remains immutable and is not relabeled for B0019. The B0019/R2=`B0023` pair therefore required a fresh, shutdown-bounded bidirectional raw retest. The same user instruction adds a prospective maximum continuous module runtime of 1800 seconds and requires a verified-shutdown cooldown of at least half the preceding stage runtime before any later transmission; the machine-readable policy is `config/safety/p10_tfdu_runtime_rest_policy.yaml`.
 
 Run `p10_4_l2b0019raw_20260808T084408Z_6ff17d33_94506af9_2b2b37d4` then passed current-pair raw connectivity in both directions: F2→R2 and R2→F2 each produced/received 64/64 and 1024/1024 raw events. Maximum requested Txd high time was eight 64 MHz cycles (125 ns). The measured direction stages were 44.763652 s and 43.460145 s; verified-shutdown cooldowns were 22.382137 s and 21.731190 s, satisfying the half-runtime rule. Both final shutdown markers passed. This remains `RAW_PHYSICAL_ONLY`; framed intake and the remaining P10.4 campaign are separate.
+
+On 2026-08-27 the user reported replacing R3=`B0025` with a new R3=`B0011` at AX7020-R/J11-B and asked Codex to continue P10.5. Codex did not perform the replacement and does not claim its power state. The earlier B0025 bidirectional P10.3 RAW PASS and the later repeated P10.5 R3→F3 loss remain immutable evidence for B0025 and are not relabeled for B0011. B0011 starts as `PENDING_FRESH_P10_5_REQUALIFICATION`; the early P10.5 1+1 matrix is the bounded lane-matching recheck, and the campaign may continue only if it passes with verified dual-board shutdown.

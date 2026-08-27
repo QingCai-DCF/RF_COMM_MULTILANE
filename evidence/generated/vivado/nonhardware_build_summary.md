@@ -11,7 +11,7 @@ VIVADO_EXECUTABLE=D:\Xilinx\Vivado\2023.1\bin\vivado.bat
 VIVADO_EXIT_CODE=0
 BITSTREAM_GENERATED_NO_HW=1
 BITSTREAM_PATH=evidence/generated/vivado/ir_top_new_safe_idle.bit
-BITSTREAM_SHA256=f8da7b0a6a88d6b9057a1a76a185387e304458c355e083afc559ec1753618b83
+BITSTREAM_SHA256=841983fa32e99d9f59756280e3b93617ca33475ad2569398e5b435b9d2ba3ba8
 P4_AUTO_DEBUG_INSTRUMENTATION_LOG=evidence/generated/vivado/p4_auto_debug_instrumentation.txt
 P4_AUTO_DEBUG_CLOCK_NET_COUNT=1
 P4_AUTO_DEBUG_STATUS_NET_COUNT=768
@@ -25,18 +25,18 @@ P4_AUTO_DEBUG_PROBES_SHA256=1f5258d51a906547942b5f7260a691fd45ad31cd88734b9aeb26
 
 | Stage | Bitstream | SHA256 | ILA Core | Probe Width |
 | --- | --- | --- | --- | --- |
-| safe_idle | `evidence/generated/vivado/ir_top_new_safe_idle.bit` | `f8da7b0a6a88d6b9057a1a76a185387e304458c355e083afc559ec1753618b83` | p4_auto_safe_idle_ila | 768 |
-| tfdu_control_idle | `evidence/generated/vivado/ir_top_new_tfdu_control_idle.bit` | `e480b6cdeb437a934117060aba39cec0b1c0a8895fd3ebc2511a8f6e596fbb4a` | p4_auto_tfdu_control_idle_ila | 768 |
-| raw_pulse | `evidence/generated/vivado/ir_top_new_raw_pulse.bit` | `b479c8c2fd17fe5eedb2c7e34729df4b19f771989440b2c99675d61da7b132be` | p4_auto_raw_pulse_ila | 768 |
-| raw_lane_matrix | `evidence/generated/vivado/ir_top_new_raw_lane_matrix.bit` | `fcbd19a9eb09fc15072ed4415630e74ac3fb0be59cf1f043ebbbbc63bdbc3b4f` | p4_auto_raw_lane_matrix_ila | 768 |
-| protocol_lane0 | `evidence/generated/vivado/ir_top_new_protocol_lane0.bit` | `24c21cc730886c78a4dcb547ceec0277fe2d36159cc2d83ce45f63717795e807` | p4_auto_protocol_lane0_ila | 768 |
-| protocol_lane0_ack | `evidence/generated/vivado/ir_top_new_protocol_lane0_ack.bit` | `1510aea5ee825723ef65f0854b112867350dae4ec0d99efc989e4ded80f70b04` | p4_auto_protocol_lane0_ack_ila | 768 |
-| protocol_lane1 | `evidence/generated/vivado/ir_top_new_protocol_lane1.bit` | `2ac241ec4c8e1437bc45c851c2ec848686b1c9c190f5de04c31e61fd553b07d1` | p4_auto_protocol_lane1_ila | 768 |
-| protocol_lane1_ack | `evidence/generated/vivado/ir_top_new_protocol_lane1_ack.bit` | `b83f76852ae5dd8bbdd15699ec8509cd6d457440c0cb0bdb0934ef5c8a55ca60` | p4_auto_protocol_lane1_ack_ila | 768 |
-| protocol_two_lane_minimal | `evidence/generated/vivado/ir_top_new_protocol_two_lane_minimal.bit` | `c6c33e3fa0d898ce179e41de3fe4df78bffe3de1dc69557e56c3c40aa93fe236` | p4_auto_protocol_two_lane_minimal_ila | 768 |
-| protocol_lane0_soak | `evidence/generated/vivado/ir_top_new_protocol_lane0_soak.bit` | `de30b5a78504f271e0428e9ba43b5eb84f8d949883d00e41e95610591c8fa1b0` | p4_auto_protocol_lane0_soak_ila | 768 |
-| protocol_two_lane_soak | `evidence/generated/vivado/ir_top_new_protocol_two_lane_soak.bit` | `6ab13d8dcd2203923c0ee2efdf1ee574fc993eceb02a434c87e0957565372663` | p4_auto_protocol_two_lane_soak_ila | 768 |
-| p6_local_transport | `evidence/generated/vivado/ir_top_new_p6_local_transport.bit` | `8bca0f047bc9b6545a4e89f8dedda32e34e914ee7ce78f1df7ab7e55129c4734` | p4_auto_p6_local_transport_ila | 768 |
+| safe_idle | `evidence/generated/vivado/ir_top_new_safe_idle.bit` | `841983fa32e99d9f59756280e3b93617ca33475ad2569398e5b435b9d2ba3ba8` | p4_auto_safe_idle_ila | 768 |
+| tfdu_control_idle | `evidence/generated/vivado/ir_top_new_tfdu_control_idle.bit` | `9547f38e51193d19aad839fe23b569a3b219fb51a46dcd4059e65ed562a6e699` | p4_auto_tfdu_control_idle_ila | 768 |
+| raw_pulse | `evidence/generated/vivado/ir_top_new_raw_pulse.bit` | `40999abd0d4a14db49923a331b496a3380482a1134d0d10492bfde02435e1f4e` | p4_auto_raw_pulse_ila | 768 |
+| raw_lane_matrix | `evidence/generated/vivado/ir_top_new_raw_lane_matrix.bit` | `c3e7c8f71928f22ce111609cc21564e63b76a2fcb3cbae10d2611c53f8f5042a` | p4_auto_raw_lane_matrix_ila | 768 |
+| protocol_lane0 | `evidence/generated/vivado/ir_top_new_protocol_lane0.bit` | `b210379235d4cddd4ab5a8d9b29b78ab8614053729c69b59589a634caff580a9` | p4_auto_protocol_lane0_ila | 768 |
+| protocol_lane0_ack | `evidence/generated/vivado/ir_top_new_protocol_lane0_ack.bit` | `1ddc1837ae3ef0085dfdd96ec2f8c930b7f8248bd21879ae2353dd96b57046b7` | p4_auto_protocol_lane0_ack_ila | 768 |
+| protocol_lane1 | `evidence/generated/vivado/ir_top_new_protocol_lane1.bit` | `9451f6decc1953257d0b7a2cd1a13f695c639793da107865c4c9960244187a24` | p4_auto_protocol_lane1_ila | 768 |
+| protocol_lane1_ack | `evidence/generated/vivado/ir_top_new_protocol_lane1_ack.bit` | `7aaee0e4bae6237537a0bf6dfa99ab4c568df86f68dec8c4096636f5b4aacdf4` | p4_auto_protocol_lane1_ack_ila | 768 |
+| protocol_two_lane_minimal | `evidence/generated/vivado/ir_top_new_protocol_two_lane_minimal.bit` | `924c75174931958df2d78b929a9b06c3f5a9a16650c62e0f7d6d017654e2f497` | p4_auto_protocol_two_lane_minimal_ila | 768 |
+| protocol_lane0_soak | `evidence/generated/vivado/ir_top_new_protocol_lane0_soak.bit` | `ace6c2e4509ac524c2d0dd1399ded677c1b9de026b9681d753118d03d4318e99` | p4_auto_protocol_lane0_soak_ila | 768 |
+| protocol_two_lane_soak | `evidence/generated/vivado/ir_top_new_protocol_two_lane_soak.bit` | `807a83b435937eff2fe850d07e229914e3558973ae4e8a01287c6582520a1d28` | p4_auto_protocol_two_lane_soak_ila | 768 |
+| p6_local_transport | `evidence/generated/vivado/ir_top_new_p6_local_transport.bit` | `b44428d728e6f86bb8bf70b490ec613183c48db2da1e3490689966cef33f2d77` | p4_auto_p6_local_transport_ila | 768 |
 
 ## Stage Commands
 
@@ -73,7 +73,7 @@ INFO: [Project 1-1876] WebTalk data collection is mandatory when using a ULT dev
 INFO: [Common 17-83] Releasing license: Implementation
 9 Infos, 5 Warnings, 0 Critical Warnings and 0 Errors encountered.
 write_bitstream completed successfully
-write_bitstream: Time (s): cpu = 00:00:21 ; elapsed = 00:00:17 . Memory (MB): peak = 3742.973 ; gain = 220.480
+write_bitstream: Time (s): cpu = 00:00:22 ; elapsed = 00:00:18 . Memory (MB): peak = 3734.340 ; gain = 217.969
 # set log_file [open "$out_dir/nonhardware_build_markers_${stage}.txt" "a"]
 # puts $log_file "VIVADO_NONHARDWARE_BUILD_DONE=1"
 # puts $log_file "VIVADO_REPORT_DIR=$out_dir"
@@ -90,7 +90,7 @@ write_bitstream: Time (s): cpu = 00:00:21 ; elapsed = 00:00:17 . Memory (MB): pe
 # if {$stage eq "safe_idle"} {
 #   file copy -force "$out_dir/nonhardware_build_markers_${stage}.txt" "$out_dir/nonhardware_build_markers.txt"
 # }
-INFO: [Common 17-206] Exiting Vivado at Mon Aug 10 02:17:16 2026...
+INFO: [Common 17-206] Exiting Vivado at Thu Aug 27 18:15:39 2026...
 
 ===== safe_idle stderr =====
 

@@ -70,7 +70,7 @@ LAUNCH_BARRIER_TIMEOUT_MS = 60_000
 INTER_OBJECT_RX_LEAD_US = 5_000
 MODULE_BINDING = {
     "F0": "A0019", "F1": "B0012", "F2": "B0019", "F3": "B0020",
-    "R0": "A0010", "R1": "A0017", "R2": "B0023", "R3": "B0025",
+    "R0": "A0010", "R1": "A0017", "R2": "B0023", "R3": "B0011",
 }
 ALL_MODULES = tuple(MODULE_BINDING)
 SHUTDOWN_POLICY = {
@@ -1237,7 +1237,17 @@ def main(argv: list[str] | None = None) -> int:
         "current_run_hardware_authorization": False, "automation_only": True,
         "user_hold_points": 0, "network_used": False, "spi_used": False,
         "hardware_moved": False, "wiring_changed": False,
-        "module_replaced": False, "maximum_lane_mask": 15,
+        "module_replaced": False,
+        "module_replaced_during_run": False,
+        "pre_run_user_module_replacement": {
+            "logical_module": "R3", "position": "AX7020-R/J11-B",
+            "removed_small_board_id": "B0025",
+            "installed_small_board_id": "B0011",
+            "identity_basis": "USER_REPORTED_NOT_INDEPENDENTLY_VERIFIED",
+            "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED",
+            "codex_physical_action": False,
+        },
+        "maximum_lane_mask": 15,
         "maximum_single_formal_run_seconds": 1800,
         "minimum_interstage_cooldown_ratio": 0.5,
         "board_binding": {
