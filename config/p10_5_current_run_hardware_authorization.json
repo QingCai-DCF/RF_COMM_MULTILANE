@@ -32,7 +32,7 @@
     "formal_30min"
   ],
   "artifact_freeze": "evidence/generated/p10_5_artifact_freeze.json",
-  "artifact_freeze_sha256": "1597c3acca3ef74a147ff945761bc4afbf05562e147c2f7f9105191c899c9c2b",
+  "artifact_freeze_sha256": "1c15558675db7135543351f3f5b5be0f95cae1ab5b8c4d2e9de645a3bd5a534b",
   "artifacts": [
     {
       "bytes": 369449,
@@ -117,14 +117,14 @@
   ],
   "authorization_batch": {
     "authorization_id": "P10_5-20260830-USER-TEN-RUN-AUTHORIZATION",
-    "current_run_ordinal": 3,
+    "current_run_ordinal": 4,
     "maximum_distinct_current_run_authorizations": 10,
-    "remaining_after_current_materialization": 7,
+    "remaining_after_current_materialization": 6,
     "source_path": "evidence/generated/p10_5_20260830_ten_run_authorization.json",
     "source_sha256": "4f24a062fc4b6c269a163a7d0df06760f19535aceabd5c337534de29372c7f05"
   },
   "authorization_id": "P10_5-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "5dc77c4df2f9a23e8d4c8885cc067ad0cfcc51ca",
+  "authorization_parent_commit": "416b01e459d4e68ce27587c15cb3ab0b3c5f5b5c",
   "authorization_source": [
     "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md",
     "direct user submission of the P10.5 Goal dated 2026-08-09",
@@ -133,16 +133,15 @@
     "direct user statement dated 2026-08-30: 我允许直接操作硬件不做回归",
     "direct user statement dated 2026-08-30: 我人工给予10次授权"
   ],
-  "authorization_source_semantics": "The Goal and the user's ten-run standing authorization authorize this exact bounded ordinal-3 P10.5 hardware run. The functional/shutdown bitstreams and ELFs are unchanged; only the committed read-only abort telemetry harness and exact-boundary simulation regression changed after the artifact source commit.",
-  "authorized": false,
+  "authorization_source_semantics": "The Goal and the user's ten-run standing authorization authorize this exact bounded ordinal-4 P10.5 hardware run. The functional/shutdown bitstreams and ELFs are unchanged; only the committed host runtime/rest guard and its tests changed after the artifact source commit.",
+  "authorized": true,
   "board_binding": {
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
-  "consumed": true,
-  "consumed_at_utc": "2026-08-30T14:04:53+00:00",
-  "created_at_utc": "2026-08-30T12:34:51.755995+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "created_at_utc": "2026-08-30T14:26:30.160226+00:00",
+  "current_run_hardware_authorization": true,
   "errors": [],
   "ethernet_allowed": false,
   "external_instrumentation_allowed": false,
@@ -173,9 +172,9 @@
   },
   "host_runtime_inputs": {
     "campaign_runner": {
-      "bytes": 63754,
+      "bytes": 65103,
       "path": "scripts/run_p10_5_hardware.py",
-      "sha256": "4ffe9b657c1b8274a458e5c8d8ee223765aae6f61e3540f09fd8d0ae24d5c8e5"
+      "sha256": "41ceb71d6f394be4a15159bfa48c592c2cb8f8eed2d1a93e9c2e73a7d1b36284"
     },
     "forensic_tcl": {
       "bytes": 16654,
@@ -183,9 +182,9 @@
       "sha256": "facc17601507a710040159b050aa902dbb8b02225c9f8998c73c743b1e3ea377"
     },
     "runtime_guard": {
-      "bytes": 9419,
+      "bytes": 11644,
       "path": "scripts/p10_tfdu_runtime_guard.py",
-      "sha256": "6c90331dc94f20b9378f50f03e0222a2444c50e1e94933abb7366bf4ff74366a"
+      "sha256": "cbd827b80788c8877e2f4644226c08b51399a4d77eeb63007488acc88a24947e"
     },
     "shutdown_tcl": {
       "bytes": 9171,
@@ -213,7 +212,7 @@
     "R3": "B0011"
   },
   "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
-  "no_hardware": true,
+  "no_hardware": false,
   "offline_inputs": {
     "ack_collision_design": {
       "bytes": 3091,
@@ -231,9 +230,9 @@
       "sha256": "ae07d866c9b86f48ef2c58e7ac32f56526d0526ea378662fa2b626b24b2893b1"
     },
     "artifact_freezer": {
-      "bytes": 19924,
+      "bytes": 20135,
       "path": "scripts/freeze_p10_5_artifacts.py",
-      "sha256": "6b4d26c016f3a950cedbcc7ffffb2ec22131ee43a929c635ab27b8b10ec11aa5"
+      "sha256": "3c51593957f05481603598b97a9d67f8068d67924b199319ac1ca957bbb24401"
     },
     "authorization_builder": {
       "bytes": 9099,
@@ -241,9 +240,9 @@
       "sha256": "a406fe0807e86c3695fc16b8b2c4ab5d33b9f3a4cc0a1dae4f517a74881db1ae"
     },
     "campaign_runner": {
-      "bytes": 63754,
+      "bytes": 65103,
       "path": "scripts/run_p10_5_hardware.py",
-      "sha256": "4ffe9b657c1b8274a458e5c8d8ee223765aae6f61e3540f09fd8d0ae24d5c8e5"
+      "sha256": "41ceb71d6f394be4a15159bfa48c592c2cb8f8eed2d1a93e9c2e73a7d1b36284"
     },
     "capability_table": {
       "bytes": 1219,
@@ -288,7 +287,7 @@
     "reference_model": {
       "bytes": 3695,
       "path": "evidence/generated/p10_5_reference_model.json",
-      "sha256": "e730b23385ccca75385ca63819cde1d05bed22e3ef434e9a66b919e7df01fb81"
+      "sha256": "770453450f6588c33b409265fd41a9b189dea42d15de3731bb36507ad750a341"
     },
     "register_manifest": {
       "bytes": 2045,
@@ -301,9 +300,9 @@
       "sha256": "723d1e35155a7d0184b787744a9cfd5c8d4574928572a4572f03df0ba16281d1"
     },
     "runtime_guard": {
-      "bytes": 9419,
+      "bytes": 11644,
       "path": "scripts/p10_tfdu_runtime_guard.py",
-      "sha256": "6c90331dc94f20b9378f50f03e0222a2444c50e1e94933abb7366bf4ff74366a"
+      "sha256": "cbd827b80788c8877e2f4644226c08b51399a4d77eeb63007488acc88a24947e"
     },
     "runtime_rest_policy": {
       "bytes": 1417,
@@ -342,13 +341,20 @@
     "f_to_r": 3,
     "r_to_f": 12
   },
+  "prior_run_rest_prerequisite": {
+    "diagnosis_path": "evidence/generated/p10_5_20260830_run3_formal_runtime_guard_diagnosis.json",
+    "diagnosis_sha256": "def4ada5bd8c48c8b78f5bc3e8909449435aec20a3e4995111fc95bbbca52183",
+    "prior_run_id": "p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01",
+    "required_cooldown_seconds": 900.168,
+    "observed_shutdown_rest_seconds": 900.955,
+    "status": "PASS"
+  },
   "register_map": {
     "hash_low": "0xA16281D1",
     "version": "0x0A000005"
   },
-  "result": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
   "rotating_jtag_serial": "210512180081",
-  "run_id": "p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01",
+  "run_id": "p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01",
   "runtime_rest_policy": {
     "conservative_modules": [
       "F0",
@@ -393,6 +399,6 @@
     "two_plus_one": 480,
     "two_plus_two": 180
   },
-  "status": "CONSUMED_AFTER_P10_5_FAIL",
+  "status": "READY_FOR_EXACT_CURRENT_RUN",
   "two_hour_test_allowed": false
 }
