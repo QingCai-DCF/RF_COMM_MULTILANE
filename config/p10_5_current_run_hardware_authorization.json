@@ -117,14 +117,14 @@
   ],
   "authorization_batch": {
     "authorization_id": "P10_5-20260830-USER-TEN-RUN-AUTHORIZATION",
-    "current_run_ordinal": 1,
+    "current_run_ordinal": 2,
     "maximum_distinct_current_run_authorizations": 10,
-    "remaining_after_current_materialization": 9,
+    "remaining_after_current_materialization": 8,
     "source_path": "evidence/generated/p10_5_20260830_ten_run_authorization.json",
     "source_sha256": "4f24a062fc4b6c269a163a7d0df06760f19535aceabd5c337534de29372c7f05"
   },
   "authorization_id": "P10_5-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "7b09409dd6df78ad476e993db676fb9c7659b8d1",
+  "authorization_parent_commit": "13a64dc02be85b7ae08d72be087253493f9bcbe0",
   "authorization_source": [
     "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md",
     "direct user submission of the P10.5 Goal dated 2026-08-09",
@@ -134,15 +134,14 @@
     "direct user statement dated 2026-08-30: 我人工给予10次授权"
   ],
   "authorization_source_semantics": "Submitting the Goal explicitly authorizes its complete bounded P10.5 hardware campaign without further confirmation after immutable offline freeze.",
-  "authorized": false,
+  "authorized": true,
   "board_binding": {
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
-  "consumed": true,
-  "consumed_at_utc": "2026-08-30T10:03:04+00:00",
-  "created_at_utc": "2026-08-30T09:51:06.808683+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "created_at_utc": "2026-08-30T10:14:46.247190+00:00",
+  "current_run_hardware_authorization": true,
   "errors": [],
   "ethernet_allowed": false,
   "external_instrumentation_allowed": false,
@@ -213,7 +212,7 @@
     "R3": "B0011"
   },
   "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
-  "no_hardware": true,
+  "no_hardware": false,
   "offline_inputs": {
     "ack_collision_design": {
       "bytes": 3091,
@@ -351,9 +350,8 @@
     "hash_low": "0xA16281D1",
     "version": "0x0A000005"
   },
-  "result": "evidence/hardware/p10_5/p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
   "rotating_jtag_serial": "210512180081",
-  "run_id": "p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01",
+  "run_id": "p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01",
   "runtime_rest_policy": {
     "conservative_modules": [
       "F0",
@@ -398,6 +396,6 @@
     "two_plus_one": 480,
     "two_plus_two": 180
   },
-  "status": "CONSUMED_AFTER_P10_5_FAIL",
+  "status": "READY_FOR_EXACT_CURRENT_RUN",
   "two_hour_test_allowed": false
 }
