@@ -625,6 +625,35 @@ proc p10_record_p10_1r_telemetry {sequence label} {
   p10_record_ps_gpio $sequence $label
 }
 
+# High-rate, read-only protocol telemetry for the two direction-abort cases.
+# The ordinary five-second telemetry cadence is too coarse to distinguish a
+# physical ACK decode failure from direction/epoch rejection or a selective-
+# repeat application failure before the fail-closed terminal path clears live
+# counters.  Every offset below is a named RO register in
+# config/register_map/ir_axi_regs.yaml; this procedure performs no writes and
+# has no control over arm, permit, SD, Mode, Txd, or shutdown.
+proc p10_record_p10_5_abort_protocol_telemetry {sequence label} {
+  global p10_abort_protocol_telemetry_handle
+  set captured [clock milliseconds]
+  set registers {
+    0x0002000C 0x00020410 0x00020414
+    0x43C00724 0x43C00758 0x43C0075C 0x43C0076C 0x43C00784
+    0x43C007A0 0x43C007A4 0x43C00880 0x43C00884 0x43C00888
+    0x43C00E60 0x43C00E68 0x43C00E6C 0x43C00E70 0x43C00E74
+    0x43C00E90 0x43C00E98 0x43C00E9C 0x43C00EA0 0x43C00EA4
+    0x43C00EA8 0x43C00EAC 0x43C00EB0 0x43C00EB4 0x43C00EB8
+    0x43C00EBC 0x43C00EC0 0x43C00ED8
+  }
+  foreach role {fixed rotating} {
+    set values [list $captured $sequence $label $role]
+    foreach address $registers {
+      lappend values [p10_read32 $role $address]
+    }
+    puts $p10_abort_protocol_telemetry_handle [join $values "|"]
+  }
+  flush $p10_abort_protocol_telemetry_handle
+}
+
 proc p10_record_ps_gpio {sequence label} {
   global p10_campaign_p103 p10_ps_gpio_handle
   if {!$p10_campaign_p103} { return }
@@ -985,6 +1014,8 @@ proc p10_wait_pair_terminal {sequence timeout_ms} {
   global p10_active_case_label
   set deadline [expr {[clock milliseconds] + $timeout_ms + 5000}]
   set next_telemetry [expr {[clock milliseconds] + 5000}]
+  set abort_protocol_case [string match "fault_abort_*" $p10_active_case_label]
+  set next_abort_protocol_telemetry [clock milliseconds]
   set fixed_done 0; set rotating_done 0
   set fixed_state 0; set rotating_state 0
   set active_gpio_recorded 0
@@ -994,6 +1025,13 @@ proc p10_wait_pair_terminal {sequence timeout_ms} {
     if {$now >= $next_telemetry} {
       p10_record_p10_1r_telemetry $sequence $p10_active_case_label
       set next_telemetry [expr {$now + 5000}]
+    }
+    if {$abort_protocol_case && $now >= $next_abort_protocol_telemetry} {
+      p10_record_p10_5_abort_protocol_telemetry $sequence $p10_active_case_label
+      # Use the completion time so slow JTAG reads cannot cause a tight-loop
+      # telemetry burst.  A 200 ms cadence resolves the bounded retry episode
+      # while keeping the observer safely below the existing timeout margin.
+      set next_abort_protocol_telemetry [expr {[clock milliseconds] + 200}]
     }
     set fixed_response [p10_read32 fixed 0x0002001C]
     set fixed_state [p10_read32 fixed 0x0002000C]
@@ -1007,6 +1045,9 @@ proc p10_wait_pair_terminal {sequence timeout_ms} {
     if {$fixed_response == $sequence && $fixed_state in {4 5 6}} { set fixed_done 1 }
     if {$rotating_response == $sequence && $rotating_state in {4 5 6}} { set rotating_done 1 }
     if {$fixed_done && $rotating_done} {
+      if {$abort_protocol_case} {
+        p10_record_p10_5_abort_protocol_telemetry $sequence $p10_active_case_label
+      }
       return [list $fixed_state $rotating_state]
     }
     after 5
@@ -2588,6 +2629,10 @@ set p10_telemetry_file [file join $p10_dump_dir p10_1r_telemetry.psv]
 set p10_telemetry_handle [open $p10_telemetry_file w]
 puts $p10_telemetry_handle "captured_ms|sequence|label|role|admission_snapshot_words_csv|ps_runtime_words_csv|pl_perf_snapshot_words_csv"
 flush $p10_telemetry_handle
+set p10_abort_protocol_telemetry_file [file join $p10_dump_dir p10_5_abort_protocol_telemetry.psv]
+set p10_abort_protocol_telemetry_handle [open $p10_abort_protocol_telemetry_file w]
+puts $p10_abort_protocol_telemetry_handle "captured_ms|sequence|label|role|mailbox_main_state|mailbox_result_state|mailbox_result_status|p9_object_error|p9_tx_sequence_base|p9_window_status|p9_tx_retry_exhausted_count|p9_ack_frames_sent|p9_physical_ack_good|p9_physical_crc_bad|p9_physical_frame_bad|p9_physical_preamble|p9_physical_symbol_error|p10_5_context_status|p10_5_piggyback_ack_rx_count|p10_5_control_ack_fallback_count|p10_5_direction_reject_count|p10_5_role_epoch_reject_count|p10_5_tx_window_occupancy|p10_5_tx_ack_base|p10_5_rx_ack_base|p10_5_rx_sack_bitmap|p10_5_tx_peer_sack_bitmap|p10_5_tx_receiver_credit|p10_5_rx_receiver_credit|p10_5_tx_retry_count|p10_5_tx_timeout_count|p10_5_ack_tx_bytes|p10_5_ack_rx_bytes|p10_5_control_tx_bytes|p10_5_control_queue_occupancy"
+flush $p10_abort_protocol_telemetry_handle
 set p10_ps_gpio_file [file join $p10_dump_dir ps_gpio_activity.psv]
 set p10_ps_gpio_handle [open $p10_ps_gpio_file w]
 puts $p10_ps_gpio_handle "captured_ms|sequence|label|role|data_ro|dirm0|oen0"
@@ -3015,6 +3060,7 @@ if {$rc != 0} {
 }
 catch {close $p10_observation_handle}
 catch {close $p10_telemetry_handle}
+catch {close $p10_abort_protocol_telemetry_handle}
 catch {close $p10_ps_gpio_handle}
 catch {close $p10_result_handle}
 if {$p10_connected} { catch {disconnect} }

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-ABORT-REACK-HARDWARE-BOUNDARY-XSIM",
+  "status": "PASS",
+  "generated_at_local": "2026-08-30T20:25:51.2537670+08:00",
+  "hardware_actions_executed": false,
+  "no_hardware": true,
+  "current_run_hardware_authorization": false,
+  "artifact_source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+  "test_launch_commit": "af1f12b2d29d65c094ff4f33f759b8deeea10d56",
+  "source_worktree_dirty": true,
+  "dirty_scope": [
+    "sim/tb/tb_p10_5_dual_direction.sv"
+  ],
+  "target_rtl_sha256": "883d40a1073928475a31ad378c3440809bd5423dfeaeb82d969da8711b8d2e91",
+  "testbench_sha256": "8f47af02b481e6d4decbf2d7431b0d6d33db232044db2582b15aee875c1c7612",
+  "log": "build/p10_5_abort_reack_regression/raw/20260830T121849.641118Z/tb_p10_5_dual_direction_faults.log",
+  "log_sha256": "7c39852419ddd26c7fca5ce6d5eb86f4166f0205e48e9a76db93903966e21365",
+  "preserved_key_log_excerpt": "evidence/generated/p10_5_abort_reack_hardware_boundary_xsim.log",
+  "preserved_key_log_excerpt_sha256": "05fe7ab7998b1eb1338a43c040b5a4744c4ef562c9ffd8a07fdc8d53928d942d",
+  "required_marker": "TB_P10_5_DUAL_DIRECTION_FAULTS=PASS",
+  "boundary": {
+    "fixed_tx_next_sequence": 84,
+    "rotating_tx_next_sequence": 84,
+    "fixed_tx_ack_base": 52,
+    "fixed_tx_outstanding": 32,
+    "fixed_physical_ack_good": 20,
+    "rotating_control_ack_fallback": 20
+  },
+  "post_abort_assertions": {
+    "fixed_tx_outstanding_zero": true,
+    "fixed_physical_ack_good_increased": true,
+    "rotating_control_ack_fallback_increased": true,
+    "direction_reject_zero": true,
+    "role_epoch_reject_zero": true,
+    "retry_exhausted_zero": true,
+    "payload_byte_exact": true
+  },
+  "interpretation": [
+    "The exact run-2 hardware boundary is not sufficient to reproduce the fault in ideal XSIM.",
+    "A correct SACK completion may leave cumulative ACK_BASE behind TX_NEXT while TX_OUTSTANDING is zero.",
+    "The next bounded hardware run therefore needs pre-terminal live protocol telemetry to separate physical decode, metadata rejection, admission, and ACK-application hypotheses."
+  ],
+  "hardware_pass_claimed": false
+}

@@ -1,0 +1,21 @@
+COMMAND=D:\Xilinx\Vivado\2023.1\bin\xsim.bat tb_p10_5_dual_direction_faults_snapshot -runall
+NO_HARDWARE=1
+CURRENT_RUN_HARDWARE_AUTHORIZATION=false
+P10_5_ABORT_REACK_BOUNDARY next=84/84 ack_base=52 outstanding=32 ack_good=20 fallback=20
+P10_5_WAIT watchdog=350000 active=1/1 complete=1/0/1/0 bytes=12844/5432/12844/7904 outstanding=32/0 phase=0/3 piggy=28/29 fallback=21/21
+P10_5_WAIT watchdog=400000 active=1/1 complete=1/0/1/0 bytes=12844/5432/12844/8396 outstanding=20/0 phase=0/0 piggy=28/29 fallback=21/21
+P10_5_WAIT watchdog=700000 active=1/1 complete=1/0/1/0 bytes=12844/5432/12844/11360 outstanding=8/0 phase=0/0 piggy=28/29 fallback=21/22
+P10_5_WAIT watchdog=900000 active=1/1 complete=1/0/1/1 bytes=12844/5432/12844/12844 outstanding=8/0 phase=0/0 piggy=28/29 fallback=21/22
+TB_P10_5_DUAL_DIRECTION_L2=PASS
+TB_P10_5_ACK_PIGGYBACK=PASS
+TB_P10_5_CONTROL_ONLY_ACK=PASS
+TB_P10_5_CREDIT_REOPEN=PASS
+TB_P10_5_BIDIRECTIONAL_DMA=PASS
+TB_P10_5_ROLE_EPOCH_STALE=PASS
+TB_P10_5_DIRECTION_ABORT_ISOLATION=PASS
+TB_P10_5_DUAL_DIRECTION_FAULTS=PASS
+TB_P10_5_DUAL_ENDPOINT_INTEGRATION=PASS
+TB_P10_5_DUAL_DIRECTION=PASS piggy=28/29 fallback=21/23 simultaneous=212907
+RETURN_CODE=0
+FULL_LOCAL_LOG=build/p10_5_abort_reack_regression/raw/20260830T121849.641118Z/tb_p10_5_dual_direction_faults.log
+FULL_LOCAL_LOG_SHA256=7c39852419ddd26c7fca5ce6d5eb86f4166f0205e48e9a76db93903966e21365

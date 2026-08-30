@@ -12,6 +12,7 @@ module tb_p10_5_dual_direction #(
   // a direction-scoped TX abort can cancel an in-flight DATA piggyback while
   // the opposite RX context still owes a cumulative ACK.
   localparam integer ABORT_REACK_BYTES = 12844;
+  localparam integer ABORT_REACK_PARTIAL_ACK_FRAGMENTS = 20;
 
   logic f_clk = 0;
   logic r_clk = 0;
@@ -82,6 +83,7 @@ module tb_p10_5_dual_direction #(
   integer simultaneous_physical_cycles;
   integer f_retry_before_adjacent, r_retry_before_adjacent;
   integer f_timeout_before_adjacent, r_timeout_before_adjacent;
+  integer f_ack_good_before_abort, r_fallback_before_abort;
 
   function automatic [7:0] payload_pattern(input integer index,
                                             input integer seed);
@@ -833,20 +835,40 @@ module tb_p10_5_dual_direction #(
       stream_fixed(ABORT_REACK_BYTES, 8'h6d);
       stream_rotating(ABORT_REACK_BYTES, 8'hd6);
     join
+    // Do not abort merely when ingress has filled the 52-fragment object.  The
+    // hardware failure occurred after the fixed sender had retired exactly 20
+    // fragments and still had a full 32-entry window outstanding.  Waiting for
+    // that partial-ACK boundary prevents this regression from accidentally
+    // testing the easier pre-ACK case.
     watchdog = 0;
     while (((fixed_endpoint.tx_next_sequence_o - 16'h0020) != 52 ||
-            (rotating_endpoint.tx_next_sequence_o - 16'h0020) != 52) &&
-           watchdog < 100_000) begin
+            (rotating_endpoint.tx_next_sequence_o - 16'h0020) != 52 ||
+            (fixed_endpoint.tx_ack_base_o - 16'h0020) !=
+                ABORT_REACK_PARTIAL_ACK_FRAGMENTS) &&
+           watchdog < 8_000_000) begin
       @(posedge f_clk); #1;
       watchdog = watchdog + 1;
     end
     if ((fixed_endpoint.tx_next_sequence_o - 16'h0020) != 52 ||
-        (rotating_endpoint.tx_next_sequence_o - 16'h0020) != 52)
-      $fatal(1, "symmetric abort did not reach exact 52-fragment boundary next=%0d/%0d",
+        (rotating_endpoint.tx_next_sequence_o - 16'h0020) != 52 ||
+        (fixed_endpoint.tx_ack_base_o - 16'h0020) !=
+            ABORT_REACK_PARTIAL_ACK_FRAGMENTS)
+      $fatal(1, "symmetric abort did not reach hardware boundary next=%0d/%0d ack_base=%0d outstanding=%0d",
              fixed_endpoint.tx_next_sequence_o,
-             rotating_endpoint.tx_next_sequence_o);
-    if (fixed_endpoint.tx_ack_base_o == fixed_endpoint.tx_next_sequence_o)
-      $fatal(1, "symmetric abort boundary completed before abort");
+             rotating_endpoint.tx_next_sequence_o,
+             fixed_endpoint.tx_ack_base_o,
+             fixed_endpoint.tx_outstanding_count_o);
+    if (fixed_endpoint.tx_outstanding_count_o != 32)
+      $fatal(1, "hardware boundary did not preserve the full 32-entry TX window outstanding=%0d",
+             fixed_endpoint.tx_outstanding_count_o);
+    f_ack_good_before_abort = fixed_endpoint.physical_ack_frames_good_o;
+    r_fallback_before_abort = r_fallback;
+    $display("P10_5_ABORT_REACK_BOUNDARY next=%0d/%0d ack_base=%0d outstanding=%0d ack_good=%0d fallback=%0d",
+             fixed_endpoint.tx_next_sequence_o,
+             rotating_endpoint.tx_next_sequence_o,
+             fixed_endpoint.tx_ack_base_o,
+             fixed_endpoint.tx_outstanding_count_o,
+             f_ack_good_before_abort, r_fallback_before_abort);
     @(negedge f_clk); f_abort_rx = 1;
     @(negedge r_clk); r_abort_tx = 1;
     @(posedge f_clk); @(negedge f_clk); f_abort_rx = 0;
@@ -864,6 +886,22 @@ module tb_p10_5_dual_direction #(
     if (f_retry_exhausted != 0 || r_retry_exhausted != 0)
       $fatal(1, "symmetric abort exhausted retries fixed=%0d rotating=%0d",
              f_retry_exhausted, r_retry_exhausted);
+    // A SACK can retire every surviving descriptor while cumulative ACK_BASE
+    // remains behind TX_NEXT.  OUTSTANDING=0 is the architectural completion
+    // condition; requiring ACK_BASE==TX_NEXT would reject a correct selective-
+    // repeat outcome such as the hardware-boundary 20+32 fragment case.
+    if (fixed_endpoint.tx_outstanding_count_o != 0)
+      $fatal(1, "post-abort control ACKs did not retire surviving fixed TX window outstanding=%0d base=%0d next=%0d",
+             fixed_endpoint.tx_outstanding_count_o,
+             fixed_endpoint.tx_ack_base_o, fixed_endpoint.tx_next_sequence_o);
+    if (fixed_endpoint.physical_ack_frames_good_o <= f_ack_good_before_abort)
+      $fatal(1, "post-abort fixed endpoint accepted no physical control ACK");
+    if (r_fallback <= r_fallback_before_abort)
+      $fatal(1, "post-abort rotating endpoint emitted no control-only ACK fallback");
+    if (f_dir_reject != 0 || r_dir_reject != 0 ||
+        f_epoch_reject != 0 || r_epoch_reject != 0)
+      $fatal(1, "post-abort ACK metadata rejection direction=%0d/%0d epoch=%0d/%0d",
+             f_dir_reject, r_dir_reject, f_epoch_reject, r_epoch_reject);
 
     for (lane_index = 0; lane_index < 4; lane_index = lane_index + 1) begin
       if (f_tx_high_max[32*lane_index +: 32] > 64 ||

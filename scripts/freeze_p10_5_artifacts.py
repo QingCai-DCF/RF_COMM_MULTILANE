@@ -70,8 +70,10 @@ POST_ARTIFACT_ALLOWED_EXACT = {
     "docs/hardware/P10_3_AS_WIRED_RECORD.md",
     "scripts/create_p10_5_authorization.py",
     "scripts/freeze_p10_5_artifacts.py",
+    "scripts/hw/p10_dual_xsdb_stage.tcl",
     "scripts/hw/p10_program_dual_shutdown.tcl",
     "scripts/run_p10_5_hardware.py",
+    "sim/tb/tb_p10_5_dual_direction.sv",
     "tests/test_p10_5_hardware.py",
 }
 POST_ARTIFACT_ALLOWED_PREFIXES = (
