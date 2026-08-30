@@ -32,7 +32,7 @@
     "formal_30min"
   ],
   "artifact_freeze": "evidence/generated/p10_5_artifact_freeze.json",
-  "artifact_freeze_sha256": "dd43a87abc70db360aa84ec4a0128a5eaf38ef71c7d363666b95c6902b259b76",
+  "artifact_freeze_sha256": "803c2d011f96f12e96431639212af28e2419c685c436382b61d572966d382808",
   "artifacts": [
     {
       "bytes": 369449,
@@ -116,22 +116,32 @@
     }
   ],
   "authorization_id": "P10_5-CURRENT-RUN-IMMUTABLE",
-  "authorization_parent_commit": "747bdc30cda38f9606de30b535b186458142c8a4",
+  "authorization_parent_commit": "7b09409dd6df78ad476e993db676fb9c7659b8d1",
   "authorization_source": [
     "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md",
     "direct user submission of the P10.5 Goal dated 2026-08-09",
-    "direct user statement dated 2026-08-27: 我已将B0025换位换为新的B0011，请你继续目标"
+    "direct user statement dated 2026-08-27: 我已将B0025换位换为新的B0011，请你继续目标",
+    "direct user statement dated 2026-08-30: 继续目标，现在应该可以枚举到设备了",
+    "direct user statement dated 2026-08-30: 我允许直接操作硬件不做回归",
+    "direct user statement dated 2026-08-30: 我人工给予10次授权"
   ],
   "authorization_source_semantics": "Submitting the Goal explicitly authorizes its complete bounded P10.5 hardware campaign without further confirmation after immutable offline freeze.",
-  "authorized": false,
+  "authorization_batch": {
+    "authorization_id": "P10_5-20260830-USER-TEN-RUN-AUTHORIZATION",
+    "source_path": "evidence/generated/p10_5_20260830_ten_run_authorization.json",
+    "source_sha256": "4f24a062fc4b6c269a163a7d0df06760f19535aceabd5c337534de29372c7f05",
+    "maximum_distinct_current_run_authorizations": 10,
+    "current_run_ordinal": 1,
+    "remaining_after_current_materialization": 9
+  },
+  "authorized": true,
   "board_binding": {
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
-  "consumed": true,
-  "consumed_at_utc": "2026-08-27T10:36:53+00:00",
-  "created_at_utc": "2026-08-27T10:35:39.034884+00:00",
-  "current_run_hardware_authorization": false,
+  "consumed": false,
+  "created_at_utc": "2026-08-30T09:51:06.808683+00:00",
+  "current_run_hardware_authorization": true,
   "errors": [],
   "ethernet_allowed": false,
   "external_instrumentation_allowed": false,
@@ -162,9 +172,9 @@
   },
   "host_runtime_inputs": {
     "campaign_runner": {
-      "bytes": 63042,
+      "bytes": 63754,
       "path": "scripts/run_p10_5_hardware.py",
-      "sha256": "4e6c897bc13920eca63da75689e3674e3425a77329ac6c8ad973f95fadbe7b3f"
+      "sha256": "4ffe9b657c1b8274a458e5c8d8ee223765aae6f61e3540f09fd8d0ae24d5c8e5"
     },
     "forensic_tcl": {
       "bytes": 16654,
@@ -175,6 +185,11 @@
       "bytes": 9419,
       "path": "scripts/p10_tfdu_runtime_guard.py",
       "sha256": "6c90331dc94f20b9378f50f03e0222a2444c50e1e94933abb7366bf4ff74366a"
+    },
+    "shutdown_tcl": {
+      "bytes": 9171,
+      "path": "scripts/hw/p10_program_dual_shutdown.tcl",
+      "sha256": "193759faff07e32f0efd15b281f777594290afb95ef9c980440a5cdc6d592b64"
     },
     "stage_tcl": {
       "bytes": 140239,
@@ -197,7 +212,12 @@
     "R3": "B0011"
   },
   "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
-  "no_hardware": true,
+  "no_hardware": false,
+  "offline_regression_rerun": {
+    "executed_for_this_materialization": false,
+    "user_waived_duplicate_rerun": true,
+    "basis": "Committed unchanged artifact freeze 803c2d011f96f12e96431639212af28e2419c685c436382b61d572966d382808 is PASS, acceptance eligible and has zero errors."
+  },
   "offline_inputs": {
     "ack_collision_design": {
       "bytes": 3091,
@@ -215,19 +235,19 @@
       "sha256": "ae07d866c9b86f48ef2c58e7ac32f56526d0526ea378662fa2b626b24b2893b1"
     },
     "artifact_freezer": {
-      "bytes": 19750,
+      "bytes": 19841,
       "path": "scripts/freeze_p10_5_artifacts.py",
-      "sha256": "54f5168b32f8d059cf6e69d3db9bb132b6e8164abc22368c478b301055758204"
+      "sha256": "a4044b217f2a01e5b44e3b85b95fac680ddcf7e69f09a6406788cf7b87ae5dba"
     },
     "authorization_builder": {
-      "bytes": 9272,
+      "bytes": 9099,
       "path": "scripts/create_p10_5_authorization.py",
-      "sha256": "3c72e180b5da4d7653ea7aa29e414a48f00646272d8987cf1ab3c7de7c7d3ca0"
+      "sha256": "a406fe0807e86c3695fc16b8b2c4ab5d33b9f3a4cc0a1dae4f517a74881db1ae"
     },
     "campaign_runner": {
-      "bytes": 63042,
+      "bytes": 63754,
       "path": "scripts/run_p10_5_hardware.py",
-      "sha256": "4e6c897bc13920eca63da75689e3674e3425a77329ac6c8ad973f95fadbe7b3f"
+      "sha256": "4ffe9b657c1b8274a458e5c8d8ee223765aae6f61e3540f09fd8d0ae24d5c8e5"
     },
     "capability_table": {
       "bytes": 1219,
@@ -272,7 +292,7 @@
     "reference_model": {
       "bytes": 3695,
       "path": "evidence/generated/p10_5_reference_model.json",
-      "sha256": "35861ac39c01d1cbcda2b4a9fa8c4b705b49c9f0f25e87ab43dc0fda4acd8483"
+      "sha256": "11c9925236a7957dbf10b227e9c3545998d8c7508d4c016d0691d1d8ff94eb0a"
     },
     "register_manifest": {
       "bytes": 2045,
@@ -293,6 +313,11 @@
       "bytes": 1417,
       "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
       "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
+    },
+    "shutdown_tcl": {
+      "bytes": 9171,
+      "path": "scripts/hw/p10_program_dual_shutdown.tcl",
+      "sha256": "193759faff07e32f0efd15b281f777594290afb95ef9c980440a5cdc6d592b64"
     },
     "stage_tcl": {
       "bytes": 140239,
@@ -325,9 +350,8 @@
     "hash_low": "0xA16281D1",
     "version": "0x0A000005"
   },
-  "result": "evidence/hardware/p10_5/p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
   "rotating_jtag_serial": "210512180081",
-  "run_id": "p10_5_20260827T103539Z_e1f8c01a_4015142e_79607d01",
+  "run_id": "p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01",
   "runtime_rest_policy": {
     "conservative_modules": [
       "F0",
@@ -372,6 +396,6 @@
     "two_plus_one": 480,
     "two_plus_two": 180
   },
-  "status": "CONSUMED_AFTER_P10_5_FAIL",
+  "status": "READY_FOR_EXACT_CURRENT_RUN",
   "two_hour_test_allowed": false
 }

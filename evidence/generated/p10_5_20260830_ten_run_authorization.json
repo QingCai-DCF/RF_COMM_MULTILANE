@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "authorization_id": "P10_5-20260830-USER-TEN-RUN-AUTHORIZATION",
+  "status": "GRANTED",
+  "scope": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
+  "user_directives": [
+    "2026-08-30: 继续目标，现在应该可以枚举到设备了",
+    "2026-08-30: 我允许直接操作硬件不做回归",
+    "2026-08-30: 我人工给予10次授权"
+  ],
+  "authorization_semantics": {
+    "maximum_distinct_current_run_authorizations": 10,
+    "one_unique_run_id_per_authorization": true,
+    "current_run_authorization_must_be_materialized_and_committed_before_use": true,
+    "authorization_may_not_be_reused_after_consumption": true,
+    "offline_regression_rerun_required_before_first_run": false,
+    "offline_regression_basis": "The committed immutable artifact freeze already has status PASS, acceptance_eligible=true and zero errors; the user explicitly waived a duplicate regression rerun for this unchanged source/artifact/harness bundle.",
+    "new_or_changed_artifact_bundle_requires_new_freeze": true
+  },
+  "immutable_bundle": {
+    "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+    "artifact_freeze_path": "evidence/generated/p10_5_artifact_freeze.json",
+    "artifact_freeze_sha256": "803c2d011f96f12e96431639212af28e2419c685c436382b61d572966d382808",
+    "source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+    "fixed_functional_bitstream_sha256": "4015142eb2a009d7924103b38c8b7fe61649d7da13c6ae354dff510438e3619d",
+    "rotating_functional_bitstream_sha256": "79607d0190d12c6160e0ff2d937a5ae0a8e208a85d0b5bd3f6f975de35b23205",
+    "fixed_shutdown_bitstream_sha256": "2539aafd5eb21fcb17a55cb12c7c8d0ff4fcd351a5ae2abee133a8d4d2c88723",
+    "rotating_shutdown_bitstream_sha256": "2f303bda57710b35c1b4bcd572eff5b12943244053ceae8d36a1995e50ac5534"
+  },
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "module_binding": {
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0019",
+    "F3": "B0020",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0023",
+    "R3": "B0011"
+  },
+  "hard_boundaries": {
+    "maximum_lane_mask": 15,
+    "maximum_single_formal_run_seconds": 1800,
+    "maximum_continuous_module_runtime_seconds": 1800,
+    "minimum_interstage_cooldown_ratio": 0.5,
+    "shutdown_before_every_stage": true,
+    "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
+    "ethernet_allowed": false,
+    "spi_allowed": false,
+    "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
+    "p11_allowed": false,
+    "two_hour_test_allowed": false
+  },
+  "hardware_actions_executed": false,
+  "created_at_utc": "2026-08-30T09:51:06.808683+00:00"
+}
