@@ -3,8 +3,8 @@
   "authorization_id": "P10_5-20260830-USER-TEN-RUN-AUTHORIZATION",
   "source": "evidence/generated/p10_5_20260830_ten_run_authorization.json",
   "maximum_distinct_current_run_authorizations": 10,
-  "used": 3,
-  "remaining": 7,
+  "used": 4,
+  "remaining": 6,
   "runs": [
     {
       "ordinal": 1,
@@ -36,8 +36,29 @@
       "shutdown_rotating": "PASS",
       "result": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
       "diagnosis": "evidence/generated/p10_5_20260830_run3_formal_runtime_guard_diagnosis.json"
+    },
+    {
+      "ordinal": 4,
+      "run_id": "p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01",
+      "status": "CONSUMED_AFTER_P10_5_PASS",
+      "campaign_classification": "PASS_WITH_NONBLOCKING_LIMITS",
+      "mandatory_hardware_gates": "PASS",
+      "f_to_r_application_goodput_bps": 4292171.093333334,
+      "r_to_f_application_goodput_bps": 4292171.093333334,
+      "f_to_r_4p8mbps_stretch": "FAIL_NONBLOCKING",
+      "r_to_f_4p8mbps_stretch": "FAIL_NONBLOCKING",
+      "formal_tx_capable_runtime_seconds": 1800.0,
+      "formal_observation_shutdown_envelope_seconds": 1800.325,
+      "formal_transport_timeout_zero": true,
+      "integrity_hard_counters_zero": true,
+      "runtime_rest_status": "PASS",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS",
+      "result": "evidence/hardware/p10_5/p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
+      "run_evidence_manifest": "evidence/hardware/p10_5/p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01/final/run_evidence_sha256_manifest.json",
+      "run_evidence_manifest_sha256": "b0f63b7ae9ce9e27843b3bf49c2fbd2470c04b5f25ea230927b400ae2558f0bb"
     }
   ],
-  "next_ordinal": 4,
-  "generated_at_utc": "2026-08-30T14:19:41Z"
+  "next_ordinal": 5,
+  "generated_at_utc": "2026-08-30T16:11:17Z"
 }

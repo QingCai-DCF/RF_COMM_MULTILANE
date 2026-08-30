@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-RUN4-FINAL-AUDIT",
+  "status": "PASS_WITH_NONBLOCKING_LIMITS",
+  "runner_status": "PASS",
+  "scope": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
+  "run_id": "p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "artifact_source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+  "host_harness_commit": "ebd164bc56c72d9d1366113832c0b265c631141b",
+  "authorization": {
+    "batch_id": "P10_5-20260830-USER-TEN-RUN-AUTHORIZATION",
+    "ordinal": 4,
+    "maximum": 10,
+    "used": 4,
+    "remaining": 6,
+    "current_run_hardware_authorization": false,
+    "consumed": true,
+    "consumed_authorization_sha256": "d239cd3dd57812824a56d846f302b28fe143d03d46cc2e2ea94eb5f5df18d2dd"
+  },
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "artifact_sha256": {
+    "fixed_functional_bitstream": "4015142eb2a009d7924103b38c8b7fe61649d7da13c6ae354dff510438e3619d",
+    "rotating_functional_bitstream": "79607d0190d12c6160e0ff2d937a5ae0a8e208a85d0b5bd3f6f975de35b23205",
+    "fixed_shutdown_bitstream": "2539aafd5eb21fcb17a55cb12c7c8d0ff4fcd351a5ae2abee133a8d4d2c88723",
+    "rotating_shutdown_bitstream": "2f303bda57710b35c1b4bcd572eff5b12943244053ceae8d36a1995e50ac5534",
+    "fixed_elf": "05b6b416a420568760ec02b276b6dfa5afd045c79079edf79c8a888c7611455a",
+    "rotating_elf": "a16770e195f30d9a51a8c0693e6b31cf0b340cc01817923d6fd9404793c68082"
+  },
+  "mandatory_results": {
+    "all_14_hardware_stages": "PASS",
+    "one_plus_one_all_pairs": "PASS",
+    "two_plus_one_and_one_plus_two_matrix": "PASS",
+    "two_plus_two_all_partitions": "PASS",
+    "two_plus_two_tx_executed": true,
+    "dynamic_role_commit": "PASS",
+    "role_epoch_final": 4,
+    "ack_piggyback": "PASS",
+    "control_only_ack_fallback": "PASS",
+    "simultaneous_5x64m_each_direction": "PASS",
+    "direction_isolated_faults": "PASS",
+    "formal_30min": "PASS",
+    "runtime_rest": "PASS",
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS"
+  },
+  "performance": {
+    "f_to_r_application_goodput_bps": 4292171.093333334,
+    "r_to_f_application_goodput_bps": 4292171.093333334,
+    "f_to_r_4mbps_target": "PASS",
+    "r_to_f_4mbps_target": "PASS",
+    "f_to_r_4p8mbps_stretch": "FAIL_NONBLOCKING",
+    "r_to_f_4p8mbps_stretch": "FAIL_NONBLOCKING"
+  },
+  "formal": {
+    "tx_capable_runtime_seconds": 1800.0,
+    "observation_shutdown_envelope_seconds": 1800.325,
+    "runtime_limit_status": "PASS",
+    "required_cooldown_seconds": 900.163,
+    "actual_cooldown_seconds": 900.163207,
+    "cooldown_status": "PASS",
+    "committed_bytes_f_to_r": 967573504,
+    "committed_bytes_r_to_f": 967573504,
+    "transport_timeout": 0,
+    "crc_bad": 0,
+    "sha_mismatch": 0,
+    "partial_commit": 0,
+    "duplicate_commit": 0,
+    "stale_commit": 0,
+    "retry_exhausted": 0,
+    "descriptor_leak": 0,
+    "double_completion": 0,
+    "integrity_hard_counters_zero": true
+  },
+  "diagnostic_counter_note": {
+    "aggregate_nonformal_tx_timeouts": 292,
+    "nonformal_transport_timeouts_are_diagnostic": true,
+    "formal_transport_timeout_zero": true,
+    "interpretation": "The aggregate diagnostic count is preserved and is not substituted for the Goal's formal-window hard gate. The direct formal-window timeout count is zero."
+  },
+  "manifest_verification": {
+    "path": "evidence/hardware/p10_5/p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01/final/run_evidence_sha256_manifest.json",
+    "sha256": "b0f63b7ae9ce9e27843b3bf49c2fbd2470c04b5f25ea230927b400ae2558f0bb",
+    "declared_files": 1107,
+    "verified_files": 1107,
+    "failures": 0
+  },
+  "primary_evidence": {
+    "final_summary": "evidence/hardware/p10_5/p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
+    "final_summary_sha256": "b267fcd3a9a8a8a7d562285f32eae1623d81221fcf2eae6c85030d9350156a99",
+    "formal_summary": "evidence/generated/p10_5_formal_30min.json",
+    "formal_summary_sha256": "babe176a8aa7c1eb52b8006c458f0f39d2081f2b355b652bd0b103b79a3676c9",
+    "evidence_consistency": "evidence/generated/p10_5_evidence_consistency.json",
+    "evidence_consistency_sha256": "12d95466a8577c32aed93dfc91f7bce4fe54c9b4991c498632c3f816e85dfe60"
+  },
+  "scope_boundaries": {
+    "network_used": false,
+    "spi_used": false,
+    "hardware_moved": false,
+    "wiring_changed": false,
+    "module_replaced_during_run": false,
+    "p11_status": "NOT_STARTED",
+    "external_electrical_or_optical_acceptance_claimed": false,
+    "product_final_acceptance_claimed": false
+  },
+  "classification_basis": "All mandatory P10.5 gates passed. Both 4.8 Mbit/s stretch targets were below threshold, so Goal section 47 requires PASS_WITH_NONBLOCKING_LIMITS."
+}
