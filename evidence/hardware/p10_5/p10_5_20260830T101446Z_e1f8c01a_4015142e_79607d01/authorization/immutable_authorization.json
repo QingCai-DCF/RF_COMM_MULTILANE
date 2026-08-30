@@ -1,0 +1,401 @@
+{
+  "allowed_plan_sha256": {
+    "capability": "ca2fb8695af2b2fd2663573ef221a4ac9f1b492ee2ac46f418e215049253724d",
+    "faults": "8509e1ca5e760f7eecc6593217ceac620f2b023fe612aac5cdaaab31edfa88ea",
+    "formal_30min": "508f70c362a1dce7799574f2a521109d618f131bbd9b088b61083945c98f4c33",
+    "one_plus_one": "a313fa2d319b9dab672ee207497f03cba3bf07b18eb043ac6991c0f3597d3ab9",
+    "performance": "a76cd7aca11bc587b8dd691a8b326afb99ff83ce570f5a9f4aa5f61e5160a8a3",
+    "role_commit": "c78bc58d41de30948ad2098771e1d73231d3b24609a7167fa6b8cc80dd1956f0",
+    "safe_start": "5374960c79b709f2b97b5d28353248b626c4acf04ad0b5ca74ef6ca7194e325e",
+    "streaming_64m_1": "38e756b28bba97a9dd5226bc3c21b75f34b6fe5fa558873ce382f8959895b5fe",
+    "streaming_64m_2": "570ad892e03fed991f30ce6e0a926b622cecea3dd9be90c53585712c9e92946c",
+    "streaming_64m_3": "6d193a5adb8783d8b7cd4f2acdf9acf06b6ac035ba51d65c5d51ae65de7491c8",
+    "streaming_64m_4": "5cdea485eaeaa4a09ec02a96423ef26a4f29ef498911a838e10e336ccd98ca88",
+    "streaming_64m_5": "7bf6ec68eae635203310d7a2f823b52a61615c316793930c10335bebd0d4d317",
+    "two_plus_one": "9b5423894049e52d98d2e0b2edabf7a2934623d8ec86632818c03f0c4e8e9fc3",
+    "two_plus_two": "cdb3459a984ea6b87e3f0c06308246218740277f8e280cfe48e081b1397314fd"
+  },
+  "allowed_stages": [
+    "safe_start",
+    "capability",
+    "one_plus_one",
+    "two_plus_one",
+    "two_plus_two",
+    "role_commit",
+    "performance",
+    "streaming_64m_1",
+    "streaming_64m_2",
+    "streaming_64m_3",
+    "streaming_64m_4",
+    "streaming_64m_5",
+    "faults",
+    "formal_30min"
+  ],
+  "artifact_freeze": "evidence/generated/p10_5_artifact_freeze.json",
+  "artifact_freeze_sha256": "803c2d011f96f12e96431639212af28e2419c685c436382b61d572966d382808",
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/2539aafd5eb21fcb17a55cb12c7c8d0ff4fcd351a5ae2abee133a8d4d2c88723/p10_ax7020_fixed_shutdown.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "2539aafd5eb21fcb17a55cb12c7c8d0ff4fcd351a5ae2abee133a8d4d2c88723"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/4015142eb2a009d7924103b38c8b7fe61649d7da13c6ae354dff510438e3619d/p10_ax7020_fixed_functional.bit",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "4015142eb2a009d7924103b38c8b7fe61649d7da13c6ae354dff510438e3619d"
+    },
+    {
+      "bytes": 1423650,
+      "kind": "xsa",
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/1175a0be9dfba097592d7c9dfcf1a989df1a06134af7dbf4c30821a4dae62a30/p10_ax7020_fixed_functional.xsa",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "1175a0be9dfba097592d7c9dfcf1a989df1a06134af7dbf4c30821a4dae62a30"
+    },
+    {
+      "bytes": 1970295,
+      "kind": "bsp",
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a"
+    },
+    {
+      "bytes": 665316,
+      "kind": "elf",
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/05b6b416a420568760ec02b276b6dfa5afd045c79079edf79c8a888c7611455a/p10_fixed_runtime.elf",
+      "read_only": true,
+      "role": "fixed",
+      "sha256": "05b6b416a420568760ec02b276b6dfa5afd045c79079edf79c8a888c7611455a"
+    },
+    {
+      "bytes": 369449,
+      "kind": "shutdown_bitstream",
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/2f303bda57710b35c1b4bcd572eff5b12943244053ceae8d36a1995e50ac5534/p10_ax7020_rotating_shutdown.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "2f303bda57710b35c1b4bcd572eff5b12943244053ceae8d36a1995e50ac5534"
+    },
+    {
+      "bytes": 4045681,
+      "kind": "functional_bitstream",
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/79607d0190d12c6160e0ff2d937a5ae0a8e208a85d0b5bd3f6f975de35b23205/p10_ax7020_rotating_functional.bit",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "79607d0190d12c6160e0ff2d937a5ae0a8e208a85d0b5bd3f6f975de35b23205"
+    },
+    {
+      "bytes": 1418475,
+      "kind": "xsa",
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/9a341a226b97d508de354e3e5b2552bcf0f6ef26258a56c8fb9c0b6faf1806c7/p10_ax7020_rotating_functional.xsa",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "9a341a226b97d508de354e3e5b2552bcf0f6ef26258a56c8fb9c0b6faf1806c7"
+    },
+    {
+      "bytes": 1970378,
+      "kind": "bsp",
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c"
+    },
+    {
+      "bytes": 666164,
+      "kind": "elf",
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/a16770e195f30d9a51a8c0693e6b31cf0b340cc01817923d6fd9404793c68082/p10_rotating_runtime.elf",
+      "read_only": true,
+      "role": "rotating",
+      "sha256": "a16770e195f30d9a51a8c0693e6b31cf0b340cc01817923d6fd9404793c68082"
+    }
+  ],
+  "authorization_batch": {
+    "authorization_id": "P10_5-20260830-USER-TEN-RUN-AUTHORIZATION",
+    "current_run_ordinal": 2,
+    "maximum_distinct_current_run_authorizations": 10,
+    "remaining_after_current_materialization": 8,
+    "source_path": "evidence/generated/p10_5_20260830_ten_run_authorization.json",
+    "source_sha256": "4f24a062fc4b6c269a163a7d0df06760f19535aceabd5c337534de29372c7f05"
+  },
+  "authorization_id": "P10_5-CURRENT-RUN-IMMUTABLE",
+  "authorization_parent_commit": "13a64dc02be85b7ae08d72be087253493f9bcbe0",
+  "authorization_source": [
+    "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md",
+    "direct user submission of the P10.5 Goal dated 2026-08-09",
+    "direct user statement dated 2026-08-27: 我已将B0025换位换为新的B0011，请你继续目标",
+    "direct user statement dated 2026-08-30: 继续目标，现在应该可以枚举到设备了",
+    "direct user statement dated 2026-08-30: 我允许直接操作硬件不做回归",
+    "direct user statement dated 2026-08-30: 我人工给予10次授权"
+  ],
+  "authorization_source_semantics": "Submitting the Goal explicitly authorizes its complete bounded P10.5 hardware campaign without further confirmation after immutable offline freeze.",
+  "authorized": true,
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "consumed": false,
+  "created_at_utc": "2026-08-30T10:14:46.247190+00:00",
+  "current_run_hardware_authorization": true,
+  "errors": [],
+  "ethernet_allowed": false,
+  "external_instrumentation_allowed": false,
+  "fixed_jtag_serial": "210249855178",
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "hardware_actions_executed": false,
+  "hardware_configuration_inputs": {
+    "actual_wiring": {
+      "bytes": 5535,
+      "path": "config/hardware/p10_3_actual_wiring.yaml",
+      "sha256": "ae07d866c9b86f48ef2c58e7ac32f56526d0526ea378662fa2b626b24b2893b1"
+    },
+    "dual_direction_config": {
+      "bytes": 2244,
+      "path": "config/p10_5_dual_direction.yaml",
+      "sha256": "24f200aca983191633f87d0974fb4034cbdbaa88c5c45a2742172e9744304d46"
+    },
+    "module_inventory": {
+      "bytes": 29631,
+      "path": "config/hardware/tfdu_module_inventory.yaml",
+      "sha256": "9dd4f034e148684a296c46f6f87822a7a248430009dc1794595999ede77d430f"
+    },
+    "runtime_rest_policy": {
+      "bytes": 1417,
+      "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
+      "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
+    }
+  },
+  "host_runtime_inputs": {
+    "campaign_runner": {
+      "bytes": 63754,
+      "path": "scripts/run_p10_5_hardware.py",
+      "sha256": "4ffe9b657c1b8274a458e5c8d8ee223765aae6f61e3540f09fd8d0ae24d5c8e5"
+    },
+    "forensic_tcl": {
+      "bytes": 16654,
+      "path": "scripts/hw/p10_3f_fault_forensics.tcl",
+      "sha256": "facc17601507a710040159b050aa902dbb8b02225c9f8998c73c743b1e3ea377"
+    },
+    "runtime_guard": {
+      "bytes": 9419,
+      "path": "scripts/p10_tfdu_runtime_guard.py",
+      "sha256": "6c90331dc94f20b9378f50f03e0222a2444c50e1e94933abb7366bf4ff74366a"
+    },
+    "shutdown_tcl": {
+      "bytes": 9171,
+      "path": "scripts/hw/p10_program_dual_shutdown.tcl",
+      "sha256": "193759faff07e32f0efd15b281f777594290afb95ef9c980440a5cdc6d592b64"
+    },
+    "stage_tcl": {
+      "bytes": 140239,
+      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+      "sha256": "d9e4b57ec89928cbf704c43f39ec415dd23f0dd907c030ee1042572d1829c6df"
+    }
+  },
+  "maximum_continuous_module_runtime_seconds": 1800,
+  "maximum_lane_mask": 15,
+  "maximum_single_formal_run_seconds": 1800,
+  "minimum_interstage_cooldown_ratio": 0.5,
+  "module_binding": {
+    "F0": "A0019",
+    "F1": "B0012",
+    "F2": "B0019",
+    "F3": "B0020",
+    "R0": "A0010",
+    "R1": "A0017",
+    "R2": "B0023",
+    "R3": "B0011"
+  },
+  "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
+  "no_hardware": false,
+  "offline_inputs": {
+    "ack_collision_design": {
+      "bytes": 3091,
+      "path": "docs/design/P10_5_CONTROL_ACK_COLLISION_AVOIDANCE.md",
+      "sha256": "6402016e736e1b808f4a375532469fec4e4618ff170ca88e6351ee6de0493463"
+    },
+    "ack_collision_diagnosis": {
+      "bytes": 3461,
+      "path": "evidence/generated/p10_5_ack_collision_diagnosis.json",
+      "sha256": "be06fb105c23386f7ae8045c9e0a90ad4d7288a4b9b708fcf00b6872bd58f4d4"
+    },
+    "actual_wiring": {
+      "bytes": 5535,
+      "path": "config/hardware/p10_3_actual_wiring.yaml",
+      "sha256": "ae07d866c9b86f48ef2c58e7ac32f56526d0526ea378662fa2b626b24b2893b1"
+    },
+    "artifact_freezer": {
+      "bytes": 19841,
+      "path": "scripts/freeze_p10_5_artifacts.py",
+      "sha256": "a4044b217f2a01e5b44e3b85b95fac680ddcf7e69f09a6406788cf7b87ae5dba"
+    },
+    "authorization_builder": {
+      "bytes": 9099,
+      "path": "scripts/create_p10_5_authorization.py",
+      "sha256": "a406fe0807e86c3695fc16b8b2c4ab5d33b9f3a4cc0a1dae4f517a74881db1ae"
+    },
+    "campaign_runner": {
+      "bytes": 63754,
+      "path": "scripts/run_p10_5_hardware.py",
+      "sha256": "4ffe9b657c1b8274a458e5c8d8ee223765aae6f61e3540f09fd8d0ae24d5c8e5"
+    },
+    "capability_table": {
+      "bytes": 1219,
+      "path": "config/generated/p10_5_capability_table.json",
+      "sha256": "0a1b4ff9812181e88740b71fe6ce1461764f2a981772088a11cfdf227d9c2560"
+    },
+    "direction_abort_ack_liveness_design": {
+      "bytes": 3807,
+      "path": "docs/design/P10_5_DIRECTION_ABORT_ACK_LIVENESS.md",
+      "sha256": "8d0c515b9bb741071fb8dd0c8eb76d4ebf3cf459f3b33d11c31b1718fa8eb5c8"
+    },
+    "direction_abort_ack_liveness_diagnosis": {
+      "bytes": 6358,
+      "path": "evidence/generated/p10_5_direction_abort_ack_liveness_diagnosis.json",
+      "sha256": "47a15fe2570bf80567da6907bedcec4cfa1a8383a92196afd715b4f75619cbf4"
+    },
+    "dual_direction_config": {
+      "bytes": 2244,
+      "path": "config/p10_5_dual_direction.yaml",
+      "sha256": "24f200aca983191633f87d0974fb4034cbdbaa88c5c45a2742172e9744304d46"
+    },
+    "forensic_tcl": {
+      "bytes": 16654,
+      "path": "scripts/hw/p10_3f_fault_forensics.tcl",
+      "sha256": "facc17601507a710040159b050aa902dbb8b02225c9f8998c73c743b1e3ea377"
+    },
+    "goal": {
+      "bytes": 37470,
+      "path": "goals/P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE_GOAL.md",
+      "sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36"
+    },
+    "module_inventory": {
+      "bytes": 29631,
+      "path": "config/hardware/tfdu_module_inventory.yaml",
+      "sha256": "9dd4f034e148684a296c46f6f87822a7a248430009dc1794595999ede77d430f"
+    },
+    "p10_4_closeout": {
+      "bytes": 522,
+      "path": "evidence/generated/p10_4_closeout.json",
+      "sha256": "a4504d3fa0eeb080c287c560e90955b7ddbb559486a21280118941ac3f053c9d"
+    },
+    "reference_model": {
+      "bytes": 3695,
+      "path": "evidence/generated/p10_5_reference_model.json",
+      "sha256": "11c9925236a7957dbf10b227e9c3545998d8c7508d4c016d0691d1d8ff94eb0a"
+    },
+    "register_manifest": {
+      "bytes": 2045,
+      "path": "config/register_map/generated/ir_regs_manifest.json",
+      "sha256": "c15fc2a29b95de8e3b0f89e378ca41ddcaf49439489619b4b650080a50e36f0f"
+    },
+    "register_map": {
+      "bytes": 78818,
+      "path": "config/register_map/ir_axi_regs.yaml",
+      "sha256": "723d1e35155a7d0184b787744a9cfd5c8d4574928572a4572f03df0ba16281d1"
+    },
+    "runtime_guard": {
+      "bytes": 9419,
+      "path": "scripts/p10_tfdu_runtime_guard.py",
+      "sha256": "6c90331dc94f20b9378f50f03e0222a2444c50e1e94933abb7366bf4ff74366a"
+    },
+    "runtime_rest_policy": {
+      "bytes": 1417,
+      "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
+      "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
+    },
+    "shutdown_tcl": {
+      "bytes": 9171,
+      "path": "scripts/hw/p10_program_dual_shutdown.tcl",
+      "sha256": "193759faff07e32f0efd15b281f777594290afb95ef9c980440a5cdc6d592b64"
+    },
+    "stage_tcl": {
+      "bytes": 140239,
+      "path": "scripts/hw/p10_dual_xsdb_stage.tcl",
+      "sha256": "d9e4b57ec89928cbf704c43f39ec415dd23f0dd907c030ee1042572d1829c6df"
+    },
+    "xsim_summary": {
+      "bytes": 22357,
+      "path": "evidence/generated/p10_5_xsim/summary.json",
+      "sha256": "c322db436e94f00dee32e1277dd616c4fef07ada6e3655d4e07bbe1ceaeb6a42"
+    }
+  },
+  "offline_regression_rerun": {
+    "basis": "Committed unchanged artifact freeze 803c2d011f96f12e96431639212af28e2419c685c436382b61d572966d382808 is PASS, acceptance eligible and has zero errors.",
+    "executed_for_this_materialization": false,
+    "user_waived_duplicate_rerun": true
+  },
+  "p11_allowed": false,
+  "pre_run_user_module_replacement": {
+    "codex_physical_action": false,
+    "historical_b0025_evidence_preserved": true,
+    "identity_basis": "USER_REPORTED_NOT_INDEPENDENTLY_VERIFIED",
+    "installed_small_board_id": "B0011",
+    "logical_module": "R3",
+    "position": "AX7020-R/J11-B",
+    "removed_small_board_id": "B0025",
+    "replacement_power_state": "NOT_STATED_BY_USER; NOT_CLAIMED"
+  },
+  "primary_partition": {
+    "active": 15,
+    "f_to_r": 3,
+    "r_to_f": 12
+  },
+  "register_map": {
+    "hash_low": "0xA16281D1",
+    "version": "0x0A000005"
+  },
+  "rotating_jtag_serial": "210512180081",
+  "run_id": "p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01",
+  "runtime_rest_policy": {
+    "conservative_modules": [
+      "F0",
+      "F1",
+      "F2",
+      "F3",
+      "R0",
+      "R1",
+      "R2",
+      "R3"
+    ],
+    "maximum_continuous_runtime_seconds": 1800,
+    "minimum_cooldown_ratio": 0.5,
+    "path": "config/safety/p10_tfdu_runtime_rest_policy.yaml",
+    "policy_id": "P10_TFDU_RUNTIME_REST_2026_08_08",
+    "sha256": "14fbd5c69afe72627dc299e02be79aae188023999405030345bb1ba8eb5480b6"
+  },
+  "schema_version": 1,
+  "scope": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
+  "shutdown_policy": {
+    "archive_before_independent_shutdown": true,
+    "clear_frozen_capture_before_shutdown_program": false,
+    "shutdown_before_every_stage": true,
+    "shutdown_on_error_timeout_ctrl_c_and_normal_exit": true,
+    "verify_both_shutdown_markers": true
+  },
+  "source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+  "spi_allowed": false,
+  "stage_runtime_limits_seconds": {
+    "capability": 10,
+    "faults": 900,
+    "formal_30min": 1800,
+    "one_plus_one": 120,
+    "performance": 300,
+    "role_commit": 40,
+    "safe_start": 1,
+    "streaming_64m_1": 600,
+    "streaming_64m_2": 600,
+    "streaming_64m_3": 600,
+    "streaming_64m_4": 600,
+    "streaming_64m_5": 600,
+    "two_plus_one": 480,
+    "two_plus_two": 180
+  },
+  "status": "READY_FOR_EXACT_CURRENT_RUN",
+  "two_hour_test_allowed": false
+}

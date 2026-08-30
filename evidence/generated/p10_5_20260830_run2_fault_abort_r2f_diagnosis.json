@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-RUN2-FAULT-ABORT-R2F-DIAGNOSIS",
+  "status": "REPRODUCED_HARDWARE_BOUNDARY_REMEDIATION_REQUIRED",
+  "generated_at_utc": "2026-08-30T11:47:36Z",
+  "run_id": "p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01",
+  "authorization_batch_ordinal": 2,
+  "authorization_batch_maximum": 10,
+  "authorization_batch_remaining": 8,
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "artifact_freeze_sha256": "803c2d011f96f12e96431639212af28e2419c685c436382b61d572966d382808",
+  "artifact_source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+  "hardware_actions_executed": true,
+  "result": "FAIL_CLOSED",
+  "shutdown": {
+    "fixed": "PASS",
+    "rotating": "PASS",
+    "tfdu_shutdown_programmed": true,
+    "shutdown_exit": 0,
+    "required_cooldown_seconds": 308.967,
+    "actual_cooldown_seconds": 308.967247,
+    "cooldown_status": "PASS"
+  },
+  "campaign_progress_before_failure": {
+    "safe_start": "PASS",
+    "capability": "PASS",
+    "one_plus_one_cases": "12/12 PASS",
+    "two_plus_one_and_one_plus_two_matrix": "PASS",
+    "two_plus_two_partitions": "6/6 PASS",
+    "role_commit_readback": "4/4 PASS",
+    "performance_300s": "PASS",
+    "application_goodput_f_to_r_bps": 4292171.093,
+    "application_goodput_r_to_f_bps": 4292171.093,
+    "streaming_64m_simultaneous_bidirectional": "5/5 PASS",
+    "formal_30min": "NOT_RUN_AFTER_MANDATORY_FAULT_STAGE_FAILURE"
+  },
+  "failing_case": {
+    "stage": "faults",
+    "label": "fault_abort_r2f",
+    "fault_target_direction": "R_TO_F",
+    "fixed_local_action": "abort RX context; keep F_TO_R TX context live",
+    "rotating_local_action": "abort R_TO_F TX context; keep F_TO_R RX context live",
+    "object_bytes": 262144,
+    "active_runtime_seconds": 617.933,
+    "fixed_status": "0x00000104 P10_1_RUNTIME_STATUS_PL_OBJECT",
+    "rotating_status": "0x00000103 P10_1_RUNTIME_STATUS_DMA_COMPLETION"
+  },
+  "fixed_frozen_state": {
+    "object_error": "0x50090004",
+    "input_bytes": 12844,
+    "output_bytes": 5432,
+    "tx_next_sequence": 52,
+    "tx_ack_base": 21,
+    "tx_outstanding": 31,
+    "tx_outstanding_high_watermark": 32,
+    "tx_attempts": 276,
+    "tx_retries": 224,
+    "tx_timeouts": 225,
+    "tx_retry_exhausted": 1,
+    "control_only_ack_count": 0,
+    "fault_cause": "0x00008070",
+    "first_fault_snapshot_sha256": "c4c94bbf2d2ce02781dc27a2943066442295a42c5989c0cf01fbecf2cea4a7ee"
+  },
+  "rotating_frozen_state": {
+    "object_error": "0x50090001",
+    "input_bytes": 12844,
+    "output_bytes": 12844,
+    "tx_attempts": 24,
+    "tx_retries": 0,
+    "tx_timeouts": 0,
+    "tx_retry_exhausted": 0,
+    "control_only_ack_count": 115,
+    "fault_cause": "0x00002030",
+    "first_fault_snapshot_sha256": "dcad49c2fd4dc77a269adfcaa95cac0d9ae3a905873d302135a1b2d2b470c87a"
+  },
+  "physical_and_safety_evidence": {
+    "fixed_physical_tx_lane0": 154008,
+    "fixed_physical_tx_lane1": 154001,
+    "rotating_raw_rx_lane0": 154008,
+    "rotating_raw_rx_lane1": 154001,
+    "rotating_physical_tx_lane2": 24669,
+    "rotating_physical_tx_lane3": 13007,
+    "fixed_raw_rx_lane2": 24669,
+    "fixed_raw_rx_lane3": 13007,
+    "maximum_continuous_high_cycles": 16,
+    "maximum_rolling_duty_cycles": 11504,
+    "rolling_duty_design_target_cycles": 11520,
+    "hard_fault_count": 0,
+    "safety_fault": false,
+    "interpretation": "Every requested physical pulse count is present at its paired board with exact equality. This proves physical pulse transport during the failed case, but it does not by itself prove CRC-valid ACK decode or protocol admission."
+  },
+  "evidence_limits": {
+    "post_terminal_p10_1r_and_p10_2_counters": "CLEARED_BY_FAIL_CLOSED_TERMINAL_PATH",
+    "consequence": "The post-terminal atomic snapshots cannot be used to claim how many of the 115 rotating control-only ACK transmissions were CRC-valid or admitted by the fixed endpoint.",
+    "forensic_snapshot_scope": "The persistent first-fault snapshot preserves TX/raw/safety/L2-object state but does not include per-lane physical ACK-good, CRC-bad, direction-reject, or role-epoch-reject counters."
+  },
+  "root_cause_state": {
+    "confirmed": false,
+    "confirmed_boundary": "After R_TO_F direction abort at the 52-fragment / full-window boundary, the rotating RX context remains live and schedules 115 control-only ACK frames, yet the fixed F_TO_R TX window advances only to ACK base 21 and exhausts all 32 entries at seven retries each.",
+    "current_hypothesis": "The earlier duplicate-DATA dirty-bit repair restores control-only ACK scheduling, but the existing simulation aborts too early and does not reproduce the hardware ACK-base-20/full-window timing state. The next regression must hold the exact partial ACK boundary before abort and directly assert control ACK decode/admission and TX-window retirement.",
+    "excluded_by_current_evidence": [
+      "JTAG enumeration failure",
+      "board identity ambiguity",
+      "permanent raw open circuit on lane0, lane1, lane2, or lane3",
+      "rolling-duty or continuous-high safety fault",
+      "absence of rotating control-only ACK scheduling"
+    ],
+    "not_yet_excluded": [
+      "ACK frame decode or admission loss after the rotating TX-context abort",
+      "stale ACK session, direction, role-epoch, or snapshot metadata",
+      "ACK scheduling/timing starvation at the partial ACK/full-window boundary",
+      "simulation timing coverage gap"
+    ]
+  },
+  "next_controlled_action": "Add a failing two-endpoint XSIM regression that delays the symmetric direction abort until fixed TX next=52 and ACK base=20, then require rotating control-only ACK reception to retire the fixed window. Repair the smallest demonstrated RTL/protocol defect, run the complete P10.5 offline gates, freeze a new immutable artifact bundle, and use authorization ordinal 3 only after exact hashes are committed.",
+  "evidence": [
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01/stages/faults/dumps/observations.psv",
+      "sha256": "693ffc8c58fe557686a6f0044467e3632e69f04a5cb4ef61080ceae9b72b2e63"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01/stages/faults/dumps/fault_abort_r2f.fixed.p10_1.bin",
+      "sha256": "7dccfcfb8866a40f4458557fef42ae68b5901c0d7bfe1c3ecd88e4af11e8169d"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01/stages/faults/dumps/fault_abort_r2f.rotating.p10_1.bin",
+      "sha256": "4e0018b88093f41ba9003fddb24233a641a74afa427c5c4ca8bb894f22ee08fc"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01/forensics/faults/fixed.p10ff.json",
+      "sha256": "719acd92ff3b86d8855f0cc412f793b177199dbc9faf0885ddbe1ee458789acc"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01/forensics/faults/rotating.p10ff.json",
+      "sha256": "c506dd007677f773f2d48101d4cb0af9b0eeedd4cb60721ebfe16329b38de071"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01/final/run_evidence_sha256_manifest.json",
+      "sha256": "c526c9ac0d4ad33e82e2c92302f1a6be688003f51614d1891030d3a256e88805",
+      "manifest_status": "PASS",
+      "manifest_file_count": 974,
+      "independent_reverification": "PASS"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
+      "sha256": "ddac8abf07d7bb8e6c95a6165439561bcbc5aa1ab7918ea3c4773165e58e6a10"
+    }
+  ],
+  "errors": []
+}

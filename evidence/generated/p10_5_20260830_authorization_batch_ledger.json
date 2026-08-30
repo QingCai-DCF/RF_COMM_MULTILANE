@@ -3,8 +3,8 @@
   "authorization_id": "P10_5-20260830-USER-TEN-RUN-AUTHORIZATION",
   "source": "evidence/generated/p10_5_20260830_ten_run_authorization.json",
   "maximum_distinct_current_run_authorizations": 10,
-  "used": 1,
-  "remaining": 9,
+  "used": 2,
+  "remaining": 8,
   "runs": [
     {
       "ordinal": 1,
@@ -14,8 +14,18 @@
       "shutdown_fixed": "PASS",
       "shutdown_rotating": "PASS",
       "result": "evidence/hardware/p10_5/p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json"
+    },
+    {
+      "ordinal": 2,
+      "run_id": "p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01",
+      "status": "CONSUMED_AFTER_P10_5_FAIL",
+      "failure_stage": "faults",
+      "failing_case": "fault_abort_r2f",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS",
+      "result": "evidence/hardware/p10_5/p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json"
     }
   ],
-  "next_ordinal": 2,
-  "generated_at_utc": "2026-08-30T10:11:53Z"
+  "next_ordinal": 3,
+  "generated_at_utc": "2026-08-30T11:47:36Z"
 }
