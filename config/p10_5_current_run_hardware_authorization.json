@@ -115,6 +115,14 @@
       "sha256": "a16770e195f30d9a51a8c0693e6b31cf0b340cc01817923d6fd9404793c68082"
     }
   ],
+  "authorization_batch": {
+    "authorization_id": "P10_5-20260830-USER-TEN-RUN-AUTHORIZATION",
+    "current_run_ordinal": 1,
+    "maximum_distinct_current_run_authorizations": 10,
+    "remaining_after_current_materialization": 9,
+    "source_path": "evidence/generated/p10_5_20260830_ten_run_authorization.json",
+    "source_sha256": "4f24a062fc4b6c269a163a7d0df06760f19535aceabd5c337534de29372c7f05"
+  },
   "authorization_id": "P10_5-CURRENT-RUN-IMMUTABLE",
   "authorization_parent_commit": "7b09409dd6df78ad476e993db676fb9c7659b8d1",
   "authorization_source": [
@@ -126,22 +134,15 @@
     "direct user statement dated 2026-08-30: 我人工给予10次授权"
   ],
   "authorization_source_semantics": "Submitting the Goal explicitly authorizes its complete bounded P10.5 hardware campaign without further confirmation after immutable offline freeze.",
-  "authorization_batch": {
-    "authorization_id": "P10_5-20260830-USER-TEN-RUN-AUTHORIZATION",
-    "source_path": "evidence/generated/p10_5_20260830_ten_run_authorization.json",
-    "source_sha256": "4f24a062fc4b6c269a163a7d0df06760f19535aceabd5c337534de29372c7f05",
-    "maximum_distinct_current_run_authorizations": 10,
-    "current_run_ordinal": 1,
-    "remaining_after_current_materialization": 9
-  },
-  "authorized": true,
+  "authorized": false,
   "board_binding": {
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
-  "consumed": false,
+  "consumed": true,
+  "consumed_at_utc": "2026-08-30T10:03:04+00:00",
   "created_at_utc": "2026-08-30T09:51:06.808683+00:00",
-  "current_run_hardware_authorization": true,
+  "current_run_hardware_authorization": false,
   "errors": [],
   "ethernet_allowed": false,
   "external_instrumentation_allowed": false,
@@ -212,12 +213,7 @@
     "R3": "B0011"
   },
   "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
-  "no_hardware": false,
-  "offline_regression_rerun": {
-    "executed_for_this_materialization": false,
-    "user_waived_duplicate_rerun": true,
-    "basis": "Committed unchanged artifact freeze 803c2d011f96f12e96431639212af28e2419c685c436382b61d572966d382808 is PASS, acceptance eligible and has zero errors."
-  },
+  "no_hardware": true,
   "offline_inputs": {
     "ack_collision_design": {
       "bytes": 3091,
@@ -330,6 +326,11 @@
       "sha256": "c322db436e94f00dee32e1277dd616c4fef07ada6e3655d4e07bbe1ceaeb6a42"
     }
   },
+  "offline_regression_rerun": {
+    "basis": "Committed unchanged artifact freeze 803c2d011f96f12e96431639212af28e2419c685c436382b61d572966d382808 is PASS, acceptance eligible and has zero errors.",
+    "executed_for_this_materialization": false,
+    "user_waived_duplicate_rerun": true
+  },
   "p11_allowed": false,
   "pre_run_user_module_replacement": {
     "codex_physical_action": false,
@@ -350,6 +351,7 @@
     "hash_low": "0xA16281D1",
     "version": "0x0A000005"
   },
+  "result": "evidence/hardware/p10_5/p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
   "rotating_jtag_serial": "210512180081",
   "run_id": "p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01",
   "runtime_rest_policy": {
@@ -396,6 +398,6 @@
     "two_plus_one": 480,
     "two_plus_two": 180
   },
-  "status": "READY_FOR_EXACT_CURRENT_RUN",
+  "status": "CONSUMED_AFTER_P10_5_FAIL",
   "two_hour_test_allowed": false
 }

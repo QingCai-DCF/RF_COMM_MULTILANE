@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-RUN1-FAILURE-DIAGNOSIS",
+  "status": "DIAGNOSIS_IN_PROGRESS",
+  "generated_at_utc": "2026-08-30T10:11:53Z",
+  "run_id": "p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01",
+  "authorization_batch_ordinal": 1,
+  "authorization_batch_maximum": 10,
+  "authorization_batch_remaining": 9,
+  "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
+  "artifact_freeze_sha256": "803c2d011f96f12e96431639212af28e2419c685c436382b61d572966d382808",
+  "artifact_source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+  "hardware_actions_executed": true,
+  "result": "FAIL_CLOSED",
+  "shutdown": {
+    "fixed": "PASS",
+    "rotating": "PASS",
+    "tfdu_shutdown_programmed": true,
+    "shutdown_exit": 0
+  },
+  "stage": {
+    "name": "one_plus_one",
+    "cases_planned": 12,
+    "cases_passed_before_failure": 11,
+    "failing_case": "oneplusone_f3_r2",
+    "physical_roles": "F3->R3 simultaneous with R2->F2",
+    "active_runtime_seconds": 244.994,
+    "required_cooldown_seconds": 122.497,
+    "actual_cooldown_seconds": 122.497268,
+    "cooldown_status": "PASS"
+  },
+  "terminal_status": {
+    "fixed_mailbox_service_state": 5,
+    "rotating_mailbox_service_state": 5,
+    "fixed_mailbox_status": 12,
+    "rotating_mailbox_status": 12,
+    "mailbox_status_semantics": "P9_RUNTIME_PL_OBJECT",
+    "fixed_autonomous_state": 8,
+    "rotating_autonomous_state": 8,
+    "fixed_autonomous_status_hex": "0x00000103",
+    "rotating_autonomous_status_hex": "0x00000103",
+    "autonomous_status_semantics": "P10_1_RUNTIME_STATUS_DMA_COMPLETION"
+  },
+  "direction_progress": {
+    "fixed": {
+      "local_tx_lane": 3,
+      "local_rx_lane": 2,
+      "tx_bytes": 40261,
+      "rx_bytes": 262144,
+      "tx_retry_count": 22,
+      "tx_timeout_count": 22,
+      "descriptors_submitted": 20,
+      "descriptors_completed": 0
+    },
+    "rotating": {
+      "local_tx_lane": 2,
+      "local_rx_lane": 3,
+      "tx_bytes": 262144,
+      "rx_bytes": 32356,
+      "tx_retry_count": 414,
+      "tx_timeout_count": 414,
+      "descriptors_submitted": 20,
+      "descriptors_completed": 4
+    },
+    "interpretation": "R2->F2 reached one full 262144-byte PL object in both the rotating TX and fixed RX counters. F3->R3 made physical and byte progress but stalled before one object completed. No application object was committed on either endpoint."
+  },
+  "physical_and_safety_evidence": {
+    "fixed_lane2_raw_rx_count": 1641633,
+    "rotating_lane2_physical_tx_count": 1641633,
+    "fixed_lane3_physical_tx_count": 238179,
+    "rotating_lane3_raw_rx_count": 238186,
+    "maximum_continuous_high_cycles": 16,
+    "maximum_rolling_duty_cycles": 11504,
+    "rolling_duty_design_target_cycles": 11520,
+    "hard_fault_count": 0,
+    "safety_fault": false,
+    "interpretation": "Both requested physical directions show direct pulse activity and the complete R2->F2 pulse counts match. The evidence does not support classifying either lane as a permanent open circuit. It also does not prove valid-frame reception on the partial F3->R3 direction."
+  },
+  "controls": {
+    "f3_r0": "PASS",
+    "f3_r1": "PASS",
+    "f0_r2": "PASS",
+    "f1_r2": "PASS",
+    "f2_r3": "PASS",
+    "significance": "F3->R3 passed while paired with R0 and R1 transmission, and R2->F2 passed while paired with F0 and F1 transmission. The observed failure is therefore specific to this simultaneous pair, its position in the sequence, or a transient state; it is not direct evidence of a permanently failed F3/R3 or R2/F2 physical direction."
+  },
+  "root_cause_state": {
+    "confirmed": false,
+    "current_hypothesis": "The failure is either a reproducible F3/R2 simultaneous-pair interaction or sequence-accumulated runtime state after eleven preceding cases. A second immutable run with the same order is required to establish reproducibility before changing RTL, firmware, or physical classification.",
+    "excluded_by_current_evidence": [
+      "JTAG enumeration failure",
+      "board identity ambiguity",
+      "safety-fault or rolling-duty violation",
+      "permanent absence of raw physical pulses on either requested direction"
+    ],
+    "not_yet_excluded": [
+      "simultaneous adjacent-module receive degradation",
+      "sequence-accumulated protocol or DMA state",
+      "transient optical reception loss",
+      "single-run nondeterminism"
+    ]
+  },
+  "next_controlled_action": "Use authorization batch ordinal 2 with the exact unchanged frozen artifact and host bundle. If the same final pair fails again, perform a fresh-program targeted order-isolation diagnostic before any design change.",
+  "evidence": [
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01/stages/one_plus_one/dumps/observations.psv",
+      "sha256": "33e1a4984a6b7d8d85a01056eebee641ceb6623f18953dc4986010388e957eb2"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01/stages/one_plus_one/dumps/oneplusone_f3_r2.fixed.p10_1.bin",
+      "sha256": "9dedf825f26dd32d30527919f4c10c28cb26ad55b959679f3ee092a3428c1e59"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01/stages/one_plus_one/dumps/oneplusone_f3_r2.rotating.p10_1.bin",
+      "sha256": "4bda35edfec90fb613df2c34e6b3520d2e5cda293969ea26bec970b23edac206"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01/forensics/one_plus_one/fixed.p10ff.json",
+      "sha256": "adac3066d75d9d95c1777593964f9774a5ca800a49fd0851d9b9b55a2576a6ea"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01/forensics/one_plus_one/rotating.p10ff.json",
+      "sha256": "4c5e206a9dd60ac7a23d945f35cde95d9785148aa5a656f2062310caaab0aeb8"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T095106Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
+      "sha256": "7b053a76f2d2a82145c036e3266512214ddfe1bcd8deed24041f723a345b39d6"
+    }
+  ],
+  "errors": []
+}
