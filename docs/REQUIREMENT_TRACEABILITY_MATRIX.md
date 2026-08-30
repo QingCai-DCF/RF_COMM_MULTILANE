@@ -6,8 +6,8 @@ Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776
 
 ```text
 REQUIREMENT_COUNT: 284
-PASS: 238
-PENDING: 40
+PASS: 262
+PENDING: 16
 FAIL: 6
 WAIVED: 0
 ```
@@ -224,30 +224,30 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_2-HWPREP-001` | `PASS` | P10_3_FAIL_CLOSED_RUNNER | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-001` | `evidence/generated/p10_2_hardware_dry_run.json` | The P10.3 command validator fails closed on missing authorization, old F1, mask>0xF, Ethernet, movement and two-hour requests. |
 | `P10_2-HWPREP-002` | `PASS` | P10_3_EVIDENCE_SCHEMA | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-002` | `evidence/generated/p10_2_p10_3_readiness.json` | P10.3 has machine-readable stage and 8x8 evidence templates without granting hardware authority. |
 | `P10_3-WIRE-001` | `PASS` | P10_3_AX7020_STATIONARY_4LANE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-WIRE-001` | `evidence/generated/p10_3_wiring.json` | The actual stationary four-lane wiring shall be frozen and hash-bound before hardware execution. |
-| `P10_5-CLOSE-001` | `PENDING` | P10_5_IMMUTABLE_P10_4_CLOSEOUT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-CLOSE-001` | `evidence/generated/p10_4_closeout_summary.json` | P10.4 immutable PASS_WITH_NONBLOCKING_LIMITS evidence and its non-transmitting 2+2 capability blocker shall remain unchanged and shall be closed by a separate annotated tag. |
-| `P10_5-CAP-001` | `PENDING` | P10_5_SPLIT_LANE_DUAL_DIRECTION | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-CAP-001` | — | The versioned endpoint capability shall explicitly advertise simultaneous split-lane bidirectional operation, four lanes, role epochs, ACK piggyback, and control-only ACK fallback. |
-| `P10_5-ROLE-001` | `PENDING` | P10_5_SPLIT_LANE_DUAL_DIRECTION | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_role_mask_commit` | `evidence/generated/p10_5_xsim/summary.json` | F-to-R and R-to-F lane-role masks shall be nonempty, disjoint, and subsets of ACTIVE_LANE_MASK, with endpoint-local TX/RX masks derived only from board role. |
-| `P10_5-ROLE-002` | `PENDING` | P10_5_ATOMIC_ROLE_COMMIT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_role_mask_commit` | `evidence/generated/p10_5_xsim/summary.json` | Lane-role changes shall use validated shadow registers and one quiet-boundary atomic commit with exactly one ROLE_EPOCH increment. |
-| `P10_5-ROLE-003` | `PENDING` | P10_5_ROLE_EPOCH_REJECTION | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-ROLE-003` | — | Frames carrying a stale role epoch shall be rejected without ACK, window progress, DMA write, or object commit. |
-| `P10_5-L2-001` | `PENDING` | P10_5_DUAL_DIRECTION_L2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_dual_direction_l2` | `evidence/generated/p10_5_xsim/summary.json` | The F-to-R direction shall have an independently tagged selective-repeat, SACK, receiver-credit, retry, completion, and object context. |
-| `P10_5-L2-002` | `PENDING` | P10_5_DUAL_DIRECTION_L2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_dual_direction_l2` | `evidence/generated/p10_5_xsim/summary.json` | The R-to-F direction shall have an independently tagged selective-repeat, SACK, receiver-credit, retry, completion, and object context. |
-| `P10_5-ACK-001` | `PENDING` | P10_5_BIDIRECTIONAL_ACK | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_ack_piggyback` | `evidence/generated/p10_5_xsim/summary.json` | Each DATA frame may carry CRC-protected ACK base, SACK bitmap, receiver credit, and validity for the opposite logical direction. |
-| `P10_5-ACK-002` | `PENDING` | P10_5_BIDIRECTIONAL_ACK | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_control_only_ack` | `evidence/generated/p10_5_xsim/summary.json` | When reverse application DATA is absent, bounded control-only ACK/SACK shall use only the direction's assigned local TX mask without changing bundle direction. |
-| `P10_5-ACK-003` | `PENDING` | P10_5_BIDIRECTIONAL_ACK | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5_DUAL_DIRECTION_REFERENCE_MODEL` | `evidence/generated/p10_5_reference_model.json` | ACK/control admission and receiver-credit updates shall have bounded latency with no simultaneous bidirectional deadlock. |
-| `P10_5-DMA-001` | `PENDING` | P10_5_BIDIRECTIONAL_DMA | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-DMA-001` | — | Each endpoint shall concurrently operate independent local TX and RX DMA rings without a global direction mutex or opposite-ring overwrite. |
-| `P10_5-DMA-002` | `PENDING` | P10_5_BIDIRECTIONAL_DMA | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-DMA-002` | — | Every descriptor shall carry direction, role epoch, object or stream identity, generation, and completion ownership so it can complete at most once. |
-| `P10_5-OBJ-001` | `PENDING` | P10_5_BIDIRECTIONAL_OBJECTS | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-OBJ-001` | — | F-to-R and R-to-F object and stream contexts shall be simultaneously active with independent integrity and atomic-publish state. |
-| `P10_5-OBJ-002` | `PENDING` | P10_5_DIRECTION_SCOPED_ABORT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-OBJ-002` | — | Aborting one direction shall reclaim only that direction's descriptors and object state while the opposite direction continues or pauses for a bounded interval. |
-| `P10_5-SAFE-001` | `PENDING` | P10_5_PER_MODULE_HALF_DUPLEX_SAFETY | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SAFE-001` | — | A physical TFDU module shall never be admitted for TX and RX simultaneously, and raw echo shall never become accepted DATA or ACK/SACK. |
-| `P10_5-SAFE-002` | `PENDING` | P10_5_SINGLE_GLOBAL_PERMIT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SAFE-002` | — | Each endpoint shall retain exactly one local active-high GLOBAL_PERMIT and all local physical TX paths shall remain subject to the unchanged final kill and TFDU safety guards. |
-| `P10_5-SAFE-003` | `PENDING` | P10_5_ROLE_MASK_SAFETY | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SAFE-003` | — | No active role configuration shall overlap local TX and RX masks or allow any lane outside ACTIVE_LANE_MASK to transmit. |
-| `P10_5-MASK-001` | `PENDING` | P10_5_CURRENT_AX7020_STATIONARY_4LANE | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-MASK-001` | — | All 12 ordered disjoint 1+1 lane-role pairs shall execute simultaneous bidirectional TX and commit clean data in both directions. |
-| `P10_5-MASK-002` | `PENDING` | P10_5_CURRENT_AX7020_STATIONARY_4LANE | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-MASK-002` | — | Hardware coverage shall exercise every lane as a dual-lane TX member, single-lane TX member, and RX member across legal 2+1 and 1+2 configurations. |
-| `P10_5-MASK-003` | `PENDING` | P10_5_CURRENT_AX7020_STATIONARY_4LANE | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-MASK-003` | — | All six directed 2+2 partitions shall execute physical TX and commit clean application data in both directions. |
-| `P10_5-PERF-001` | `PENDING` | P10_5_PRIMARY_2PLUS2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-PERF-001` | — | Primary 2+2 F-to-R application goodput shall be at least 4000000 bit/s over a board-autonomous interval of at least 300 seconds. |
-| `P10_5-PERF-002` | `PENDING` | P10_5_PRIMARY_2PLUS2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-PERF-002` | — | Primary 2+2 R-to-F application goodput shall be at least 4000000 bit/s over a board-autonomous interval of at least 300 seconds. |
-| `P10_5-STREAM-001` | `PENDING` | P10_5_SIMULTANEOUS_64M_STREAMING | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-STREAM-001` | — | Each direction shall simultaneously complete at least five 64 MiB streams with CRC32, SHA256, atomic-publish, and descriptor ownership checks. |
-| `P10_5-SOAK-001` | `PENDING` | P10_5_PRIMARY_2PLUS2_FORMAL | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SOAK-001` | — | Primary 2+2 shall sustain 1800 seconds of simultaneous bidirectional autonomous streaming with all integrity, protocol, DMA, admission, and TFDU safety hard-error counters at zero. |
+| `P10_5-CLOSE-001` | `PASS` | P10_5_IMMUTABLE_P10_4_CLOSEOUT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-CLOSE-001` | `evidence/generated/p10_4_closeout_summary.json` | P10.4 immutable PASS_WITH_NONBLOCKING_LIMITS evidence and its non-transmitting 2+2 capability blocker shall remain unchanged and shall be closed by a separate annotated tag. |
+| `P10_5-CAP-001` | `PASS` | P10_5_SPLIT_LANE_DUAL_DIRECTION | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-CAP-001` | `evidence/generated/p10_5_final_summary.json` | The versioned endpoint capability shall explicitly advertise simultaneous split-lane bidirectional operation, four lanes, role epochs, ACK piggyback, and control-only ACK fallback. |
+| `P10_5-ROLE-001` | `PASS` | P10_5_SPLIT_LANE_DUAL_DIRECTION | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_role_mask_commit` | `evidence/generated/p10_5_xsim/summary.json` | F-to-R and R-to-F lane-role masks shall be nonempty, disjoint, and subsets of ACTIVE_LANE_MASK, with endpoint-local TX/RX masks derived only from board role. |
+| `P10_5-ROLE-002` | `PASS` | P10_5_ATOMIC_ROLE_COMMIT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_role_mask_commit` | `evidence/generated/p10_5_xsim/summary.json` | Lane-role changes shall use validated shadow registers and one quiet-boundary atomic commit with exactly one ROLE_EPOCH increment. |
+| `P10_5-ROLE-003` | `PASS` | P10_5_ROLE_EPOCH_REJECTION | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-ROLE-003` | `evidence/generated/p10_5_role_commit.json` | Frames carrying a stale role epoch shall be rejected without ACK, window progress, DMA write, or object commit. |
+| `P10_5-L2-001` | `PASS` | P10_5_DUAL_DIRECTION_L2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_dual_direction_l2` | `evidence/generated/p10_5_xsim/summary.json` | The F-to-R direction shall have an independently tagged selective-repeat, SACK, receiver-credit, retry, completion, and object context. |
+| `P10_5-L2-002` | `PASS` | P10_5_DUAL_DIRECTION_L2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_dual_direction_l2` | `evidence/generated/p10_5_xsim/summary.json` | The R-to-F direction shall have an independently tagged selective-repeat, SACK, receiver-credit, retry, completion, and object context. |
+| `P10_5-ACK-001` | `PASS` | P10_5_BIDIRECTIONAL_ACK | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_ack_piggyback` | `evidence/generated/p10_5_xsim/summary.json` | Each DATA frame may carry CRC-protected ACK base, SACK bitmap, receiver credit, and validity for the opposite logical direction. |
+| `P10_5-ACK-002` | `PASS` | P10_5_BIDIRECTIONAL_ACK | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_control_only_ack` | `evidence/generated/p10_5_xsim/summary.json` | When reverse application DATA is absent, bounded control-only ACK/SACK shall use only the direction's assigned local TX mask without changing bundle direction. |
+| `P10_5-ACK-003` | `PASS` | P10_5_BIDIRECTIONAL_ACK | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5_DUAL_DIRECTION_REFERENCE_MODEL` | `evidence/generated/p10_5_reference_model.json` | ACK/control admission and receiver-credit updates shall have bounded latency with no simultaneous bidirectional deadlock. |
+| `P10_5-DMA-001` | `PASS` | P10_5_BIDIRECTIONAL_DMA | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-DMA-001` | `evidence/generated/p10_5_streaming_64m.json` | Each endpoint shall concurrently operate independent local TX and RX DMA rings without a global direction mutex or opposite-ring overwrite. |
+| `P10_5-DMA-002` | `PASS` | P10_5_BIDIRECTIONAL_DMA | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-DMA-002` | `evidence/generated/p10_5_streaming_64m.json` | Every descriptor shall carry direction, role epoch, object or stream identity, generation, and completion ownership so it can complete at most once. |
+| `P10_5-OBJ-001` | `PASS` | P10_5_BIDIRECTIONAL_OBJECTS | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-OBJ-001` | `evidence/generated/p10_5_streaming_64m.json` | F-to-R and R-to-F object and stream contexts shall be simultaneously active with independent integrity and atomic-publish state. |
+| `P10_5-OBJ-002` | `PASS` | P10_5_DIRECTION_SCOPED_ABORT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-OBJ-002` | `evidence/generated/p10_5_faults.json` | Aborting one direction shall reclaim only that direction's descriptors and object state while the opposite direction continues or pauses for a bounded interval. |
+| `P10_5-SAFE-001` | `PASS` | P10_5_PER_MODULE_HALF_DUPLEX_SAFETY | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SAFE-001` | `evidence/generated/p10_5_final_summary.json` | A physical TFDU module shall never be admitted for TX and RX simultaneously, and raw echo shall never become accepted DATA or ACK/SACK. |
+| `P10_5-SAFE-002` | `PASS` | P10_5_SINGLE_GLOBAL_PERMIT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SAFE-002` | `evidence/generated/p10_5_shutdown.json` | Each endpoint shall retain exactly one local active-high GLOBAL_PERMIT and all local physical TX paths shall remain subject to the unchanged final kill and TFDU safety guards. |
+| `P10_5-SAFE-003` | `PASS` | P10_5_ROLE_MASK_SAFETY | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SAFE-003` | `evidence/generated/p10_5_2plus2_partitions.json` | No active role configuration shall overlap local TX and RX masks or allow any lane outside ACTIVE_LANE_MASK to transmit. |
+| `P10_5-MASK-001` | `PASS` | P10_5_CURRENT_AX7020_STATIONARY_4LANE | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-MASK-001` | `evidence/generated/p10_5_1plus1.json` | All 12 ordered disjoint 1+1 lane-role pairs shall execute simultaneous bidirectional TX and commit clean data in both directions. |
+| `P10_5-MASK-002` | `PASS` | P10_5_CURRENT_AX7020_STATIONARY_4LANE | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-MASK-002` | `evidence/generated/p10_5_2plus1.json` | Hardware coverage shall exercise every lane as a dual-lane TX member, single-lane TX member, and RX member across legal 2+1 and 1+2 configurations. |
+| `P10_5-MASK-003` | `PASS` | P10_5_CURRENT_AX7020_STATIONARY_4LANE | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-MASK-003` | `evidence/generated/p10_5_2plus2_partitions.json` | All six directed 2+2 partitions shall execute physical TX and commit clean application data in both directions. |
+| `P10_5-PERF-001` | `PASS` | P10_5_PRIMARY_2PLUS2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-PERF-001` | `evidence/generated/p10_5_performance.json` | Primary 2+2 F-to-R application goodput shall be at least 4000000 bit/s over a board-autonomous interval of at least 300 seconds. |
+| `P10_5-PERF-002` | `PASS` | P10_5_PRIMARY_2PLUS2 | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-PERF-002` | `evidence/generated/p10_5_performance.json` | Primary 2+2 R-to-F application goodput shall be at least 4000000 bit/s over a board-autonomous interval of at least 300 seconds. |
+| `P10_5-STREAM-001` | `PASS` | P10_5_SIMULTANEOUS_64M_STREAMING | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-STREAM-001` | `evidence/generated/p10_5_streaming_64m.json` | Each direction shall simultaneously complete at least five 64 MiB streams with CRC32, SHA256, atomic-publish, and descriptor ownership checks. |
+| `P10_5-SOAK-001` | `PASS` | P10_5_PRIMARY_2PLUS2_FORMAL | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-SOAK-001` | `evidence/generated/p10_5_formal_30min.json` | Primary 2+2 shall sustain 1800 seconds of simultaneous bidirectional autonomous streaming with all integrity, protocol, DMA, admission, and TFDU safety hard-error counters at zero. |
 | `P10_4-SAFE-RUNTIME-001` | `PASS` | P10_4_TFDU_RUNTIME_REST_POLICY | `P10_4_RUNTIME_COOLDOWN_REMEDIATION` | `P10_4-SAFE-RUNTIME-001` | `evidence/generated/p10_4_runtime_rest_compliance.json` | Every hardware stage using any installed TFDU small board shall have a continuous runtime of no more than 1800 seconds, measured conservatively from immediately before the TX-capable stage invocation through verified dual-board shutdown-after. |
 | `P10_4-SAFE-COOLDOWN-001` | `PASS` | P10_4_TFDU_RUNTIME_REST_POLICY | `P10_4_RUNTIME_COOLDOWN_REMEDIATION` | `P10_4-SAFE-COOLDOWN-001` | `evidence/generated/p10_4_runtime_rest_compliance.json` | After every hardware stage, all installed TFDU small boards shall remain in verified dual-board shutdown for at least one half of that stage's measured runtime before any later transmission starts. |
 | `P10_4-CLOSE-001` | `PASS` | P10_4_P10_3_IMMUTABLE_CLOSEOUT | `P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT` | `P10_4-CLOSE-001` | `evidence/generated/p10_4_p10_3_closeout.json` | P10.3 evidence, pass tag, closeout tag, and stationary four-lane scoped PASS shall remain immutable and directly rechecked before P10.4. |
@@ -373,13 +373,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `68bc2217a656087479ea2e7f26d1dc93951ac19cfa9c22a5bdf0f4d15c6f86f6`
-- `PROJECT_STATUS.md` — `58fdaeae2b63bfc991bd8cbd501fdc64ddc6e0e77cb9789df1faf8e0fd58c334`
+- `config/project_state.json` — `0d1ab29a8f9ab5b90bf6493e85b1f7abbf39cdb8530e5e04b745227840b2479d`
+- `PROJECT_STATUS.md` — `6c71459ac7d179ade8d32c2f15f2fd38cab3c87248b4fa597595eeeb5d53691f`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `68bc2217a656087479ea2e7f26d1dc93951ac19cfa9c22a5bdf0f4d15c6f86f6`
+- `config/project_state.json` — `0d1ab29a8f9ab5b90bf6493e85b1f7abbf39cdb8530e5e04b745227840b2479d`
 
 ### `P8A-EVID-001`
 
@@ -389,8 +389,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `68bc2217a656087479ea2e7f26d1dc93951ac19cfa9c22a5bdf0f4d15c6f86f6`
-- `PROJECT_STATUS.md` — `58fdaeae2b63bfc991bd8cbd501fdc64ddc6e0e77cb9789df1faf8e0fd58c334`
+- `config/project_state.json` — `0d1ab29a8f9ab5b90bf6493e85b1f7abbf39cdb8530e5e04b745227840b2479d`
+- `PROJECT_STATUS.md` — `6c71459ac7d179ade8d32c2f15f2fd38cab3c87248b4fa597595eeeb5d53691f`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -1438,6 +1438,102 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `evidence/generated/p10_3_wiring.json` — `ca89d42ac92a77f104f0b82e5de237738435d69b862e0e1260f6e8e7d3d49782`
 - `evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json` — `3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2`
 - `evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json` — `ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1`
+
+### `P10_5-CLOSE-001`
+
+- `evidence/generated/p10_4_closeout_summary.json` — `4ff282fd69134d8aa813bb4f3b93bff4882215e3270749c88ca157f68b631e17`
+
+### `P10_5-CAP-001`
+
+- `evidence/generated/p10_5_final_summary.json` — `b267fcd3a9a8a8a7d562285f32eae1623d81221fcf2eae6c85030d9350156a99`
+
+### `P10_5-ROLE-001`
+
+- `evidence/generated/p10_5_xsim/summary.json` — `c322db436e94f00dee32e1277dd616c4fef07ada6e3655d4e07bbe1ceaeb6a42`
+
+### `P10_5-ROLE-002`
+
+- `evidence/generated/p10_5_xsim/summary.json` — `c322db436e94f00dee32e1277dd616c4fef07ada6e3655d4e07bbe1ceaeb6a42`
+
+### `P10_5-ROLE-003`
+
+- `evidence/generated/p10_5_role_commit.json` — `5a7311e1f07a0fb084287324c2bdb3c2055806f84650b71d2ad0e67a9d1dff0b`
+
+### `P10_5-L2-001`
+
+- `evidence/generated/p10_5_xsim/summary.json` — `c322db436e94f00dee32e1277dd616c4fef07ada6e3655d4e07bbe1ceaeb6a42`
+
+### `P10_5-L2-002`
+
+- `evidence/generated/p10_5_xsim/summary.json` — `c322db436e94f00dee32e1277dd616c4fef07ada6e3655d4e07bbe1ceaeb6a42`
+
+### `P10_5-ACK-001`
+
+- `evidence/generated/p10_5_xsim/summary.json` — `c322db436e94f00dee32e1277dd616c4fef07ada6e3655d4e07bbe1ceaeb6a42`
+
+### `P10_5-ACK-002`
+
+- `evidence/generated/p10_5_xsim/summary.json` — `c322db436e94f00dee32e1277dd616c4fef07ada6e3655d4e07bbe1ceaeb6a42`
+
+### `P10_5-ACK-003`
+
+- `evidence/generated/p10_5_reference_model.json` — `770453450f6588c33b409265fd41a9b189dea42d15de3731bb36507ad750a341`
+
+### `P10_5-DMA-001`
+
+- `evidence/generated/p10_5_streaming_64m.json` — `2d1101583cd77fd96979078cd33115f3b7d2e76261a321dae57c6702e13b69e9`
+
+### `P10_5-DMA-002`
+
+- `evidence/generated/p10_5_streaming_64m.json` — `2d1101583cd77fd96979078cd33115f3b7d2e76261a321dae57c6702e13b69e9`
+
+### `P10_5-OBJ-001`
+
+- `evidence/generated/p10_5_streaming_64m.json` — `2d1101583cd77fd96979078cd33115f3b7d2e76261a321dae57c6702e13b69e9`
+
+### `P10_5-OBJ-002`
+
+- `evidence/generated/p10_5_faults.json` — `8dd8be26c77a9207b5c32e495aa314f977b08735b49f6f7d002ce207911c5468`
+
+### `P10_5-SAFE-001`
+
+- `evidence/generated/p10_5_final_summary.json` — `b267fcd3a9a8a8a7d562285f32eae1623d81221fcf2eae6c85030d9350156a99`
+
+### `P10_5-SAFE-002`
+
+- `evidence/generated/p10_5_shutdown.json` — `1cecac6f96f865680f5e51a71ecf6d2f83ef0aba84839564b28bd4f2d0d15449`
+
+### `P10_5-SAFE-003`
+
+- `evidence/generated/p10_5_2plus2_partitions.json` — `1d2b9671e4015e056050097fcb7446d385a134a27dea020669c746b12c552a0d`
+
+### `P10_5-MASK-001`
+
+- `evidence/generated/p10_5_1plus1.json` — `af834d33a699cd8a3f8668181523be2ca54df7ab2b85f1322a17f6f310bbd063`
+
+### `P10_5-MASK-002`
+
+- `evidence/generated/p10_5_2plus1.json` — `916afdf4eb2141f81b45adb485138c6e24a38016d22cccbf1cd929a468756bbb`
+
+### `P10_5-MASK-003`
+
+- `evidence/generated/p10_5_2plus2_partitions.json` — `1d2b9671e4015e056050097fcb7446d385a134a27dea020669c746b12c552a0d`
+
+### `P10_5-PERF-001`
+
+- `evidence/generated/p10_5_performance.json` — `772d3339a1dd7abf1b3d9cf121a53dbad4ac59f5b2d657a999225608d1bc3aff`
+
+### `P10_5-PERF-002`
+
+- `evidence/generated/p10_5_performance.json` — `772d3339a1dd7abf1b3d9cf121a53dbad4ac59f5b2d657a999225608d1bc3aff`
+
+### `P10_5-STREAM-001`
+
+- `evidence/generated/p10_5_streaming_64m.json` — `2d1101583cd77fd96979078cd33115f3b7d2e76261a321dae57c6702e13b69e9`
+
+### `P10_5-SOAK-001`
+
+- `evidence/generated/p10_5_formal_30min.json` — `babe176a8aa7c1eb52b8006c458f0f39d2081f2b355b652bd0b103b79a3676c9`
 
 ### `P10_4-SAFE-RUNTIME-001`
 

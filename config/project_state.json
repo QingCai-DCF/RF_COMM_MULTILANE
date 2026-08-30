@@ -68,7 +68,8 @@
       "gate_id": "P10_2",
       "status": "PASS"
     },
-    "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT"
+    "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT",
+    "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE"
   ],
   "current_profiles": [
     {
@@ -144,20 +145,20 @@
       "xdc_path": "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc"
     }
   ],
-  "current_program_stage": "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE",
+  "current_program_stage": "P11_OFFLINE_PREPARATION",
   "current_run_hardware_authorization": false,
   "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
   "final_product_status": "PENDING_HW",
   "four_lane_application_8mbps": "PASS",
   "four_lane_raw_16mbps": "PASS",
   "last_hardware_authorization_consumed": true,
-  "last_hardware_authorization_id": "P10_4-RESUME-CURRENT-RUN-IMMUTABLE",
-  "last_hardware_evidence_checkpoint": "f53d98252dfa85d73f35d49ebf5dc01323bcb4e7",
-  "last_hardware_run_id": "p10_4_20260808T162049Z_6ff17d33_94506af9_2b2b37d4",
-  "last_hardware_stage": "P10_4",
+  "last_hardware_authorization_id": "P10_5-CURRENT-RUN-IMMUTABLE",
+  "last_hardware_evidence_checkpoint": "6546a9bd749f0daae6696ac22d18007937210722",
+  "last_hardware_run_id": "p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01",
+  "last_hardware_stage": "P10_5",
   "last_shutdown_fixed": "PASS",
   "last_shutdown_rotating": "PASS",
-  "last_verified_commit": "f53d98252dfa85d73f35d49ebf5dc01323bcb4e7",
+  "last_verified_commit": "6546a9bd749f0daae6696ac22d18007937210722",
   "legacy_known_failures": [
     {
       "current_authority": false,
@@ -841,6 +842,19 @@
   "p10_4_status": "PASS_WITH_NONBLOCKING_LIMITS",
   "p10_5_dual_direction": {
     "active_lane_mask": "0xF",
+    "application_goodput_bps": {
+      "F_TO_R": 4292171.093333334,
+      "R_TO_F": 4292171.093333334
+    },
+    "artifact_source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+    "artifacts": {
+      "fixed_elf_sha256": "05b6b416a420568760ec02b276b6dfa5afd045c79079edf79c8a888c7611455a",
+      "fixed_functional_bitstream_sha256": "4015142eb2a009d7924103b38c8b7fe61649d7da13c6ae354dff510438e3619d",
+      "fixed_shutdown_bitstream_sha256": "2539aafd5eb21fcb17a55cb12c7c8d0ff4fcd351a5ae2abee133a8d4d2c88723",
+      "rotating_elf_sha256": "a16770e195f30d9a51a8c0693e6b31cf0b340cc01817923d6fd9404793c68082",
+      "rotating_functional_bitstream_sha256": "79607d0190d12c6160e0ff2d937a5ae0a8e208a85d0b5bd3f6f975de35b23205",
+      "rotating_shutdown_bitstream_sha256": "2f303bda57710b35c1b4bcd572eff5b12943244053ceae8d36a1995e50ac5534"
+    },
     "automation_only": true,
     "base_commit": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
     "base_tag": "p10.4-autonomous-4lane-hardening-closed",
@@ -849,9 +863,32 @@
       "rotating": "AX7020-R/JTAG:210512180081"
     },
     "current_run_hardware_authorization": false,
+    "current_run_authorization": {
+      "consumed": true,
+      "current_run_hardware_authorization": false,
+      "path": "config/p10_5_current_run_hardware_authorization.json",
+      "sha256": "d239cd3dd57812824a56d846f302b28fe143d03d46cc2e2ea94eb5f5df18d2dd",
+      "status": "CONSUMED_AFTER_P10_5_PASS"
+    },
+    "evidence_audit_path": "evidence/generated/p10_5_20260830_run4_final_audit.json",
+    "evidence_audit_sha256": "e74f02e886b3b9e8b34a59aa8048dd7ac464c3e270020f42093e5a33ba8638d8",
+    "evidence_checkpoint_commit": "6546a9bd749f0daae6696ac22d18007937210722",
+    "evidence_manifest_file_count": 1107,
+    "evidence_manifest_path": "evidence/hardware/p10_5/p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01/final/run_evidence_sha256_manifest.json",
+    "evidence_manifest_sha256": "b0f63b7ae9ce9e27843b3bf49c2fbd2470c04b5f25ea230927b400ae2558f0bb",
+    "evidence_path": "evidence/hardware/p10_5/p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
+    "evidence_sha256": "b267fcd3a9a8a8a7d562285f32eae1623d81221fcf2eae6c85030d9350156a99",
     "f_to_r_lane_mask": "0x3",
+    "formal_committed_bytes": {
+      "F_TO_R": 967573504,
+      "R_TO_F": 967573504
+    },
+    "formal_transport_timeout_zero": true,
     "goal_sha256": "5c08e89917ffc18150e37f65ff29cf7c48f749d81033fe02a0d1bce772c23a36",
-    "hardware_actions_executed": false,
+    "hardware_actions_executed": true,
+    "hardware_moved": false,
+    "integrity_hard_counters_zero": true,
+    "mandatory_hardware_gates": "PASS",
     "maximum_lane_mask": "0xF",
     "maximum_single_formal_run_seconds": 1800,
     "minimum_interstage_cooldown_ratio": 0.5,
@@ -866,6 +903,7 @@
       "R3": "B0011"
     },
     "network_allowed": false,
+    "network_used": false,
     "operating_mode": "SPLIT_LANE_SIMULTANEOUS_BIDIRECTIONAL",
     "p10_4_two_plus_two_failure_preserved": true,
     "pre_run_user_module_replacement": {
@@ -878,12 +916,21 @@
     },
     "p11_status": "NOT_STARTED",
     "r_to_f_lane_mask": "0xC",
-    "standing_authorization": "GRANTED_BY_SUBMISSION_OF_P10_5_GOAL_PENDING_IMMUTABLE_ARTIFACT_MATERIALIZATION",
-    "status": "IN_PROGRESS_PENDING_R3_B0011_REQUALIFICATION",
+    "run_id": "p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01",
+    "runtime_rest_status": "PASS",
+    "shutdown_fixed": "PASS",
+    "shutdown_rotating": "PASS",
+    "spi_used": false,
+    "standing_authorization": "ORDINAL_4_OF_10_CONSUMED_AFTER_P10_5_PASS; 6 UNUSED AUTHORIZATIONS REMAIN",
+    "status": "PASS_WITH_NONBLOCKING_LIMITS",
+    "stretch_4p8mbps": {
+      "F_TO_R": "FAIL_NONBLOCKING",
+      "R_TO_F": "FAIL_NONBLOCKING"
+    },
     "user_hold_points": 0,
     "wiring_changed": false
   },
-  "p10_5_status": "IN_PROGRESS",
+  "p10_5_status": "PASS_WITH_NONBLOCKING_LIMITS",
   "p10_acceptance": {
     "application_goodput_f_to_r_bps": 5767.861069534447,
     "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",
@@ -1262,7 +1309,7 @@
     "P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS": "PASS",
     "P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE": "PASS",
     "P10_4_AUTONOMOUS_4LANE_PERFORMANCE_ROBUSTNESS_AND_2PLUS2_EXPERIMENT": "PASS_WITH_NONBLOCKING_LIMITS",
-    "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE": "IN_PROGRESS",
+    "P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE": "PASS_WITH_NONBLOCKING_LIMITS",
     "P10_AX7020_DUAL_NODE_2LANE_NO_ETHERNET": "PASS",
     "P1_OFFLINE_HARDENING": "PASS",
     "P2_SIMULATION_BASELINE": "PASS",
@@ -1278,7 +1325,7 @@
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
-  "state_revision": "P10-5-DUAL-DIRECTION-IN-PROGRESS",
+  "state_revision": "P10-5-DUAL-DIRECTION-PASS-WITH-NONBLOCKING-LIMITS",
   "stationary_4lane_hardware": "PASS",
   "two_lane_baseline_status": "FROZEN_ACCEPTED",
   "two_lane_speed_stability": "PASS_STATIONARY_AX7020_2LANE_HALF_DUPLEX",
