@@ -72,9 +72,11 @@ POST_ARTIFACT_ALLOWED_EXACT = {
     "scripts/freeze_p10_5_artifacts.py",
     "scripts/hw/p10_dual_xsdb_stage.tcl",
     "scripts/hw/p10_program_dual_shutdown.tcl",
+    "scripts/p10_tfdu_runtime_guard.py",
     "scripts/run_p10_5_hardware.py",
     "sim/tb/tb_p10_5_dual_direction.sv",
     "tests/test_p10_5_hardware.py",
+    "tests/test_p10_tfdu_runtime_guard.py",
 }
 POST_ARTIFACT_ALLOWED_PREFIXES = (
     "artifacts/p10_5/", "evidence/", "reports/")
@@ -85,6 +87,8 @@ MODULE_IDENTITY_RECORD_PATHS = {
 TCLSH = Path(r"D:\Xilinx\Vivado\2023.1\tps\win64\git-2.16.2\mingw64\bin\tclsh.exe")
 GATES = {
     "p10_5_runner_unit": [sys.executable, "-m", "unittest", "tests.test_p10_5_hardware"],
+    "runtime_guard_unit": [sys.executable, "-m", "unittest",
+                           "tests.test_p10_tfdu_runtime_guard"],
     "p10_5_firmware_unit": [sys.executable, "-m", "unittest", "tests.test_p10_5_firmware_contract"],
     "tcl_complete": [str(TCLSH), "scripts/hw/check_tcl_complete.tcl",
                      "scripts/hw/p10_dual_xsdb_stage.tcl",

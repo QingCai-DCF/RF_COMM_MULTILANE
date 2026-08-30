@@ -1009,6 +1009,39 @@ def formal_transport_timeout_zero(stages: list[dict[str, Any]]) -> bool:
                for role in ("fixed", "rotating"))
 
 
+def tx_capable_runtime_seconds(stage: str, result: dict[str, Any]) -> float:
+    measured = float(result["active_runtime_seconds"])
+    if stage != "formal_30min":
+        return measured
+    details = result.get("details") or []
+    if len(details) != 1:
+        raise RuntimeError("formal TX-capable interval evidence is incomplete")
+    durations = [
+        int(details[0].get(role, {}).get("duration_elapsed_ms", 0))
+        for role in ("fixed", "rotating")
+    ]
+    if any(value <= 0 for value in durations):
+        raise RuntimeError("formal TX-capable interval evidence is invalid")
+    return max(durations) / 1000.0
+
+
+def finish_runtime_stage(
+        guard: RuntimeRestGuard, *, shutdown_verified: bool,
+        measured_runtime_seconds: float,
+        tx_capable_runtime_seconds: float) -> dict[str, Any]:
+    try:
+        record = guard.finish_stage(
+            shutdown_verified=shutdown_verified,
+            measured_runtime_seconds=measured_runtime_seconds,
+            tx_capable_runtime_seconds=tx_capable_runtime_seconds,
+        )
+    except BaseException:
+        guard.wait_for_cooldown()
+        raise
+    guard.wait_for_cooldown()
+    return record
+
+
 def aggregate_shutdown_evidence(shutdowns: list[dict[str, Any]]) -> dict[str, Any]:
     fixed = bool(shutdowns) and all(
         item.get("SHUTDOWN_FIXED") == "PASS" for item in shutdowns)
@@ -1181,11 +1214,15 @@ def main(argv: list[str] | None = None) -> int:
             shutdowns.append(after)
             result = evaluate_stage(stage, stage_dir, process, archive, plans[stage])
             measured = float(result["active_runtime_seconds"])
-            record = runtime_guard.finish_stage(
-                shutdown_verified=after.get("status") == "PASS",
-                measured_runtime_seconds=measured)
-            runtime_active = False
-            runtime_guard.wait_for_cooldown()
+            limit_runtime = tx_capable_runtime_seconds(stage, result)
+            try:
+                record = finish_runtime_stage(
+                    runtime_guard,
+                    shutdown_verified=after.get("status") == "PASS",
+                    measured_runtime_seconds=measured,
+                    tx_capable_runtime_seconds=limit_runtime)
+            finally:
+                runtime_active = False
             result["runtime_rest"] = dict(record)
             result["shutdown_before_status"] = before.get("status")
             result["shutdown_after_status"] = after.get("status")

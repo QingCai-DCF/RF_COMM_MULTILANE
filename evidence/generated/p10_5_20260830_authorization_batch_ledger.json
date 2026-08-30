@@ -3,8 +3,8 @@
   "authorization_id": "P10_5-20260830-USER-TEN-RUN-AUTHORIZATION",
   "source": "evidence/generated/p10_5_20260830_ten_run_authorization.json",
   "maximum_distinct_current_run_authorizations": 10,
-  "used": 2,
-  "remaining": 8,
+  "used": 3,
+  "remaining": 7,
   "runs": [
     {
       "ordinal": 1,
@@ -24,8 +24,20 @@
       "shutdown_fixed": "PASS",
       "shutdown_rotating": "PASS",
       "result": "evidence/hardware/p10_5/p10_5_20260830T101446Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json"
+    },
+    {
+      "ordinal": 3,
+      "run_id": "p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01",
+      "status": "CONSUMED_AFTER_P10_5_FAIL",
+      "failure_stage": "formal_30min_host_runtime_guard",
+      "failing_gate": "HOST_CONSERVATIVE_ENVELOPE_1800P336_GT_1800",
+      "direct_hardware_formal_case": "PASS",
+      "shutdown_fixed": "PASS",
+      "shutdown_rotating": "PASS",
+      "result": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
+      "diagnosis": "evidence/generated/p10_5_20260830_run3_formal_runtime_guard_diagnosis.json"
     }
   ],
-  "next_ordinal": 3,
-  "generated_at_utc": "2026-08-30T11:47:36Z"
+  "next_ordinal": 4,
+  "generated_at_utc": "2026-08-30T14:19:41Z"
 }

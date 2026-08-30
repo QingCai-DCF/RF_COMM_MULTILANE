@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-RUN3-FAULT-ABORT-R2F-OBSERVATION",
+  "status": "PASS",
+  "run_id": "p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01",
+  "case": "fault_abort_r2f",
+  "stage_status": "PASS",
+  "prior_run2_failure_preserved": true,
+  "observations": {
+    "fixed_physical_ack_good": [0, 32, 77],
+    "fixed_physical_crc_bad": [0, 1, 1],
+    "fixed_physical_frame_bad": [0, 1, 1],
+    "fixed_ack_rx_bytes": [0, 726, 1716],
+    "fixed_tx_ack_base": [0, 404, 956],
+    "rotating_control_ack_fallback_count": [3, 40, 85],
+    "direction_reject_count": 0,
+    "role_epoch_reject_count": 0,
+    "retry_exhausted_count": 0,
+    "terminal_cleanup_zero": true
+  },
+  "interpretation": "Run 3 directly observed physical ACK reception and ACK-base progress during fault_abort_r2f, and the case completed cleanly. The run 2 fault was not reproduced.",
+  "limitation": "Run 2 did not contain equivalent live pre-terminal telemetry, and the added read-only JTAG/AXI sampling can perturb timing. This evidence therefore does not prove a unique permanent root cause for run 2.",
+  "telemetry": {
+    "path": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/stages/faults/dumps/p10_5_abort_protocol_telemetry.psv",
+    "sha256": "a8900aa5d1397e8630f4405ea0f21629f53f7783aa0541c441a9a60442e585c3",
+    "bytes": 2742,
+    "line_count_including_header": 17
+  },
+  "hardware_actions_executed": true,
+  "generated_at_utc": "2026-08-30T14:19:41Z",
+  "errors": []
+}

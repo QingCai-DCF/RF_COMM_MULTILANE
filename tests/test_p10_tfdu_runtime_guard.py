@@ -87,6 +87,54 @@ class RuntimeRestGuardTests(unittest.TestCase):
         self.assertEqual(entry["runtime_measurement_source"],
                          "hardware_stage_active_evidence")
 
+    def test_exact_tx_capable_limit_uses_conservative_envelope_for_rest(self) -> None:
+        self.guard.begin_stage("formal", 1800)
+        self.fake.sleep(1800.5)
+        entry = self.guard.finish_stage(
+            shutdown_verified=True,
+            measured_runtime_seconds=1800.336,
+            tx_capable_runtime_seconds=1800.0,
+        )
+        self.assertEqual(entry["tx_capable_runtime_seconds"], 1800.0)
+        self.assertEqual(entry["measured_runtime_seconds"], 1800.336)
+        self.assertEqual(entry["runtime_limit_status"], "PASS")
+        self.assertEqual(entry["required_cooldown_seconds"], 900.168)
+        self.guard.wait_for_cooldown()
+        self.assertEqual(self.guard.public_ledger()["status"], "PASS")
+
+    def test_over_limit_shutdown_still_rests_and_remains_fail_closed(self) -> None:
+        self.guard.begin_stage("formal", 1800)
+        self.fake.sleep(1800.5)
+        with self.assertRaisesRegex(RuntimeError, "exceeded"):
+            self.guard.finish_stage(
+                shutdown_verified=True,
+                measured_runtime_seconds=1800.336,
+                tx_capable_runtime_seconds=1800.001,
+            )
+        self.guard.wait_for_cooldown()
+        ledger = self.guard.public_ledger()
+        self.assertEqual(ledger["status"], "FAIL")
+        self.assertEqual(ledger["stages"][0]["runtime_limit_status"], "FAIL")
+        self.assertEqual(ledger["stages"][0]["cooldown_status"], "PASS")
+        self.assertEqual(ledger["stages"][0]["required_cooldown_seconds"], 900.168)
+        with self.assertRaisesRegex(RuntimeError, "fail-closed"):
+            self.guard.begin_stage("later", 1)
+
+    def test_invalid_tx_interval_still_rests_from_conservative_envelope(self) -> None:
+        self.guard.begin_stage("stage", 300)
+        self.fake.sleep(100)
+        with self.assertRaisesRegex(RuntimeError, "invalid hardware TX-capable"):
+            self.guard.finish_stage(
+                shutdown_verified=True,
+                measured_runtime_seconds=90.0,
+                tx_capable_runtime_seconds=90.001,
+            )
+        self.guard.wait_for_cooldown()
+        ledger = self.guard.public_ledger()
+        self.assertEqual(ledger["status"], "FAIL")
+        self.assertEqual(ledger["stages"][0]["required_cooldown_seconds"], 45.0)
+        self.assertEqual(ledger["stages"][0]["cooldown_status"], "PASS")
+
     def test_invalid_external_measurement_is_archived_fail_closed(self) -> None:
         self.guard.begin_stage("stage", 300)
         self.fake.sleep(2)

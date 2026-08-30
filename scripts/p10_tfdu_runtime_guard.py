@@ -109,8 +109,6 @@ class RuntimeRestGuard:
     def wait_for_cooldown(self) -> dict[str, Any] | None:
         if self._active is not None:
             raise RuntimeError("cannot cool down while a stage is active")
-        if self._failed_closed:
-            raise RuntimeError("runtime guard is fail-closed")
         if self._cooldown_due_monotonic is None:
             return None
         entry = self.entries[-1]
@@ -127,13 +125,19 @@ class RuntimeRestGuard:
         entry["cooldown_completed_utc"] = _utc_text(self.utc_clock())
         entry["actual_cooldown_seconds"] = round(actual, 6)
         entry["cooldown_status"] = "PASS" if actual + 1e-6 >= required else "FAIL"
-        entry["status"] = "PASS" if entry["cooldown_status"] == "PASS" else "FAIL"
+        entry["status"] = (
+            "PASS"
+            if entry["cooldown_status"] == "PASS"
+            and entry.get("runtime_limit_status") == "PASS"
+            and entry.get("shutdown_verified") is True
+            else "FAIL"
+        )
         self._cooldown_due_monotonic = None
         self._cooldown_start_monotonic = None
         if entry["status"] != "PASS":
             self._failed_closed = True
         self._persist()
-        if entry["status"] != "PASS":
+        if entry["cooldown_status"] != "PASS":
             raise RuntimeError("required inter-stage cooldown was not satisfied")
         return entry
 
@@ -163,6 +167,7 @@ class RuntimeRestGuard:
         *,
         shutdown_verified: bool,
         measured_runtime_seconds: float | None = None,
+        tx_capable_runtime_seconds: float | None = None,
     ) -> dict[str, Any]:
         if self._active is None:
             raise RuntimeError("no active TFDU stage")
@@ -198,30 +203,71 @@ class RuntimeRestGuard:
                 self._persist()
                 raise RuntimeError("invalid externally measured active runtime")
             measurement = "hardware_stage_active_evidence"
+        if tx_capable_runtime_seconds is None:
+            tx_capable_elapsed = elapsed
+            limit_measurement = measurement
+        else:
+            tx_capable_elapsed = float(tx_capable_runtime_seconds)
+            if tx_capable_elapsed <= 0.0 or tx_capable_elapsed > elapsed + 1e-6:
+                required = math.ceil(elapsed * self.ratio * 1000.0) / 1000.0
+                entry.update({
+                    "shutdown_verified": bool(shutdown_verified),
+                    "shutdown_verified_utc": (
+                        _utc_text(finished_utc) if shutdown_verified else None
+                    ),
+                    "measured_runtime_seconds": round(elapsed, 6),
+                    "tx_capable_runtime_seconds": tx_capable_elapsed,
+                    "wall_runtime_seconds": round(wall_elapsed, 6),
+                    "runtime_measurement_source": measurement,
+                    "runtime_limit_measurement_source":
+                        "invalid_hardware_tx_capable_interval",
+                    "runtime_limit_status": "FAIL",
+                    "required_cooldown_seconds": required,
+                    "cooldown_completed_utc": None,
+                    "actual_cooldown_seconds": None,
+                    "cooldown_status": "PENDING" if shutdown_verified else "FAIL",
+                    "status": "FAIL",
+                })
+                self.entries.append(entry)
+                self._failed_closed = True
+                if shutdown_verified:
+                    self._cooldown_start_monotonic = stopped
+                    self._cooldown_due_monotonic = stopped + required
+                self._persist()
+                raise RuntimeError("invalid hardware TX-capable runtime")
+            limit_measurement = "hardware_reported_tx_capable_interval"
         required = math.ceil(elapsed * self.ratio * 1000.0) / 1000.0
         entry.update({
             "shutdown_verified": bool(shutdown_verified),
             "shutdown_verified_utc": _utc_text(finished_utc) if shutdown_verified else None,
             "measured_runtime_seconds": round(elapsed, 6),
+            "tx_capable_runtime_seconds": round(tx_capable_elapsed, 6),
             "wall_runtime_seconds": round(wall_elapsed, 6),
             "runtime_measurement_source": measurement,
-            "runtime_limit_status": "PASS" if elapsed <= self.maximum else "FAIL",
+            "runtime_limit_measurement_source": limit_measurement,
+            "runtime_limit_status": (
+                "PASS" if tx_capable_elapsed <= self.maximum else "FAIL"
+            ),
             "required_cooldown_seconds": required,
             "cooldown_completed_utc": None,
             "actual_cooldown_seconds": None,
             "cooldown_status": "PENDING" if shutdown_verified else "FAIL",
-            "status": "PENDING" if shutdown_verified and elapsed <= self.maximum else "FAIL",
+            "status": (
+                "PENDING"
+                if shutdown_verified and tx_capable_elapsed <= self.maximum
+                else "FAIL"
+            ),
         })
         self.entries.append(entry)
-        if shutdown_verified and elapsed <= self.maximum:
+        if shutdown_verified:
             self._cooldown_start_monotonic = stopped
             self._cooldown_due_monotonic = stopped + required
-        else:
+        if not shutdown_verified or tx_capable_elapsed > self.maximum:
             self._failed_closed = True
         self._persist()
         if not shutdown_verified:
             raise RuntimeError("shutdown-after unconfirmed; no later TX is permitted")
-        if elapsed > self.maximum:
+        if tx_capable_elapsed > self.maximum:
             raise RuntimeError("measured continuous runtime exceeded 30 minutes")
         return entry
 

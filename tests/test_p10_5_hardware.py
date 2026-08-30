@@ -99,8 +99,10 @@ class P10_5HardwareTests(unittest.TestCase):
                 "reports/lane3_connectivity_probe_20260810T114211Z.md",
                 "scripts/create_p10_5_authorization.py",
                 "scripts/hw/p10_program_dual_shutdown.tcl",
+                "scripts/p10_tfdu_runtime_guard.py",
                 "scripts/run_p10_5_hardware.py",
                 "tests/test_p10_5_hardware.py",
+                "tests/test_p10_tfdu_runtime_guard.py",
                 "evidence/hardware/p10_5/run/final.json",
                 "artifacts/p10_5/source/hash/candidate.bit"):
             self.assertTrue(freezer.post_artifact_path_allowed(path), path)
@@ -111,6 +113,13 @@ class P10_5HardwareTests(unittest.TestCase):
                 "config/p10_5_dual_direction.yaml",
                 "scripts/build_p10_5_functional.py"):
             self.assertFalse(freezer.post_artifact_path_allowed(path), path)
+
+    def test_artifact_freeze_runs_runtime_guard_unit_gate(self) -> None:
+        self.assertEqual(
+            freezer.GATES["runtime_guard_unit"],
+            [sys.executable, "-m", "unittest",
+             "tests.test_p10_tfdu_runtime_guard"],
+        )
 
     def test_post_artifact_module_identity_only_change_is_admissible(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -508,6 +517,44 @@ class P10_5HardwareTests(unittest.TestCase):
             ledger = guard.public_ledger()
         self.assertEqual(ledger["status"], "FAIL")
         self.assertEqual(ledger["stages"][0]["runtime_limit_status"], "FAIL")
+
+    def test_runtime_finalization_waits_rest_and_preserves_original_failure(self) -> None:
+        policy = load_policy(campaign.RUNTIME_REST_POLICY)
+        fake = FakeTime()
+        with tempfile.TemporaryDirectory() as temporary:
+            guard = RuntimeRestGuard(
+                policy, Path(temporary) / "ledger.json", campaign.ALL_MODULES,
+                clock=fake.clock, sleeper=fake.sleep, utc_clock=fake.utc_clock)
+            guard.begin_stage("formal_30min", 1800)
+            fake.sleep(1800.5)
+            with self.assertRaisesRegex(RuntimeError, "exceeded"):
+                campaign.finish_runtime_stage(
+                    guard,
+                    shutdown_verified=True,
+                    measured_runtime_seconds=1800.336,
+                    tx_capable_runtime_seconds=1800.001,
+                )
+            ledger = guard.public_ledger()
+        self.assertEqual(ledger["status"], "FAIL")
+        self.assertEqual(ledger["stages"][0]["cooldown_status"], "PASS")
+        self.assertAlmostEqual(fake.value, 2800.668, places=3)
+
+    def test_formal_runtime_limit_uses_hardware_tx_capable_interval(self) -> None:
+        result = {
+            "active_runtime_seconds": 1800.336,
+            "details": [{
+                "fixed": {"duration_elapsed_ms": 1_800_000},
+                "rotating": {"duration_elapsed_ms": 1_800_000},
+            }],
+        }
+        self.assertEqual(
+            campaign.tx_capable_runtime_seconds("formal_30min", result),
+            1800.0,
+        )
+        self.assertEqual(
+            campaign.tx_capable_runtime_seconds("performance", result),
+            1800.336,
+        )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "test_id": "P10_5-RUN3-FORMAL-RUNTIME-GUARD-DIAGNOSIS",
+  "status": "PASS",
+  "run_id": "p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01",
+  "immutable_campaign_status": "FAIL",
+  "failure_stage": "formal_30min_host_runtime_guard",
+  "classification": "HOST_RUNTIME_ACCOUNTING_FALSE_REJECTION_WITH_DIRECT_HARDWARE_FORMAL_PASS",
+  "root_cause": {
+    "maximum_tx_capable_runtime_seconds": 1800.0,
+    "hardware_reported_tx_capable_runtime_seconds": 1800.0,
+    "conservative_observation_to_terminal_envelope_seconds": 1800.336,
+    "post_tx_control_and_terminal_overhead_seconds": 0.336,
+    "old_limit_basis": "conservative_observation_to_terminal_envelope_seconds",
+    "old_guard_error": "measured continuous runtime exceeded 30 minutes",
+    "secondary_cleanup_error": "runtime/rest finalization: no active TFDU stage",
+    "secondary_cleanup_cause": "the host runtime_active flag remained true after finish_stage had already cleared the active stage and raised"
+  },
+  "direct_hardware_formal_evidence": {
+    "case_marker": "P10_CASE_PASS=formal_primary_1800s",
+    "safety_marker": "P10_3F_SAFETY_GATE_PASS=formal_primary_1800s",
+    "stage_marker": "P10_XSDB_STAGE_RESULT=PASS",
+    "fixed_duration_target_ms": 1800000,
+    "fixed_duration_elapsed_ms": 1800000,
+    "rotating_duration_target_ms": 1800000,
+    "rotating_duration_elapsed_ms": 1800000,
+    "fixed_application_committed_bytes": 967573504,
+    "rotating_application_committed_bytes": 967573504,
+    "fixed_application_goodput_bps": 4300326.684444444,
+    "rotating_application_goodput_bps": 4300326.684444444,
+    "formal_transport_timeouts_fixed": 0,
+    "formal_transport_timeouts_rotating": 0,
+    "crc_bad_fixed": 0,
+    "crc_bad_rotating": 0,
+    "sha_mismatch_fixed": 0,
+    "sha_mismatch_rotating": 0,
+    "retry_exhausted_fixed": 0,
+    "retry_exhausted_rotating": 0,
+    "integrity_errors_fixed": 0,
+    "integrity_errors_rotating": 0,
+    "partial_commit_fixed": 0,
+    "partial_commit_rotating": 0,
+    "duplicate_commit_fixed": 0,
+    "duplicate_commit_rotating": 0,
+    "stale_commit_fixed": 0,
+    "stale_commit_rotating": 0,
+    "descriptor_leak_fixed": 0,
+    "descriptor_leak_rotating": 0,
+    "double_completion_fixed": 0,
+    "double_completion_rotating": 0
+  },
+  "pre_formal_stage_result": {
+    "status": "PASS",
+    "stage_count": 13,
+    "stages": [
+      "safe_start",
+      "capability",
+      "one_plus_one",
+      "two_plus_one",
+      "two_plus_two",
+      "role_commit",
+      "performance",
+      "streaming_64m_1",
+      "streaming_64m_2",
+      "streaming_64m_3",
+      "streaming_64m_4",
+      "streaming_64m_5",
+      "faults"
+    ],
+    "performance_goodput_bps": {
+      "F_TO_R": 4292171.093333334,
+      "R_TO_F": 4292171.093333334
+    },
+    "two_plus_two_tx_executed": true
+  },
+  "shutdown": {
+    "fixed": "PASS",
+    "rotating": "PASS",
+    "tfdu_shutdown_programmed": true,
+    "shutdown_exit": 0,
+    "formal_shutdown_verified_utc": "2026-08-30T14:04:40.656Z"
+  },
+  "post_run_rest": {
+    "basis_seconds": 1800.336,
+    "required_ratio": 0.5,
+    "required_seconds": 900.168,
+    "earliest_next_tx_utc": "2026-08-30T14:19:40.824Z",
+    "observed_at_utc": "2026-08-30T14:19:41.611Z",
+    "observed_shutdown_rest_seconds": 900.955,
+    "hardware_tool_processes_observed": [],
+    "status": "PASS",
+    "evidence_semantics": "host process and shutdown-bitstream evidence; no external electrical measurement claimed"
+  },
+  "remediation": {
+    "tx_runtime_limit_basis": "exact hardware-reported TX-capable duration_elapsed_ms from both endpoints",
+    "cooldown_basis": "the longer conservative observation-to-terminal envelope",
+    "over_limit_failure_behavior": "remain fail-closed while still completing the required cooldown",
+    "runner_finalization_behavior": "settle each runtime stage once and preserve the original error",
+    "artifact_change": false,
+    "rtl_change": false,
+    "firmware_change": false,
+    "host_harness_only": true,
+    "unit_tests": {
+      "p10_5_hardware": "PASS_21_TESTS",
+      "runtime_guard": "PASS_9_TESTS",
+      "combined_p10_5_runtime_firmware": "PASS_42_TESTS"
+    }
+  },
+  "evidence": [
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
+      "sha256": "c091a97bc8d43283b5378301ad38d9f8665b06e27b3803e1d901a1a08e120e14",
+      "bytes": 864221
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/final/run_evidence_sha256_manifest.json",
+      "sha256": "2c2fbc8f0ba4ef5e90ffbf09e2a06741bb8ad80df2a740095acf734b044248e6",
+      "bytes": 207181,
+      "independent_manifest_verification": "PASS_1104_OF_1104"
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/runtime_rest/runtime_rest_ledger.json",
+      "sha256": "0840b37d8c24bb4af9632a97d50ddf997240248608c62f1dbf447af60195451a",
+      "bytes": 11117
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/stages/formal_30min/xsdb.result.txt",
+      "sha256": "73c93a26bf839ad734191e109dc7c82ec2aacb7022bb35be4ffc4b1ee5ca4a3c",
+      "bytes": 2449
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/stages/formal_30min/dumps/observations.psv",
+      "sha256": "63c9496990b8fdb27534e7c7d3ca1b286b1ba66842940d36cef7c7b9f71d4b7d",
+      "bytes": 3532
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/stages/formal_30min/dumps/formal_primary_1800s.fixed.p10_1.bin",
+      "sha256": "74a752b6791bee5cb139e3725f9c2beb0788013c0c64eb1823465bf35fd154b9",
+      "bytes": 2048
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/stages/formal_30min/dumps/formal_primary_1800s.rotating.p10_1.bin",
+      "sha256": "97e72fd5fabf6b7cf6815494ff3b7944a55212b53b62ce02aa4dbee14ce40a97",
+      "bytes": 2048
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/stages/formal_30min/dumps/p10_1r_telemetry.psv",
+      "sha256": "0d5f2f5d81663fb2164eeed4c1d1c03bdabe6ea4e65b5233987b76c65c1865e5",
+      "bytes": 329093
+    },
+    {
+      "path": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/shutdown/formal_30min_after/attempt_1.result.txt",
+      "sha256": "8073f3583500665513e67b87a756f1eff27d615a41b46f4feb01cbf38eec2e06",
+      "bytes": 2973
+    }
+  ],
+  "immutable_result_semantics": "Run 3 remains FAIL and is not retroactively promoted. The direct formal hardware case is retained as scoped diagnostic evidence only. A new exact current-run authorization and run ID are required for acceptance.",
+  "generated_at_utc": "2026-08-30T14:19:41Z",
+  "errors": []
+}

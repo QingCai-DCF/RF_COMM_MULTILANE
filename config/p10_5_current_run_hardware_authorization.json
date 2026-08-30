@@ -134,14 +134,15 @@
     "direct user statement dated 2026-08-30: 我人工给予10次授权"
   ],
   "authorization_source_semantics": "The Goal and the user's ten-run standing authorization authorize this exact bounded ordinal-3 P10.5 hardware run. The functional/shutdown bitstreams and ELFs are unchanged; only the committed read-only abort telemetry harness and exact-boundary simulation regression changed after the artifact source commit.",
-  "authorized": true,
+  "authorized": false,
   "board_binding": {
     "fixed": "AX7020-F/JTAG:210249855178",
     "rotating": "AX7020-R/JTAG:210512180081"
   },
-  "consumed": false,
+  "consumed": true,
+  "consumed_at_utc": "2026-08-30T14:04:53+00:00",
   "created_at_utc": "2026-08-30T12:34:51.755995+00:00",
-  "current_run_hardware_authorization": true,
+  "current_run_hardware_authorization": false,
   "errors": [],
   "ethernet_allowed": false,
   "external_instrumentation_allowed": false,
@@ -212,7 +213,7 @@
     "R3": "B0011"
   },
   "movement_rotation_realignment_rewiring_or_module_replacement_allowed": false,
-  "no_hardware": false,
+  "no_hardware": true,
   "offline_inputs": {
     "ack_collision_design": {
       "bytes": 3091,
@@ -345,6 +346,7 @@
     "hash_low": "0xA16281D1",
     "version": "0x0A000005"
   },
+  "result": "evidence/hardware/p10_5/p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01/final/p10_5_final_summary.json",
   "rotating_jtag_serial": "210512180081",
   "run_id": "p10_5_20260830T123451Z_e1f8c01a_4015142e_79607d01",
   "runtime_rest_policy": {
@@ -391,6 +393,6 @@
     "two_plus_one": 480,
     "two_plus_two": 180
   },
-  "status": "READY_FOR_EXACT_CURRENT_RUN",
+  "status": "CONSUMED_AFTER_P10_5_FAIL",
   "two_hour_test_allowed": false
 }
