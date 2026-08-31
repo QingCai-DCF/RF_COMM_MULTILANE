@@ -1,0 +1,62 @@
+{
+  "base_commit": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
+  "base_tag": {
+    "name": "p10.4-autonomous-4lane-hardening-closed",
+    "object": "e9afcc66ffe549c30e9642cca4a66f95a27f793a",
+    "target": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
+    "type": "tag"
+  },
+  "branch": "p10.5/dual-direction-2plus2",
+  "closed_tag": {
+    "message": "P10.5 dual-direction 2+2 closed baseline; mandatory PASS, 4.8 Mbit/s stretch nonblocking; P10 family stationary dual-AX7020 four-lane scope frozen.",
+    "name": "p10.5-2plus2-dual-direction-closed",
+    "target_resolution": "resolve through the tag after the closeout commit; a commit cannot embed its own hash",
+    "type": "annotated"
+  },
+  "current_run_hardware_authorization": false,
+  "evidence_checkpoint": {
+    "commit": "6546a9bd749f0daae6696ac22d18007937210722",
+    "parents": [
+      "6144a7d530122dfe470187ba8bbf91844aff15ba"
+    ],
+    "subject": "test: add P10.5 hardware 2plus2 evidence",
+    "tree": "f67229d446ff5748b969e740fdcc53c1e40cd0c5"
+  },
+  "final_checkpoint": {
+    "commit": "0a79ee8be21a199e7ba14bd65fcd72638f7160e0",
+    "parents": [
+      "6546a9bd749f0daae6696ac22d18007937210722"
+    ],
+    "subject": "test: freeze P10.5 checkpoint",
+    "tree": "7f092cce1659c98b8e32c990b850ce0eb80bbcc8"
+  },
+  "force_push_allowed": false,
+  "generation_mode": "DETERMINISTIC_OFFLINE_CLOSEOUT",
+  "hardware_actions_executed": false,
+  "instruction_path": "C:\\Users\\user\\Downloads\\P10_FAMILY_FINAL_CLOSEOUT_CODEX_INSTRUCTION.md",
+  "instruction_sha256": "f3679c3673ec6a77bbb48ef3c7587d061f6ef543466a8fb2318459652219df58",
+  "no_hardware": true,
+  "p11_status": "NOT_STARTED",
+  "pass_tag": {
+    "name": "p10.5-2plus2-dual-direction-pass",
+    "object": "a0fe8b02a638fc5a8fc21d80488a7c8c294b7a68",
+    "target": "0a79ee8be21a199e7ba14bd65fcd72638f7160e0",
+    "type": "tag"
+  },
+  "pass_tag_immutable_verified": true,
+  "rebase_frozen_history_allowed": false,
+  "repository": "RF_COMM_MULTILANE",
+  "schema_version": 1,
+  "scope": "P10_5_IMMUTABLE_GIT_IDENTITY",
+  "source": {
+    "commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+    "parents": [
+      "b49554e24d930529b415a75eee70ac4db6029015"
+    ],
+    "subject": "fix: restore P10.5 ACK liveness after direction abort",
+    "tree": "6cb3b909faf3b9bed96d94ceab77c4c88a5bcda2"
+  },
+  "status": "READY_FOR_CLOSEOUT_COMMIT",
+  "test_id": "P10_5-GIT-CHECKPOINT-METADATA",
+  "worktree": "C:\\Users\\user\\Documents\\RF_COMM_MULTILANE_P10_5"
+}

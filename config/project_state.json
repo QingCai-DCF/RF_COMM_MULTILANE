@@ -145,8 +145,9 @@
       "xdc_path": "board_profiles/ax7020_rotating_4lane/ax7020_rotating_4lane.generated.xdc"
     }
   ],
-  "current_program_stage": "P11_OFFLINE_PREPARATION",
+  "current_program_stage": "P10_FAMILY_FINAL_CLOSEOUT",
   "current_run_hardware_authorization": false,
+  "current_run_hardware_authorization_reusable": false,
   "current_z7010_platform_status": "PLATFORM_LIMITED_PASS",
   "final_product_status": "PENDING_HW",
   "four_lane_application_8mbps": "PASS",
@@ -154,6 +155,7 @@
   "last_hardware_authorization_consumed": true,
   "last_hardware_authorization_id": "P10_5-CURRENT-RUN-IMMUTABLE",
   "last_hardware_evidence_checkpoint": "6546a9bd749f0daae6696ac22d18007937210722",
+  "last_hardware_final_checkpoint": "0a79ee8be21a199e7ba14bd65fcd72638f7160e0",
   "last_hardware_run_id": "p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01",
   "last_hardware_stage": "P10_5",
   "last_shutdown_fixed": "PASS",
@@ -867,6 +869,7 @@
       "consumed": true,
       "current_run_hardware_authorization": false,
       "path": "config/p10_5_current_run_hardware_authorization.json",
+      "reusable_for_future_run": false,
       "sha256": "d239cd3dd57812824a56d846f302b28fe143d03d46cc2e2ea94eb5f5df18d2dd",
       "status": "CONSUMED_AFTER_P10_5_PASS"
     },
@@ -922,6 +925,7 @@
     "shutdown_rotating": "PASS",
     "spi_used": false,
     "standing_authorization": "ORDINAL_4_OF_10_CONSUMED_AFTER_P10_5_PASS; 6 UNUSED AUTHORIZATIONS REMAIN",
+    "standing_authorization_status": "HISTORICAL_RECORD_CLOSED_NOT_REUSABLE",
     "status": "PASS_WITH_NONBLOCKING_LIMITS",
     "stretch_4p8mbps": {
       "F_TO_R": "FAIL_NONBLOCKING",
@@ -931,6 +935,31 @@
     "wiring_changed": false
   },
   "p10_5_status": "PASS_WITH_NONBLOCKING_LIMITS",
+  "p10_family_closeout": {
+    "authorization_reusable": false,
+    "closed_tag": "p10.5-2plus2-dual-direction-closed",
+    "closeout_summary_path": "evidence/generated/p10_5_closeout_summary.json",
+    "closeout_summary_sha256": "7d87336e33524f6b82e840ee818d732795f3a2d2d92b24c07f3f634bf36ae683",
+    "current_run_hardware_authorization": false,
+    "evidence_consistency_path": "evidence/generated/p10_family_closeout_evidence_consistency.json",
+    "evidence_consistency_sha256": "7577f453e841a65d784de2910f33d42d9ca054df40c6077ed656878f73ca6709",
+    "family_summary_path": "evidence/generated/p10_family_closeout_summary.json",
+    "family_summary_sha256": "9a0e7b5531aeaf3b6fdb9abc9631bd1427cf763a0a995e8e4035dd75ad62b81d",
+    "gate_summary_path": "evidence/generated/p10_5_closeout_gate_summary.json",
+    "gate_summary_sha256": "ba48c5a41f94f1823ff930d4a976f204f9c16d727947a262295ab84b231408ae",
+    "git_metadata_path": "evidence/generated/p10_5_git_checkpoint_metadata.json",
+    "git_metadata_sha256": "bb71db70c213e8cad4075c5e5f3a8fb71b6fdd4331ad0adc0689b7acbc88050d",
+    "hardware_actions_executed": false,
+    "mandatory_result": "PASS",
+    "p10_5_status": "PASS_WITH_NONBLOCKING_LIMITS",
+    "p11_status": "NOT_STARTED",
+    "pass_tag": "p10.5-2plus2-dual-direction-pass",
+    "scope_status": "CLOSED_FOR_STATIONARY_DUAL_AX7020_FOUR_LANE_PROTOTYPE_SCOPE",
+    "stretch_4p8mbps": {
+      "F_TO_R": "FAIL_NONBLOCKING",
+      "R_TO_F": "FAIL_NONBLOCKING"
+    }
+  },
   "p10_acceptance": {
     "application_goodput_f_to_r_bps": 5767.861069534447,
     "application_goodput_fields_classification": "GLOBAL_MINIMUM_MICROTRANSFER_BPS_NOT_SCALING_METRIC",
@@ -1325,7 +1354,7 @@
     "P8E_DUAL_TARGET_BUILD_TIMING_CDC": "PASS",
     "P9_Z7010_STATIONARY_2LANE_PLATFORM_LIMITED_HARDWARE_VALIDATION": "PASS"
   },
-  "state_revision": "P10-5-DUAL-DIRECTION-PASS-WITH-NONBLOCKING-LIMITS",
+  "state_revision": "P10-FAMILY-FINAL-CLOSEOUT",
   "stationary_4lane_hardware": "PASS",
   "two_lane_baseline_status": "FROZEN_ACCEPTED",
   "two_lane_speed_stability": "PASS_STATIONARY_AX7020_2LANE_HALF_DUPLEX",

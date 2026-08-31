@@ -5,8 +5,8 @@
 Canonical constraint: `PROJECT_CONSTRAINTS.txt` (`9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`).
 
 ```text
-REQUIREMENT_COUNT: 284
-PASS: 262
+REQUIREMENT_COUNT: 285
+PASS: 263
 PENDING: 16
 FAIL: 6
 WAIVED: 0
@@ -224,6 +224,7 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 | `P10_2-HWPREP-001` | `PASS` | P10_3_FAIL_CLOSED_RUNNER | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-001` | `evidence/generated/p10_2_hardware_dry_run.json` | The P10.3 command validator fails closed on missing authorization, old F1, mask>0xF, Ethernet, movement and two-hour requests. |
 | `P10_2-HWPREP-002` | `PASS` | P10_3_EVIDENCE_SCHEMA | `P10_2_2LANE_BASELINE_FREEZE_AND_4LANE_OFFLINE_READINESS` | `P10_2-HWPREP-002` | `evidence/generated/p10_2_p10_3_readiness.json` | P10.3 has machine-readable stage and 8x8 evidence templates without granting hardware authority. |
 | `P10_3-WIRE-001` | `PASS` | P10_3_AX7020_STATIONARY_4LANE | `P10_3_AX7020_STATIONARY_4LANE_HARDWARE_ACCEPTANCE` | `P10_3-WIRE-001` | `evidence/generated/p10_3_wiring.json` | The actual stationary four-lane wiring shall be frozen and hash-bound before hardware execution. |
+| `P10-FAMILY-CLOSEOUT-001` | `PASS` | P10_FAMILY_STATIONARY_DUAL_AX7020_CLOSEOUT | `P10_FAMILY_FINAL_CLOSEOUT` | `P10-FAMILY-CLOSEOUT-001` | `evidence/generated/p10_family_closeout_summary.json` | The P10 family stationary dual-AX7020 four-lane prototype baseline shall close offline with immutable P10.5 tag/checkpoint identity, consumed non-reusable authorization, both shutdown results, mandatory 4 Mbit/s results, truthful 4.8 Mbit/s nonblocking failures, and P11 remaining NOT_STARTED. |
 | `P10_5-CLOSE-001` | `PASS` | P10_5_IMMUTABLE_P10_4_CLOSEOUT | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-CLOSE-001` | `evidence/generated/p10_4_closeout_summary.json` | P10.4 immutable PASS_WITH_NONBLOCKING_LIMITS evidence and its non-transmitting 2+2 capability blocker shall remain unchanged and shall be closed by a separate annotated tag. |
 | `P10_5-CAP-001` | `PASS` | P10_5_SPLIT_LANE_DUAL_DIRECTION | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `P10_5-CAP-001` | `evidence/generated/p10_5_final_summary.json` | The versioned endpoint capability shall explicitly advertise simultaneous split-lane bidirectional operation, four lanes, role epochs, ACK piggyback, and control-only ACK fallback. |
 | `P10_5-ROLE-001` | `PASS` | P10_5_SPLIT_LANE_DUAL_DIRECTION | `P10_5_DUAL_DIRECTION_2PLUS2_ARCHITECTURE_AND_HARDWARE_ACCEPTANCE` | `tb_p10_5_role_mask_commit` | `evidence/generated/p10_5_xsim/summary.json` | F-to-R and R-to-F lane-role masks shall be nonempty, disjoint, and subsets of ACTIVE_LANE_MASK, with endpoint-local TX/RX masks derived only from board role. |
@@ -373,13 +374,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-STATE-001`
 
-- `config/project_state.json` — `0d1ab29a8f9ab5b90bf6493e85b1f7abbf39cdb8530e5e04b745227840b2479d`
-- `PROJECT_STATUS.md` — `6c71459ac7d179ade8d32c2f15f2fd38cab3c87248b4fa597595eeeb5d53691f`
+- `config/project_state.json` — `0d631c98c4eec140874af7477efee6fbe8755caa8becfb942ac641504ce83657`
+- `PROJECT_STATUS.md` — `89761c3eb3abce086b8690b542eb72aacbd0450c05eb49d6ad7fb66e0db6bb98`
 
 ### `P8A-TRACE-001`
 
 - `PROJECT_CONSTRAINTS.txt` — `9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758`
-- `config/project_state.json` — `0d1ab29a8f9ab5b90bf6493e85b1f7abbf39cdb8530e5e04b745227840b2479d`
+- `config/project_state.json` — `0d631c98c4eec140874af7477efee6fbe8755caa8becfb942ac641504ce83657`
 
 ### `P8A-EVID-001`
 
@@ -389,8 +390,8 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 
 ### `P8A-SCOPE-001`
 
-- `config/project_state.json` — `0d1ab29a8f9ab5b90bf6493e85b1f7abbf39cdb8530e5e04b745227840b2479d`
-- `PROJECT_STATUS.md` — `6c71459ac7d179ade8d32c2f15f2fd38cab3c87248b4fa597595eeeb5d53691f`
+- `config/project_state.json` — `0d631c98c4eec140874af7477efee6fbe8755caa8becfb942ac641504ce83657`
+- `PROJECT_STATUS.md` — `89761c3eb3abce086b8690b542eb72aacbd0450c05eb49d6ad7fb66e0db6bb98`
 - `evidence/generated/p7_final_acceptance_summary.md` — `702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624`
 
 ### `P8A-LEGACY-001`
@@ -1438,6 +1439,13 @@ A PENDING requirement is not a failure and is not a PASS. P8A baseline PASS mean
 - `evidence/generated/p10_3_wiring.json` — `ca89d42ac92a77f104f0b82e5de237738435d69b862e0e1260f6e8e7d3d49782`
 - `evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/orchestrator_result.json` — `3dccb9888fd2b5af2fda308defa22fac7d55970d11197fb86b6d39f2888f6af2`
 - `evidence/hardware/p10_3f_full/p10_3f_full_20260805T065127Z_e356dd92_1ff0885f_82ef5093/final/run_evidence_sha256_manifest.json` — `ba2504ae83109f441ac6301a75280fb20580119ea87bdfa9bc6d322eff3765e1`
+
+### `P10-FAMILY-CLOSEOUT-001`
+
+- `evidence/generated/p10_family_closeout_summary.json` — `9a0e7b5531aeaf3b6fdb9abc9631bd1427cf763a0a995e8e4035dd75ad62b81d`
+- `evidence/generated/p10_5_closeout_summary.json` — `7d87336e33524f6b82e840ee818d732795f3a2d2d92b24c07f3f634bf36ae683`
+- `evidence/generated/p10_5_closeout_gate_summary.json` — `ba48c5a41f94f1823ff930d4a976f204f9c16d727947a262295ab84b231408ae`
+- `evidence/generated/p10_family_closeout_evidence_consistency.json` — `7577f453e841a65d784de2910f33d42d9ca054df40c6077ed656878f73ca6709`
 
 ### `P10_5-CLOSE-001`
 

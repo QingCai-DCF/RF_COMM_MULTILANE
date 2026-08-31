@@ -348,12 +348,12 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 0d1ab29a8f9ab5b90bf6493e85b1f7abbf39cdb8530e5e04b745227840b2479d
-    bytes: 61601
+    sha256: 0d631c98c4eec140874af7477efee6fbe8755caa8becfb942ac641504ce83657
+    bytes: 63314
   - path: PROJECT_STATUS.md
-    sha256: 6c71459ac7d179ade8d32c2f15f2fd38cab3c87248b4fa597595eeeb5d53691f
-    bytes: 10245
-  artifact_hash: 6c71459ac7d179ade8d32c2f15f2fd38cab3c87248b4fa597595eeeb5d53691f
+    sha256: 89761c3eb3abce086b8690b542eb72aacbd0450c05eb49d6ad7fb66e0db6bb98
+    bytes: 10247
+  artifact_hash: 89761c3eb3abce086b8690b542eb72aacbd0450c05eb49d6ad7fb66e0db6bb98
 - requirement_id: P8A-TRACE-001
   requirement_text: V3.1 初始关键 requirement ID 和 P8A requirement ID 必须具备完整机器可读追踪字段。
   profile: P8A_BASELINE
@@ -367,8 +367,8 @@ requirements:
   - path: PROJECT_CONSTRAINTS.txt
     sha256: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
   - path: config/project_state.json
-    sha256: 0d1ab29a8f9ab5b90bf6493e85b1f7abbf39cdb8530e5e04b745227840b2479d
-    bytes: 61601
+    sha256: 0d631c98c4eec140874af7477efee6fbe8755caa8becfb942ac641504ce83657
+    bytes: 63314
   artifact_hash: 9688fd14a3a7431c06e65218cbc776a0c6b69e6fc544ab7fd23e20ae42a90758
 - requirement_id: P8A-EVID-001
   requirement_text: P0-P7 final JSON、Markdown 和 raw evidence 必须完成显式 reconciliation，历史失败不得删除。
@@ -398,14 +398,14 @@ requirements:
   waiver: null
   artifact_hashes:
   - path: config/project_state.json
-    sha256: 0d1ab29a8f9ab5b90bf6493e85b1f7abbf39cdb8530e5e04b745227840b2479d
-    bytes: 61601
+    sha256: 0d631c98c4eec140874af7477efee6fbe8755caa8becfb942ac641504ce83657
+    bytes: 63314
   - path: PROJECT_STATUS.md
-    sha256: 6c71459ac7d179ade8d32c2f15f2fd38cab3c87248b4fa597595eeeb5d53691f
-    bytes: 10245
+    sha256: 89761c3eb3abce086b8690b542eb72aacbd0450c05eb49d6ad7fb66e0db6bb98
+    bytes: 10247
   - path: evidence/generated/p7_final_acceptance_summary.md
     sha256: 702a32cf72601474b56e35bb3fac57ed9b97da8a4e681a8bf1c5089907caf624
-  artifact_hash: 6c71459ac7d179ade8d32c2f15f2fd38cab3c87248b4fa597595eeeb5d53691f
+  artifact_hash: 89761c3eb3abce086b8690b542eb72aacbd0450c05eb49d6ad7fb66e0db6bb98
 - requirement_id: P8A-LEGACY-001
   requirement_text: AB_L1 BAD_DIR 和 P7 r41 FAIL 必须保留，当前 lane1 可用性只能按最新 P7 scope 解释。
   profile: P8A_BASELINE
@@ -4390,6 +4390,31 @@ requirements:
   artifact_hash: ca89d42ac92a77f104f0b82e5de237738435d69b862e0e1260f6e8e7d3d49782
   hardware_followup: P10.3 PASS is stationary four-lane AX7020 scope only; P11, 8x32, 600 rpm, Ethernet/SPI, physical GLOBAL_PERMIT,
     external electrical/duty measurement and product-final acceptance remain pending.
+- requirement_id: P10-FAMILY-CLOSEOUT-001
+  requirement_text: The P10 family stationary dual-AX7020 four-lane prototype baseline shall close offline with immutable
+    P10.5 tag/checkpoint identity, consumed non-reusable authorization, both shutdown results, mandatory 4 Mbit/s results,
+    truthful 4.8 Mbit/s nonblocking failures, and P11 remaining NOT_STARTED.
+  profile: P10_FAMILY_STATIONARY_DUAL_AX7020_CLOSEOUT
+  verification_method: Re-run all portable verify-existing entry points, validate frozen artifact and evidence hashes,
+    validate archived P10.4 manifest members byte-for-byte, check state/requirements/status consistency, and run no-hardware
+    closeout unit tests.
+  verification_stage: P10_FAMILY_FINAL_CLOSEOUT
+  verification_scope: P10_FAMILY_SCOPED_CLOSEOUT_NO_HARDWARE
+  test_id: P10-FAMILY-CLOSEOUT-001
+  evidence_path: evidence/generated/p10_family_closeout_summary.json
+  status: PASS
+  waiver: null
+  artifact_hashes:
+  - path: evidence/generated/p10_family_closeout_summary.json
+    sha256: 9a0e7b5531aeaf3b6fdb9abc9631bd1427cf763a0a995e8e4035dd75ad62b81d
+  - path: evidence/generated/p10_5_closeout_summary.json
+    sha256: 7d87336e33524f6b82e840ee818d732795f3a2d2d92b24c07f3f634bf36ae683
+  - path: evidence/generated/p10_5_closeout_gate_summary.json
+    sha256: ba48c5a41f94f1823ff930d4a976f204f9c16d727947a262295ab84b231408ae
+  - path: evidence/generated/p10_family_closeout_evidence_consistency.json
+    sha256: 7577f453e841a65d784de2910f33d42d9ca054df40c6077ed656878f73ca6709
+  hardware_followup: P11 remains NOT_STARTED; the next offline-preparation recommendation is not a P11 execution authorization.
+  artifact_hash: 9a0e7b5531aeaf3b6fdb9abc9631bd1427cf763a0a995e8e4035dd75ad62b81d
 - requirement_id: P10_5-CLOSE-001
   requirement_text: P10.4 immutable PASS_WITH_NONBLOCKING_LIMITS evidence and its non-transmitting 2+2 capability blocker
     shall remain unchanged and shall be closed by a separate annotated tag.

@@ -1,0 +1,78 @@
+{
+  "closeout_unit_tests": "PASS",
+  "current_run_hardware_authorization": false,
+  "errors": [],
+  "family_stage_tag_ancestry": "PASS",
+  "frozen_baseline": "PASS",
+  "gates": {
+    "git_diff_check": {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": "",
+      "stdout": ""
+    },
+    "no_hardware_static_scan": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/check_no_hardware_calls.py"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": "",
+      "stdout": "NO_HARDWARE_ACTIONS_EXECUTED=1"
+    },
+    "project_status": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_project_status.py",
+        "--check"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": "",
+      "stdout": "PROJECT_STATUS_GENERATION=PASS\nPROJECT_STATUS_PATH=PROJECT_STATUS.md"
+    },
+    "python_compile": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-m",
+        "py_compile",
+        "scripts/verify_p10_family_closeout.py",
+        "scripts/generate_p10_family_closeout.py",
+        "tests/test_p10_family_closeout.py"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": "",
+      "stdout": ""
+    },
+    "requirements_traceability": {
+      "command": [
+        "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "scripts/generate_requirement_traceability.py",
+        "--check"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": "",
+      "stdout": "REQUIREMENT_TRACEABILITY_GENERATION=PASS\nREQUIREMENT_TRACEABILITY_PATH=docs/REQUIREMENT_TRACEABILITY_MATRIX.md"
+    }
+  },
+  "generation_mode": "DETERMINISTIC_OFFLINE_CLOSEOUT",
+  "hardware_actions_executed": false,
+  "instruction_path": "C:\\Users\\user\\Downloads\\P10_FAMILY_FINAL_CLOSEOUT_CODEX_INSTRUCTION.md",
+  "instruction_sha256": "f3679c3673ec6a77bbb48ef3c7587d061f6ef543466a8fb2318459652219df58",
+  "no_hardware": true,
+  "p10_5_mandatory_result": "PASS",
+  "p10_5_status": "PASS_WITH_NONBLOCKING_LIMITS",
+  "p11_status": "NOT_STARTED",
+  "schema_version": 1,
+  "scope": "P10_FAMILY_FINAL_CLOSEOUT_OFFLINE_GATES",
+  "status": "PASS",
+  "test_id": "P10_5-CLOSEOUT-GATES"
+}

@@ -1,0 +1,153 @@
+{
+  "application_goodput_bps": {
+    "F_TO_R": 4292171.093333334,
+    "R_TO_F": 4292171.093333334
+  },
+  "artifacts": [
+    {
+      "bytes": 369449,
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/2539aafd5eb21fcb17a55cb12c7c8d0ff4fcd351a5ae2abee133a8d4d2c88723/p10_ax7020_fixed_shutdown.bit",
+      "sha256": "2539aafd5eb21fcb17a55cb12c7c8d0ff4fcd351a5ae2abee133a8d4d2c88723",
+      "status": "PASS"
+    },
+    {
+      "bytes": 4045681,
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/4015142eb2a009d7924103b38c8b7fe61649d7da13c6ae354dff510438e3619d/p10_ax7020_fixed_functional.bit",
+      "sha256": "4015142eb2a009d7924103b38c8b7fe61649d7da13c6ae354dff510438e3619d",
+      "status": "PASS"
+    },
+    {
+      "bytes": 1423650,
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/1175a0be9dfba097592d7c9dfcf1a989df1a06134af7dbf4c30821a4dae62a30/p10_ax7020_fixed_functional.xsa",
+      "sha256": "1175a0be9dfba097592d7c9dfcf1a989df1a06134af7dbf4c30821a4dae62a30",
+      "status": "PASS"
+    },
+    {
+      "bytes": 1970295,
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a/p10_ax7020_fixed_bsp.zip",
+      "sha256": "9e68339dc17476a9c6920e78fadeeefc52d2c9c396e3dda91e6f49f81417729a",
+      "status": "PASS"
+    },
+    {
+      "bytes": 665316,
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/05b6b416a420568760ec02b276b6dfa5afd045c79079edf79c8a888c7611455a/p10_fixed_runtime.elf",
+      "sha256": "05b6b416a420568760ec02b276b6dfa5afd045c79079edf79c8a888c7611455a",
+      "status": "PASS"
+    },
+    {
+      "bytes": 369449,
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/2f303bda57710b35c1b4bcd572eff5b12943244053ceae8d36a1995e50ac5534/p10_ax7020_rotating_shutdown.bit",
+      "sha256": "2f303bda57710b35c1b4bcd572eff5b12943244053ceae8d36a1995e50ac5534",
+      "status": "PASS"
+    },
+    {
+      "bytes": 4045681,
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/79607d0190d12c6160e0ff2d937a5ae0a8e208a85d0b5bd3f6f975de35b23205/p10_ax7020_rotating_functional.bit",
+      "sha256": "79607d0190d12c6160e0ff2d937a5ae0a8e208a85d0b5bd3f6f975de35b23205",
+      "status": "PASS"
+    },
+    {
+      "bytes": 1418475,
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/9a341a226b97d508de354e3e5b2552bcf0f6ef26258a56c8fb9c0b6faf1806c7/p10_ax7020_rotating_functional.xsa",
+      "sha256": "9a341a226b97d508de354e3e5b2552bcf0f6ef26258a56c8fb9c0b6faf1806c7",
+      "status": "PASS"
+    },
+    {
+      "bytes": 1970378,
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c/p10_ax7020_rotating_bsp.zip",
+      "sha256": "48cc070b90a89302372322e473bb01db3d5a5cbb883fdf15e41055823a4dc58c",
+      "status": "PASS"
+    },
+    {
+      "bytes": 666164,
+      "path": "artifacts/p10_5/e1f8c01ab084571627380367422f0bda2c0aed87/a16770e195f30d9a51a8c0693e6b31cf0b340cc01817923d6fd9404793c68082/p10_rotating_runtime.elf",
+      "sha256": "a16770e195f30d9a51a8c0693e6b31cf0b340cc01817923d6fd9404793c68082",
+      "status": "PASS"
+    }
+  ],
+  "authorization": {
+    "authorization_reusable": false,
+    "consumed": true,
+    "current_run_hardware_authorization": false
+  },
+  "board_binding": {
+    "fixed": "AX7020-F/JTAG:210249855178",
+    "rotating": "AX7020-R/JTAG:210512180081"
+  },
+  "closed_tag_to_create": "p10.5-2plus2-dual-direction-closed",
+  "committed_bytes": {
+    "F_TO_R": 967573504,
+    "R_TO_F": 967573504
+  },
+  "current_run_hardware_authorization": false,
+  "evidence_checkpoint": "6546a9bd749f0daae6696ac22d18007937210722",
+  "evidence_manifest": {
+    "declared_files": 1107,
+    "path": "evidence/hardware/p10_5/p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01/final/run_evidence_sha256_manifest.json",
+    "sha256": "b0f63b7ae9ce9e27843b3bf49c2fbd2470c04b5f25ea230927b400ae2558f0bb",
+    "verified_files": 1107
+  },
+  "final_checkpoint": "0a79ee8be21a199e7ba14bd65fcd72638f7160e0",
+  "formal_run_id": "p10_5_20260830T142630Z_e1f8c01a_4015142e_79607d01",
+  "frozen_hardware_evidence_modified": false,
+  "generation_mode": "DETERMINISTIC_OFFLINE_CLOSEOUT",
+  "hardware_actions_executed": false,
+  "instruction_path": "C:\\Users\\user\\Downloads\\P10_FAMILY_FINAL_CLOSEOUT_CODEX_INSTRUCTION.md",
+  "instruction_sha256": "f3679c3673ec6a77bbb48ef3c7587d061f6ef543466a8fb2318459652219df58",
+  "mandatory_result": "PASS",
+  "mandatory_targets": {
+    "F_TO_R_4MBPS": "PASS",
+    "R_TO_F_4MBPS": "PASS"
+  },
+  "module_inventory": {
+    "bytes": 29631,
+    "path": "config/hardware/tfdu_module_inventory.yaml",
+    "sha256": "9dd4f034e148684a296c46f6f87822a7a248430009dc1794595999ede77d430f",
+    "status": "PASS"
+  },
+  "no_hardware": true,
+  "nonblocking_results": {
+    "F_TO_R_4P8MBPS_STRETCH": "FAIL_NONBLOCKING",
+    "R_TO_F_4P8MBPS_STRETCH": "FAIL_NONBLOCKING"
+  },
+  "p10_5_status": "PASS_WITH_NONBLOCKING_LIMITS",
+  "p11_status": "NOT_STARTED",
+  "pass_tag": {
+    "moved": false,
+    "name": "p10.5-2plus2-dual-direction-pass",
+    "object": "a0fe8b02a638fc5a8fc21d80488a7c8c294b7a68",
+    "target": "0a79ee8be21a199e7ba14bd65fcd72638f7160e0",
+    "type": "tag"
+  },
+  "pass_tag_moved": false,
+  "schema_version": 1,
+  "scope": "P10_5_DUAL_DIRECTION_POST_ACCEPTANCE_CLOSEOUT_NO_HARDWARE",
+  "scope_boundaries": {
+    "ethernet": "DEFERRED_NO_NETWORK_CABLE",
+    "external_power_and_system_ir_safety": "PENDING",
+    "external_tfdu_duty": "PENDING_EXTERNAL_MEASUREMENT",
+    "p10_family_scoped_status": "CLOSED_FOR_STATIONARY_DUAL_AX7020_FOUR_LANE_PROTOTYPE_SCOPE",
+    "p11": "NOT_STARTED",
+    "p12": "PENDING",
+    "p13": "PENDING",
+    "p14": "PENDING",
+    "p15": "PENDING",
+    "physical_global_permit": "PENDING_D17",
+    "product_final": "PENDING_HW",
+    "rotation": "PENDING_FINAL_MECHANICAL",
+    "spi": "PENDING"
+  },
+  "shutdown": {
+    "fixed": "PASS",
+    "rotating": "PASS"
+  },
+  "source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+  "status": "PASS",
+  "test_id": "P10_5-FINAL-CLOSEOUT",
+  "wiring": {
+    "bytes": 5535,
+    "path": "config/hardware/p10_3_actual_wiring.yaml",
+    "sha256": "ae07d866c9b86f48ef2c58e7ac32f56526d0526ea378662fa2b626b24b2893b1",
+    "status": "PASS"
+  }
+}

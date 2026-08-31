@@ -1,0 +1,158 @@
+{
+  "current_run_hardware_authorization": false,
+  "generation_mode": "DETERMINISTIC_OFFLINE_CLOSEOUT",
+  "hardware_actions_executed": false,
+  "instruction_path": "C:\\Users\\user\\Downloads\\P10_FAMILY_FINAL_CLOSEOUT_CODEX_INSTRUCTION.md",
+  "instruction_sha256": "f3679c3673ec6a77bbb48ef3c7587d061f6ef543466a8fb2318459652219df58",
+  "mandatory_results": {
+    "F_TO_R_4MBPS_TARGET": "PASS",
+    "P10_5_MANDATORY": "PASS",
+    "R_TO_F_4MBPS_TARGET": "PASS"
+  },
+  "next_recommended_stage": "P11A_OFFLINE_HANDOVER_AND_8LANE_DUAL_DIRECTION_INTEGRATION_PREPARATION",
+  "next_stage_authorized": false,
+  "no_hardware": true,
+  "non_promotions": [
+    "P11",
+    "8X32",
+    "600_RPM",
+    "ROTATION",
+    "ETHERNET",
+    "SPI",
+    "EXTERNAL_ELECTRICAL_OR_OPTICAL_MEASUREMENT",
+    "PRODUCT_FINAL"
+  ],
+  "nonblocking_results": {
+    "F_TO_R_4P8MBPS_STRETCH": "FAIL_NONBLOCKING",
+    "R_TO_F_4P8MBPS_STRETCH": "FAIL_NONBLOCKING"
+  },
+  "p10_family_scoped_status": "CLOSED_FOR_STATIONARY_DUAL_AX7020_FOUR_LANE_PROTOTYPE_SCOPE",
+  "p11_status": "NOT_STARTED",
+  "schema_version": 1,
+  "scope": "STATIONARY_DUAL_AX7020_FOUR_LANE_PROTOTYPE",
+  "stages": [
+    {
+      "accepted_scope": "stationary dual-AX7020 two-lane no-Ethernet migration",
+      "closed_tag": {
+        "name": "p10-ax7020-dual-node-2lane-closed",
+        "object": "de64a1e8fd21931015b01f0f48c91bf0ba3b5040",
+        "target": "b212f81bd0a8114e309fb821025fa17f0484b255",
+        "type": "tag"
+      },
+      "evidence_checkpoint": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0",
+      "pass_tag": {
+        "name": "p10-ax7020-dual-node-2lane-pass",
+        "object": "0b8f4fd41b98978ae3c036d0f057990b947e3cdb",
+        "target": "35f5fefdcf5ac2833ed5708cef7a5de3005a2aa0",
+        "type": "tag"
+      },
+      "pending_scope": [
+        "four-lane scale-up",
+        "rotation",
+        "product-final"
+      ],
+      "source_commit": "8aa3879c5a8a5a4ed327b1084575bcfcc953f06b",
+      "stage": "P10",
+      "status": "PASS"
+    },
+    {
+      "accepted_scope": "stationary AX7020 two-lane half-duplex speed and stability",
+      "closed_tag": {
+        "name": "p10.1r-2lane-speed-stability-closed",
+        "object": "c0998935ddd19f44177540ea260a917c9ac54bad",
+        "target": "e90a2203c4d6b71f93e0ee1c5bf93bb263c8a1b8",
+        "type": "tag"
+      },
+      "evidence_checkpoint": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+      "pass_tag": {
+        "name": "p10.1r-2lane-speed-stability-pass",
+        "object": "c78066152e2d5ac0c673e21896fb90b9a78f7489",
+        "target": "9321ca2f1797eb12bfb02848c3ee27145e1e8eb4",
+        "type": "tag"
+      },
+      "pending_scope": [
+        "external electrical measurement",
+        "rotation"
+      ],
+      "source_commit": "39df17155ce82e38366fbdac00c79584f0fe1afa",
+      "stage": "P10.1R",
+      "status": "PASS"
+    },
+    {
+      "accepted_scope": "stationary dual-AX7020 four-lane half-duplex acceptance",
+      "closed_tag": {
+        "name": "p10.3-ax7020-stationary-4lane-closed",
+        "object": "bf67d059eda000e0323a85e8375f6f7352c18423",
+        "target": "11a05992279717511527573012449b37787b9d6a",
+        "type": "tag"
+      },
+      "evidence_checkpoint": "e64c04843d5d996f8d66d650fafaf3a43a2dd7dc",
+      "pass_tag": {
+        "name": "p10.3-ax7020-stationary-4lane-pass",
+        "object": "a5173ce33c3f2770f0d8b1b20505665e83390f50",
+        "target": "e647f066bbba8b36660e5f0bc43c79adc872c4c0",
+        "type": "tag"
+      },
+      "pending_scope": [
+        "external TFDU duty",
+        "P11",
+        "rotation",
+        "product-final"
+      ],
+      "source_commit": "7fc3a7cb03f9ee19793403f9f1deaef139b11d7d",
+      "stage": "P10.3",
+      "status": "PASS"
+    },
+    {
+      "accepted_scope": "stationary autonomous AX7020 four-lane half-duplex hardening",
+      "closed_tag": {
+        "name": "p10.4-autonomous-4lane-hardening-closed",
+        "object": "e9afcc66ffe549c30e9642cca4a66f95a27f793a",
+        "target": "bcbe5b51469ac499fb0a17a89cb9f5a4bbda6676",
+        "type": "tag"
+      },
+      "evidence_checkpoint": "f53d98252dfa85d73f35d49ebf5dc01323bcb4e7",
+      "pass_tag": {
+        "name": "p10.4-autonomous-4lane-hardening-pass",
+        "object": "2e050f943a80ccae38790771da8e298d11fe7c79",
+        "target": "7987e6385b65fa2c7ed7d3a008c1ecbdf323ffa8",
+        "type": "tag"
+      },
+      "pending_scope": [
+        "simultaneous bidirectional 2+2 in P10.4 artifacts"
+      ],
+      "source_commit": "6ff17d33a0ea111fbd796899c49decbfa339e2c1",
+      "stage": "P10.4",
+      "status": "PASS_WITH_NONBLOCKING_LIMITS"
+    },
+    {
+      "accepted_scope": "stationary split-lane simultaneous dual-direction 2+2 on two AX7020 boards",
+      "closed_tag": {
+        "name": "p10.5-2plus2-dual-direction-closed",
+        "target_resolution": "resolved through the tag after commit creation; no self-reference is embedded",
+        "target_semantics": "the pure-offline P10-family closeout commit",
+        "type": "annotated"
+      },
+      "evidence_checkpoint": "6546a9bd749f0daae6696ac22d18007937210722",
+      "final_checkpoint": "0a79ee8be21a199e7ba14bd65fcd72638f7160e0",
+      "pass_tag": {
+        "name": "p10.5-2plus2-dual-direction-pass",
+        "object": "a0fe8b02a638fc5a8fc21d80488a7c8c294b7a68",
+        "target": "0a79ee8be21a199e7ba14bd65fcd72638f7160e0",
+        "type": "tag"
+      },
+      "pending_scope": [
+        "4.8 Mbit/s per-direction stretch",
+        "P11",
+        "8x32",
+        "600 rpm",
+        "product-final"
+      ],
+      "source_commit": "e1f8c01ab084571627380367422f0bda2c0aed87",
+      "stage": "P10.5",
+      "status": "PASS_WITH_NONBLOCKING_LIMITS"
+    }
+  ],
+  "status": "PASS_WITH_NONBLOCKING_LIMITS",
+  "test_id": "P10-FAMILY-SCOPED-CLOSEOUT"
+}

@@ -623,10 +623,101 @@ def validate_state(state: dict[str, Any], root: Path = ROOT) -> list[str]:
             if architecture.get("external_tfdu_duty_measurement") != "PENDING_EXTERNAL_MEASUREMENT":
                 errors.append("external TFDU duty measurement must remain pending external measurement")
 
+    p10_family_closeout = state.get("p10_family_closeout")
+    if p10_family_closeout is not None:
+        if not isinstance(p10_family_closeout, dict):
+            errors.append("p10_family_closeout must be a mapping")
+        else:
+            expected_closeout_values = {
+                "scope_status": "CLOSED_FOR_STATIONARY_DUAL_AX7020_FOUR_LANE_PROTOTYPE_SCOPE",
+                "p10_5_status": "PASS_WITH_NONBLOCKING_LIMITS",
+                "mandatory_result": "PASS",
+                "current_run_hardware_authorization": False,
+                "authorization_reusable": False,
+                "hardware_actions_executed": False,
+                "p11_status": "NOT_STARTED",
+                "pass_tag": "p10.5-2plus2-dual-direction-pass",
+                "closed_tag": "p10.5-2plus2-dual-direction-closed",
+            }
+            for key, value in expected_closeout_values.items():
+                if p10_family_closeout.get(key) != value:
+                    errors.append(f"p10_family_closeout {key} must be {value}")
+
+            stretch = p10_family_closeout.get("stretch_4p8mbps")
+            if not isinstance(stretch, dict):
+                errors.append("p10_family_closeout stretch_4p8mbps must be a mapping")
+            else:
+                for direction in ("F_TO_R", "R_TO_F"):
+                    if stretch.get(direction) != "FAIL_NONBLOCKING":
+                        errors.append(
+                            "p10_family_closeout stretch_4p8mbps "
+                            f"{direction} must be FAIL_NONBLOCKING"
+                        )
+
+            closeout_reports = (
+                "closeout_summary",
+                "evidence_consistency",
+                "family_summary",
+                "gate_summary",
+                "git_metadata",
+            )
+            for report_name in closeout_reports:
+                path_value = p10_family_closeout.get(f"{report_name}_path")
+                digest = str(
+                    p10_family_closeout.get(f"{report_name}_sha256", "")
+                ).lower()
+                try:
+                    report_path = resolve_repo_path(root, path_value)
+                except (TypeError, ValueError) as exc:
+                    errors.append(
+                        f"p10_family_closeout {report_name} path invalid: {exc}"
+                    )
+                    continue
+                if not report_path.is_file():
+                    errors.append(
+                        f"p10_family_closeout {report_name} path is missing"
+                    )
+                elif (
+                    not SHA256_RE.fullmatch(digest)
+                    or sha256_file(report_path) != digest
+                ):
+                    errors.append(
+                        f"p10_family_closeout {report_name} SHA256 mismatch"
+                    )
+
+            if state.get("current_run_hardware_authorization_reusable") is not False:
+                errors.append(
+                    "current_run_hardware_authorization_reusable must be false "
+                    "after P10 family closeout"
+                )
+            if state.get("last_hardware_final_checkpoint") != (
+                "0a79ee8be21a199e7ba14bd65fcd72638f7160e0"
+            ):
+                errors.append(
+                    "last_hardware_final_checkpoint must retain the frozen P10.5 "
+                    "final checkpoint"
+                )
+
     if p8c_pass:
+        p10_family_closeout_active = (
+            isinstance(p10_family_closeout, dict)
+            and p10_family_closeout.get("scope_status")
+            == "CLOSED_FOR_STATIONARY_DUAL_AX7020_FOUR_LANE_PROTOTYPE_SCOPE"
+            and p10_family_closeout.get("p10_5_status")
+            == "PASS_WITH_NONBLOCKING_LIMITS"
+            and p10_family_closeout.get("mandatory_result") == "PASS"
+            and p10_family_closeout.get("current_run_hardware_authorization") is False
+            and p10_family_closeout.get("authorization_reusable") is False
+            and p10_family_closeout.get("hardware_actions_executed") is False
+            and p10_family_closeout.get("p11_status") == "NOT_STARTED"
+        )
         if p10_5_stage is not None:
             expected_program_stage = (
-                "P11_OFFLINE_PREPARATION"
+                (
+                    "P10_FAMILY_FINAL_CLOSEOUT"
+                    if p10_family_closeout_active
+                    else "P11_OFFLINE_PREPARATION"
+                )
                 if p10_5_stage in {"PASS", "PASS_WITH_NONBLOCKING_LIMITS"}
                 else P10_5_STAGE
             )
