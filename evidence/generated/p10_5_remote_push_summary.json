@@ -1,0 +1,37 @@
+{
+  "atomic_push": {
+    "command_scope": [
+      "p10.5/dual-direction-2plus2",
+      "p10.5-2plus2-dual-direction-pass",
+      "p10.5-2plus2-dual-direction-closed",
+      "main"
+    ],
+    "dry_run": "PASS",
+    "executed_at_utc": "2026-08-31T13:23:53Z",
+    "status": "PASS"
+  },
+  "bundle_backup": "NONE_NOT_REQUIRED",
+  "current_run_hardware_authorization": false,
+  "hardware_actions_executed": false,
+  "network_scope": "GIT_REMOTE_ONLY_NOT_HARDWARE_ETHERNET",
+  "p11_status": "NOT_STARTED",
+  "post_push_evidence_commit": {
+    "closed_tag_moved": false,
+    "required": true,
+    "reason": "This summary is committed after the successful atomic push; branch and main are then fast-forwarded once more while the closed tag remains immutable."
+  },
+  "remote": "origin",
+  "remote_push": "PASS",
+  "remote_refs_after_atomic_push": {
+    "main": "1b8fc93699ce80c4835969c84b235b6280c320da",
+    "p10_5_branch": "1b8fc93699ce80c4835969c84b235b6280c320da",
+    "p10_5_closed_tag_object": "2b7dde99bea7eabea50b89cd8cf66843c31058ba",
+    "p10_5_closed_tag_target": "1b8fc93699ce80c4835969c84b235b6280c320da",
+    "p10_5_pass_tag_object": "a0fe8b02a638fc5a8fc21d80488a7c8c294b7a68",
+    "p10_5_pass_tag_target": "0a79ee8be21a199e7ba14bd65fcd72638f7160e0"
+  },
+  "remote_url": "https://github.com/QingCai-DCF/RF_COMM_MULTILANE.git",
+  "schema_version": 1,
+  "status": "PASS",
+  "test_id": "P10_5-REMOTE-PUSH-SUMMARY"
+}
